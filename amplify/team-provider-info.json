@@ -1,4 +1,22 @@
 {
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mike-react-dev-195239-authRole",
+      "UnauthRoleArn": "arn:aws:iam::301286101195:role/amplify-mike-react-dev-195239-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::301286101195:role/amplify-mike-react-dev-195239-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-mike-react-dev-195239-deployment",
+      "UnauthRoleName": "amplify-mike-react-dev-195239-unauthRole",
+      "StackName": "amplify-mike-react-dev-195239",
+      "StackId": "arn:aws:cloudformation:us-east-1:301286101195:stack/amplify-mike-react-dev-195239/2ebad790-786c-11eb-82b1-1208f0f76cbf",
+      "AmplifyAppId": "d2zq2hh7w4s55d"
+    },
+    "categories": {
+      "auth": {
+        "mikereact": {}
+      }
+    }
+  },
   "staging": {
     "awscloudformation": {
       "AuthRoleName": "amplify-amplify4ec2fcacdac84-staging-211930-authRole",

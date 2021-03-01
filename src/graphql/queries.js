@@ -2,20 +2,20 @@
 // this is an auto generated file. This will be overwritten
 
 export const getUserProfile = /* GraphQL */ `
-  query GetUserProfile($UserID: Int!) {
-    getUserProfile(UserID: $UserID) {
-      UserID
-      UserRole
-      UserName
-      RegDate
-      UserImage
-      Gender
+  query GetUserProfile($CognitoID: String!) {
+    getUserProfile(CognitoID: $CognitoID) {
       Birthday
-      Height
-      Weight
-      Price
       Email
+      Gender
+      Height
+      Price
+      RegDate
       StripeID
+      CognitoID
+      UserImage
+      UserName
+      UserRole
+      Weight
     }
   }
 `;
@@ -27,18 +27,18 @@ export const listUserProfiles = /* GraphQL */ `
   ) {
     listUserProfiles(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        UserID
-        UserRole
-        UserName
-        RegDate
-        UserImage
-        Gender
         Birthday
-        Height
-        Weight
-        Price
         Email
+        Gender
+        Height
+        Price
+        RegDate
         StripeID
+        CognitoID
+        UserImage
+        UserName
+        UserRole
+        Weight
       }
       nextToken
     }
@@ -47,27 +47,27 @@ export const listUserProfiles = /* GraphQL */ `
 export const queryUserProfilesByUserRoleIndex = /* GraphQL */ `
   query QueryUserProfilesByUserRoleIndex(
     $UserRole: String!
-    $first: Int
     $after: String
+    $first: Int
   ) {
     queryUserProfilesByUserRoleIndex(
       UserRole: $UserRole
-      first: $first
       after: $after
+      first: $first
     ) {
       items {
-        UserID
-        UserRole
-        UserName
-        RegDate
-        UserImage
-        Gender
         Birthday
-        Height
-        Weight
-        Price
         Email
+        Gender
+        Height
+        Price
+        RegDate
         StripeID
+        CognitoID
+        UserImage
+        UserName
+        UserRole
+        Weight
       }
       nextToken
     }
