@@ -13,3 +13,17 @@ projects:
         region: us-east-1
         apiId: h7kloan2ibhinjlmyun7za4qwu
         maxDepth: 2
+  mikeAmplify:
+    schemaPath: src/graphql/schema.json
+    includes:
+      - src/graphql/**/*.js
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: javascript
+        generatedFileName: ''
+        docsFilePath: src/graphql
+extensions:
+  amplify:
+    version: 3

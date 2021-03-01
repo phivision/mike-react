@@ -3,91 +3,91 @@
 
 export const onCreateUserProfile = /* GraphQL */ `
   subscription OnCreateUserProfile(
-    $UserID: Int
-    $UserRole: String
-    $UserName: String
-    $RegDate: String
     $Gender: String
+    $RegDate: String
+    $CognitoID: String
+    $UserName: String
+    $UserRole: String
   ) {
     onCreateUserProfile(
-      UserID: $UserID
-      UserRole: $UserRole
-      UserName: $UserName
-      RegDate: $RegDate
       Gender: $Gender
-    ) {
-      UserID
-      UserRole
-      UserName
-      RegDate
-      UserImage
-      Gender
-      Birthday
-      Height
-      Weight
-      Price
-      Email
-      StripeID
-    }
-  }
-`;
-export const onUpdateUserProfile = /* GraphQL */ `
-  subscription OnUpdateUserProfile(
-    $UserID: Int
-    $UserRole: String
-    $UserName: String
-    $RegDate: String
-    $Gender: String
-  ) {
-    onUpdateUserProfile(
-      UserID: $UserID
-      UserRole: $UserRole
-      UserName: $UserName
       RegDate: $RegDate
-      Gender: $Gender
+      CognitoID: $CognitoID
+      UserName: $UserName
+      UserRole: $UserRole
     ) {
-      UserID
-      UserRole
-      UserName
-      RegDate
-      UserImage
-      Gender
       Birthday
-      Height
-      Weight
-      Price
       Email
+      Gender
+      Height
+      Price
+      RegDate
       StripeID
+      CognitoID
+      UserImage
+      UserName
+      UserRole
+      Weight
     }
   }
 `;
 export const onDeleteUserProfile = /* GraphQL */ `
   subscription OnDeleteUserProfile(
-    $UserID: Int
-    $UserRole: String
-    $UserName: String
-    $RegDate: String
     $Gender: String
+    $RegDate: String
+    $CognitoID: String
+    $UserName: String
+    $UserRole: String
   ) {
     onDeleteUserProfile(
-      UserID: $UserID
-      UserRole: $UserRole
-      UserName: $UserName
-      RegDate: $RegDate
       Gender: $Gender
+      RegDate: $RegDate
+      CognitoID: $CognitoID
+      UserName: $UserName
+      UserRole: $UserRole
     ) {
-      UserID
-      UserRole
-      UserName
-      RegDate
-      UserImage
-      Gender
       Birthday
-      Height
-      Weight
-      Price
       Email
+      Gender
+      Height
+      Price
+      RegDate
       StripeID
+      CognitoID
+      UserImage
+      UserName
+      UserRole
+      Weight
+    }
+  }
+`;
+export const onUpdateUserProfile = /* GraphQL */ `
+  subscription OnUpdateUserProfile(
+    $Gender: String
+    $RegDate: String
+    $CognitoID: String
+    $UserName: String
+    $UserRole: String
+  ) {
+    onUpdateUserProfile(
+      Gender: $Gender
+      RegDate: $RegDate
+      CognitoID: $CognitoID
+      UserName: $UserName
+      UserRole: $UserRole
+    ) {
+      Birthday
+      Email
+      Gender
+      Height
+      Price
+      RegDate
+      StripeID
+      CognitoID
+      UserImage
+      UserName
+      UserRole
+      Weight
     }
   }
 `;
