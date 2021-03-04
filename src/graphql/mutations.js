@@ -2,8 +2,12 @@
 // this is an auto generated file. This will be overwritten
 
 export const createUserProfile = /* GraphQL */ `
-  mutation CreateUserProfile($input: CreateUserProfileInput!) {
-    createUserProfile(input: $input) {
+  mutation CreateUserProfile(
+    $input: CreateUserProfileInput!
+    $condition: ModelUserProfileConditionInput
+  ) {
+    createUserProfile(input: $input, condition: $condition) {
+      id
       Birthday
       Email
       Gender
@@ -11,35 +15,24 @@ export const createUserProfile = /* GraphQL */ `
       Price
       RegDate
       StripeID
-      CognitoID
       UserImage
-      UserName
+      LastName
+      FirstName
       UserRole
       Weight
-    }
-  }
-`;
-export const deleteUserProfile = /* GraphQL */ `
-  mutation DeleteUserProfile($input: DeleteUserProfileInput!) {
-    deleteUserProfile(input: $input) {
-      Birthday
-      Email
-      Gender
-      Height
-      Price
-      RegDate
-      StripeID
-      CognitoID
-      UserImage
-      UserName
-      UserRole
-      Weight
+      createdAt
+      updatedAt
+      owner
     }
   }
 `;
 export const updateUserProfile = /* GraphQL */ `
-  mutation UpdateUserProfile($input: UpdateUserProfileInput!) {
-    updateUserProfile(input: $input) {
+  mutation UpdateUserProfile(
+    $input: UpdateUserProfileInput!
+    $condition: ModelUserProfileConditionInput
+  ) {
+    updateUserProfile(input: $input, condition: $condition) {
+      id
       Birthday
       Email
       Gender
@@ -47,11 +40,39 @@ export const updateUserProfile = /* GraphQL */ `
       Price
       RegDate
       StripeID
-      CognitoID
       UserImage
-      UserName
+      LastName
+      FirstName
       UserRole
       Weight
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteUserProfile = /* GraphQL */ `
+  mutation DeleteUserProfile(
+    $input: DeleteUserProfileInput!
+    $condition: ModelUserProfileConditionInput
+  ) {
+    deleteUserProfile(input: $input, condition: $condition) {
+      id
+      Birthday
+      Email
+      Gender
+      Height
+      Price
+      RegDate
+      StripeID
+      UserImage
+      LastName
+      FirstName
+      UserRole
+      Weight
+      createdAt
+      updatedAt
+      owner
     }
   }
 `;

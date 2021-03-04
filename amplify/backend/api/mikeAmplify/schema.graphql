@@ -1,28 +1,6 @@
-﻿schema {
-  query: Query
-  mutation: Mutation
-  subscription: Subscription
-}
-
-type Mutation {
-  createUserProfile(input: CreateUserProfileInput!): UserProfile
-  deleteUserProfile(input: DeleteUserProfileInput!): UserProfile
-  updateUserProfile(input: UpdateUserProfileInput!): UserProfile
-}
-
-type Query {
-  getUserProfile(CognitoID: String!): UserProfile
-  listUserProfiles(filter: TableUserProfileFilterInput, limit: Int, nextToken: String): UserProfileConnection
-  queryUserProfilesByUserRoleIndex(UserRole: String!, after: String, first: Int): UserProfileConnection
-}
-
-type Subscription {
-  onCreateUserProfile(Gender: String, RegDate: String, CognitoID: String, UserName: String, UserRole: String): UserProfile @aws_subscribe(mutations : ["createUserProfile"])
-  onDeleteUserProfile(Gender: String, RegDate: String, CognitoID: String, UserName: String, UserRole: String): UserProfile @aws_subscribe(mutations : ["deleteUserProfile"])
-  onUpdateUserProfile(Gender: String, RegDate: String, CognitoID: String, UserName: String, UserRole: String): UserProfile @aws_subscribe(mutations : ["updateUserProfile"])
-}
-
-type UserProfile {
+﻿type UserProfile @model
+@auth(rules: [{ allow: owner }])
+{
   Birthday: AWSDate
   Email: AWSEmail
   Gender: String
@@ -30,117 +8,9 @@ type UserProfile {
   Price: Float
   RegDate: String!
   StripeID: String
-  CognitoID: String!
   UserImage: String
-  UserName: String!
+  LastName: String
+  FirstName: String
   UserRole: String!
-  Weight: Float
-}
-
-type UserProfileConnection {
-  items: [UserProfile]
-  nextToken: String
-}
-
-input CreateUserProfileInput {
-  Birthday: AWSDate
-  Email: AWSEmail
-  Gender: String
-  Height: Float
-  Price: Float
-  RegDate: String!
-  StripeID: String
-  CognitoID: String!
-  UserImage: String
-  UserName: String!
-  UserRole: String!
-  Weight: Float
-}
-
-input DeleteUserProfileInput {
-  CognitoID: String!
-}
-
-input TableBooleanFilterInput {
-  eq: Boolean
-  ne: Boolean
-}
-
-input TableFloatFilterInput {
-  between: [Float]
-  contains: Float
-  eq: Float
-  ge: Float
-  gt: Float
-  le: Float
-  lt: Float
-  ne: Float
-  notContains: Float
-}
-
-input TableIDFilterInput {
-  beginsWith: ID
-  between: [ID]
-  contains: ID
-  eq: ID
-  ge: ID
-  gt: ID
-  le: ID
-  lt: ID
-  ne: ID
-  notContains: ID
-}
-
-input TableIntFilterInput {
-  between: [Int]
-  contains: Int
-  eq: Int
-  ge: Int
-  gt: Int
-  le: Int
-  lt: Int
-  ne: Int
-  notContains: Int
-}
-
-input TableStringFilterInput {
-  beginsWith: String
-  between: [String]
-  contains: String
-  eq: String
-  ge: String
-  gt: String
-  le: String
-  lt: String
-  ne: String
-  notContains: String
-}
-
-input TableUserProfileFilterInput {
-  Birthday: TableStringFilterInput
-  Email: TableStringFilterInput
-  Gender: TableStringFilterInput
-  Height: TableFloatFilterInput
-  Price: TableFloatFilterInput
-  RegDate: TableStringFilterInput
-  StripeID: TableStringFilterInput
-  UserID: TableIntFilterInput
-  UserName: TableStringFilterInput
-  UserRole: TableStringFilterInput
-  Weight: TableFloatFilterInput
-}
-
-input UpdateUserProfileInput {
-  Birthday: AWSDate
-  Email: AWSEmail
-  Gender: String
-  Height: Float
-  Price: Float
-  RegDate: String
-  StripeID: String
-  CognitoID: String!
-  UserImage: String
-  UserName: String
-  UserRole: String
   Weight: Float
 }

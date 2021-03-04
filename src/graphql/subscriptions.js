@@ -2,20 +2,9 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateUserProfile = /* GraphQL */ `
-  subscription OnCreateUserProfile(
-    $Gender: String
-    $RegDate: String
-    $CognitoID: String
-    $UserName: String
-    $UserRole: String
-  ) {
-    onCreateUserProfile(
-      Gender: $Gender
-      RegDate: $RegDate
-      CognitoID: $CognitoID
-      UserName: $UserName
-      UserRole: $UserRole
-    ) {
+  subscription OnCreateUserProfile($owner: String!) {
+    onCreateUserProfile(owner: $owner) {
+      id
       Birthday
       Email
       Gender
@@ -23,59 +12,21 @@ export const onCreateUserProfile = /* GraphQL */ `
       Price
       RegDate
       StripeID
-      CognitoID
       UserImage
-      UserName
+      LastName
+      FirstName
       UserRole
       Weight
-    }
-  }
-`;
-export const onDeleteUserProfile = /* GraphQL */ `
-  subscription OnDeleteUserProfile(
-    $Gender: String
-    $RegDate: String
-    $CognitoID: String
-    $UserName: String
-    $UserRole: String
-  ) {
-    onDeleteUserProfile(
-      Gender: $Gender
-      RegDate: $RegDate
-      CognitoID: $CognitoID
-      UserName: $UserName
-      UserRole: $UserRole
-    ) {
-      Birthday
-      Email
-      Gender
-      Height
-      Price
-      RegDate
-      StripeID
-      CognitoID
-      UserImage
-      UserName
-      UserRole
-      Weight
+      createdAt
+      updatedAt
+      owner
     }
   }
 `;
 export const onUpdateUserProfile = /* GraphQL */ `
-  subscription OnUpdateUserProfile(
-    $Gender: String
-    $RegDate: String
-    $CognitoID: String
-    $UserName: String
-    $UserRole: String
-  ) {
-    onUpdateUserProfile(
-      Gender: $Gender
-      RegDate: $RegDate
-      CognitoID: $CognitoID
-      UserName: $UserName
-      UserRole: $UserRole
-    ) {
+  subscription OnUpdateUserProfile($owner: String!) {
+    onUpdateUserProfile(owner: $owner) {
+      id
       Birthday
       Email
       Gender
@@ -83,11 +34,36 @@ export const onUpdateUserProfile = /* GraphQL */ `
       Price
       RegDate
       StripeID
-      CognitoID
       UserImage
-      UserName
+      LastName
+      FirstName
       UserRole
       Weight
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteUserProfile = /* GraphQL */ `
+  subscription OnDeleteUserProfile($owner: String!) {
+    onDeleteUserProfile(owner: $owner) {
+      id
+      Birthday
+      Email
+      Gender
+      Height
+      Price
+      RegDate
+      StripeID
+      UserImage
+      LastName
+      FirstName
+      UserRole
+      Weight
+      createdAt
+      updatedAt
+      owner
     }
   }
 `;
