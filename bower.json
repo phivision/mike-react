@@ -1,0 +1,25 @@
+{
+  "name": "mike",
+  "homepage": "https://phivision.us",
+  "authors": [
+    "PhiVision Inc."
+  ],
+  "description": "A P2P fitness platform",
+  "main": "public/index.html",
+  "keywords": [
+    "fitness",
+    "ai",
+    "google",
+    "twitter"
+  ],
+  "license": "Creative TIM License",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "build"
+  ],
+  "private": true
+}
