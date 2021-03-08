@@ -15,6 +15,8 @@ import Person from "@material-ui/icons/Person";
 import Notifications from "@material-ui/icons/Notifications";
 import Dashboard from "@material-ui/icons/Dashboard";
 import Search from "@material-ui/icons/Search";
+// amplify componets
+import { Auth } from "aws-amplify";
 // core components
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
@@ -47,6 +49,14 @@ export default function AdminNavbarLinks() {
   const handleCloseProfile = () => {
     setOpenProfile(null);
   };
+  async function handleAmplifySignOut() {
+    try {
+      await Auth.signOut();
+    } catch (error) {
+      console.log("error signing out: ", error);
+    }
+  }
+
   return (
     <div>
       <div className={classes.searchWrapper}>
@@ -207,7 +217,7 @@ export default function AdminNavbarLinks() {
                     </MenuItem>
                     <Divider light />
                     <MenuItem
-                      onClick={handleCloseProfile}
+                      onClick={handleAmplifySignOut}
                       className={classes.dropdownItem}
                     >
                       Logout
