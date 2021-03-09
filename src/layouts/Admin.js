@@ -19,22 +19,24 @@ import logo from "../assets/img/reactlogo.png";
 
 let ps;
 
-const switchRoutes = (
-  <Switch>
-    {routes.map((prop, key) => {
-      if (prop.layout === "/admin") {
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            component={prop.component}
-            key={key}
-          />
-        );
-      }
-      return null;
-    })}
-  </Switch>
-);
+const switchRoutes = (user) => {
+  return (
+    <Switch>
+      {routes.map((prop, key) => {
+        if (prop.layout === "/admin") {
+          return (
+            <Route
+              path={prop.layout + prop.path}
+              render={() => <prop.component user={user} />}
+              key={key}
+            />
+          );
+        }
+        return null;
+      })}
+    </Switch>
+  );
+};
 
 const useStyles = makeStyles(styles);
 
@@ -99,10 +101,12 @@ export default function Admin({ ...rest }) {
          classes are present because they have some paddings which would make the map smaller */}
         {getRoute() ? (
           <div className={classes.content}>
-            <div className={classes.container}>{switchRoutes}</div>
+            <div className={classes.container}>
+              {switchRoutes(rest.user.username)}
+            </div>
           </div>
         ) : (
-          <div className={classes.map}>{switchRoutes}</div>
+          <div className={classes.map}>{switchRoutes(rest.user.username)}</div>
         )}
         {getRoute() ? <Footer /> : null}
       </div>

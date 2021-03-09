@@ -8,14 +8,12 @@ import {
 } from "@aws-amplify/ui-react";
 import { AuthState, onAuthUIStateChange } from "@aws-amplify/ui-components";
 import awsconfig from "./aws-exports";
-import { createBrowserHistory } from "history";
 import { BrowserRouter as Router, Redirect } from "react-router-dom";
 // core components
 import Admin from "layouts/Admin.js";
 
 import "assets/css/material-dashboard-react.css?v=1.9.0";
 
-const hist = createBrowserHistory();
 // amplify config
 Amplify.configure(awsconfig);
 
@@ -31,7 +29,7 @@ const App = () => {
   }, []);
 
   return authState === AuthState.SignedIn && user ? (
-    <Router history={hist}>
+    <Router>
       <Admin user={user} />
       <Redirect from="/" to="/admin/dashboard" />
     </Router>

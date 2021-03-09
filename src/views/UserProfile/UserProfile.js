@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -9,11 +9,27 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
-import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
+import PropTypes from "prop-types";
+import { API, graphqlOperation } from "aws-amplify";
+import { getUserProfile } from "graphql/queries";
 
-import avatar from "assets/img/faces/marc.jpg";
+const initialProfileState = {
+  id: "",
+  LastName: null,
+  FirstName: null,
+  UserImage: null,
+  RegDate: "",
+  UserRole: "",
+  Birthday: null,
+  Email: null,
+  Gender: null,
+  Height: null,
+  Weight: null,
+  Price: null,
+  StripID: null,
+};
 
 const styles = {
   cardCategoryWhite: {
@@ -36,7 +52,25 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-export default function UserProfile() {
+export default function UserProfile(props) {
+  const [profile, setProfile] = React.useState(initialProfileState);
+
+  async function userQuery() {
+    const userProfile = await API.graphql(
+      graphqlOperation(getUserProfile, { id: props.user })
+    );
+    if (userProfile.data.getUserProfile != null) {
+      return userProfile.data.getUserProfile;
+    } else {
+      alert("cannot find user profile!");
+    }
+  }
+
+  useEffect(() => {
+    userQuery().then((r) => setProfile(r));
+    // TODO: need to do useEffect cleanup and fix uncaught (in promise) object
+  });
+
   const classes = useStyles();
   return (
     <div>
@@ -72,7 +106,7 @@ export default function UserProfile() {
                 </GridItem>
                 <GridItem xs={12} sm={12} md={4}>
                   <CustomInput
-                    labelText="Email address"
+                    labelText={profile.Email}
                     id="email-address"
                     formControlProps={{
                       fullWidth: true,
@@ -151,28 +185,11 @@ export default function UserProfile() {
             </CardFooter>
           </Card>
         </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card profile>
-            <CardAvatar profile>
-              <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                <img src={avatar} alt="..." />
-              </a>
-            </CardAvatar>
-            <CardBody profile>
-              <h6 className={classes.cardCategory}>CEO / CO-FOUNDER</h6>
-              <h4 className={classes.cardTitle}>Alec Thompson</h4>
-              <p className={classes.description}>
-                Don{"'"}t be scared of the truth because we need to restart the
-                human foundation in truth And I love you like Kanye loves Kanye
-                I love Rick Owens’ bed design but the back is...
-              </p>
-              <Button color="primary" round>
-                Follow
-              </Button>
-            </CardBody>
-          </Card>
-        </GridItem>
       </GridContainer>
     </div>
   );
 }
+
+UserProfile.propTypes = {
+  user: PropTypes.string,
+};
