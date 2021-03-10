@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import CustomInput from "components/CustomInput/CustomInput.js";
+import TextField from "@material-ui/core/TextField";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
@@ -66,10 +65,44 @@ export default function UserProfile(props) {
     }
   }
 
+  function textFieldGenerator(
+    breakpoint,
+    id,
+    label,
+    text,
+    type = "string",
+    readOnly = false
+  ) {
+    return text == null ? (
+      <GridItem xs={breakpoint} sm={breakpoint} md={breakpoint / 2}>
+        <TextField
+          id={id}
+          label={label}
+          type={type}
+          InputLabelProps={{
+            readOnly: readOnly,
+          }}
+        />
+      </GridItem>
+    ) : (
+      <GridItem xs={breakpoint} sm={breakpoint} md={breakpoint / 2}>
+        <TextField
+          id={id}
+          label={label}
+          type={type}
+          value={text}
+          InputLabelProps={{
+            shrink: true,
+            readOnly: readOnly,
+          }}
+        />
+      </GridItem>
+    );
+  }
+
   useEffect(() => {
     userQuery().then((r) => setProfile(r));
-    // TODO: need to do useEffect cleanup and fix uncaught (in promise) object
-  });
+  }, [props.user]);
 
   const classes = useStyles();
   return (
@@ -83,101 +116,67 @@ export default function UserProfile(props) {
             </CardHeader>
             <CardBody>
               <GridContainer>
-                <GridItem xs={12} sm={12} md={5}>
-                  <CustomInput
-                    labelText="Company (disabled)"
-                    id="company-disabled"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                    inputProps={{
-                      disabled: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={3}>
-                  <CustomInput
-                    labelText="Username"
-                    id="username"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText={profile.Email}
-                    id="email-address"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
+                {textFieldGenerator(
+                  6,
+                  "email",
+                  "Email",
+                  profile.Email,
+                  "string",
+                  true
+                )}
+                {textFieldGenerator(
+                  6,
+                  "last-name",
+                  "Last Name",
+                  profile.LastName
+                )}
+                {textFieldGenerator(
+                  6,
+                  "first-name",
+                  "First Name",
+                  profile.FirstName
+                )}
               </GridContainer>
               <GridContainer>
-                <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
-                    labelText="First Name"
-                    id="first-name"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
-                    labelText="Last Name"
-                    id="last-name"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
+                {textFieldGenerator(
+                  6,
+                  "user-role",
+                  "User Role",
+                  profile.UserRole,
+                  "string",
+                  true
+                )}
+                {textFieldGenerator(
+                  6,
+                  "reg-date",
+                  "Registration Date",
+                  profile.RegDate,
+                  "string",
+                  true
+                )}
+                {textFieldGenerator(
+                  6,
+                  "birthday",
+                  "Birthday",
+                  profile.Birthday
+                )}
               </GridContainer>
               <GridContainer>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="City"
-                    id="city"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Country"
-                    id="country"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Postal Code"
-                    id="postal-code"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={12}>
-                  <InputLabel style={{ color: "#AAAAAA" }}>About me</InputLabel>
-                  <CustomInput
-                    labelText="Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo."
-                    id="about-me"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                    inputProps={{
-                      multiline: true,
-                      rows: 5,
-                    }}
-                  />
-                </GridItem>
+                {textFieldGenerator(6, "gender", "Gender", profile.Gender)}
+                {textFieldGenerator(
+                  6,
+                  "height",
+                  "Height",
+                  profile.Height,
+                  "number"
+                )}
+                {textFieldGenerator(
+                  6,
+                  "weight",
+                  "Weight",
+                  profile.Weight,
+                  "number"
+                )}
               </GridContainer>
             </CardBody>
             <CardFooter>
