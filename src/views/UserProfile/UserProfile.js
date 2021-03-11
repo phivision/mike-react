@@ -4,25 +4,30 @@ import { makeStyles } from "@material-ui/core/styles";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
+import Input from "@material-ui/core/Input";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
+import CardAvatar from "components/Card/CardAvatar.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import PropTypes from "prop-types";
-import { API, graphqlOperation } from "aws-amplify";
+import { API, Storage, graphqlOperation } from "aws-amplify";
 import { getUserProfile } from "graphql/queries";
 import { updateUserProfile } from "graphql/mutations";
+// resources
+import avatar from "assets/img/faces/marc.jpg";
 
 const initialProfileState = {
   id: "",
   LastName: "",
   FirstName: "",
+  Description: null,
   UserImage: null,
+  ImageURL: null,
   RegDate: "",
-  UserRole: "",
   Birthday: null,
   Email: "",
   Gender: null,
@@ -58,11 +63,19 @@ export default function UserProfile(props) {
 
   async function userQuery() {
     try {
-      const userProfile = await API.graphql(
+      const userProfileData = await API.graphql(
         graphqlOperation(getUserProfile, { id: props.user })
       );
-      if (userProfile.data.getUserProfile != null) {
-        setProfile(userProfile.data.getUserProfile);
+      const userProfile = userProfileData.data.getUserProfile;
+      if (userProfile.UserImage) {
+        // get url for the user image and update it to the profile view
+        userProfile.ImageURL = await Storage.get(userProfile.UserImage);
+      } else {
+        // if image is not yet uploaded, use local avatar
+        userProfile.ImageURL = avatar;
+      }
+      if (userProfile) {
+        setProfile(userProfile);
       } else {
         console.log("cannot find user profile!");
       }
@@ -80,6 +93,8 @@ export default function UserProfile(props) {
       Weight: profile.Weight,
       LastName: profile.LastName,
       FirstName: profile.FirstName,
+      UserImage: profile.UserImage,
+      Description: profile.Description,
     };
     try {
       const resultedProfile = await API.graphql(
@@ -87,8 +102,15 @@ export default function UserProfile(props) {
           input: updatedProfile,
         })
       );
-      if (resultedProfile.data.updateUserProfile != null) {
-        setProfile(resultedProfile.data.updateUserProfile);
+      const updatedUserProfile = resultedProfile.data.updateUserProfile;
+      // if user image uploaded, replace the local path with s3 url and update the local webpage
+      if (profile.UserImage) {
+        updatedUserProfile.ImageURL = await Storage.get(profile.UserImage);
+      } else {
+        updatedUserProfile.ImageURL = avatar;
+      }
+      if (updatedUserProfile) {
+        setProfile(updatedUserProfile);
       } else {
         console.log("cannot update user profile!");
       }
@@ -100,6 +122,19 @@ export default function UserProfile(props) {
   const handleChange = (event) => {
     setProfile({ ...profile, [event.target.name]: event.target.value });
   };
+
+  async function handleImageChange(e) {
+    if (!e.target.files[0]) return;
+    const file = e.target.files[0];
+    setProfile({ ...profile, UserImage: file.name });
+    try {
+      await Storage.put(file.name, file, { contentType: "image/*" });
+    } catch (e) {
+      const msg = "Error uploading file: " + e.message;
+      console.log(e);
+      alert(msg);
+    }
+  }
 
   const genders = [
     {
@@ -148,10 +183,36 @@ export default function UserProfile(props) {
   }, [props.user]);
 
   const classes = useStyles();
-  // TODO: change to drop down menu to select from a list of genders
+  // TODO: update the user group (student or trainer) in the avatar card if the schema is updated
   return (
     <div>
       <GridContainer>
+        <GridItem xs={12} sm={12} md={4}>
+          <Card profile>
+            <CardAvatar profile>
+              <img src={profile.ImageURL} alt="..." />
+            </CardAvatar>
+            <CardBody profile>
+              <h4 className={classes.cardTitle}>{profile.UserRole}</h4>
+              <TextField
+                id="description"
+                label="Description"
+                name="Description"
+                value={profile.Description || ""}
+                onChange={handleChange}
+              />
+              <Input
+                type="file"
+                name="UserImage"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+              <Button color="primary" onClick={userUpdate}>
+                Upload Image
+              </Button>
+            </CardBody>
+          </Card>
+        </GridItem>
         <GridItem xs={12} sm={12} md={8}>
           <Card>
             <CardHeader color="primary">
@@ -189,15 +250,6 @@ export default function UserProfile(props) {
                 </GridItem>
               </GridContainer>
               <GridContainer>
-                {textFieldGenerator(
-                  6,
-                  "user-role",
-                  "User Role",
-                  profile.UserRole,
-                  "text",
-                  true,
-                  true
-                )}
                 {textFieldGenerator(
                   6,
                   "reg-date",

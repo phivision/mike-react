@@ -17,6 +17,7 @@ export const getUserProfile = /* GraphQL */ `
       FirstName
       UserRole
       Weight
+      Description
       createdAt
       updatedAt
       owner
@@ -44,6 +45,7 @@ export const listUserProfiles = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        Description
         createdAt
         updatedAt
         owner
