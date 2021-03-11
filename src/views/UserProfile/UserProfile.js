@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import TextField from "@material-ui/core/TextField";
+import MenuItem from "@material-ui/core/MenuItem";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
@@ -87,7 +88,7 @@ export default function UserProfile(props) {
         })
       );
       if (resultedProfile.data.updateUserProfile != null) {
-        setProfile(updatedProfile.data.updateUserProfile);
+        setProfile(resultedProfile.data.updateUserProfile);
       } else {
         console.log("cannot update user profile!");
       }
@@ -99,6 +100,21 @@ export default function UserProfile(props) {
   const handleChange = (event) => {
     setProfile({ ...profile, [event.target.name]: event.target.value });
   };
+
+  const genders = [
+    {
+      value: "male",
+      label: "Male",
+    },
+    {
+      value: "female",
+      label: "Female",
+    },
+    {
+      value: "",
+      label: "Undefined",
+    },
+  ];
 
   function textFieldGenerator(
     breakpoint,
@@ -129,7 +145,6 @@ export default function UserProfile(props) {
 
   useEffect(() => {
     userQuery();
-    // TODO clean up async task to fix the memory leak
   }, [props.user]);
 
   const classes = useStyles();
@@ -208,11 +223,19 @@ export default function UserProfile(props) {
                 <GridItem xs={6} sm={6} md={3}>
                   <TextField
                     id="gender"
+                    select
                     label="Gender"
                     name="Gender"
                     value={profile.Gender || ""}
                     onChange={handleChange}
-                  />
+                    InputLabelProps={{ shrink: true }}
+                  >
+                    {genders.map((gender) => (
+                      <MenuItem key={gender.value} value={gender.value}>
+                        {gender.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 </GridItem>
                 <GridItem xs={6} sm={6} md={3}>
                   <TextField
