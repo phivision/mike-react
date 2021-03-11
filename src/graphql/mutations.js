@@ -20,6 +20,7 @@ export const createUserProfile = /* GraphQL */ `
       FirstName
       UserRole
       Weight
+      Description
       createdAt
       updatedAt
       owner
@@ -45,6 +46,7 @@ export const updateUserProfile = /* GraphQL */ `
       FirstName
       UserRole
       Weight
+      Description
       createdAt
       updatedAt
       owner
@@ -70,6 +72,7 @@ export const deleteUserProfile = /* GraphQL */ `
       FirstName
       UserRole
       Weight
+      Description
       createdAt
       updatedAt
       owner

@@ -1,5 +1,5 @@
 ﻿type UserProfile @model
-@auth(rules: [{ allow: owner }])
+@auth(rules: [{ allow: owner, operations: [create, delete, update] }])
 {
   Birthday: AWSDate
   Email: AWSEmail
@@ -13,4 +13,5 @@
   FirstName: String
   UserRole: String!
   Weight: Float
+  Description: String
 }
