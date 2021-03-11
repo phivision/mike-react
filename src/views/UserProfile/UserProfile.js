@@ -13,16 +13,17 @@ import CardFooter from "components/Card/CardFooter.js";
 import PropTypes from "prop-types";
 import { API, graphqlOperation } from "aws-amplify";
 import { getUserProfile } from "graphql/queries";
+import { updateUserProfile } from "graphql/mutations";
 
 const initialProfileState = {
   id: "",
-  LastName: null,
-  FirstName: null,
+  LastName: "",
+  FirstName: "",
   UserImage: null,
   RegDate: "",
   UserRole: "",
   Birthday: null,
-  Email: null,
+  Email: "",
   Gender: null,
   Height: null,
   Weight: null,
@@ -55,56 +56,84 @@ export default function UserProfile(props) {
   const [profile, setProfile] = React.useState(initialProfileState);
 
   async function userQuery() {
-    const userProfile = await API.graphql(
-      graphqlOperation(getUserProfile, { id: props.user })
-    );
-    if (userProfile.data.getUserProfile != null) {
-      return userProfile.data.getUserProfile;
-    } else {
-      alert("cannot find user profile!");
+    try {
+      const userProfile = await API.graphql(
+        graphqlOperation(getUserProfile, { id: props.user })
+      );
+      if (userProfile.data.getUserProfile != null) {
+        setProfile(userProfile.data.getUserProfile);
+      } else {
+        console.log("cannot find user profile!");
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
+
+  async function userUpdate() {
+    const updatedProfile = {
+      id: profile.id,
+      Birthday: profile.Birthday,
+      Gender: profile.Gender,
+      Height: profile.Height,
+      Weight: profile.Weight,
+      LastName: profile.LastName,
+      FirstName: profile.FirstName,
+    };
+    try {
+      const resultedProfile = await API.graphql(
+        graphqlOperation(updateUserProfile, {
+          input: updatedProfile,
+        })
+      );
+      if (resultedProfile.data.updateUserProfile != null) {
+        setProfile(updatedProfile.data.updateUserProfile);
+      } else {
+        console.log("cannot update user profile!");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const handleChange = (event) => {
+    setProfile({ ...profile, [event.target.name]: event.target.value });
+  };
 
   function textFieldGenerator(
     breakpoint,
     id,
     label,
-    text,
-    type = "string",
-    readOnly = false
+    val,
+    type = "text",
+    readOnly = false,
+    shrink = false
   ) {
-    return text == null ? (
+    // only generate unchanged text field
+    const inputLabelProps =
+      val == null && type !== "date"
+        ? { readOnly: readOnly }
+        : { shrink: shrink, readOnly: readOnly };
+    return (
       <GridItem xs={breakpoint} sm={breakpoint} md={breakpoint / 2}>
         <TextField
           id={id}
           label={label}
           type={type}
-          InputLabelProps={{
-            readOnly: readOnly,
-          }}
-        />
-      </GridItem>
-    ) : (
-      <GridItem xs={breakpoint} sm={breakpoint} md={breakpoint / 2}>
-        <TextField
-          id={id}
-          label={label}
-          type={type}
-          value={text}
-          InputLabelProps={{
-            shrink: true,
-            readOnly: readOnly,
-          }}
+          value={val || ""}
+          InputLabelProps={inputLabelProps}
         />
       </GridItem>
     );
   }
 
   useEffect(() => {
-    userQuery().then((r) => setProfile(r));
+    userQuery();
+    // TODO clean up async task to fix the memory leak
   }, [props.user]);
 
   const classes = useStyles();
+  // TODO: change to drop down menu to select from a list of genders
   return (
     <div>
       <GridContainer>
@@ -121,21 +150,28 @@ export default function UserProfile(props) {
                   "email",
                   "Email",
                   profile.Email,
-                  "string",
+                  "email",
+                  true,
                   true
                 )}
-                {textFieldGenerator(
-                  6,
-                  "last-name",
-                  "Last Name",
-                  profile.LastName
-                )}
-                {textFieldGenerator(
-                  6,
-                  "first-name",
-                  "First Name",
-                  profile.FirstName
-                )}
+                <GridItem xs={6} sm={6} md={3}>
+                  <TextField
+                    id="last-name"
+                    label="Last Name"
+                    name="LastName"
+                    value={profile.LastName || ""}
+                    onChange={handleChange}
+                  />
+                </GridItem>
+                <GridItem xs={6} sm={6} md={3}>
+                  <TextField
+                    id="first-name"
+                    label="First Name"
+                    name="FirstName"
+                    value={profile.FirstName || ""}
+                    onChange={handleChange}
+                  />
+                </GridItem>
               </GridContainer>
               <GridContainer>
                 {textFieldGenerator(
@@ -143,7 +179,8 @@ export default function UserProfile(props) {
                   "user-role",
                   "User Role",
                   profile.UserRole,
-                  "string",
+                  "text",
+                  true,
                   true
                 )}
                 {textFieldGenerator(
@@ -151,36 +188,58 @@ export default function UserProfile(props) {
                   "reg-date",
                   "Registration Date",
                   profile.RegDate,
-                  "string",
+                  "date",
+                  true,
                   true
                 )}
-                {textFieldGenerator(
-                  6,
-                  "birthday",
-                  "Birthday",
-                  profile.Birthday
-                )}
+                <GridItem xs={6} sm={6} md={3}>
+                  <TextField
+                    id="birthday"
+                    label="Birthday"
+                    name="Birthday"
+                    type="date"
+                    value={profile.Birthday || ""}
+                    onChange={handleChange}
+                    InputLabelProps={{ shrink: true, readOnly: false }}
+                  />
+                </GridItem>
               </GridContainer>
               <GridContainer>
-                {textFieldGenerator(6, "gender", "Gender", profile.Gender)}
-                {textFieldGenerator(
-                  6,
-                  "height",
-                  "Height",
-                  profile.Height,
-                  "number"
-                )}
-                {textFieldGenerator(
-                  6,
-                  "weight",
-                  "Weight",
-                  profile.Weight,
-                  "number"
-                )}
+                <GridItem xs={6} sm={6} md={3}>
+                  <TextField
+                    id="gender"
+                    label="Gender"
+                    name="Gender"
+                    value={profile.Gender || ""}
+                    onChange={handleChange}
+                  />
+                </GridItem>
+                <GridItem xs={6} sm={6} md={3}>
+                  <TextField
+                    id="height"
+                    label="Height (cm)"
+                    name="Height"
+                    type="number"
+                    value={profile.Height || 0.0}
+                    onChange={handleChange}
+                  />
+                </GridItem>
+                <GridItem xs={6} sm={6} md={3}>
+                  <TextField
+                    id="weight"
+                    label="Weight (pound)"
+                    name="Weight"
+                    type="number"
+                    value={profile.Weight || 0.0}
+                    onChange={handleChange}
+                  />
+                </GridItem>
               </GridContainer>
             </CardBody>
             <CardFooter>
-              <Button color="primary">Update Profile</Button>
+              <Button color="primary" onClick={userUpdate}>
+                Update Profile
+              </Button>
             </CardFooter>
           </Card>
         </GridItem>
