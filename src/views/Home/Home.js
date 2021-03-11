@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { API, graphqlOperation } from "aws-amplify";
-import { getUserProfile } from "graphql/queries";
+import { listUserProfiles } from "graphql/queries";
 
 const trainerList = (trainers) => {
   if (!trainers) {
@@ -26,7 +26,7 @@ export default function Home() {
 
   async function trainerQuery() {
     const trainerList = await API.graphql(
-      graphqlOperation(getUserProfile, { id: "sample" }) //Need to select correct query
+      graphqlOperation(listUserProfiles, { limit: 20, filter: "Trainer" })
     );
     if (trainerList.data.getUserProfile != null) {
       return trainerList.data.getUserProfile;
