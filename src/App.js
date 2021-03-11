@@ -1,11 +1,6 @@
 import React from "react";
 import "./App.css";
 import Amplify from "aws-amplify";
-/*import {
-  AmplifyAuthenticator,
-  AmplifySignUp,
-  AmplifySignIn,
-} from "@aws-amplify/ui-react";*/
 import { AuthState, onAuthUIStateChange } from "@aws-amplify/ui-components";
 import awsconfig from "./aws-exports";
 import { BrowserRouter as Router, Redirect } from "react-router-dom";
@@ -29,6 +24,7 @@ const App = () => {
     });
   }, []);
 
+  //To-Do: Need to fix functionality with going back in browser.
   return authState === AuthState.SignedIn && user ? (
     <Router>
       <Admin user={user} />
@@ -37,7 +33,7 @@ const App = () => {
   ) : (
     <Router>
       <Home />
-      <Redirect from="/" to="/home/landingpage" />
+      <Redirect from="/" to="/home/" />
     </Router>
   );
 };

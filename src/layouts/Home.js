@@ -24,7 +24,7 @@ const switchRoutes = () => {
             <Route
               exact={prop.exact}
               path={prop.layout + prop.path}
-              render={() => <prop.component />}
+              render={(props) => <prop.component props={props} />}
               key={key}
             />
           );
