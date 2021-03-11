@@ -1,20 +1,3 @@
-/*!
-
-=========================================================
-* Material Dashboard React - v1.9.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2020 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/material-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 // @material-ui/icons
 import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
@@ -26,7 +9,12 @@ import TableList from "views/TableList/TableList.js";
 
 import NotificationsPage from "views/Notifications/Notifications.js";
 
-const dashboardRoutes = [
+//core components/views for Home layout
+import LandingPage from "views/LandingPage/LandingPage.js";
+import Login from "views/Login/Login.js";
+import Home from "views/Home/Home.js";
+
+const routes = [
   {
     path: "/dashboard",
     name: "Dashboard",
@@ -59,6 +47,33 @@ const dashboardRoutes = [
     component: NotificationsPage,
     layout: "/admin",
   },
+  {
+    path: "/",
+    name: "Home",
+    rtlName: "Home",
+    icon: Person,
+    component: Home,
+    layout: "/home",
+    exact: true,
+  },
+  {
+    path: "/landingpage/:id",
+    name: "Landing Page",
+    rtlName: "Landing Page",
+    icon: Person,
+    component: LandingPage,
+    layout: "/home",
+    exact: true,
+  },
+  {
+    path: "/login",
+    name: "Login",
+    rtlName: "Login",
+    icon: Person,
+    component: Login,
+    layout: "/home",
+    exact: false,
+  },
 ];
 
-export default dashboardRoutes;
+export default routes;
