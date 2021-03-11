@@ -40,3 +40,7 @@ amplify-build-config.json
 amplify-gradle-config.json
 amplifytools.xcconfig
 .secret-*
+
+# @Fanghao Should we ignore this too?
+amplify-backup/
+amplify/backend/auth/mikereact/mikereact-cloudformation-template.yml
