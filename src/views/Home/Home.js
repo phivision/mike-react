@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { API, graphqlOperation } from "aws-amplify";
+import { API } from "aws-amplify";
 import { listUserProfiles } from "graphql/queries";
 
 const trainerList = (trainers) => {
@@ -12,7 +12,7 @@ const trainerList = (trainers) => {
     <div>
       {trainers.map((query, key) => {
         return (
-          <Link key={key} to={{ pathname: "/landingpage/" + query.id }}>
+          <Link key={key} to={{ pathname: "/home/landingpage/" + query.id }}>
             {"Trainer: " + query.FirstName + " " + query.LastName}
           </Link>
         );
@@ -22,29 +22,27 @@ const trainerList = (trainers) => {
 };
 
 export default function Home() {
-  const [trainers, setTrainers] = React.useState();
+  const [trainers, setTrainers] = React.useState([]);
 
   async function trainerQuery() {
-    const trainerList = await API.graphql(
-      graphqlOperation(listUserProfiles, { limit: 20, filter: "Trainer" })
-    );
-    if (trainerList.data.getUserProfile != null) {
-      return trainerList.data.getUserProfile;
-    } else {
-      alert("cannot find user profile!");
+    const trainerList = await API.graphql({
+      query: listUserProfiles,
+      variables: { limit: 10, filter: { UserRole: { contains: "trainer" } } },
+      authMode: "AWS_IAM",
+    });
+    if (trainerList.data.listUserProfiles.items != null) {
+      return trainerList.data.listUserProfiles.items;
     }
   }
 
   useEffect(() => {
     trainerQuery().then((r) => setTrainers(r));
-    // TODO: need to do useEffect cleanup and fix uncaught (in promise) object
-  });
+  }, [trainers.length]);
 
   return (
     <div>
       <div>Welcome to Mike</div>
       <div>{trainerList(trainers)}</div>
-      <Link to="/home/landingpage/343">Trainer 1</Link>
     </div>
   );
 }

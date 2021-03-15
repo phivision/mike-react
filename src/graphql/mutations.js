@@ -24,6 +24,22 @@ export const createUserProfile = /* GraphQL */ `
       createdAt
       updatedAt
       owner
+      Contents {
+        items {
+          id
+          ContentName
+          Description
+          Length
+          IsDemo
+          ViewCount
+          Thumbnail
+          Preview
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
     }
   }
 `;
@@ -50,6 +66,22 @@ export const updateUserProfile = /* GraphQL */ `
       createdAt
       updatedAt
       owner
+      Contents {
+        items {
+          id
+          ContentName
+          Description
+          Length
+          IsDemo
+          ViewCount
+          Thumbnail
+          Preview
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
     }
   }
 `;
@@ -75,6 +107,148 @@ export const deleteUserProfile = /* GraphQL */ `
       Description
       createdAt
       updatedAt
+      owner
+      Contents {
+        items {
+          id
+          ContentName
+          Description
+          Length
+          IsDemo
+          ViewCount
+          Thumbnail
+          Preview
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+    }
+  }
+`;
+export const createUserContent = /* GraphQL */ `
+  mutation CreateUserContent(
+    $input: CreateUserContentInput!
+    $condition: ModelUserContentConditionInput
+  ) {
+    createUserContent(input: $input, condition: $condition) {
+      id
+      ContentName
+      Description
+      Length
+      IsDemo
+      ViewCount
+      Thumbnail
+      Preview
+      createdAt
+      updatedAt
+      Creator {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        Price
+        RegDate
+        StripeID
+        UserImage
+        LastName
+        FirstName
+        UserRole
+        Weight
+        Description
+        createdAt
+        updatedAt
+        owner
+        Contents {
+          nextToken
+        }
+      }
+      owner
+    }
+  }
+`;
+export const updateUserContent = /* GraphQL */ `
+  mutation UpdateUserContent(
+    $input: UpdateUserContentInput!
+    $condition: ModelUserContentConditionInput
+  ) {
+    updateUserContent(input: $input, condition: $condition) {
+      id
+      ContentName
+      Description
+      Length
+      IsDemo
+      ViewCount
+      Thumbnail
+      Preview
+      createdAt
+      updatedAt
+      Creator {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        Price
+        RegDate
+        StripeID
+        UserImage
+        LastName
+        FirstName
+        UserRole
+        Weight
+        Description
+        createdAt
+        updatedAt
+        owner
+        Contents {
+          nextToken
+        }
+      }
+      owner
+    }
+  }
+`;
+export const deleteUserContent = /* GraphQL */ `
+  mutation DeleteUserContent(
+    $input: DeleteUserContentInput!
+    $condition: ModelUserContentConditionInput
+  ) {
+    deleteUserContent(input: $input, condition: $condition) {
+      id
+      ContentName
+      Description
+      Length
+      IsDemo
+      ViewCount
+      Thumbnail
+      Preview
+      createdAt
+      updatedAt
+      Creator {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        Price
+        RegDate
+        StripeID
+        UserImage
+        LastName
+        FirstName
+        UserRole
+        Weight
+        Description
+        createdAt
+        updatedAt
+        owner
+        Contents {
+          nextToken
+        }
+      }
       owner
     }
   }

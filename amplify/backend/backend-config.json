@@ -19,7 +19,9 @@
               "userPoolId": "authmikereact"
             }
           },
-          "additionalAuthenticationProviders": []
+          "additionalAuthenticationProviders": [{
+            "authenticationType": "AWS_IAM"
+          }]
         }
       }
     }
