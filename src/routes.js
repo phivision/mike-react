@@ -13,6 +13,7 @@ import NotificationsPage from "views/Notifications/Notifications.js";
 import LandingPage from "views/LandingPage/LandingPage.js";
 import Login from "views/Login/Login.js";
 import Home from "views/Home/Home.js";
+import Search from "views/Search/Search.js";
 
 const routes = [
   {
@@ -50,9 +51,15 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    rtlName: "Home",
     icon: Person,
     component: Home,
+    layout: "/home",
+    exact: true,
+  },
+  {
+    path: "/search/:query",
+    name: "Search Results",
+    component: Search,
     layout: "/home",
     exact: true,
   },

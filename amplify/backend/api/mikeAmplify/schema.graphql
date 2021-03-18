@@ -1,4 +1,4 @@
-﻿type UserProfile @model
+﻿type UserProfile @model @searchable
 @auth(rules: [{ allow: owner, operations: [create, delete, update] },
   { allow: private, operations: [read]},
   { allow: public, provider: iam, operations: [read]}])

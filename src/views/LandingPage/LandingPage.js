@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { API } from "aws-amplify";
 import { getUserProfile } from "graphql/queries";
 import PropTypes from "prop-types";
+import { Card } from "@material-ui/core";
 
 export default function LandingPage({ ...props }) {
   const [profile, setProfile] = React.useState();
@@ -29,6 +30,7 @@ export default function LandingPage({ ...props }) {
       <h4>{profile.FirstName + " " + profile.LastName}</h4>
       <p>{profile.Bio}</p>
       <p>{profile.Price}</p>
+      <Card></Card>
     </div>
   );
 }
