@@ -1,6 +1,9 @@
-﻿type UserProfile @model
-@auth(rules: [{ allow: owner, operations: [create, delete, update] }])
+﻿type UserProfile @model @searchable
+@auth(rules: [{ allow: owner, operations: [create, delete, update] },
+  { allow: private, operations: [read]},
+  { allow: public, provider: iam, operations: [read]}])
 {
+  id: ID!
   Birthday: AWSDate
   Email: AWSEmail
   Gender: String
@@ -14,4 +17,21 @@
   UserRole: String!
   Weight: Float
   Description: String
+  Contents: [UserContent] @connection(name: "UserCreatedContents")
+}
+
+type UserContent @model
+@auth(rules: [{ allow: owner, operations: [create, delete, update] },
+  { allow: private, operations: [read]},
+  { allow: public, provider: iam, operations: [read]}])
+{
+  id: ID!
+  ContentName: String!
+  Description: String
+  Length: Float
+  IsDemo: Boolean
+  ViewCount: Int
+  Thumbnail: String
+  Preview: String
+  Creator: UserProfile @connection(name: "UserCreatedContents")
 }

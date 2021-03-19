@@ -1,54 +1,38 @@
 import React, { useEffect } from "react";
-import { API, graphqlOperation } from "aws-amplify";
+import { API } from "aws-amplify";
 import { getUserProfile } from "graphql/queries";
 import PropTypes from "prop-types";
-
-const initialProfileState = {
-  id: "",
-  LastName: "Smith",
-  FirstName: "John",
-  UserImage: null,
-  RegDate: "",
-  UserRole: "",
-  Birthday: null,
-  Email: null,
-  Gender: null,
-  Height: null,
-  Weight: null,
-  Price: "$9.00",
-  StripID: null,
-  Bio:
-    "I can feel the changes. I can feel the people around me just want to be famous.",
-};
+import { Card } from "@material-ui/core";
 
 export default function LandingPage({ ...props }) {
-  const [profile, setProfile] = React.useState(initialProfileState);
+  const [profile, setProfile] = React.useState();
 
   async function userQuery() {
-    const userProfile = await API.graphql(
-      graphqlOperation(getUserProfile, { id: props.props.match.params.id })
-    );
+    const userProfile = await API.graphql({
+      query: getUserProfile,
+      variables: { id: props.props.match.params.id },
+      authMode: "AWS_IAM",
+    });
+    console.log(userProfile.data);
     if (userProfile.data.getUserProfile != null) {
       return userProfile.data.getUserProfile;
-    } else {
-      alert("cannot find user profile!");
     }
   }
 
   useEffect(() => {
     userQuery().then((r) => setProfile(r));
-    // TODO: need to do useEffect cleanup and fix uncaught (in promise) object
-  });
+  }, [props.props.match.params.id]);
 
-  return (
+  return !profile ? (
+    "Loading..."
+  ) : (
     <div>
       <h4>{profile.FirstName + " " + profile.LastName}</h4>
       <p>{profile.Bio}</p>
       <p>{profile.Price}</p>
+      <Card></Card>
     </div>
   );
-
-  //TO-DO: Need to add subscription plan queries + handling.
 }
 
 LandingPage.propTypes = {

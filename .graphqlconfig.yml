@@ -14,7 +14,7 @@ projects:
         apiId: h7kloan2ibhinjlmyun7za4qwu
         maxDepth: 2
   mikeAmplify:
-    schemaPath: src/graphql/schema.json
+    schemaPath: amplify/backend/api/mikeAmplify/build/schema.graphql
     includes:
       - src/graphql/**/*.js
     excludes:
