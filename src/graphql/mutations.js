@@ -27,6 +27,7 @@ export const createUserProfile = /* GraphQL */ `
       Contents {
         items {
           id
+          CreatorID
           ContentName
           Description
           Length
@@ -34,6 +35,19 @@ export const createUserProfile = /* GraphQL */ `
           ViewCount
           Thumbnail
           Preview
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      Subscriptions {
+        items {
+          id
+          SubscriberID
+          ExpireDate
+          ProductID
+          TrainerID
           createdAt
           updatedAt
           owner
@@ -69,6 +83,7 @@ export const updateUserProfile = /* GraphQL */ `
       Contents {
         items {
           id
+          CreatorID
           ContentName
           Description
           Length
@@ -76,6 +91,19 @@ export const updateUserProfile = /* GraphQL */ `
           ViewCount
           Thumbnail
           Preview
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      Subscriptions {
+        items {
+          id
+          SubscriberID
+          ExpireDate
+          ProductID
+          TrainerID
           createdAt
           updatedAt
           owner
@@ -111,6 +139,7 @@ export const deleteUserProfile = /* GraphQL */ `
       Contents {
         items {
           id
+          CreatorID
           ContentName
           Description
           Length
@@ -118,6 +147,19 @@ export const deleteUserProfile = /* GraphQL */ `
           ViewCount
           Thumbnail
           Preview
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      Subscriptions {
+        items {
+          id
+          SubscriberID
+          ExpireDate
+          ProductID
+          TrainerID
           createdAt
           updatedAt
           owner
@@ -134,6 +176,7 @@ export const createUserContent = /* GraphQL */ `
   ) {
     createUserContent(input: $input, condition: $condition) {
       id
+      CreatorID
       ContentName
       Description
       Length
@@ -162,6 +205,9 @@ export const createUserContent = /* GraphQL */ `
         updatedAt
         owner
         Contents {
+          nextToken
+        }
+        Subscriptions {
           nextToken
         }
       }
@@ -176,6 +222,7 @@ export const updateUserContent = /* GraphQL */ `
   ) {
     updateUserContent(input: $input, condition: $condition) {
       id
+      CreatorID
       ContentName
       Description
       Length
@@ -204,6 +251,9 @@ export const updateUserContent = /* GraphQL */ `
         updatedAt
         owner
         Contents {
+          nextToken
+        }
+        Subscriptions {
           nextToken
         }
       }
@@ -218,6 +268,7 @@ export const deleteUserContent = /* GraphQL */ `
   ) {
     deleteUserContent(input: $input, condition: $condition) {
       id
+      CreatorID
       ContentName
       Description
       Length
@@ -248,7 +299,61 @@ export const deleteUserContent = /* GraphQL */ `
         Contents {
           nextToken
         }
+        Subscriptions {
+          nextToken
+        }
       }
+      owner
+    }
+  }
+`;
+export const createUserSubscription = /* GraphQL */ `
+  mutation CreateUserSubscription(
+    $input: CreateUserSubscriptionInput!
+    $condition: ModelUserSubscriptionConditionInput
+  ) {
+    createUserSubscription(input: $input, condition: $condition) {
+      id
+      SubscriberID
+      ExpireDate
+      ProductID
+      TrainerID
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateUserSubscription = /* GraphQL */ `
+  mutation UpdateUserSubscription(
+    $input: UpdateUserSubscriptionInput!
+    $condition: ModelUserSubscriptionConditionInput
+  ) {
+    updateUserSubscription(input: $input, condition: $condition) {
+      id
+      SubscriberID
+      ExpireDate
+      ProductID
+      TrainerID
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteUserSubscription = /* GraphQL */ `
+  mutation DeleteUserSubscription(
+    $input: DeleteUserSubscriptionInput!
+    $condition: ModelUserSubscriptionConditionInput
+  ) {
+    deleteUserSubscription(input: $input, condition: $condition) {
+      id
+      SubscriberID
+      ExpireDate
+      ProductID
+      TrainerID
+      createdAt
+      updatedAt
       owner
     }
   }

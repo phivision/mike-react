@@ -29,6 +29,9 @@ export const listUserProfiles = /* GraphQL */ `
         Contents {
           nextToken
         }
+        Subscriptions {
+          nextToken
+        }
       }
       nextToken
     }
@@ -57,6 +60,7 @@ export const getUserProfile = /* GraphQL */ `
       Contents {
         items {
           id
+          CreatorID
           ContentName
           Description
           Length
@@ -64,6 +68,19 @@ export const getUserProfile = /* GraphQL */ `
           ViewCount
           Thumbnail
           Preview
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      Subscriptions {
+        items {
+          id
+          SubscriberID
+          ExpireDate
+          ProductID
+          TrainerID
           createdAt
           updatedAt
           owner
@@ -109,6 +126,9 @@ export const searchUserProfiles = /* GraphQL */ `
         Contents {
           nextToken
         }
+        Subscriptions {
+          nextToken
+        }
       }
       nextToken
       total
@@ -119,6 +139,7 @@ export const getUserContent = /* GraphQL */ `
   query GetUserContent($id: ID!) {
     getUserContent(id: $id) {
       id
+      CreatorID
       ContentName
       Description
       Length
@@ -149,6 +170,9 @@ export const getUserContent = /* GraphQL */ `
         Contents {
           nextToken
         }
+        Subscriptions {
+          nextToken
+        }
       }
       owner
     }
@@ -163,6 +187,7 @@ export const listUserContents = /* GraphQL */ `
     listUserContents(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        CreatorID
         ContentName
         Description
         Length
@@ -191,6 +216,45 @@ export const listUserContents = /* GraphQL */ `
           updatedAt
           owner
         }
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getUserSubscription = /* GraphQL */ `
+  query GetUserSubscription($id: ID!) {
+    getUserSubscription(id: $id) {
+      id
+      SubscriberID
+      ExpireDate
+      ProductID
+      TrainerID
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listUserSubscriptions = /* GraphQL */ `
+  query ListUserSubscriptions(
+    $filter: ModelUserSubscriptionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUserSubscriptions(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        SubscriberID
+        ExpireDate
+        ProductID
+        TrainerID
+        createdAt
+        updatedAt
         owner
       }
       nextToken

@@ -24,6 +24,7 @@ export const onCreateUserProfile = /* GraphQL */ `
       Contents {
         items {
           id
+          CreatorID
           ContentName
           Description
           Length
@@ -31,6 +32,19 @@ export const onCreateUserProfile = /* GraphQL */ `
           ViewCount
           Thumbnail
           Preview
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      Subscriptions {
+        items {
+          id
+          SubscriberID
+          ExpireDate
+          ProductID
+          TrainerID
           createdAt
           updatedAt
           owner
@@ -63,6 +77,7 @@ export const onUpdateUserProfile = /* GraphQL */ `
       Contents {
         items {
           id
+          CreatorID
           ContentName
           Description
           Length
@@ -70,6 +85,19 @@ export const onUpdateUserProfile = /* GraphQL */ `
           ViewCount
           Thumbnail
           Preview
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      Subscriptions {
+        items {
+          id
+          SubscriberID
+          ExpireDate
+          ProductID
+          TrainerID
           createdAt
           updatedAt
           owner
@@ -102,6 +130,7 @@ export const onDeleteUserProfile = /* GraphQL */ `
       Contents {
         items {
           id
+          CreatorID
           ContentName
           Description
           Length
@@ -115,6 +144,19 @@ export const onDeleteUserProfile = /* GraphQL */ `
         }
         nextToken
       }
+      Subscriptions {
+        items {
+          id
+          SubscriberID
+          ExpireDate
+          ProductID
+          TrainerID
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
     }
   }
 `;
@@ -122,6 +164,7 @@ export const onCreateUserContent = /* GraphQL */ `
   subscription OnCreateUserContent {
     onCreateUserContent {
       id
+      CreatorID
       ContentName
       Description
       Length
@@ -150,6 +193,9 @@ export const onCreateUserContent = /* GraphQL */ `
         updatedAt
         owner
         Contents {
+          nextToken
+        }
+        Subscriptions {
           nextToken
         }
       }
@@ -161,6 +207,7 @@ export const onUpdateUserContent = /* GraphQL */ `
   subscription OnUpdateUserContent {
     onUpdateUserContent {
       id
+      CreatorID
       ContentName
       Description
       Length
@@ -189,6 +236,9 @@ export const onUpdateUserContent = /* GraphQL */ `
         updatedAt
         owner
         Contents {
+          nextToken
+        }
+        Subscriptions {
           nextToken
         }
       }
@@ -200,6 +250,7 @@ export const onDeleteUserContent = /* GraphQL */ `
   subscription OnDeleteUserContent {
     onDeleteUserContent {
       id
+      CreatorID
       ContentName
       Description
       Length
@@ -230,7 +281,52 @@ export const onDeleteUserContent = /* GraphQL */ `
         Contents {
           nextToken
         }
+        Subscriptions {
+          nextToken
+        }
       }
+      owner
+    }
+  }
+`;
+export const onCreateUserSubscription = /* GraphQL */ `
+  subscription OnCreateUserSubscription {
+    onCreateUserSubscription {
+      id
+      SubscriberID
+      ExpireDate
+      ProductID
+      TrainerID
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateUserSubscription = /* GraphQL */ `
+  subscription OnUpdateUserSubscription {
+    onUpdateUserSubscription {
+      id
+      SubscriberID
+      ExpireDate
+      ProductID
+      TrainerID
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteUserSubscription = /* GraphQL */ `
+  subscription OnDeleteUserSubscription {
+    onDeleteUserSubscription {
+      id
+      SubscriberID
+      ExpireDate
+      ProductID
+      TrainerID
+      createdAt
+      updatedAt
       owner
     }
   }

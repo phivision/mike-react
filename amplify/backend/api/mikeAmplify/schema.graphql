@@ -26,10 +26,6 @@
   A list of subscriptions which is being paid or has been paid by the user
   """
   Subscriptions: [UserProfile] @connection(keyName: "bySubscription", fields: ["ProductID"])
-  """
-  The product ID used in the Stripe API
-  """
-  ProductID: String
 }
 
 type UserContent @model
