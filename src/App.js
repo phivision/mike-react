@@ -20,8 +20,9 @@ const App = () => {
 
   React.useEffect(() => {
     Hub.listen("auth", (data) => {
+      console.log(data);
       if (data.payload.event === "signIn") {
-        setUser(data.payload.data.user);
+        setUser(data.payload.data);
         setAuthState(true);
       }
       if (data.payload.event === "signOut") {
@@ -29,7 +30,6 @@ const App = () => {
         setUser(null);
       }
       if (data.payload.event === "signUp") {
-        console.log(data);
         setUser(data.payload.data.user);
         setAuthState(true);
       }
