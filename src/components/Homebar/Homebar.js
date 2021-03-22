@@ -26,7 +26,7 @@ export default function Header() {
           onChange={(q) => setQuery(q)}
           onRequestSearch={() => history.push("/home/search/" + query)}
         />
-        <Link to="/home/login">Log In</Link>
+        <Link to="/home/signin">Log In</Link>
       </Toolbar>
     </AppBar>
   );

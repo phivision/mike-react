@@ -79,6 +79,7 @@ export default function Admin({ ...rest }) {
       window.removeEventListener("resize", resizeFunction);
     };
   }, [mainPanel]);
+  console.log(rest);
   return (
     // {...rest} is removed
     <div className={classes.wrapper}>

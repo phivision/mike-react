@@ -1,8 +1,9 @@
 import React from "react";
 import "./App.css";
 import Amplify from "aws-amplify";
-import { AuthState, onAuthUIStateChange } from "@aws-amplify/ui-components";
 import awsconfig from "./aws-exports";
+import { Hub } from "aws-amplify";
+
 import { BrowserRouter as Router, Redirect } from "react-router-dom";
 // core components
 import Admin from "layouts/Admin.js";
@@ -18,14 +19,25 @@ const App = () => {
   const [user, setUser] = React.useState();
 
   React.useEffect(() => {
-    return onAuthUIStateChange((nextAuthState, authData) => {
-      setAuthState(nextAuthState);
-      setUser(authData);
+    Hub.listen("auth", (data) => {
+      if (data.payload.event === "signIn") {
+        setUser(data.payload.data.user);
+        setAuthState(true);
+      }
+      if (data.payload.event === "signOut") {
+        setAuthState(false);
+        setUser(null);
+      }
+      if (data.payload.event === "signUp") {
+        console.log(data);
+        setUser(data.payload.data.user);
+        setAuthState(true);
+      }
     });
   }, []);
 
   //To-Do: Need to fix functionality with going back in browser.
-  return authState === AuthState.SignedIn && user ? (
+  return authState ? (
     <Router>
       <Admin user={user} />
       <Redirect from="/" to="/admin/dashboard" />
