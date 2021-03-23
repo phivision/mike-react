@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { API } from "aws-amplify";
 import { listUserProfiles } from "graphql/queries";
 
+//TODO: Need to add home page
 const trainerList = (trainers) => {
   if (!trainers) {
     return;
