@@ -16,6 +16,7 @@ import Search from "views/Search/Search.js";
 import SignIn from "views/Auth/SignIn.js";
 import SignUp from "views/Auth/SignUp.js";
 import Verify from "views/Auth/Verify.js";
+import TrainerSignUp from "views/Auth/TrainerSignUp.js";
 
 const routes = [
   {
@@ -94,6 +95,13 @@ const routes = [
     component: Verify,
     layout: "/home",
     exact: true,
+  },
+  {
+    path: "/trainersignup",
+    name: "Trainer Sign Up",
+    component: TrainerSignUp,
+    layout: "/home",
+    exact: false,
   },
 ];
 
