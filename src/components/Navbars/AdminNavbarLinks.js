@@ -21,7 +21,7 @@ import { Auth } from "aws-amplify";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 
-import { useHistory } from "react-router-dom";
+import { useHistory, withRouter } from "react-router-dom";
 
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 
@@ -40,6 +40,7 @@ const AdminNavbarLinks = () => {
       setOpenNotification(event.currentTarget);
     }
   };
+
   const handleCloseNotification = () => {
     setOpenNotification(null);
   };
@@ -55,7 +56,8 @@ const AdminNavbarLinks = () => {
   };
   async function handleAmplifySignOut() {
     try {
-      await Auth.signOut().then(() => history.push("/home"));
+      history.push("/home/signin");
+      await Auth.signOut();
     } catch (error) {
       console.log("error signing out: ", error);
     }
@@ -237,4 +239,4 @@ const AdminNavbarLinks = () => {
   );
 };
 
-export default AdminNavbarLinks;
+export default withRouter(AdminNavbarLinks);
