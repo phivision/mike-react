@@ -31,16 +31,23 @@ const useStyles = makeStyles((theme) => ({
 
 //TODO: Modularize the sign-in/sign-up system into components
 //TODO: Setup forgot password page
-//TODO: Only signs in on second submit???????????
 export default function SignIn({ ...rest }) {
   const classes = useStyles();
   const history = useHistory();
 
-  const [state, setState] = React.useState({
-    email: "",
-    password: "",
-    remember: false,
-  });
+  const [state, setState] = React.useState(
+    localStorage.getItem("remember")
+      ? {
+          email: localStorage.getItem("username"),
+          password: localStorage.getItem("password"),
+          remember: true,
+        }
+      : {
+          email: "",
+          password: "",
+          remember: false,
+        }
+  );
 
   const handleChange = (e) => {
     const value =
@@ -57,11 +64,20 @@ export default function SignIn({ ...rest }) {
       await Auth.signIn({
         username: state.email,
         password: state.password,
-      }).then(
-        rest.props.location.state.next
-          ? history.push(rest.props.location.state.next)
-          : history.push("/admin/dashboard/")
-      );
+      }).then(() => {
+        if (state.remember) {
+          localStorage.setItem("username", state.email);
+          localStorage.setItem("password", state.password);
+        }
+        localStorage.setItem("remember", state.remember);
+        if (rest.props.location.state !== undefined) {
+          if (rest.props.location.state.next !== undefined) {
+            history.push(rest.props.location.state.next);
+          }
+        } else {
+          history.push("/admin/dashboard/");
+        }
+      });
     } catch (error) {
       console.log("error signing up:", error);
     }
@@ -89,6 +105,7 @@ export default function SignIn({ ...rest }) {
             name="email"
             autoComplete="email"
             autoFocus
+            value={state.email}
             onChange={(e) => handleChange(e)}
           />
           <TextField
@@ -101,6 +118,7 @@ export default function SignIn({ ...rest }) {
             type="password"
             id="password"
             autoComplete="current-password"
+            value={state.password}
             onChange={(e) => handleChange(e)}
           />
           <FormControlLabel
@@ -109,6 +127,7 @@ export default function SignIn({ ...rest }) {
                 value="remember"
                 name="remember"
                 color="primary"
+                defaultChecked={state.remember}
                 onChange={(e) => handleChange(e)}
               />
             }

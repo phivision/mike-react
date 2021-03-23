@@ -21,11 +21,15 @@ import { Auth } from "aws-amplify";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 
+import { useHistory } from "react-router-dom";
+
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 
 const useStyles = makeStyles(styles);
 
-export default function AdminNavbarLinks() {
+//TODO: Sign out functionality still broken
+const AdminNavbarLinks = () => {
+  const history = useHistory();
   const classes = useStyles();
   const [openNotification, setOpenNotification] = React.useState(null);
   const [openProfile, setOpenProfile] = React.useState(null);
@@ -51,7 +55,7 @@ export default function AdminNavbarLinks() {
   };
   async function handleAmplifySignOut() {
     try {
-      await Auth.signOut();
+      await Auth.signOut().then(() => history.push("/home"));
     } catch (error) {
       console.log("error signing out: ", error);
     }
@@ -231,4 +235,6 @@ export default function AdminNavbarLinks() {
       </div>
     </div>
   );
-}
+};
+
+export default AdminNavbarLinks;

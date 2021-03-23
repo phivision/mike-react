@@ -4,7 +4,7 @@ import Amplify from "aws-amplify";
 import awsconfig from "./aws-exports";
 import { Hub } from "aws-amplify";
 
-import { BrowserRouter, Switch } from "react-router-dom";
+import { BrowserRouter, Switch, Redirect } from "react-router-dom";
 // core components
 import Admin from "layouts/Admin.js";
 import Home from "layouts/Home.js";
@@ -38,13 +38,14 @@ const App = () => {
   return (
     <BrowserRouter>
       <Switch>
+        <PublicRoute path="/home" component={Home} />
         <PrivateRoute
-          path="/admin/"
+          path="/admin"
           user={user}
           auth={authState}
           component={Admin}
         />
-        <PublicRoute path="/" component={Home} />
+        <Redirect to="/home" />
       </Switch>
     </BrowserRouter>
   );

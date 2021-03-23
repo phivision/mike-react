@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+import { Route, useRouteMatch, Switch } from "react-router-dom";
 // creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
@@ -20,28 +20,9 @@ import PropTypes from "prop-types";
 
 let ps;
 
-const switchRoutes = (user) => {
-  return (
-    <Switch>
-      {routes.map((prop, key) => {
-        if (prop.layout === "/admin") {
-          return (
-            <Route
-              path={prop.layout + prop.path}
-              render={() => <prop.component user={user} />}
-              key={key}
-            />
-          );
-        }
-        return null;
-      })}
-    </Switch>
-  );
-};
-
 const useStyles = makeStyles(styles);
 
-export default function Admin({ user, ...rest }) {
+const Admin = ({ user, ...rest }) => {
   // styles
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
@@ -50,12 +31,33 @@ export default function Admin({ user, ...rest }) {
   const image = bgImage;
   const color = "blue";
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const { path, url } = useRouteMatch();
+  console.log(path);
+
+  const switchRoutes = (user) => {
+    return (
+      <Switch>
+        {routes.map((prop, key) => {
+          if (prop.layout === "/admin") {
+            return (
+              <Route
+                path={url + prop.path}
+                render={() => <prop.component user={user} />}
+                key={key}
+                exact
+              />
+            );
+          }
+          return null;
+        })}
+      </Switch>
+    );
+  };
+
+  console.log(rest);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
-  };
-  const getRoute = () => {
-    return window.location.pathname !== "/admin/maps";
   };
   const resizeFunction = () => {
     if (window.innerWidth >= 960) {
@@ -80,7 +82,6 @@ export default function Admin({ user, ...rest }) {
       window.removeEventListener("resize", resizeFunction);
     };
   }, [mainPanel]);
-  console.log(rest);
   return (
     // {...rest} is removed
     <div className={classes.wrapper}>
@@ -99,23 +100,17 @@ export default function Admin({ user, ...rest }) {
           handleDrawerToggle={handleDrawerToggle}
           userName={user.username}
         />
-        {/* On the /maps route we want the map to be on full screen - this is not possible if the content and container
-         classes are present because they have some paddings which would make the map smaller */}
-        {getRoute() ? (
-          <div className={classes.content}>
-            <div className={classes.container}>
-              {switchRoutes(user.username)}
-            </div>
-          </div>
-        ) : (
-          <div className={classes.map}>{switchRoutes(user.username)}</div>
-        )}
-        {getRoute() ? <Footer /> : null}
+        <div className={classes.content}>
+          <div className={classes.container}>{switchRoutes(user.username)}</div>
+        </div>
+        <Footer />
       </div>
     </div>
   );
-}
+};
 
 Admin.propTypes = {
   user: PropTypes.shape({ username: PropTypes.string.isRequired }),
 };
+
+export default Admin;

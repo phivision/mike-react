@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, useRouteMatch } from "react-router-dom";
 // creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
@@ -15,33 +15,35 @@ import styles from "../assets/jss/material-dashboard-react/layouts/homeStyle.js"
 
 let ps;
 
-const switchRoutes = () => {
-  return (
-    <Switch>
-      {routes.map((prop, key) => {
-        if (prop.layout === "/home") {
-          return (
-            <Route
-              exact={prop.exact}
-              path={prop.layout + prop.path}
-              render={(props) => <prop.component props={props} />}
-              key={key}
-            />
-          );
-        }
-        return null;
-      })}
-    </Switch>
-  );
-};
-
 const useStyles = makeStyles(styles);
 
-export default function Home() {
+const Home = () => {
   // styles
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
   const mainPanel = React.createRef();
+  const { path, url } = useRouteMatch();
+  console.log(path);
+
+  const switchRoutes = () => {
+    return (
+      <Switch>
+        {routes.map((prop, key) => {
+          if (prop.layout === "/home") {
+            return (
+              <Route
+                exact={prop.exact}
+                path={url + prop.path}
+                render={(props) => <prop.component props={props} />}
+                key={key}
+              />
+            );
+          }
+          return null;
+        })}
+      </Switch>
+    );
+  };
 
   // initialize and destroy the PerfectScrollbar plugin
   React.useEffect(() => {
@@ -71,4 +73,6 @@ export default function Home() {
       </div>
     </div>
   );
-}
+};
+
+export default Home;

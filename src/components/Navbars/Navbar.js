@@ -18,7 +18,7 @@ import styles from "assets/jss/material-dashboard-react/components/headerStyle.j
 
 const useStyles = makeStyles(styles);
 
-export default function Header(props) {
+const Header = (props) => {
   const classes = useStyles();
   function makeBrand() {
     let name;
@@ -58,7 +58,7 @@ export default function Header(props) {
       </Toolbar>
     </AppBar>
   );
-}
+};
 
 Header.propTypes = {
   color: PropTypes.oneOf(["primary", "info", "success", "warning", "danger"]),
@@ -67,3 +67,5 @@ Header.propTypes = {
   userName: PropTypes.string,
   routes: PropTypes.arrayOf(PropTypes.object),
 };
+
+export default Header;
