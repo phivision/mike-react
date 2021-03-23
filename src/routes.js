@@ -16,6 +16,7 @@ import Home from "views/Home/Home.js";
 import Search from "views/Search/Search.js";
 import SignIn from "views/Auth/SignIn.js";
 import SignUp from "views/Auth/SignUp.js";
+import Verify from "views/Auth/Verify.js";
 
 const routes = [
   {
@@ -96,6 +97,13 @@ const routes = [
     component: SignUp,
     layout: "/home",
     exact: false,
+  },
+  {
+    path: "/verify/:username/:password/",
+    name: "Verify your email",
+    component: Verify,
+    layout: "/home",
+    exact: true,
   },
 ];
 

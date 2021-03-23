@@ -20,10 +20,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
   },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
   form: {
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
@@ -33,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+//TODO: Modularize the sign-in/sign-up system into components
 export default function SignIn() {
   const classes = useStyles();
 

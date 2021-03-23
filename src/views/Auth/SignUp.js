@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Auth } from "aws-amplify";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -15,10 +15,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -31,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
   const classes = useStyles();
+  const history = useHistory();
 
   const [state, setState] = React.useState({
     email: "",
@@ -49,8 +46,19 @@ export default function SignUp() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    const { email, password } = state;
+    console.log(email);
+    console.log(password);
     try {
-      await Auth.signUp(state.email, state.password);
+      const user = await Auth.signUp({
+        username: email,
+        password: password,
+        attributes: {
+          "custom:role": "student",
+        },
+      });
+      console.log(user);
+      history.push("/home/verify/" + state.email + "/" + state.password);
     } catch (error) {
       console.log("error signing up:", error);
     }
