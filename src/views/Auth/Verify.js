@@ -8,7 +8,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Auth } from "aws-amplify";
 import PropTypes from "prop-types";
-// import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {

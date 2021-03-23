@@ -9,6 +9,9 @@ import styles from "assets/jss/material-dashboard-react/components/headerStyle.j
 
 const useStyles = makeStyles(styles);
 
+//TODO: Fix formatting
+//TODO: Add trainer sign up functionality
+//TODO: (For Later) Add functionality to display profile when signed in
 export default function Header() {
   const classes = useStyles();
   let history = useHistory();

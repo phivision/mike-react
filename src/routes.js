@@ -11,7 +11,6 @@ import NotificationsPage from "views/Notifications/Notifications.js";
 
 //core components/views for Home layout
 import LandingPage from "views/LandingPage/LandingPage.js";
-import Login from "views/Login/Login.js";
 import Home from "views/Home/Home.js";
 import Search from "views/Search/Search.js";
 import SignIn from "views/Auth/SignIn.js";
@@ -74,15 +73,6 @@ const routes = [
     component: LandingPage,
     layout: "/home",
     exact: true,
-  },
-  {
-    path: "/login",
-    name: "Login",
-    rtlName: "Login",
-    icon: Person,
-    component: Login,
-    layout: "/home",
-    exact: false,
   },
   {
     path: "/signin",

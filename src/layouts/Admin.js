@@ -16,6 +16,7 @@ import styles from "../assets/jss/material-dashboard-react/layouts/adminStyle.js
 
 import bgImage from "../assets/img/sidebar-2.jpg";
 import logo from "../assets/img/reactlogo.png";
+import PropTypes from "prop-types";
 
 let ps;
 
@@ -40,7 +41,7 @@ const switchRoutes = (user) => {
 
 const useStyles = makeStyles(styles);
 
-export default function Admin({ ...rest }) {
+export default function Admin({ user, ...rest }) {
   // styles
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
@@ -96,21 +97,25 @@ export default function Admin({ ...rest }) {
         <Navbar
           routes={routes}
           handleDrawerToggle={handleDrawerToggle}
-          userName={rest.user.username}
+          userName={user.username}
         />
         {/* On the /maps route we want the map to be on full screen - this is not possible if the content and container
          classes are present because they have some paddings which would make the map smaller */}
         {getRoute() ? (
           <div className={classes.content}>
             <div className={classes.container}>
-              {switchRoutes(rest.user.username)}
+              {switchRoutes(user.username)}
             </div>
           </div>
         ) : (
-          <div className={classes.map}>{switchRoutes(rest.user.username)}</div>
+          <div className={classes.map}>{switchRoutes(user.username)}</div>
         )}
         {getRoute() ? <Footer /> : null}
       </div>
     </div>
   );
 }
+
+Admin.propTypes = {
+  user: PropTypes.shape({ username: PropTypes.string.isRequired }),
+};

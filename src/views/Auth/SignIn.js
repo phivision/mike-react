@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Auth } from "aws-amplify";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -30,8 +30,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 //TODO: Modularize the sign-in/sign-up system into components
+//TODO: Setup forgot password page
+//TODO: Only signs in on second submit???????????
 export default function SignIn() {
   const classes = useStyles();
+  const history = useHistory();
 
   const [state, setState] = React.useState({
     email: "",
@@ -51,7 +54,10 @@ export default function SignIn() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      await Auth.signIn(state.email, state.password);
+      await Auth.signIn({
+        username: state.email,
+        password: state.password,
+      }).then(history.push("/admin/dashboard/"));
     } catch (error) {
       console.log("error signing up:", error);
     }

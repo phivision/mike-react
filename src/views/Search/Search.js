@@ -4,6 +4,7 @@ import { API } from "aws-amplify";
 import { searchUserProfiles } from "graphql/queries";
 import PropTypes from "prop-types";
 
+//TODO: Need to add card functionality
 const trainerList = (trainers) => {
   if (!trainers) {
     return;

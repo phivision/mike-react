@@ -4,6 +4,9 @@ import { getUserProfile } from "graphql/queries";
 import PropTypes from "prop-types";
 import { Card } from "@material-ui/core";
 
+//TODO: Add payment functionality
+//TODO: Add cards for payment tiers
+//TODO: Add images + description, nicely formatted
 export default function LandingPage({ ...props }) {
   const [profile, setProfile] = React.useState();
 
