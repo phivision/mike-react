@@ -6,15 +6,14 @@ const PrivateRoute = ({ component: Component, auth, user, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={(props) =>
+      render={(p) =>
         auth ? (
-          <Component {...props} user={user} />
+          <Component {...p} user={user} />
         ) : (
           <Redirect
             to={{
               pathname: "/home/signin",
-              // TODO: Setup proper history/redirecting on login if user trying to directly go to a page.
-              // state: { from: props.location },
+              state: { next: p.location },
             }}
           />
         )

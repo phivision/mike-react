@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 //TODO: Modularize the sign-in/sign-up system into components
 //TODO: Setup forgot password page
 //TODO: Only signs in on second submit???????????
-export default function SignIn() {
+export default function SignIn({ ...rest }) {
   const classes = useStyles();
   const history = useHistory();
 
@@ -57,7 +57,11 @@ export default function SignIn() {
       await Auth.signIn({
         username: state.email,
         password: state.password,
-      }).then(history.push("/admin/dashboard/"));
+      }).then(
+        rest.props.location.state.next
+          ? history.push(rest.props.location.state.next)
+          : history.push("/admin/dashboard/")
+      );
     } catch (error) {
       console.log("error signing up:", error);
     }
