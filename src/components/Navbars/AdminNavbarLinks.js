@@ -21,7 +21,7 @@ import { Auth } from "aws-amplify";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 
-import { useHistory, withRouter } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 
@@ -239,4 +239,4 @@ const AdminNavbarLinks = () => {
   );
 };
 
-export default withRouter(AdminNavbarLinks);
+export default AdminNavbarLinks;
