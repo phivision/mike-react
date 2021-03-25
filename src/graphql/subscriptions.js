@@ -18,9 +18,33 @@ export const onCreateUserProfile = /* GraphQL */ `
       UserRole
       Weight
       Description
+      ProductID
       createdAt
       updatedAt
       owner
+      Subscriptions {
+        items {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          Price
+          RegDate
+          StripeID
+          UserImage
+          LastName
+          FirstName
+          UserRole
+          Weight
+          Description
+          ProductID
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       Contents {
         items {
           id
@@ -32,19 +56,6 @@ export const onCreateUserProfile = /* GraphQL */ `
           ViewCount
           Thumbnail
           Preview
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      Subscriptions {
-        items {
-          id
-          SubscriberID
-          ExpireDate
-          ProductID
-          TrainerID
           createdAt
           updatedAt
           owner
@@ -71,9 +82,33 @@ export const onUpdateUserProfile = /* GraphQL */ `
       UserRole
       Weight
       Description
+      ProductID
       createdAt
       updatedAt
       owner
+      Subscriptions {
+        items {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          Price
+          RegDate
+          StripeID
+          UserImage
+          LastName
+          FirstName
+          UserRole
+          Weight
+          Description
+          ProductID
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       Contents {
         items {
           id
@@ -85,19 +120,6 @@ export const onUpdateUserProfile = /* GraphQL */ `
           ViewCount
           Thumbnail
           Preview
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      Subscriptions {
-        items {
-          id
-          SubscriberID
-          ExpireDate
-          ProductID
-          TrainerID
           createdAt
           updatedAt
           owner
@@ -124,9 +146,33 @@ export const onDeleteUserProfile = /* GraphQL */ `
       UserRole
       Weight
       Description
+      ProductID
       createdAt
       updatedAt
       owner
+      Subscriptions {
+        items {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          Price
+          RegDate
+          StripeID
+          UserImage
+          LastName
+          FirstName
+          UserRole
+          Weight
+          Description
+          ProductID
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       Contents {
         items {
           id
@@ -138,19 +184,6 @@ export const onDeleteUserProfile = /* GraphQL */ `
           ViewCount
           Thumbnail
           Preview
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      Subscriptions {
-        items {
-          id
-          SubscriberID
-          ExpireDate
-          ProductID
-          TrainerID
           createdAt
           updatedAt
           owner
@@ -189,13 +222,14 @@ export const onCreateUserContent = /* GraphQL */ `
         UserRole
         Weight
         Description
+        ProductID
         createdAt
         updatedAt
         owner
-        Contents {
+        Subscriptions {
           nextToken
         }
-        Subscriptions {
+        Contents {
           nextToken
         }
       }
@@ -232,13 +266,14 @@ export const onUpdateUserContent = /* GraphQL */ `
         UserRole
         Weight
         Description
+        ProductID
         createdAt
         updatedAt
         owner
-        Contents {
+        Subscriptions {
           nextToken
         }
-        Subscriptions {
+        Contents {
           nextToken
         }
       }
@@ -275,58 +310,17 @@ export const onDeleteUserContent = /* GraphQL */ `
         UserRole
         Weight
         Description
+        ProductID
         createdAt
         updatedAt
         owner
-        Contents {
-          nextToken
-        }
         Subscriptions {
           nextToken
         }
+        Contents {
+          nextToken
+        }
       }
-      owner
-    }
-  }
-`;
-export const onCreateUserSubscription = /* GraphQL */ `
-  subscription OnCreateUserSubscription {
-    onCreateUserSubscription {
-      id
-      SubscriberID
-      ExpireDate
-      ProductID
-      TrainerID
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onUpdateUserSubscription = /* GraphQL */ `
-  subscription OnUpdateUserSubscription {
-    onUpdateUserSubscription {
-      id
-      SubscriberID
-      ExpireDate
-      ProductID
-      TrainerID
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onDeleteUserSubscription = /* GraphQL */ `
-  subscription OnDeleteUserSubscription {
-    onDeleteUserSubscription {
-      id
-      SubscriberID
-      ExpireDate
-      ProductID
-      TrainerID
-      createdAt
-      updatedAt
       owner
     }
   }

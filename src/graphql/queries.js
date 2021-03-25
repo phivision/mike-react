@@ -23,13 +23,14 @@ export const listUserProfiles = /* GraphQL */ `
         UserRole
         Weight
         Description
+        ProductID
         createdAt
         updatedAt
         owner
-        Contents {
+        Subscriptions {
           nextToken
         }
-        Subscriptions {
+        Contents {
           nextToken
         }
       }
@@ -54,9 +55,33 @@ export const getUserProfile = /* GraphQL */ `
       UserRole
       Weight
       Description
+      ProductID
       createdAt
       updatedAt
       owner
+      Subscriptions {
+        items {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          Price
+          RegDate
+          StripeID
+          UserImage
+          LastName
+          FirstName
+          UserRole
+          Weight
+          Description
+          ProductID
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       Contents {
         items {
           id
@@ -68,19 +93,6 @@ export const getUserProfile = /* GraphQL */ `
           ViewCount
           Thumbnail
           Preview
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      Subscriptions {
-        items {
-          id
-          SubscriberID
-          ExpireDate
-          ProductID
-          TrainerID
           createdAt
           updatedAt
           owner
@@ -120,13 +132,14 @@ export const searchUserProfiles = /* GraphQL */ `
         UserRole
         Weight
         Description
+        ProductID
         createdAt
         updatedAt
         owner
-        Contents {
+        Subscriptions {
           nextToken
         }
-        Subscriptions {
+        Contents {
           nextToken
         }
       }
@@ -164,13 +177,14 @@ export const getUserContent = /* GraphQL */ `
         UserRole
         Weight
         Description
+        ProductID
         createdAt
         updatedAt
         owner
-        Contents {
+        Subscriptions {
           nextToken
         }
-        Subscriptions {
+        Contents {
           nextToken
         }
       }
@@ -212,49 +226,11 @@ export const listUserContents = /* GraphQL */ `
           UserRole
           Weight
           Description
+          ProductID
           createdAt
           updatedAt
           owner
         }
-        owner
-      }
-      nextToken
-    }
-  }
-`;
-export const getUserSubscription = /* GraphQL */ `
-  query GetUserSubscription($id: ID!) {
-    getUserSubscription(id: $id) {
-      id
-      SubscriberID
-      ExpireDate
-      ProductID
-      TrainerID
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const listUserSubscriptions = /* GraphQL */ `
-  query ListUserSubscriptions(
-    $filter: ModelUserSubscriptionFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listUserSubscriptions(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        SubscriberID
-        ExpireDate
-        ProductID
-        TrainerID
-        createdAt
-        updatedAt
         owner
       }
       nextToken

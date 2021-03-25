@@ -19,17 +19,21 @@
               "userPoolId": "authmikereact"
             }
           },
-          "additionalAuthenticationProviders": [{
-            "authenticationType": "AWS_IAM"
-          }]
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AWS_IAM"
+            }
+          ]
         }
       }
     }
   },
   "storage": {
-    "userImage": {
+    "mike_react9aa15861": {
       "service": "S3",
-      "providerPlugin": "awscloudformation"
+      "serviceType": "imported",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": []
     }
   }
 }

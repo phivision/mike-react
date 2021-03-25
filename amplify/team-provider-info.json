@@ -14,6 +14,12 @@
     "categories": {
       "auth": {
         "mikereact": {}
+      },
+      "storage": {
+        "mike_react9aa15861": {
+          "bucketName": "mikevod-301286101195-us-east-1",
+          "region": "us-east-1"
+        }
       }
     }
   },

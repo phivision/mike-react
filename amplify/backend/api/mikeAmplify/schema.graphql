@@ -2,7 +2,7 @@
 @auth(rules: [{ allow: owner, operations: [create, delete, update] },
   { allow: private, operations: [read]},
   { allow: public, provider: iam, operations: [read]}])
-@key(name: "bySubscription", fields: ["ProductID"])
+@key(name: "bySubscription", fields: ["StripeID"])
 {
   id: ID!
   Birthday: AWSDate
@@ -47,4 +47,26 @@ type UserContent @model
   Thumbnail: String
   Preview: String
   Creator: UserProfile @connection(fields: ["CreatorID"])
+}
+
+type UserSubscription @model
+@auth(rules: [{ allow: owner, operations: [create, delete, update] },
+  { allow: private, operations: [read]},
+  { allow: public, provider: iam, operations: [read]}])
+@key(name: "bySubscription", fields: ["SubscriberID", "ProductID"])
+{
+  id: ID!
+  """
+  The ID of the subscriber who is paying for the trainer course
+  """
+  SubscriberID: ID!
+  ExpireDate: AWSDate
+  """
+  The product ID used in the Stripe API
+  """
+  ProductID: String!
+  """
+  The ID of the trainer who is providing the training course
+  """
+  TrainerID: ID!
 }
