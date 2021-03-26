@@ -4,13 +4,19 @@ import { makeStyles } from "@material-ui/core/styles";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Input from "@material-ui/core/Input";
-import TextField from "@material-ui/core/TextField";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
+// material ui components
+import Input from "@material-ui/core/Input";
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import Checkbox from "@material-ui/core/Checkbox";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -19,10 +25,12 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import PropTypes from "prop-types";
+// amplify components
 import { API, Storage, graphqlOperation } from "aws-amplify";
 import { listUserContents } from "graphql/queries";
 import { createUserContent, deleteUserContent } from "graphql/mutations";
+
+import PropTypes from "prop-types";
 
 // load YAML file for video endpoints info
 // TODO: try to use aws SDK to pull the info from aws server
@@ -31,7 +39,6 @@ const videoEndpoint = "https://dtl1jse5ko1yc.cloudfront.net/output/hls/";
 const initialVideoForm = {
   id: null,
   ContentName: "",
-  VideoURL: "",
   Description: null,
   IsDemo: false,
   createdAt: "",
@@ -73,6 +80,36 @@ export default function VideoUpload(props) {
   const [videos, setVideos] = React.useState([]);
   const [response, setResponse] = React.useState("");
   const [videoURL, setVideoURL] = React.useState("");
+  const [open, setOpen] = React.useState(false);
+
+  const handleVideoUpload = () => {
+    // check video duplication
+    const duplicatedVideo = videos.filter((video) => {
+      return video.ContentName === videoForm.ContentName;
+    })[0];
+    if (duplicatedVideo) {
+      setOpen(true);
+    } else {
+      createVideo();
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleCloseUpload = async () => {
+    // try to re-upload the existing video
+    setOpen(false);
+    // remove existing video, then re-create the video
+    const duplicatedVideo = videos.filter((video) => {
+      return video.ContentName === videoForm.ContentName;
+    })[0];
+    deleteVideo(duplicatedVideo.id).then(() => {
+      // after deletion, the previous state need to be passed to the next setState hook
+      createVideo();
+    });
+  };
 
   useEffect(() => {
     fetchVideos();
@@ -110,10 +147,14 @@ export default function VideoUpload(props) {
       ])
         .then((result) => {
           console.log(result);
-          setResponse(`Success uploading file: ${name}!`);
-        })
-        .then(() => {
-          setVideos([...videos, videoForm]);
+          // updated video form with returned id and timestamp
+          videoForm.id = result[0].data.createUserContent.id;
+          videoForm.createdAt = result[0].data.createUserContent.createdAt;
+          // response with uploading results
+          setResponse(`Success uploading file: ${videoFile.name}!`);
+          setVideos((prevVideos) => {
+            return [...prevVideos, videoForm];
+          });
           setVideoForm(initialVideoForm);
         })
         .catch((error) => {
@@ -128,32 +169,46 @@ export default function VideoUpload(props) {
     const newVideos = videos.filter((video) => video.id !== id);
     const deleteVideo = videos.filter((video) => video.id === id)[0];
     const deleteVideoName = deleteVideo.ContentName.split(".")[0];
-    await Promise.all([
-      // delete S3 storage output m3u8
-      Storage.remove(deleteVideoName + ".m3u8", {
-        customPrefix: {
-          public: "output/hls/",
-        },
-      }),
-      // delete S3 storage output videos
-      Storage.remove(deleteVideoName, {
-        customPrefix: {
-          public: "output/hls/",
-        },
-      }),
-      // delete S3 storage input video
-      Storage.remove(deleteVideo.ContentName, {
-        customPrefix: {
-          public: "input/",
-        },
-      }),
-      // delete content from database
-      API.graphql(graphqlOperation(deleteUserContent, { input: { id } })),
-    ])
-      .then(() => {
-        setVideos(newVideos);
-      })
-      .catch(console.log);
+
+    if (deleteVideo) {
+      await Promise.all([
+        // delete S3 storage output m3u8
+        Storage.remove(deleteVideoName + ".m3u8", {
+          customPrefix: {
+            public: "output/hls/",
+          },
+        }),
+        // delete S3 storage output mpd
+        Storage.remove(deleteVideoName + ".mpd", {
+          customPrefix: {
+            public: "output/dash/",
+          },
+        }),
+        // delete S3 storage output videos
+        Storage.remove(deleteVideoName, {
+          customPrefix: {
+            public: "output/hls/",
+          },
+        }),
+        // delete S3 storage input video
+        Storage.remove(deleteVideo.ContentName, {
+          customPrefix: {
+            public: "input/",
+          },
+        }),
+        // delete content from database
+        API.graphql(graphqlOperation(deleteUserContent, { input: { id } })),
+      ])
+        .then(() => {
+          setVideos(() => {
+            return newVideos;
+          });
+          setResponse("Duplicated video is deleted!");
+        })
+        .catch(console.log);
+    } else {
+      alert("The video to be deleted does not exist!");
+    }
   }
 
   const handleChange = (event) => {
@@ -200,9 +255,33 @@ export default function VideoUpload(props) {
                 accept="video/*"
                 onChange={handleVideoChange}
               />
-              <Button color="primary" onClick={createVideo}>
+              <Button color="primary" onClick={handleVideoUpload}>
                 Upload Video
               </Button>
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {"Video Duplication Alert"}
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    The video has already been uploaded, do you still want to
+                    upload it?
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose} color="primary">
+                    No
+                  </Button>
+                  <Button onClick={handleCloseUpload} color="primary" autoFocus>
+                    Yes
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </CardBody>
             <CardFooter>
               <h4 className={classes.cardTitle}>{response}</h4>
@@ -258,7 +337,7 @@ export default function VideoUpload(props) {
                         color="primary"
                         value={video.id}
                         onClick={(e) => {
-                          deleteVideo(e.target.value);
+                          deleteVideo(e.currentTarget.value);
                         }}
                       >
                         Delete
