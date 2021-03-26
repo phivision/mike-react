@@ -81,6 +81,7 @@ export default function VideoUpload(props) {
   const [response, setResponse] = React.useState("");
   const [videoURL, setVideoURL] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const fileRef = React.useRef();
 
   const handleVideoUpload = () => {
     // check video duplication
@@ -156,6 +157,8 @@ export default function VideoUpload(props) {
             return [...prevVideos, videoForm];
           });
           setVideoForm(initialVideoForm);
+          // reset file input
+          fileRef.current.value = "";
         })
         .catch((error) => {
           const msg = "Error uploading file: " + error.message;
@@ -164,6 +167,26 @@ export default function VideoUpload(props) {
         });
     }
   }
+
+  const deleteS3Prefix = async (videoName, prefix) => {
+    Storage.list(videoName + "/", {
+      customPrefix: {
+        public: prefix,
+      },
+    })
+      .then((files) => {
+        files.map((file) => {
+          Storage.remove(file.key, {
+            customPrefix: {
+              public: prefix,
+            },
+          });
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   async function deleteVideo(id) {
     const newVideos = videos.filter((video) => video.id !== id);
@@ -185,11 +208,8 @@ export default function VideoUpload(props) {
           },
         }),
         // delete S3 storage output videos
-        Storage.remove(deleteVideoName, {
-          customPrefix: {
-            public: "output/hls/",
-          },
-        }),
+        deleteS3Prefix(deleteVideoName, "output/hls/"),
+        deleteS3Prefix(deleteVideoName, "output/dash/"),
         // delete S3 storage input video
         Storage.remove(deleteVideo.ContentName, {
           customPrefix: {
@@ -203,7 +223,6 @@ export default function VideoUpload(props) {
           setVideos(() => {
             return newVideos;
           });
-          setResponse("Duplicated video is deleted!");
         })
         .catch(console.log);
     } else {
@@ -253,6 +272,7 @@ export default function VideoUpload(props) {
                 type="file"
                 name="ContentName"
                 accept="video/*"
+                inputRef={fileRef}
                 onChange={handleVideoChange}
               />
               <Button color="primary" onClick={handleVideoUpload}>
