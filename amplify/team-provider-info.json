@@ -1,28 +1,4 @@
 {
-  "dev": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-mike-react-dev-195239-authRole",
-      "UnauthRoleArn": "arn:aws:iam::301286101195:role/amplify-mike-react-dev-195239-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::301286101195:role/amplify-mike-react-dev-195239-authRole",
-      "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-mike-react-dev-195239-deployment",
-      "UnauthRoleName": "amplify-mike-react-dev-195239-unauthRole",
-      "StackName": "amplify-mike-react-dev-195239",
-      "StackId": "arn:aws:cloudformation:us-east-1:301286101195:stack/amplify-mike-react-dev-195239/2ebad790-786c-11eb-82b1-1208f0f76cbf",
-      "AmplifyAppId": "d2zq2hh7w4s55d"
-    },
-    "categories": {
-      "auth": {
-        "mikereact": {}
-      },
-      "storage": {
-        "mike_react9aa15861": {
-          "bucketName": "mikevod-301286101195-us-east-1",
-          "region": "us-east-1"
-        }
-      }
-    }
-  },
   "staging": {
     "awscloudformation": {
       "AuthRoleName": "amplify-amplify4ec2fcacdac84-staging-211930-authRole",
@@ -51,6 +27,30 @@
       "UnauthRoleName": "amplify-mike-react-prod-224836-unauthRole",
       "StackName": "amplify-mike-react-prod-224836",
       "StackId": "arn:aws:cloudformation:us-east-1:301286101195:stack/amplify-mike-react-prod-224836/9636f0f0-9682-11eb-8798-0a90b7832da7",
+      "AmplifyAppId": "d2zq2hh7w4s55d"
+    },
+    "categories": {
+      "auth": {
+        "mikereact": {}
+      },
+      "storage": {
+        "mike_react2126db09": {
+          "bucketName": "mikevod-301286101195-us-east-1",
+          "region": "us-east-1"
+        }
+      }
+    }
+  },
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mike-react-dev-150010-authRole",
+      "UnauthRoleArn": "arn:aws:iam::301286101195:role/amplify-mike-react-dev-150010-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::301286101195:role/amplify-mike-react-dev-150010-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-mike-react-dev-150010-deployment",
+      "UnauthRoleName": "amplify-mike-react-dev-150010-unauthRole",
+      "StackName": "amplify-mike-react-dev-150010",
+      "StackId": "arn:aws:cloudformation:us-east-1:301286101195:stack/amplify-mike-react-dev-150010/50664980-970a-11eb-8673-0a8a0480d74d",
       "AmplifyAppId": "d2zq2hh7w4s55d"
     },
     "categories": {

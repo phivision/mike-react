@@ -1,5 +1,5 @@
 projects:
-  UserProfile:
+  mikeAmplify:
     schemaPath: src/graphql/schema.json
     includes:
       - src/graphql/**/*.js
@@ -10,20 +10,3 @@ projects:
         codeGenTarget: javascript
         generatedFileName: ''
         docsFilePath: src/graphql
-        region: us-east-1
-        apiId: h7kloan2ibhinjlmyun7za4qwu
-        maxDepth: 2
-  mikeAmplify:
-    schemaPath: amplify/backend/api/mikeAmplify/build/schema.graphql
-    includes:
-      - src/graphql/**/*.js
-    excludes:
-      - ./amplify/**
-    extensions:
-      amplify:
-        codeGenTarget: javascript
-        generatedFileName: ''
-        docsFilePath: src/graphql
-extensions:
-  amplify:
-    version: 3
