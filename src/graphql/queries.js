@@ -23,7 +23,6 @@ export const listUserProfiles = /* GraphQL */ `
         UserRole
         Weight
         Description
-        ProductID
         createdAt
         updatedAt
         owner
@@ -55,7 +54,6 @@ export const getUserProfile = /* GraphQL */ `
       UserRole
       Weight
       Description
-      ProductID
       createdAt
       updatedAt
       owner
@@ -75,7 +73,6 @@ export const getUserProfile = /* GraphQL */ `
           UserRole
           Weight
           Description
-          ProductID
           createdAt
           updatedAt
           owner
@@ -132,7 +129,6 @@ export const searchUserProfiles = /* GraphQL */ `
         UserRole
         Weight
         Description
-        ProductID
         createdAt
         updatedAt
         owner
@@ -177,7 +173,6 @@ export const getUserContent = /* GraphQL */ `
         UserRole
         Weight
         Description
-        ProductID
         createdAt
         updatedAt
         owner
@@ -226,7 +221,6 @@ export const listUserContents = /* GraphQL */ `
           UserRole
           Weight
           Description
-          ProductID
           createdAt
           updatedAt
           owner

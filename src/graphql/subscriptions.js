@@ -18,7 +18,6 @@ export const onCreateUserProfile = /* GraphQL */ `
       UserRole
       Weight
       Description
-      ProductID
       createdAt
       updatedAt
       owner
@@ -38,7 +37,6 @@ export const onCreateUserProfile = /* GraphQL */ `
           UserRole
           Weight
           Description
-          ProductID
           createdAt
           updatedAt
           owner
@@ -82,7 +80,6 @@ export const onUpdateUserProfile = /* GraphQL */ `
       UserRole
       Weight
       Description
-      ProductID
       createdAt
       updatedAt
       owner
@@ -102,7 +99,6 @@ export const onUpdateUserProfile = /* GraphQL */ `
           UserRole
           Weight
           Description
-          ProductID
           createdAt
           updatedAt
           owner
@@ -146,7 +142,6 @@ export const onDeleteUserProfile = /* GraphQL */ `
       UserRole
       Weight
       Description
-      ProductID
       createdAt
       updatedAt
       owner
@@ -166,7 +161,6 @@ export const onDeleteUserProfile = /* GraphQL */ `
           UserRole
           Weight
           Description
-          ProductID
           createdAt
           updatedAt
           owner
@@ -222,7 +216,6 @@ export const onCreateUserContent = /* GraphQL */ `
         UserRole
         Weight
         Description
-        ProductID
         createdAt
         updatedAt
         owner
@@ -266,7 +259,6 @@ export const onUpdateUserContent = /* GraphQL */ `
         UserRole
         Weight
         Description
-        ProductID
         createdAt
         updatedAt
         owner
@@ -310,7 +302,6 @@ export const onDeleteUserContent = /* GraphQL */ `
         UserRole
         Weight
         Description
-        ProductID
         createdAt
         updatedAt
         owner
