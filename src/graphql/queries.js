@@ -26,6 +26,9 @@ export const listUserProfiles = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
         Contents {
           nextToken
         }
@@ -54,9 +57,32 @@ export const getUserProfile = /* GraphQL */ `
       createdAt
       updatedAt
       owner
+      Subscriptions {
+        items {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          Price
+          RegDate
+          StripeID
+          UserImage
+          LastName
+          FirstName
+          UserRole
+          Weight
+          Description
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       Contents {
         items {
           id
+          CreatorID
           ContentName
           Description
           Length
@@ -106,6 +132,9 @@ export const searchUserProfiles = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
         Contents {
           nextToken
         }
@@ -119,6 +148,7 @@ export const getUserContent = /* GraphQL */ `
   query GetUserContent($id: ID!) {
     getUserContent(id: $id) {
       id
+      CreatorID
       ContentName
       Description
       Length
@@ -146,6 +176,9 @@ export const getUserContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
         Contents {
           nextToken
         }
@@ -163,6 +196,7 @@ export const listUserContents = /* GraphQL */ `
     listUserContents(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        CreatorID
         ContentName
         Description
         Length

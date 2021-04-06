@@ -21,9 +21,32 @@ export const onCreateUserProfile = /* GraphQL */ `
       createdAt
       updatedAt
       owner
+      Subscriptions {
+        items {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          Price
+          RegDate
+          StripeID
+          UserImage
+          LastName
+          FirstName
+          UserRole
+          Weight
+          Description
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       Contents {
         items {
           id
+          CreatorID
           ContentName
           Description
           Length
@@ -60,9 +83,32 @@ export const onUpdateUserProfile = /* GraphQL */ `
       createdAt
       updatedAt
       owner
+      Subscriptions {
+        items {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          Price
+          RegDate
+          StripeID
+          UserImage
+          LastName
+          FirstName
+          UserRole
+          Weight
+          Description
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       Contents {
         items {
           id
+          CreatorID
           ContentName
           Description
           Length
@@ -99,9 +145,32 @@ export const onDeleteUserProfile = /* GraphQL */ `
       createdAt
       updatedAt
       owner
+      Subscriptions {
+        items {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          Price
+          RegDate
+          StripeID
+          UserImage
+          LastName
+          FirstName
+          UserRole
+          Weight
+          Description
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       Contents {
         items {
           id
+          CreatorID
           ContentName
           Description
           Length
@@ -122,6 +191,7 @@ export const onCreateUserContent = /* GraphQL */ `
   subscription OnCreateUserContent {
     onCreateUserContent {
       id
+      CreatorID
       ContentName
       Description
       Length
@@ -149,6 +219,9 @@ export const onCreateUserContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
         Contents {
           nextToken
         }
@@ -161,6 +234,7 @@ export const onUpdateUserContent = /* GraphQL */ `
   subscription OnUpdateUserContent {
     onUpdateUserContent {
       id
+      CreatorID
       ContentName
       Description
       Length
@@ -188,6 +262,9 @@ export const onUpdateUserContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
         Contents {
           nextToken
         }
@@ -200,6 +277,7 @@ export const onDeleteUserContent = /* GraphQL */ `
   subscription OnDeleteUserContent {
     onDeleteUserContent {
       id
+      CreatorID
       ContentName
       Description
       Length
@@ -227,6 +305,9 @@ export const onDeleteUserContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
         Contents {
           nextToken
         }

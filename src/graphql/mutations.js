@@ -24,9 +24,32 @@ export const createUserProfile = /* GraphQL */ `
       createdAt
       updatedAt
       owner
+      Subscriptions {
+        items {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          Price
+          RegDate
+          StripeID
+          UserImage
+          LastName
+          FirstName
+          UserRole
+          Weight
+          Description
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       Contents {
         items {
           id
+          CreatorID
           ContentName
           Description
           Length
@@ -66,9 +89,32 @@ export const updateUserProfile = /* GraphQL */ `
       createdAt
       updatedAt
       owner
+      Subscriptions {
+        items {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          Price
+          RegDate
+          StripeID
+          UserImage
+          LastName
+          FirstName
+          UserRole
+          Weight
+          Description
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       Contents {
         items {
           id
+          CreatorID
           ContentName
           Description
           Length
@@ -108,9 +154,32 @@ export const deleteUserProfile = /* GraphQL */ `
       createdAt
       updatedAt
       owner
+      Subscriptions {
+        items {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          Price
+          RegDate
+          StripeID
+          UserImage
+          LastName
+          FirstName
+          UserRole
+          Weight
+          Description
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       Contents {
         items {
           id
+          CreatorID
           ContentName
           Description
           Length
@@ -134,6 +203,7 @@ export const createUserContent = /* GraphQL */ `
   ) {
     createUserContent(input: $input, condition: $condition) {
       id
+      CreatorID
       ContentName
       Description
       Length
@@ -161,6 +231,9 @@ export const createUserContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
         Contents {
           nextToken
         }
@@ -176,6 +249,7 @@ export const updateUserContent = /* GraphQL */ `
   ) {
     updateUserContent(input: $input, condition: $condition) {
       id
+      CreatorID
       ContentName
       Description
       Length
@@ -203,6 +277,9 @@ export const updateUserContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
         Contents {
           nextToken
         }
@@ -218,6 +295,7 @@ export const deleteUserContent = /* GraphQL */ `
   ) {
     deleteUserContent(input: $input, condition: $condition) {
       id
+      CreatorID
       ContentName
       Description
       Length
@@ -245,6 +323,9 @@ export const deleteUserContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
         Contents {
           nextToken
         }
