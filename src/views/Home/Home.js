@@ -37,7 +37,9 @@ export default function Home() {
   }
 
   useEffect(() => {
-    trainerQuery().then((r) => setTrainers(r));
+    trainerQuery()
+      .then((r) => setTrainers(r))
+      .catch(console.log);
   }, [trainers.length]);
 
   return (
