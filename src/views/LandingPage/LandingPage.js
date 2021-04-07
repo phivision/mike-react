@@ -23,7 +23,9 @@ export default function LandingPage({ ...props }) {
   }
 
   useEffect(() => {
-    userQuery().then((r) => setProfile(r));
+    userQuery()
+      .then((r) => setProfile(r))
+      .catch(console.log);
   }, [props.props.match.params.id]);
 
   return !profile ? (
@@ -31,7 +33,7 @@ export default function LandingPage({ ...props }) {
   ) : (
     <div>
       <h4>{profile.FirstName + " " + profile.LastName}</h4>
-      <p>{profile.Bio}</p>
+      <p>{profile.Description}</p>
       <p>{profile.Price}</p>
       <Card></Card>
     </div>
