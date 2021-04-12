@@ -1,12 +1,13 @@
 // @material-ui/icons
 import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
+import PeopleIcon from "@material-ui/icons/People";
 import Notifications from "@material-ui/icons/Notifications";
 import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
-import TableList from "views/TableList/TableList.js";
+import TrainerList from "views/TableList/TrainerList.js";
 
 import NotificationsPage from "views/Notifications/Notifications.js";
 
@@ -41,8 +42,8 @@ const routes = [
     path: "/table",
     name: "Trainer List",
     rtlName: "Trainer List",
-    icon: "content_paste",
-    component: TableList,
+    icon: PeopleIcon,
+    component: TrainerList,
     layout: "/admin",
   },
   {
