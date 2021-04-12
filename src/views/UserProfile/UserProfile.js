@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+import CardMedia from "@material-ui/core/CardMedia";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import TextField from "@material-ui/core/TextField";
+import MenuItem from "@material-ui/core/MenuItem";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Input from "@material-ui/core/Input";
-import TextField from "@material-ui/core/TextField";
-import MenuItem from "@material-ui/core/MenuItem";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardAvatar from "components/Card/CardAvatar.js";
@@ -19,6 +21,7 @@ import { getUserProfile } from "graphql/queries";
 import { updateUserProfile } from "graphql/mutations";
 // resources
 import avatar from "assets/img/faces/marc.jpg";
+import cover from "assets/img/cover.jpeg";
 
 const initialProfileState = {
   id: "",
@@ -27,6 +30,8 @@ const initialProfileState = {
   Description: null,
   UserImage: null,
   ImageURL: null,
+  BgImage: null,
+  BgURL: null,
   RegDate: "",
   Birthday: null,
   Email: "",
@@ -54,6 +59,9 @@ const styles = {
     marginBottom: "3px",
     textDecoration: "none",
   },
+  media: {
+    height: 200,
+  },
 };
 
 const useStyles = makeStyles(styles);
@@ -73,6 +81,11 @@ export default function UserProfile(props) {
       } else {
         // if image is not yet uploaded, use local avatar
         userProfile.ImageURL = avatar;
+      }
+      if (userProfile.BgImage) {
+        userProfile.BgURL = await Storage.get(userProfile.BgImage);
+      } else {
+        userProfile.BgURL = cover;
       }
       if (userProfile) {
         setProfile(userProfile);
@@ -94,6 +107,7 @@ export default function UserProfile(props) {
       LastName: profile.LastName,
       FirstName: profile.FirstName,
       UserImage: profile.UserImage,
+      BgImage: profile.BgImage,
       Description: profile.Description,
     };
     try {
@@ -108,6 +122,11 @@ export default function UserProfile(props) {
         updatedUserProfile.ImageURL = await Storage.get(profile.UserImage);
       } else {
         updatedUserProfile.ImageURL = avatar;
+      }
+      if (profile.BgImage) {
+        updatedUserProfile.BgURL = await Storage.get(profile.BgImage);
+      } else {
+        updatedUserProfile.BgURL = cover;
       }
       if (updatedUserProfile) {
         setProfile(updatedUserProfile);
@@ -127,6 +146,19 @@ export default function UserProfile(props) {
     if (!e.target.files[0]) return;
     const file = e.target.files[0];
     setProfile({ ...profile, UserImage: file.name });
+    try {
+      await Storage.put(file.name, file, { contentType: "image/*" });
+    } catch (e) {
+      const msg = "Error uploading file: " + e.message;
+      console.log(e);
+      alert(msg);
+    }
+  }
+
+  async function handleBackgroundChange(e) {
+    if (!e.target.files[0]) return;
+    const file = e.target.files[0];
+    setProfile({ ...profile, BgImage: file.name });
     try {
       await Storage.put(file.name, file, { contentType: "image/*" });
     } catch (e) {
@@ -193,22 +225,25 @@ export default function UserProfile(props) {
               <img src={profile.ImageURL} alt="..." />
             </CardAvatar>
             <CardBody profile>
-              <h4 className={classes.cardTitle}>{profile.UserRole}</h4>
-              <TextField
-                id="description"
-                label="Description"
-                name="Description"
-                value={profile.Description || ""}
-                onChange={handleChange}
-              />
+              <h4 className={classes.cardTitle}>
+                {"Role: " + profile.UserRole}
+              </h4>
+              <InputLabel>Choose image for user profile</InputLabel>
               <Input
                 type="file"
                 name="UserImage"
                 accept="image/*"
                 onChange={handleImageChange}
               />
+              <InputLabel>Choose image for user background</InputLabel>
+              <Input
+                type="file"
+                name="BgImage"
+                accept="image/*"
+                onChange={handleBackgroundChange}
+              />
               <Button color="primary" onClick={userUpdate}>
-                Upload Image
+                Update Images
               </Button>
             </CardBody>
           </Card>
@@ -219,6 +254,11 @@ export default function UserProfile(props) {
               <h4 className={classes.cardTitleWhite}>Edit Profile</h4>
               <p className={classes.cardCategoryWhite}>Complete your profile</p>
             </CardHeader>
+            <CardMedia
+              className={classes.media}
+              image={profile.BgURL}
+              title="User Background"
+            />
             <CardBody>
               <GridContainer>
                 {textFieldGenerator(
@@ -306,6 +346,19 @@ export default function UserProfile(props) {
                     name="Weight"
                     type="number"
                     value={profile.Weight || 0.0}
+                    onChange={handleChange}
+                  />
+                </GridItem>
+              </GridContainer>
+              <GridContainer>
+                <GridItem>
+                  <TextField
+                    id="description"
+                    label="Description"
+                    name="Description"
+                    multiline
+                    rows={4}
+                    value={profile.Description || ""}
                     onChange={handleChange}
                   />
                 </GridItem>
