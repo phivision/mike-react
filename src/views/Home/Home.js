@@ -11,10 +11,10 @@ const trainerList = (trainers) => {
 
   return (
     <div>
-      {trainers.map((query, key) => {
+      {trainers.map((trainer, idx) => {
         return (
-          <Link key={key} to={{ pathname: "/home/landingpage/" + query.id }}>
-            {"Trainer: " + query.FirstName + " " + query.LastName}
+          <Link key={idx} to={{ pathname: "/home/landingpage/" + trainer.id }}>
+            {"Trainer: " + trainer.FirstName + " " + trainer.LastName}
           </Link>
         );
       })}
