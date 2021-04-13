@@ -33,6 +33,8 @@ export default function SignUp() {
     email: "",
     password: "",
     remember: false,
+    firstName: null,
+    lastName: null,
   });
 
   const handleChange = (e) => {
@@ -47,15 +49,16 @@ export default function SignUp() {
   //TODO: Stop exposing email + password in url when redirecting to verify
   async function handleSubmit(e) {
     e.preventDefault();
-    const { email, password } = state;
-    console.log(email);
-    console.log(password);
+    console.log(state.email);
+    console.log(state.password);
     try {
       const user = await Auth.signUp({
-        username: email,
-        password: password,
+        username: state.email,
+        password: state.password,
         attributes: {
           "custom:role": "student",
+          "custom:first_name": state.firstName,
+          "custom:last_name": state.lastName,
         },
       });
       console.log(user);

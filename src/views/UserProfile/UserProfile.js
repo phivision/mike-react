@@ -31,7 +31,7 @@ const initialProfileState = {
   UserImage: null,
   ImageURL: null,
   BgImage: null,
-  BgURL: null,
+  BgURL: cover,
   RegDate: "",
   Birthday: null,
   Email: "",
@@ -215,7 +215,6 @@ export default function UserProfile(props) {
   }, [props.user]);
 
   const classes = useStyles();
-  // TODO: update the user group (student or trainer) in the avatar card if the schema is updated
   return (
     <div>
       <GridContainer>
@@ -254,11 +253,6 @@ export default function UserProfile(props) {
               <h4 className={classes.cardTitleWhite}>Edit Profile</h4>
               <p className={classes.cardCategoryWhite}>Complete your profile</p>
             </CardHeader>
-            <CardMedia
-              className={classes.media}
-              image={profile.BgURL}
-              title="User Background"
-            />
             <CardBody>
               <GridContainer>
                 {textFieldGenerator(
@@ -369,6 +363,11 @@ export default function UserProfile(props) {
                 Update Profile
               </Button>
             </CardFooter>
+            <CardMedia
+              className={classes.media}
+              image={profile.BgURL}
+              title="User Background"
+            />
           </Card>
         </GridItem>
       </GridContainer>
