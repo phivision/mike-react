@@ -44,7 +44,6 @@ export default function SignUp() {
     });
   };
 
-  //TODO: Stop exposing email + password in url when redirecting to verify
   async function handleSubmit(e) {
     e.preventDefault();
     const { email, password } = state;

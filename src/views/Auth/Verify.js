@@ -8,6 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Auth } from "aws-amplify";
 import PropTypes from "prop-types";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -27,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Verify({ ...props }) {
   const classes = useStyles();
+  const history = useHistory();
 
   const [state, setState] = React.useState({
     verify0: null,
@@ -61,10 +63,21 @@ export default function Verify({ ...props }) {
       state.verify4 +
       state.verify5;
     try {
-      await Auth.confirmSignUp(props.props.match.params.username, code);
-      await Auth.signIn(
-        props.props.match.params.username,
-        props.props.match.params.password
+      await Auth.confirmSignUp(props.props.location.state.username, code).then(
+        async () => {
+          await Auth.signIn(
+            props.props.location.state.username,
+            props.props.location.state.password
+          ).then(() => {
+            if (props.props.location.state !== undefined) {
+              if (props.props.location.state.next !== undefined) {
+                history.push(props.props.location.state.next);
+              }
+            } else {
+              history.push("/admin/dashboard/");
+            }
+          });
+        }
       );
     } catch (error) {
       console.log("error confirming sign up", error);
@@ -124,10 +137,11 @@ export default function Verify({ ...props }) {
 
 Verify.propTypes = {
   props: PropTypes.shape({
-    match: PropTypes.shape({
-      params: PropTypes.shape({
+    location: PropTypes.shape({
+      state: PropTypes.shape({
         username: PropTypes.string.isRequired,
         password: PropTypes.string.isRequired,
+        next: PropTypes.object,
       }),
     }),
   }),
