@@ -14,6 +14,35 @@ var delays2 = 80,
 // ##############################
 // // // Daily Sales
 // #############################
+const chartAnimation = {
+  draw: function (data) {
+    if (data.type === "line" || data.type === "area") {
+      data.element.animate({
+        d: {
+          begin: 600,
+          dur: 700,
+          from: data.path
+            .clone()
+            .scale(1, 0)
+            .translate(0, data.chartRect.height())
+            .stringify(),
+          to: data.path.clone().stringify(),
+          easing: Chartist.Svg.Easing.easeOutQuint,
+        },
+      });
+    } else if (data.type === "point") {
+      data.element.animate({
+        opacity: {
+          begin: (data.index + 1) * delays,
+          dur: durations,
+          from: 0,
+          to: 1,
+          easing: "ease",
+        },
+      });
+    }
+  },
+};
 
 const dailySalesChart = {
   data: {
@@ -34,35 +63,7 @@ const dailySalesChart = {
     },
   },
   // for animation
-  animation: {
-    draw: function (data) {
-      if (data.type === "line" || data.type === "area") {
-        data.element.animate({
-          d: {
-            begin: 600,
-            dur: 700,
-            from: data.path
-              .clone()
-              .scale(1, 0)
-              .translate(0, data.chartRect.height())
-              .stringify(),
-            to: data.path.clone().stringify(),
-            easing: Chartist.Svg.Easing.easeOutQuint,
-          },
-        });
-      } else if (data.type === "point") {
-        data.element.animate({
-          opacity: {
-            begin: (data.index + 1) * delays,
-            dur: durations,
-            from: 0,
-            to: 1,
-            easing: "ease",
-          },
-        });
-      }
-    },
-  },
+  animation: chartAnimation,
 };
 
 // ##############################
@@ -134,10 +135,10 @@ const emailsSubscriptionChart = {
 // // // Completed Tasks
 // #############################
 
-const completedTasksChart = {
+const calorieBurnedChart = {
   data: {
-    labels: ["12am", "3pm", "6pm", "9pm", "12pm", "3am", "6am", "9am"],
-    series: [[230, 750, 450, 300, 280, 240, 200, 190]],
+    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    series: [[230, 750, 450, 300, 280, 240, 200]],
   },
   options: {
     lineSmooth: Chartist.Interpolation.cardinal({
@@ -152,39 +153,11 @@ const completedTasksChart = {
       left: 0,
     },
   },
-  animation: {
-    draw: function (data) {
-      if (data.type === "line" || data.type === "area") {
-        data.element.animate({
-          d: {
-            begin: 600,
-            dur: 700,
-            from: data.path
-              .clone()
-              .scale(1, 0)
-              .translate(0, data.chartRect.height())
-              .stringify(),
-            to: data.path.clone().stringify(),
-            easing: Chartist.Svg.Easing.easeOutQuint,
-          },
-        });
-      } else if (data.type === "point") {
-        data.element.animate({
-          opacity: {
-            begin: (data.index + 1) * delays,
-            dur: durations,
-            from: 0,
-            to: 1,
-            easing: "ease",
-          },
-        });
-      }
-    },
-  },
+  animation: chartAnimation,
 };
 
 module.exports = {
   dailySalesChart,
   emailsSubscriptionChart,
-  completedTasksChart,
+  calorieBurnedChart,
 };

@@ -18,6 +18,7 @@ export const listUserProfiles = /* GraphQL */ `
         RegDate
         StripeID
         UserImage
+        BgImage
         LastName
         FirstName
         UserRole
@@ -49,6 +50,7 @@ export const getUserProfile = /* GraphQL */ `
       RegDate
       StripeID
       UserImage
+      BgImage
       LastName
       FirstName
       UserRole
@@ -68,6 +70,7 @@ export const getUserProfile = /* GraphQL */ `
           RegDate
           StripeID
           UserImage
+          BgImage
           LastName
           FirstName
           UserRole
@@ -124,6 +127,7 @@ export const searchUserProfiles = /* GraphQL */ `
         RegDate
         StripeID
         UserImage
+        BgImage
         LastName
         FirstName
         UserRole
@@ -168,6 +172,7 @@ export const getUserContent = /* GraphQL */ `
         RegDate
         StripeID
         UserImage
+        BgImage
         LastName
         FirstName
         UserRole
@@ -216,6 +221,7 @@ export const listUserContents = /* GraphQL */ `
           RegDate
           StripeID
           UserImage
+          BgImage
           LastName
           FirstName
           UserRole

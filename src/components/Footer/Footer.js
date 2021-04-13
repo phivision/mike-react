@@ -1,6 +1,5 @@
 /*eslint-disable*/
 import React from "react";
-import PropTypes from "prop-types";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import ListItem from "@material-ui/core/ListItem";
@@ -10,30 +9,21 @@ import styles from "assets/jss/material-dashboard-react/components/footerStyle.j
 
 const useStyles = makeStyles(styles);
 
-export default function Footer(props) {
+export default function Footer() {
   const classes = useStyles();
+  // TODO: adding & fixing links to company blog
   return (
     <footer className={classes.footer}>
       <div className={classes.container}>
         <div className={classes.left}>
           <List className={classes.list}>
             <ListItem className={classes.inlineBlock}>
-              <a href="#home" className={classes.block}>
+              <a href="../../home" className={classes.block}>
                 Home
               </a>
             </ListItem>
             <ListItem className={classes.inlineBlock}>
-              <a href="#company" className={classes.block}>
-                Company
-              </a>
-            </ListItem>
-            <ListItem className={classes.inlineBlock}>
-              <a href="#portfolio" className={classes.block}>
-                Portfolio
-              </a>
-            </ListItem>
-            <ListItem className={classes.inlineBlock}>
-              <a href="#blog" className={classes.block}>
+              <a href="https://wordpress.com/" className={classes.block}>
                 Blog
               </a>
             </ListItem>
@@ -43,13 +33,13 @@ export default function Footer(props) {
           <span>
             &copy; {1900 + new Date().getYear()}{" "}
             <a
-              href="https://www.creative-tim.com?ref=mdr-footer"
+              href="http://phivision.us/"
               target="_blank"
               className={classes.a}
             >
-              Creative Tim
+              PhiVision Inc.
             </a>
-            , made with love for a better web
+            , Leading Vision Technology
           </span>
         </p>
       </div>

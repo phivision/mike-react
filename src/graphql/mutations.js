@@ -16,6 +16,7 @@ export const createUserProfile = /* GraphQL */ `
       RegDate
       StripeID
       UserImage
+      BgImage
       LastName
       FirstName
       UserRole
@@ -35,6 +36,7 @@ export const createUserProfile = /* GraphQL */ `
           RegDate
           StripeID
           UserImage
+          BgImage
           LastName
           FirstName
           UserRole
@@ -81,6 +83,7 @@ export const updateUserProfile = /* GraphQL */ `
       RegDate
       StripeID
       UserImage
+      BgImage
       LastName
       FirstName
       UserRole
@@ -100,6 +103,7 @@ export const updateUserProfile = /* GraphQL */ `
           RegDate
           StripeID
           UserImage
+          BgImage
           LastName
           FirstName
           UserRole
@@ -146,6 +150,7 @@ export const deleteUserProfile = /* GraphQL */ `
       RegDate
       StripeID
       UserImage
+      BgImage
       LastName
       FirstName
       UserRole
@@ -165,6 +170,7 @@ export const deleteUserProfile = /* GraphQL */ `
           RegDate
           StripeID
           UserImage
+          BgImage
           LastName
           FirstName
           UserRole
@@ -223,6 +229,7 @@ export const createUserContent = /* GraphQL */ `
         RegDate
         StripeID
         UserImage
+        BgImage
         LastName
         FirstName
         UserRole
@@ -269,6 +276,7 @@ export const updateUserContent = /* GraphQL */ `
         RegDate
         StripeID
         UserImage
+        BgImage
         LastName
         FirstName
         UserRole
@@ -315,6 +323,7 @@ export const deleteUserContent = /* GraphQL */ `
         RegDate
         StripeID
         UserImage
+        BgImage
         LastName
         FirstName
         UserRole
