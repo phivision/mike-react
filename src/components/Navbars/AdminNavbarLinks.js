@@ -27,7 +27,6 @@ import styles from "assets/jss/material-dashboard-react/components/headerLinksSt
 
 const useStyles = makeStyles(styles);
 
-//TODO: Sign out functionality still broken
 const AdminNavbarLinks = () => {
   const history = useHistory();
   const classes = useStyles();
