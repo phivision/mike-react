@@ -73,9 +73,8 @@ export default function Verify({ ...props }) {
               if (props.props.location.state.next !== undefined) {
                 history.push(props.props.location.state.next);
               }
-            } else {
-              history.push("/admin/dashboard/");
             }
+            history.push("/admin/dashboard/");
           });
         }
       );
