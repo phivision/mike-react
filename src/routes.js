@@ -10,6 +10,7 @@ import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
 import TrainerList from "views/TableList/TrainerList.js";
 import Settings from "views/Settings/Settings";
+import Payment from "views/Payment/Payment.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
 
 //core components/views for Home layout
@@ -62,6 +63,13 @@ const routes = [
     name: "Notifications",
     icon: Notifications,
     component: NotificationsPage,
+    layout: "/admin",
+  },
+  {
+    path: "/payment",
+    name: "Payment",
+    icon: Person,
+    component: Payment,
     layout: "/admin",
   },
   {
