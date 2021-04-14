@@ -1,13 +1,9 @@
-import { API, Auth } from "aws-amplify";
+import { API } from "aws-amplify";
 
 export default function Payment() {
   const getLink = async () => {
     const myInit = {
-      headers: {
-        Authorization: `Bearer ${(await Auth.currentSession())
-          .getIdToken()
-          .getJwtToken()}`,
-      },
+      headers: {},
       response: true,
     };
 
