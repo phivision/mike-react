@@ -11,9 +11,11 @@ export default function Payment() {
       response: true,
     };
 
-    API.post("stripeAPI", "/stripe/onboarding", myInit).then((res) =>
-      console.log(res)
-    );
+    API.post("stripeAPI", "/stripe/api/onboarding", myInit)
+      .then((res) => console.log(res))
+      .catch((err) => {
+        console.log(err);
+      });
   };
   getLink();
   return null;
