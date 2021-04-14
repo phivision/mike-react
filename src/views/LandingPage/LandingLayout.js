@@ -24,6 +24,11 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     color: theme.palette.text.secondary,
   },
+  BImage: {
+    background: `url(${"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2620721125,1355879679&fm=26&gp=0.jpg"})`,
+    backgroundSize: "100% 100%",
+    height: "200px",
+  },
   avatar: {
     width: "150px",
     height: "150px",
@@ -40,20 +45,12 @@ const useStyles = makeStyles((theme) => ({
 const CenteredGrid = ({ profile }) => {
   const classes = useStyles();
   console.log(profile);
-  console.log(profile.UserImage);
   return !profile ? (
     "Loading..."
   ) : (
     <div className={classes.root}>
       <Grid container spacing={1}>
-        <Grid item xs={12}>
-          <img
-            src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2620721125,1355879679&fm=26&gp=0.jpg"
-            alt="..."
-            width="1000"
-            height="200"
-          />
-        </Grid>
+        <Grid item xs={12} className={classes.BImage}></Grid>
         <Grid item xs={6}>
           <Card>
             <CardHeader

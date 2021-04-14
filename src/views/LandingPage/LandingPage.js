@@ -3,6 +3,7 @@ import { API } from "aws-amplify";
 import { getUserProfile } from "graphql/queries";
 import PropTypes from "prop-types";
 import CenteredGrid from "./LandingLayout";
+import Container from "@material-ui/core/Container";
 
 //TODO: Add payment functionality
 //TODO: Add cards for payment tiers
@@ -31,9 +32,9 @@ export default function LandingPage({ ...props }) {
   return !profile ? (
     "Loading..."
   ) : (
-    <div>
+    <Container maxWidth="lg">
       <CenteredGrid profile={profile}></CenteredGrid>
-    </div>
+    </Container>
   );
 }
 
