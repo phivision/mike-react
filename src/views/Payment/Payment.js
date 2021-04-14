@@ -3,7 +3,7 @@ import { API } from "aws-amplify";
 export default function Payment() {
   const getLink = async () => {
     const myInit = {
-      headers: {},
+      headers: {}, // AWS-IAM authorization if using empty headers
       response: true,
     };
 
