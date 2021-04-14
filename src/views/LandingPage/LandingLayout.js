@@ -14,6 +14,7 @@ import {
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import PropTypes from "prop-types";
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
+import AlignItemsList from "./comment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,6 +41,18 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "10px",
     borderRadius: "20px",
   },
+  profileSection: {
+    backgroundColor: "white",
+    margin: "2px",
+  },
+  CardStlye: {
+    border: "none",
+    boxShadow: "none",
+  },
+  profileCardStlye: {
+    borderRight: "2px solid #bbe1f1",
+    boxShadow: "none",
+  },
 }));
 
 const CenteredGrid = ({ profile }) => {
@@ -49,71 +62,78 @@ const CenteredGrid = ({ profile }) => {
     "Loading..."
   ) : (
     <div className={classes.root}>
-      <Grid container spacing={1}>
+      <Grid container spacing={2}>
         <Grid item xs={12} className={classes.BImage}></Grid>
-        <Grid item xs={6}>
-          <Card>
-            <CardHeader
-              avatar={
-                <Avatar
-                  aria-label="recipe"
-                  className={classes.avatar}
-                  src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3879298782,3698363030&fm=26&gp=0.jpg"
-                />
-              }
-              title={profile.FirstName + " " + profile.LastName}
-              subheader={
-                "Email: " +
-                profile.Email +
-                "\n" +
-                profile.Gender +
-                " | " +
-                profile.Height +
-                "cm | " +
-                profile.Weight
-              }
-            />
-            <CardContent>
-              <Typography variant="h6" component="h2">
-                Biograpghy
-              </Typography>
-              <CardContent className={classes.CardBox}>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  {profile.Description}
+        <Grid container spacing={2} className={classes.profileSection}>
+          <Grid item xs={6}>
+            <Card className={classes.profileCardStlye}>
+              <CardHeader
+                avatar={
+                  <Avatar
+                    aria-label="recipe"
+                    className={classes.avatar}
+                    src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3879298782,3698363030&fm=26&gp=0.jpg"
+                  />
+                }
+                title={profile.FirstName + " " + profile.LastName}
+                subheader={
+                  "Email: " +
+                  profile.Email +
+                  "\n" +
+                  profile.Gender +
+                  " | " +
+                  profile.Height +
+                  "cm | " +
+                  profile.Weight
+                }
+              />
+              <CardContent>
+                <Typography variant="h6" component="h2">
+                  Biograpghy
                 </Typography>
+                <CardContent className={classes.CardBox}>
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    component="p"
+                  >
+                    {profile.Description}
+                  </Typography>
+                </CardContent>
               </CardContent>
-            </CardContent>
-            <CardActions disableSpacing>
-              <Grid item xs={9}>
-                <IconButton aria-label="add to favorites" color="secondary">
-                  <FavoriteIcon />
-                </IconButton>
-              </Grid>
-              <Grid item xs={3}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<MonetizationOnIcon />}
-                >
-                  Pay
-                </Button>
-              </Grid>
-            </CardActions>
-          </Card>
-        </Grid>
-        <Grid item xs={6}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" component="h2">
-                What people are saying
-              </Typography>
-              <CardContent className={classes.CardBox}>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  I like this trainer!
+              <CardActions disableSpacing>
+                <Grid item xs={9}>
+                  <IconButton aria-label="add to favorites" color="secondary">
+                    <FavoriteIcon />
+                  </IconButton>
+                </Grid>
+                <Grid item xs={3}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<MonetizationOnIcon />}
+                  >
+                    Pay
+                  </Button>
+                </Grid>
+              </CardActions>
+            </Card>
+          </Grid>
+          <Grid item xs={6}>
+            <Card className={classes.CardStlye}>
+              <CardContent>
+                <Typography variant="h6" component="h2">
+                  What people are saying
                 </Typography>
+                <AlignItemsList />
+                {/* <CardContent className={classes.CardBox}>
+                  <Typography variant="body2" color="textSecondary" component="p">
+                    I like this trainer!
+                  </Typography>
+                </CardContent> */}
               </CardContent>
-            </CardContent>
-          </Card>
+            </Card>
+          </Grid>
         </Grid>
       </Grid>
     </div>
