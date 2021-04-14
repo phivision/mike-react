@@ -28,9 +28,10 @@ export default function Home() {
   async function trainerQuery() {
     const trainerList = await API.graphql({
       query: listUserProfiles,
-      variables: { limit: 10, filter: { UserRole: { contains: "trainer" } } },
+      variables: { filter: { UserRole: { contains: "trainer" } } },
       authMode: "AWS_IAM",
     });
+    console.log(trainerList);
     if (trainerList.data.listUserProfiles.items != null) {
       return trainerList.data.listUserProfiles.items;
     }

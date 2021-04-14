@@ -22,8 +22,7 @@ const Home = () => {
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
   const mainPanel = React.createRef();
-  const { path, url } = useRouteMatch();
-  console.log(path);
+  const match = useRouteMatch();
 
   const switchRoutes = () => {
     return (
@@ -33,7 +32,7 @@ const Home = () => {
             return (
               <Route
                 exact={prop.exact}
-                path={url + prop.path}
+                path={match.url + prop.path}
                 render={(props) => <prop.component props={props} />}
                 key={key}
               />

@@ -8,6 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Auth } from "aws-amplify";
 import { Link, useHistory } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -25,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+export default function SignUp({ ...props }) {
   const classes = useStyles();
   const history = useHistory();
 
@@ -33,6 +34,8 @@ export default function SignUp() {
     email: "",
     password: "",
     remember: false,
+    firstName: null,
+    lastName: null,
   });
 
   const handleChange = (e) => {
@@ -44,22 +47,39 @@ export default function SignUp() {
     });
   };
 
-  //TODO: Stop exposing email + password in url when redirecting to verify
   async function handleSubmit(e) {
     e.preventDefault();
-    const { email, password } = state;
-    console.log(email);
-    console.log(password);
     try {
-      const user = await Auth.signUp({
-        username: email,
-        password: password,
+      await Auth.signUp({
+        username: state.email,
+        password: state.password,
         attributes: {
           "custom:role": "student",
+          "custom:first_name": state.firstName,
+          "custom:last_name": state.lastName,
         },
       });
-      console.log(user);
-      history.push("/home/verify/" + state.email + "/" + state.password);
+
+      if (props.props.location.state !== undefined) {
+        if (props.props.location.state.next !== undefined) {
+          history.push({
+            pathname: "/home/verify/",
+            state: {
+              username: state.email,
+              password: state.password,
+              next: props.props.location.state.next,
+            },
+          });
+        }
+      } else {
+        history.push({
+          pathname: "/home/verify/",
+          state: {
+            username: state.email,
+            password: state.password,
+          },
+        });
+      }
     } catch (error) {
       console.log("error signing up:", error);
     }
@@ -147,3 +167,13 @@ export default function SignUp() {
     </Container>
   );
 }
+
+SignUp.propTypes = {
+  props: PropTypes.shape({
+    location: PropTypes.shape({
+      state: PropTypes.shape({
+        next: PropTypes.object,
+      }),
+    }),
+  }),
+};
