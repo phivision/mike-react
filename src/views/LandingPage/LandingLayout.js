@@ -14,7 +14,6 @@ import {
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import PropTypes from "prop-types";
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
-import AlignItemsList from "./comment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,14 +49,14 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "none",
   },
   profileCardStlye: {
-    borderRight: "2px solid #bbe1f1",
+    borderRight: "3px solid #bbe1f1",
     boxShadow: "none",
+    whiteSpace: "pre",
   },
 }));
 
 const CenteredGrid = ({ profile }) => {
   const classes = useStyles();
-  console.log(profile);
   return !profile ? (
     "Loading..."
   ) : (
@@ -120,19 +119,7 @@ const CenteredGrid = ({ profile }) => {
             </Card>
           </Grid>
           <Grid item xs={6}>
-            <Card className={classes.CardStlye}>
-              <CardContent>
-                <Typography variant="h6" component="h2">
-                  What people are saying
-                </Typography>
-                <AlignItemsList />
-                {/* <CardContent className={classes.CardBox}>
-                  <Typography variant="body2" color="textSecondary" component="p">
-                    I like this trainer!
-                  </Typography>
-                </CardContent> */}
-              </CardContent>
-            </Card>
+            <Card className={classes.CardStlye}></Card>
           </Grid>
         </Grid>
       </Grid>
