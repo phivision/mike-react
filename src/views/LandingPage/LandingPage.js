@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { API } from "aws-amplify";
 import { getUserProfile } from "graphql/queries";
 import PropTypes from "prop-types";
-import { Card } from "@material-ui/core";
+import CenteredGrid from "./LandingLayout";
 
 //TODO: Add payment functionality
 //TODO: Add cards for payment tiers
@@ -32,10 +32,7 @@ export default function LandingPage({ ...props }) {
     "Loading..."
   ) : (
     <div>
-      <h4>{profile.FirstName + " " + profile.LastName}</h4>
-      <p>{profile.Description}</p>
-      <p>{profile.Price}</p>
-      <Card></Card>
+      <CenteredGrid profile={profile}></CenteredGrid>
     </div>
   );
 }
