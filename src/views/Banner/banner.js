@@ -10,7 +10,7 @@ const useStyles = makeStyles(() => ({
   BannerImage: {
     background: `url(${banner}) no-repeat center top`,
     backgroundSize: "100%",
-    height: "50vh",
+    height: "60vh",
     maxWidth: "none",
     overflow: "hidden",
     backgroundPosition: "left",
@@ -20,9 +20,10 @@ const useStyles = makeStyles(() => ({
     fontSize: "4.5rem",
     fontWeight: 500,
     fontFamily: "Arial Rounded MT Bold",
-    padding: "10%",
     lineHeight: 1.4,
     textAlign: "left",
+    width: "50vh",
+    margin: "auto 5rem",
   },
 }));
 
@@ -30,12 +31,9 @@ const Banner = () => {
   const classes = useStyles();
   return (
     <Grid container className={classes.BannerImage}>
-      <Grid item xs={8}>
-        <Typography className={classes.BannerTitle}>
-          A better way change your life
-        </Typography>
-      </Grid>
-      <Grid item xs={4}></Grid>
+      <Typography className={classes.BannerTitle}>
+        A better way change your life
+      </Typography>
     </Grid>
   );
 };
