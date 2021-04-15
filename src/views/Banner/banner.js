@@ -1,5 +1,5 @@
 import React from "react";
-import { Container } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import banner from "assets/img/banner.jpg";
 
@@ -15,14 +15,27 @@ const useStyles = makeStyles(() => ({
     overflow: "hidden",
     backgroundPosition: "left",
   },
+  BannerTitle: {
+    color: "white",
+    fontWeight: 500,
+    fontFamily: "Arial Rounded MT Bold",
+    padding: "10%",
+    lineHeight: 1.4,
+    textAlign: "left",
+  },
 }));
 
 const Banner = () => {
   const classes = useStyles();
   return (
-    <div>
-      <Container className={classes.BannerImage}></Container>
-    </div>
+    <Grid container className={classes.BannerImage}>
+      <Grid item xs={8}>
+        <Typography variant="h1" className={classes.BannerTitle}>
+          A better way change your life
+        </Typography>
+      </Grid>
+      <Grid item xs={4}></Grid>
+    </Grid>
   );
 };
 

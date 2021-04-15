@@ -60,7 +60,7 @@ const Home = () => {
   }, [mainPanel]);
 
   return (
-    <Container maxWidth="false" disableGutters="true">
+    <Container maxWidth={false} disableGutters={true}>
       <Homebar />
       <div className={classes.content}>
         <div className={classes.container}>{switchRoutes()}</div>

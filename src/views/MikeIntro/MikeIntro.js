@@ -50,7 +50,7 @@ const useStyles = makeStyles(() => ({
 const MikeIntro = () => {
   const classes = useStyles();
   return (
-    <Container disableGutters="true" className={classes.MikeIntroSection}>
+    <Container disableGutters={true} className={classes.MikeIntroSection}>
       <Grid item xs={12}>
         <Typography
           variant="h1"
