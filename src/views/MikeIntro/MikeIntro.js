@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
     background: `url(${fitness}) no-repeat center top`,
     backgroundSize: "100% 100%",
     maxWidth: "none",
-    minHeight: "480px",
+    minHeight: "490px",
     overflow: "hidden",
     backgroundPosition: "right",
   },

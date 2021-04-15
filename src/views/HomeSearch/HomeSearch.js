@@ -14,12 +14,10 @@ const useStyles = makeStyles(() => ({
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
-    width: "60%",
+    width: "65%",
     boxShadow: "none",
-    backgroundColor: "#ecedf1",
-    borderRadius: "20px",
     margin: "20px auto",
-    height: "60px",
+    height: "70px",
     fontFamily: "Arial Rounded MT Bold",
   },
   HomeSection: {
@@ -31,9 +29,12 @@ const useStyles = makeStyles(() => ({
   },
   input: {
     flex: 1,
-    padding: "20px",
+    padding: "6px 20px",
     fontSize: "30px",
     fontWeight: 500,
+    backgroundColor: "#ecedf1",
+    borderRadius: "20px 0 0 20px",
+    height: "100%",
   },
   iconButton: {
     padding: 10,
@@ -41,6 +42,14 @@ const useStyles = makeStyles(() => ({
     height: "100%",
     width: "120px",
     color: "white",
+    borderRadius: "0 20px 20px 0",
+  },
+  mikeStlye: {
+    color: "#5dcbcb",
+    fontFamily: "Futura",
+    fontWeight: 600,
+    marginLeft: "20px",
+    fontSize: "4rem",
   },
 }));
 
@@ -49,7 +58,8 @@ const HomeSearch = () => {
   return (
     <Container disableGutters={true} className={classes.HomeSection}>
       <Typography variant="h3">
-        Search the 200,000+ Apple Music On MIKE
+        Search the 200,000+ Apple Music On
+        <h className={classes.mikeStlye}>MIKE</h>
       </Typography>
       <Paper component="form" className={classes.root}>
         <InputBase
@@ -63,7 +73,7 @@ const HomeSearch = () => {
           aria-label="search"
           size="medium"
         >
-          <SearchIcon />
+          <SearchIcon fontSize="large" />
         </Button>
       </Paper>
     </Container>

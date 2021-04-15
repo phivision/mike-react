@@ -17,6 +17,7 @@ const useStyles = makeStyles(() => ({
   },
   BannerTitle: {
     color: "white",
+    fontSize: "4.5rem",
     fontWeight: 500,
     fontFamily: "Arial Rounded MT Bold",
     padding: "10%",
@@ -30,7 +31,7 @@ const Banner = () => {
   return (
     <Grid container className={classes.BannerImage}>
       <Grid item xs={8}>
-        <Typography variant="h1" className={classes.BannerTitle}>
+        <Typography className={classes.BannerTitle}>
           A better way change your life
         </Typography>
       </Grid>
