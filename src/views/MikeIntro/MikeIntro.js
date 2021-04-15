@@ -23,7 +23,6 @@ const useStyles = makeStyles(() => ({
     fontWeight: 600,
     color: "#47576a",
     fontFamily: "Futura",
-    padding: "3% 0 0 0",
   },
   MikeText: {
     color: "#6a6c6d",

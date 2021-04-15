@@ -59,7 +59,7 @@ const HomeSearch = () => {
     <Container disableGutters={true} className={classes.HomeSection}>
       <Typography variant="h3">
         Search the 200,000+ Apple Music On
-        <h className={classes.mikeStlye}>MIKE</h>
+        <nobr className={classes.mikeStlye}>MIKE</nobr>
       </Typography>
       <Paper component="form" className={classes.root}>
         <InputBase
