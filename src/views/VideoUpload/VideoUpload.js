@@ -80,6 +80,27 @@ const useStyles = makeStyles(styles);
 // global video file handler
 let videoFile;
 
+const VideoPlayer = (props) => {
+  return (
+    <ReactHlsPlayer
+      src={props.url}
+      autoPlay={false}
+      controls={true}
+      width="100%"
+      height="auto"
+    />
+  );
+};
+
+VideoPlayer.propTypes = {
+  url: PropTypes.string,
+};
+
+const videoPropsEqual = (prevVideo, nextVideo) => {
+  return prevVideo.url === nextVideo.url;
+};
+
+const MemoVideoPlayer = React.memo(VideoPlayer, videoPropsEqual);
 export default function VideoUpload(props) {
   const [videoForm, setVideoForm] = React.useState(initialVideoForm);
   const [videos, setVideos] = React.useState([]);
@@ -120,7 +141,7 @@ export default function VideoUpload(props) {
 
   useEffect(() => {
     fetchVideos();
-  }, [props.user]);
+  }, [props.user, videoURL]);
 
   async function fetchVideos() {
     const apiData = await API.graphql(
@@ -270,6 +291,7 @@ export default function VideoUpload(props) {
 
   return (
     <div>
+      <MemoVideoPlayer url={videoURL} />
       <GridContainer>
         <GridItem xs={12} sm={12} md={4}>
           <Card>
@@ -280,13 +302,6 @@ export default function VideoUpload(props) {
               </p>
             </CardHeader>
             <CardBody profile>
-              <ReactHlsPlayer
-                src={videoURL}
-                autoPlay={false}
-                controls={true}
-                width="100%"
-                height="auto"
-              />
               <TextField
                 id="description"
                 label="Video Description"
