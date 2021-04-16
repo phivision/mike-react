@@ -81,7 +81,7 @@ export default function TrainerList() {
                   trainer.FirstName + " " + trainer.LastName,
                   trainer.Gender,
                   trainer.Description,
-                  trainer.Price,
+                  Number(trainer.Price).toString(),
                 ];
               })}
             />
