@@ -6,7 +6,6 @@ import Banner from "../Banner/banner";
 import HomeSearch from "../HomeSearch/HomeSearch";
 import MikeIntro from "../MikeIntro/MikeIntro";
 
-//TODO: Need to add home page
 const trainerList = (trainers) => {
   if (!trainers) {
     return;
