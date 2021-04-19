@@ -58,7 +58,10 @@ export default function TrainerSignUp() {
         },
       });
       console.log(user);
-      history.push("/home/verify/" + state.email + "/" + state.password);
+      history.push({
+        pathname: "/home/verify/",
+        state: { username: state.email, password: state.password },
+      });
     } catch (error) {
       console.log("error signing up:", error);
     }
