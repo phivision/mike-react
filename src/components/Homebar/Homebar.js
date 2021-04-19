@@ -3,14 +3,25 @@ import { Link, useHistory } from "react-router-dom";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import { AppBar, Toolbar, Button } from "@material-ui/core";
-import SearchBar from "material-ui-search-bar";
-
 import styles from "assets/jss/material-dashboard-react/components/headerStyle.js";
+import styled from "styled-components";
+import SearchBar from "material-ui-search-bar";
 import logo from "../../assets/img/logo.jpg";
 
 const useStyles = makeStyles(styles);
+const SearchButton = styled(SearchBar)`
+  &&& {
+    margin-right: 20px;
+    background-color: #eaeef1;
+    box-shadow: none;
+    border-radius: 20px;
+    min-width: 300px;
+    .MuiIconButton-label {
+      color: #5dcbcb;
+    }
+  }
+`;
 
-//TODO: Fix formatting
 //TODO: (For Later) Add functionality to display profile when signed in
 export default function Header() {
   const classes = useStyles();
@@ -25,7 +36,7 @@ export default function Header() {
             <img src={logo} alt="logo" />
           </Link>
         </div>
-        <SearchBar
+        <SearchButton
           value={query}
           placeholder={"Find a trainer"}
           onChange={(q) => setQuery(q)}
