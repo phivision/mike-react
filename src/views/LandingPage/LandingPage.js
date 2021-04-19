@@ -72,7 +72,7 @@ export default function LandingPage({ ...props }) {
 
   const onSubmit = () => {
     history.push({
-      pathname: "/home/checkout",
+      pathname: "/admin/checkout",
       state: { connectedID: profile.StripeID },
     });
   };

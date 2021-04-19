@@ -12,7 +12,7 @@ export default function Checkout() {
       response: true,
     };
 
-    API.post("stripeAPI", "/stripe/api/onboarding", myInit)
+    API.post("stripeAPI", "/stripe/api/checkout", myInit)
       .then((res) => console.log(res))
       .catch((err) => {
         console.log(err);

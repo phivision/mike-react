@@ -67,17 +67,18 @@ const routes = [
     layout: "/admin",
   },
   {
+    path: "/checkout",
+    name: "Checkout",
+    icon: Person,
+    component: Checkout,
+    layout: "/admin",
+  },
+  {
     path: "/",
     name: "Home",
     component: Home,
     layout: "/home",
     exact: true,
-  },
-  {
-    path: "/checkout",
-    name: "Checkout",
-    component: Checkout,
-    layout: "/home",
   },
   {
     path: "/search/:query",
