@@ -114,7 +114,7 @@ const routes = [
     name: "Verify your email",
     component: Verify,
     layout: "/home",
-    exact: true,
+    exact: false,
   },
 ];
 

@@ -47,8 +47,7 @@ export default function TrainerSignUp() {
   async function handleSubmit(e) {
     e.preventDefault();
     const { email, password } = state;
-    console.log(email);
-    console.log(password);
+
     try {
       const user = await Auth.signUp({
         username: email,
