@@ -61,9 +61,6 @@ const headerStyle = () => ({
     fontWeight: 600,
     marginLeft: "20px",
   },
-  searchBar: {
-    marginRight: "20px",
-  },
   login: {
     color: "#979d9f",
     fontSize: "xx-large",
