@@ -9,7 +9,7 @@ const useStyles = makeStyles(() => ({
   },
   BannerImage: {
     background: `url(${banner}) no-repeat center top`,
-    backgroundSize: "100%",
+    backgroundSize: "100% 100%",
     height: "60vh",
     maxWidth: "none",
     overflow: "hidden",
