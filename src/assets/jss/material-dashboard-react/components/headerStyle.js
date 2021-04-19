@@ -31,7 +31,10 @@ const headerStyle = () => ({
   },
   container: {
     ...container,
-    minHeight: "50px",
+    minHeight: "100px",
+    backgroundColor: "white",
+    marginLeft: "30px",
+    marginRight: "30px",
   },
   flex: {
     flex: 1,
@@ -51,6 +54,21 @@ const headerStyle = () => ({
   },
   appResponsive: {
     top: "8px",
+  },
+  buttonStyle: {
+    backgroundColor: "#5dcbcb",
+    color: "white",
+    fontWeight: 600,
+    marginLeft: "20px",
+  },
+  searchBar: {
+    marginRight: "20px",
+  },
+  login: {
+    color: "#979d9f",
+    fontSize: "xx-large",
+    fontWeight: 700,
+    fontFamily: "Futura",
   },
   primary: {
     backgroundColor: primaryColor[0],
