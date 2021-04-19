@@ -6,7 +6,8 @@ Amplify Params - DO NOT EDIT */
 var express = require("express");
 var bodyParser = require("body-parser");
 var awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
-
+const AWS = require("aws-sdk");
+const docClient = new AWS.DynamoDB.DocumentClient();
 require("dotenv").config();
 
 // declare a new express app
@@ -21,7 +22,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-const stripe = require("stripe")(process.env.SECRET_TEST_KEY);
+const stripe = require("Stripe")(process.env.SECRET_TEST_KEY);
 
 app.post(
   "/stripe/webhook",
@@ -43,7 +44,7 @@ app.post(
     }
 
     const handleCompletedCheckoutSession = (s) => {
-      console.log(JSON.stringify(s));
+      console.log(JSON.stringify(session));
     };
 
     // Handle the event

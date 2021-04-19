@@ -15,6 +15,7 @@ import NotificationsPage from "views/Notifications/Notifications.js";
 
 //core components/views for Home layout
 import LandingPage from "views/LandingPage/LandingPage.js";
+import Checkout from "views/Checkout/Checkout.js";
 import Home from "views/Home/Home.js";
 import Search from "views/Search/Search.js";
 import VideoUpload from "./views/VideoUpload/VideoUpload";
@@ -66,19 +67,17 @@ const routes = [
     layout: "/admin",
   },
   {
-    path: "/payment",
-    name: "Payment",
-    icon: Person,
-    component: Payment,
-    layout: "/admin",
-  },
-  {
     path: "/",
     name: "Home",
-    icon: Person,
     component: Home,
     layout: "/home",
     exact: true,
+  },
+  {
+    path: "/checkout",
+    name: "Checkout",
+    component: Checkout,
+    layout: "/home",
   },
   {
     path: "/search/:query",

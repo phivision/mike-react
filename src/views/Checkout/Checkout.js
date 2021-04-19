@@ -1,9 +1,14 @@
 import { API } from "aws-amplify";
 
-export default function Payment() {
+export default function Checkout() {
   const getLink = async () => {
     const myInit = {
       headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        connectedID: "",
+        refreshUrl: "",
+        returnUrl: "",
+      },
       response: true,
     };
 
