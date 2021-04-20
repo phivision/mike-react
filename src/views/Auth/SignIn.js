@@ -72,8 +72,8 @@ export default function SignIn({ ...props }) {
           localStorage.setItem("password", state.password);
         }
         localStorage.setItem("remember", state.remember);
-        if (props.props.location.state != undefined) {
-          if (props.props.location.state.next != undefined) {
+        if (props.props.location.state !== undefined) {
+          if (props.props.location.state.next !== undefined) {
             history.push(props.props.location.state.next);
           }
         } else {
@@ -149,10 +149,10 @@ export default function SignIn({ ...props }) {
               <Link to="/home/">Forgot password?</Link>
             </Grid>
             <Grid item>
-              {props.props.location.state != undefined ? (
+              {props.props.location.state !== undefined ? (
                 <Link
                   to={{
-                    pathname: "/home/signup",
+                    pathname: "/home/signup/student",
                     state: { next: props.props.location.state.next },
                   }}
                 >
@@ -161,7 +161,7 @@ export default function SignIn({ ...props }) {
               ) : (
                 <Link
                   to={{
-                    pathname: "/home/signup",
+                    pathname: "/home/signup/student",
                   }}
                 >
                   {"Don't have an account? Sign Up"}
