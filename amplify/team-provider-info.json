@@ -62,6 +62,16 @@
           "bucketName": "mikevod-301286101195-us-east-1",
           "region": "us-east-1"
         }
+      },
+      "function": {
+        "stripeAPI": {
+          "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
+          "s3Key": "amplify-builds/stripeAPI-4170417147374a6f7554-build.zip"
+        },
+        "stripeWebhook": {
+          "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
+          "s3Key": "amplify-builds/stripeWebhook-336b57516a4261395869-build.zip"
+        }
       }
     }
   }
