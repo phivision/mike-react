@@ -1,8 +1,9 @@
 import {
   container,
   whiteColor,
-  // primaryColor,
+  primaryColor,
 } from "assets/jss/material-dashboard-react.js";
+import fitness from "assets/img/fitness.jpg";
 
 const landingPageStyle = () => ({
   container: {
@@ -33,7 +34,7 @@ const landingPageStyle = () => ({
   avatar: {
     width: "250px",
     height: "250px",
-    boxShadow: "-5px -5px 0 10px #5dcbcb",
+    boxShadow: `-5px -5px 0 10px ${primaryColor[4]}`,
   },
   CardBox: {
     minHeight: "200px",
@@ -41,7 +42,7 @@ const landingPageStyle = () => ({
     padding: "20px",
     marginTop: "10px",
     borderRadius: "20px",
-    boxShadow: "10px 0 0 0 #5dcbcb, 10px 5px 20px 20px #e4e5e6",
+    boxShadow: `10px 0 0 0 ${primaryColor[4]}, 10px 5px 20px 20px #e4e5e6`,
   },
   profileSection: {
     backgroundColor: "white",
@@ -49,13 +50,28 @@ const landingPageStyle = () => ({
   },
   CardStlye: {
     border: "none",
-    boxShadow: "none",
+    background: `url(${fitness}) no-repeat center top`,
+    minHeight: "300px",
+    backgroundSize: "100% 100%",
+    overflow: "hidden",
+    backgroundPosition: "left",
+    borderRadius: "20px",
+    margin: "20px",
+    display: "flex",
+    alignItems: "flex-end",
   },
   profileCardStlye: {
-    borderRight: "3px solid #bbe1f1",
+    borderRight: `3px solid ${primaryColor[4]}`,
     boxShadow: "none",
     whiteSpace: "pre",
     padding: "20px",
+  },
+  CourseCardTitle: {
+    color: "white",
+    fontSize: "2rem",
+    fontWeight: 500,
+    fontFamily: "Arial Rounded MT Bold",
+    marginLeft: "20px",
   },
   courseSection: {
     padding: "20px",
