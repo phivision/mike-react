@@ -12,10 +12,11 @@ import TrainerList from "views/TableList/TrainerList.js";
 import Settings from "views/Settings/Settings";
 import Payment from "views/Payment/Payment.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
+import Checkout from "views/Checkout/Checkout.js";
+import Payment from "views/Payment/Payment.js";
 
 //core components/views for Home layout
 import LandingPage from "views/LandingPage/LandingPage.js";
-import Checkout from "views/Checkout/Checkout.js";
 import Home from "views/Home/Home.js";
 import Search from "views/Search/Search.js";
 import VideoUpload from "./views/VideoUpload/VideoUpload";
@@ -71,6 +72,13 @@ const routes = [
     name: "Checkout",
     icon: Person,
     component: Checkout,
+    layout: "/admin",
+  },
+  {
+    path: "/payment",
+    name: "Payment",
+    icon: Person,
+    component: Payment,
     layout: "/admin",
   },
   {
