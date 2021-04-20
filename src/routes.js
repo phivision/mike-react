@@ -19,7 +19,6 @@ import VideoUpload from "./views/VideoUpload/VideoUpload";
 import SignIn from "views/Auth/SignIn.js";
 import SignUp from "views/Auth/SignUp.js";
 import Verify from "views/Auth/Verify.js";
-import TrainerSignUp from "views/Auth/TrainerSignUp.js";
 
 const routes = [
   {
@@ -94,25 +93,18 @@ const routes = [
     exact: false,
   },
   {
-    path: "/signup",
+    path: "/signup/:role",
     name: "Sign Up",
     component: SignUp,
     layout: "/home",
     exact: false,
   },
   {
-    path: "/verify/:username/:password/",
+    path: "/verify",
     name: "Verify your email",
     component: Verify,
     layout: "/home",
     exact: true,
-  },
-  {
-    path: "/trainersignup",
-    name: "Trainer Sign Up",
-    component: TrainerSignUp,
-    layout: "/home",
-    exact: false,
   },
 ];
 

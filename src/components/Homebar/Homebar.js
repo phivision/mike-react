@@ -29,7 +29,7 @@ export default function Header() {
           onRequestSearch={() => history.push("/home/search/" + query)}
         />
         <Link to="/home/signin">Log In</Link>
-        <Link to="/home/trainersignup">Coach on Mike</Link>
+        <Link to="/home/signup/trainer">Coach on Mike</Link>
       </Toolbar>
     </AppBar>
   );
