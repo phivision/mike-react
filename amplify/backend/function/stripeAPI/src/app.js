@@ -24,28 +24,15 @@ app.use(function (req, res, next) {
   next();
 });
 
-const stripe = require("Stripe")(process.env.SECRET_TEST_KEY);
+const stripe = require("stripe")(process.env.SECRET_TEST_KEY);
 
-app.post("/stripe/create/trainer", function (req, res) {
+app.post("/stripe/api/createtrainer", function (req, res) {
   const create = async () => {
     let account = await stripe.accounts.create({
-      email: req.apiGateway.event.email,
+      email: req.body.email,
       type: "express",
     });
-    res.json({ ConnectedID: account.id });
     return account.id;
-  };
-
-  const queryID = async (address) => {
-    const params = {
-      TableName: process.env.TABLE_NAME,
-      KeyConditionExpression: "Email = :address",
-      ExpressionAttributeValues: {
-        ":address": { S: address },
-      },
-    };
-
-    return await docClient.query(params).promise();
   };
 
   const setStripeID = async (id, stripeID) => {
@@ -54,53 +41,35 @@ app.post("/stripe/create/trainer", function (req, res) {
       Key: {
         id: id,
       },
-      UpdateExpression: "set info.StripeID = :d",
+      UpdateExpression: "set #s = :d",
+      ExpressionAttributeNames: {
+        "#s": "StripeID",
+      },
       ExpressionAttributeValues: {
         ":d": stripeID,
       },
       ReturnValues: "UPDATED_NEW",
     };
 
-    return await docClient.query(params).promise();
+    return await docClient.update(params).promise();
   };
 
-  queryID(req.apiGateway.event.email).then((query) => {
-    if (query !== undefined) {
-      create()
-        .then((StripeID) => {
-          setStripeID(query.id, StripeID).then(() =>
-            res.json({ ConnectedID: StripeID })
-          );
-        })
-        .catch((e) => {
-          console.log(e);
-          res.status(500).send();
-        });
-    } else {
+  create()
+    .then((StripeID) => {
+      setStripeID(req.body.id, StripeID).then(() => res.status(200).send());
+    })
+    .catch((e) => {
+      console.log(e);
       res.status(500).send();
-    }
-  });
+    });
 });
 
-app.post("/stripe/create/user", function (req, res) {
+app.post("/stripe/api/createuser", function (req, res) {
   const create = async () => {
     let account = await stripe.customers.create({
-      email: req.apiGateway.event.email,
+      email: req.body.email,
     });
-    res.json({ CustomerID: account.id });
     return account.id;
-  };
-
-  const queryID = async (address) => {
-    const params = {
-      TableName: process.env.TABLE_NAME,
-      KeyConditionExpression: "Email = :address",
-      ExpressionAttributeValues: {
-        ":address": { S: address },
-      },
-    };
-
-    return await docClient.query(params).promise();
   };
 
   const setStripeID = async (id, stripeID) => {
@@ -109,37 +78,38 @@ app.post("/stripe/create/user", function (req, res) {
       Key: {
         id: id,
       },
-      UpdateExpression: "set info.StripeID = :d",
+      UpdateExpression: "set #s = :d",
+      ExpressionAttributeNames: {
+        "#s": "StripeID",
+      },
       ExpressionAttributeValues: {
         ":d": stripeID,
       },
       ReturnValues: "UPDATED_NEW",
     };
 
-    return await docClient.query(params).promise();
+    return await docClient.update(params).promise();
   };
 
-  queryID(req.apiGateway.event.email).then((query) => {
-    create()
-      .then((StripeID) => {
-        setStripeID(query.id, StripeID).then(() => {
-          res.json({ CustomerID: StripeID });
-        });
-      })
-      .catch((e) => {
-        console.log(e);
-        res.status(500).send();
+  create()
+    .then((StripeID) => {
+      setStripeID(req.body.id, StripeID).then(() => {
+        res.status(200).send();
       });
-  });
+    })
+    .catch((e) => {
+      console.log(e);
+      res.status(500).send();
+    });
 });
 
 //refresh + return url have to be https
-app.post("/stripe/onboarding", function (req, res) {
+app.post("/stripe/api/onboarding", function (req, res) {
   const onboard = async () => {
     const accountLinks = await stripe.accountLinks.create({
-      account: req.apiGateway.event.ConnectedID,
-      refresh_url: req.apiGateway.event.refresh_url,
-      return_url: req.apiGateway.event.return_url,
+      account: req.body.connectedID,
+      refresh_url: req.body.refreshUrl,
+      return_url: req.body.returnUrl,
       type: "account_onboarding",
     });
     return accountLinks;
@@ -148,12 +118,13 @@ app.post("/stripe/onboarding", function (req, res) {
   onboard()
     .then((link) => res.json({ AccountLink: link.url }))
     .catch((e) => {
+      console.log(req);
       console.log(e);
       res.status(500).send();
     });
 });
 
-app.post("/stripe/checkout", function (req, res) {
+app.post("/stripe/api/checkout", function (req, res) {
   const checkout = async (p) => {
     const session = await stripe.checkout.sessions.create(
       {
@@ -168,11 +139,11 @@ app.post("/stripe/checkout", function (req, res) {
         subscription_data: {
           application_fee_percent: 10,
         },
-        success_url: req.apiGateway.event.success_url,
-        cancel_url: req.apiGateway.event.cancel_url,
+        success_url: req.body.success_url,
+        cancel_url: req.body.cancel_url,
       },
       {
-        stripeAccount: req.apiGateway.event.ConnectedID,
+        stripeAccount: req.body.ConnectedID,
       }
     );
     return session;
@@ -190,7 +161,7 @@ app.post("/stripe/checkout", function (req, res) {
     return await docClient.query(params).promise();
   };
 
-  queryPrice(req.apiGateway.event.ConnectedID).then((p) => {
+  queryPrice(req.body.ConnectedID).then((p) => {
     checkout(p)
       .then((session) => res.json({ CheckoutSession: session }))
       .catch((e) => {
@@ -201,6 +172,7 @@ app.post("/stripe/checkout", function (req, res) {
 });
 
 app.post("/*", function (req, res) {
+  console.log("Hello");
   res.status(404).send();
 });
 
