@@ -4,10 +4,13 @@ import { getUserProfile } from "graphql/queries";
 import PropTypes from "prop-types";
 import CenteredGrid from "./LandingLayout";
 import Container from "@material-ui/core/Container";
+import { makeStyles } from "@material-ui/core/styles";
+import landingPageStyle from "assets/jss/material-dashboard-react/views/landingpageStyle";
 
 //TODO: Add payment functionality
 //TODO: Add cards for payment tiers
 //TODO: Add images + description, nicely formatted
+const useStyles = makeStyles(landingPageStyle);
 export default function LandingPage({ ...props }) {
   const [profile, setProfile] = React.useState();
 
@@ -29,10 +32,12 @@ export default function LandingPage({ ...props }) {
       .catch(console.log);
   }, [props.props.match.params.id]);
 
+  const classes = useStyles();
+
   return !profile ? (
     "Loading..."
   ) : (
-    <Container maxWidth="lg">
+    <Container className={classes.container}>
       <CenteredGrid profile={profile}></CenteredGrid>
     </Container>
   );
