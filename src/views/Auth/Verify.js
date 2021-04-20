@@ -54,12 +54,13 @@ export default function Verify({ ...props }) {
     }
   };
 
-  const stripeOnboarding = async () => {
+  const stripeOnboarding = async (cognitoID) => {
     if (props.props.location.state.isTrainer) {
       const myInit = {
         headers: {}, // AWS-IAM authorization if using empty headers
         body: {
           email: props.props.location.state.username,
+          id: cognitoID,
         },
         response: true,
       };
@@ -70,6 +71,7 @@ export default function Verify({ ...props }) {
         headers: {}, // AWS-IAM authorization if using empty headers
         body: {
           email: props.props.location.state.username,
+          id: cognitoID,
         },
         response: true,
       };
@@ -90,11 +92,11 @@ export default function Verify({ ...props }) {
     try {
       await Auth.confirmSignUp(props.props.location.state.username, code).then(
         async () => {
-          await stripeOnboarding().then(async () => {
-            await Auth.signIn(
-              props.props.location.state.username,
-              props.props.location.state.password
-            ).then(() => {
+          await Auth.signIn(
+            props.props.location.state.username,
+            props.props.location.state.password
+          ).then(async (user) => {
+            await stripeOnboarding(user.username).then(() => {
               if (props.props.location.state !== undefined) {
                 if (props.props.location.state.next !== undefined) {
                   history.push(props.props.location.state.next);
