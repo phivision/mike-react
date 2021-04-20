@@ -12,6 +12,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { Auth } from "aws-amplify";
 import { Link, useHistory } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -31,7 +32,8 @@ const useStyles = makeStyles((theme) => ({
 
 //TODO: Modularize the sign-in/sign-up system into components
 //TODO: Setup forgot password page
-export default function SignIn({ ...rest }) {
+//TODO: Error handling for authentication
+export default function SignIn({ ...props }) {
   const classes = useStyles();
   const history = useHistory();
 
@@ -70,9 +72,9 @@ export default function SignIn({ ...rest }) {
           localStorage.setItem("password", state.password);
         }
         localStorage.setItem("remember", state.remember);
-        if (rest.props.location.state !== undefined) {
-          if (rest.props.location.state.next !== undefined) {
-            history.push(rest.props.location.state.next);
+        if (props.props.location.state !== undefined) {
+          if (props.props.location.state.next !== undefined) {
+            history.push(props.props.location.state.next);
           }
         } else {
           history.push("/admin/dashboard/");
@@ -147,7 +149,24 @@ export default function SignIn({ ...rest }) {
               <Link to="/home/">Forgot password?</Link>
             </Grid>
             <Grid item>
-              <Link to="/home/signup">{"Don't have an account? Sign Up"}</Link>
+              {props.props.location.state !== undefined ? (
+                <Link
+                  to={{
+                    pathname: "/home/signup/student",
+                    state: { next: props.props.location.state.next },
+                  }}
+                >
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              ) : (
+                <Link
+                  to={{
+                    pathname: "/home/signup/student",
+                  }}
+                >
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              )}
             </Grid>
           </Grid>
         </form>
@@ -155,3 +174,13 @@ export default function SignIn({ ...rest }) {
     </Container>
   );
 }
+
+SignIn.propTypes = {
+  props: PropTypes.shape({
+    location: PropTypes.shape({
+      state: PropTypes.shape({
+        next: PropTypes.object,
+      }),
+    }),
+  }),
+};
