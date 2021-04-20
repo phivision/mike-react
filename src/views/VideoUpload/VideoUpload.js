@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import ReactHlsPlayer from "react-hls-player";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
@@ -35,6 +36,10 @@ import PropTypes from "prop-types";
 // load YAML file for video endpoints info
 // TODO: try to use aws SDK to pull the info from aws server
 const videoEndpoint = "https://dtl1jse5ko1yc.cloudfront.net/output/hls/";
+// the video transcoder will generate a number of files in prefix
+const videoTranscodeCount = 12;
+const demoURL =
+  "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8";
 
 const initialVideoForm = {
   id: null,
@@ -75,11 +80,33 @@ const useStyles = makeStyles(styles);
 // global video file handler
 let videoFile;
 
+const VideoPlayer = (props) => {
+  return (
+    <ReactHlsPlayer
+      src={props.url}
+      autoPlay={false}
+      controls={true}
+      width="100%"
+      height="auto"
+    />
+  );
+};
+
+VideoPlayer.propTypes = {
+  url: PropTypes.string,
+};
+
+const videoPropsEqual = (prevVideo, nextVideo) => {
+  return prevVideo.url === nextVideo.url;
+};
+
+const MemoVideoPlayer = React.memo(VideoPlayer, videoPropsEqual);
 export default function VideoUpload(props) {
   const [videoForm, setVideoForm] = React.useState(initialVideoForm);
   const [videos, setVideos] = React.useState([]);
   const [response, setResponse] = React.useState("");
-  const [videoURL, setVideoURL] = React.useState("");
+  // TODO: use a guide video to replace this dummy video for first time uploader
+  const [videoURL, setVideoURL] = React.useState(demoURL);
   const [open, setOpen] = React.useState(false);
   const fileRef = React.useRef();
 
@@ -114,7 +141,7 @@ export default function VideoUpload(props) {
 
   useEffect(() => {
     fetchVideos();
-  }, [props.user]);
+  }, [props.user, videoURL]);
 
   async function fetchVideos() {
     const apiData = await API.graphql(
@@ -169,7 +196,7 @@ export default function VideoUpload(props) {
   }
 
   const deleteS3Prefix = async (videoName, prefix) => {
-    Storage.list(videoName + "/", {
+    await Storage.list(videoName + "/", {
       customPrefix: {
         public: prefix,
       },
@@ -186,6 +213,22 @@ export default function VideoUpload(props) {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const checkS3PrefixReady = async (videoName, prefix) => {
+    // ready true if video is ready, false if not
+    return await Promise.all([
+      Storage.list(videoName + "/", {
+        customPrefix: {
+          public: prefix,
+        },
+      }),
+      Storage.list(videoName + ".m3u8", {
+        customPrefix: {
+          public: "output/hls/",
+        },
+      }),
+    ]);
   };
 
   async function deleteVideo(id) {
@@ -248,6 +291,7 @@ export default function VideoUpload(props) {
 
   return (
     <div>
+      <MemoVideoPlayer url={videoURL} />
       <GridContainer>
         <GridItem xs={12} sm={12} md={4}>
           <Card>
@@ -262,6 +306,7 @@ export default function VideoUpload(props) {
                 id="description"
                 label="Video Description"
                 multiline
+                fullWidth
                 rows={4}
                 variant="outlined"
                 name="Description"
@@ -311,7 +356,6 @@ export default function VideoUpload(props) {
         <GridItem xs={12} sm={12} md={8}>
           <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="caption table">
-              <caption>{videoURL}</caption>
               <TableHead>
                 <TableRow>
                   <TableCell>When Created</TableCell>
@@ -343,12 +387,30 @@ export default function VideoUpload(props) {
                       <Button
                         color="primary"
                         value={video.ContentName}
-                        onClick={(e) => {
+                        onClick={async (e) => {
                           const videoName = e.currentTarget.value.split(".")[0];
-                          setVideoURL(videoEndpoint + videoName + ".m3u8");
+                          checkS3PrefixReady(videoName, "output/hls/")
+                            .then((lists) => {
+                              const videoFiles = lists[0];
+                              const headerFiles = lists[1];
+                              return (
+                                videoFiles.length + headerFiles.length >=
+                                videoTranscodeCount + 1
+                              );
+                            })
+                            .then((ready) => {
+                              if (ready) {
+                                // if transcoding is ready, view the video
+                                setVideoURL(
+                                  videoEndpoint + videoName + ".m3u8"
+                                );
+                              } else {
+                                alert("Video transcoding is not ready!");
+                              }
+                            });
                         }}
                       >
-                        View URL
+                        View Video
                       </Button>
                     </TableCell>
                     <TableCell>{video.Description}</TableCell>

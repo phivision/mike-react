@@ -2,8 +2,10 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { API } from "aws-amplify";
 import { listUserProfiles } from "graphql/queries";
+import Banner from "../Banner/banner";
+import HomeSearch from "../HomeSearch/HomeSearch";
+import MikeIntro from "../MikeIntro/MikeIntro";
 
-//TODO: Need to add home page
 const trainerList = (trainers) => {
   if (!trainers) {
     return;
@@ -45,6 +47,9 @@ export default function Home() {
 
   return (
     <div>
+      <Banner />
+      <HomeSearch />
+      <MikeIntro />
       <div>Welcome to Mike</div>
       <div>{trainerList(trainers)}</div>
     </div>

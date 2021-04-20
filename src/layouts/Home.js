@@ -8,13 +8,11 @@ import { makeStyles } from "@material-ui/core/styles";
 // core components
 import Homebar from "../components/Homebar/Homebar.js";
 import Footer from "../components/Footer/Footer.js";
-
 import routes from "../routes.js";
-
+import { Container } from "@material-ui/core";
 import styles from "../assets/jss/material-dashboard-react/layouts/homeStyle.js";
 
 let ps;
-
 const useStyles = makeStyles(styles);
 
 const Home = () => {
@@ -62,15 +60,13 @@ const Home = () => {
   }, [mainPanel]);
 
   return (
-    <div className={classes.wrapper}>
-      <div className={classes.mainPanel} ref={mainPanel}>
-        <Homebar />
-        <div className={classes.content}>
-          <div className={classes.container}>{switchRoutes()}</div>
-        </div>
-        <Footer />
+    <Container maxWidth={false} disableGutters={true}>
+      <Homebar />
+      <div className={classes.content}>
+        <div className={classes.container}>{switchRoutes()}</div>
       </div>
-    </div>
+      <Footer />
+    </Container>
   );
 };
 
