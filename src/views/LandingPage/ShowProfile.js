@@ -20,7 +20,9 @@ const useStyles = makeStyles(landingPageStyle);
 
 const ShowProfile = ({ profile }) => {
   const classes = useStyles();
-  return (
+  return !profile ? (
+    "Loading..."
+  ) : (
     <Card className={classes.profileCardStlye}>
       <CardHeader
         avatar={
@@ -30,22 +32,25 @@ const ShowProfile = ({ profile }) => {
             src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3879298782,3698363030&fm=26&gp=0.jpg"
           />
         }
-        title={profile.FirstName + " " + profile.LastName}
+        title={
+          <Typography variant="h4">
+            {profile.FirstName} {profile.LastName}
+          </Typography>
+        }
         subheader={
-          profile.Gender +
-          " | " +
-          profile.Height +
-          "cm | " +
-          profile.Weight +
-          "\n | BMI"
+          <Typography variant="body1">
+            {profile.Gender} | {profile.Height} cm | {profile.Weight}
+            {"\n"}
+            {profile.Description}
+          </Typography>
         }
       />
       <CardContent>
         <CardContent className={classes.CardBox}>
-          <Typography variant="h6" component="h2">
+          <Typography variant="h4" component="h1">
             Biograpghy
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
+          <Typography variant="h5" color="textSecondary" component="body1">
             {profile.Description}
           </Typography>
         </CardContent>
