@@ -38,11 +38,11 @@ const ShowProfile = ({ profile }) => {
           </Typography>
         }
         subheader={
-          <Typography variant="body1">
+          <p className={classes.profileDes}>
             {profile.Gender} | {profile.Height} cm | {profile.Weight}
             {"\n"}
             {profile.Description}
-          </Typography>
+          </p>
         }
       />
       <CardContent>
@@ -50,9 +50,7 @@ const ShowProfile = ({ profile }) => {
           <Typography variant="h4" component="h1">
             Biograpghy
           </Typography>
-          <Typography variant="h5" color="textSecondary" component="body1">
-            {profile.Description}
-          </Typography>
+          <p className={classes.BioDescription}>{profile.Description}</p>
         </CardContent>
       </CardContent>
       <CardActions disableSpacing>

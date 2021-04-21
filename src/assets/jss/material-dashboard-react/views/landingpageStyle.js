@@ -76,6 +76,19 @@ const landingPageStyle = () => ({
   courseSection: {
     padding: "20px",
   },
+  profileDes: {
+    fontSize: "1rem",
+    whiteSpace: "pre-line",
+    lineHeight: "1.5em",
+    color: "#6c7076",
+  },
+  BioDescription: {
+    fontSize: "1.5rem",
+    whiteSpace: "pre-line",
+    lineHeight: "1.5em",
+    color: "#6c7076",
+    fontWeight: 500,
+  },
 });
 
 export default landingPageStyle;
