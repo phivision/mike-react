@@ -14,11 +14,13 @@ export const onCreateUserProfile = /* GraphQL */ `
       StripeID
       UserImage
       BgImage
+      BgTitle
       LastName
       FirstName
       UserRole
       Weight
       Description
+      Biography
       createdAt
       updatedAt
       owner
@@ -34,11 +36,31 @@ export const onCreateUserProfile = /* GraphQL */ `
           StripeID
           UserImage
           BgImage
+          BgTitle
           LastName
           FirstName
           UserRole
           Weight
           Description
+          Biography
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      Favorites {
+        items {
+          id
+          CreatorID
+          ContentName
+          Description
+          Level
+          Length
+          IsDemo
+          ViewCount
+          Thumbnail
+          Preview
           createdAt
           updatedAt
           owner
@@ -51,6 +73,7 @@ export const onCreateUserProfile = /* GraphQL */ `
           CreatorID
           ContentName
           Description
+          Level
           Length
           IsDemo
           ViewCount
@@ -78,11 +101,13 @@ export const onUpdateUserProfile = /* GraphQL */ `
       StripeID
       UserImage
       BgImage
+      BgTitle
       LastName
       FirstName
       UserRole
       Weight
       Description
+      Biography
       createdAt
       updatedAt
       owner
@@ -98,11 +123,31 @@ export const onUpdateUserProfile = /* GraphQL */ `
           StripeID
           UserImage
           BgImage
+          BgTitle
           LastName
           FirstName
           UserRole
           Weight
           Description
+          Biography
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      Favorites {
+        items {
+          id
+          CreatorID
+          ContentName
+          Description
+          Level
+          Length
+          IsDemo
+          ViewCount
+          Thumbnail
+          Preview
           createdAt
           updatedAt
           owner
@@ -115,6 +160,7 @@ export const onUpdateUserProfile = /* GraphQL */ `
           CreatorID
           ContentName
           Description
+          Level
           Length
           IsDemo
           ViewCount
@@ -142,11 +188,13 @@ export const onDeleteUserProfile = /* GraphQL */ `
       StripeID
       UserImage
       BgImage
+      BgTitle
       LastName
       FirstName
       UserRole
       Weight
       Description
+      Biography
       createdAt
       updatedAt
       owner
@@ -162,11 +210,31 @@ export const onDeleteUserProfile = /* GraphQL */ `
           StripeID
           UserImage
           BgImage
+          BgTitle
           LastName
           FirstName
           UserRole
           Weight
           Description
+          Biography
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      Favorites {
+        items {
+          id
+          CreatorID
+          ContentName
+          Description
+          Level
+          Length
+          IsDemo
+          ViewCount
+          Thumbnail
+          Preview
           createdAt
           updatedAt
           owner
@@ -179,6 +247,7 @@ export const onDeleteUserProfile = /* GraphQL */ `
           CreatorID
           ContentName
           Description
+          Level
           Length
           IsDemo
           ViewCount
@@ -200,6 +269,7 @@ export const onCreateUserContent = /* GraphQL */ `
       CreatorID
       ContentName
       Description
+      Level
       Length
       IsDemo
       ViewCount
@@ -218,15 +288,20 @@ export const onCreateUserContent = /* GraphQL */ `
         StripeID
         UserImage
         BgImage
+        BgTitle
         LastName
         FirstName
         UserRole
         Weight
         Description
+        Biography
         createdAt
         updatedAt
         owner
         Subscriptions {
+          nextToken
+        }
+        Favorites {
           nextToken
         }
         Contents {
@@ -244,6 +319,7 @@ export const onUpdateUserContent = /* GraphQL */ `
       CreatorID
       ContentName
       Description
+      Level
       Length
       IsDemo
       ViewCount
@@ -262,15 +338,20 @@ export const onUpdateUserContent = /* GraphQL */ `
         StripeID
         UserImage
         BgImage
+        BgTitle
         LastName
         FirstName
         UserRole
         Weight
         Description
+        Biography
         createdAt
         updatedAt
         owner
         Subscriptions {
+          nextToken
+        }
+        Favorites {
           nextToken
         }
         Contents {
@@ -288,6 +369,7 @@ export const onDeleteUserContent = /* GraphQL */ `
       CreatorID
       ContentName
       Description
+      Level
       Length
       IsDemo
       ViewCount
@@ -306,15 +388,20 @@ export const onDeleteUserContent = /* GraphQL */ `
         StripeID
         UserImage
         BgImage
+        BgTitle
         LastName
         FirstName
         UserRole
         Weight
         Description
+        Biography
         createdAt
         updatedAt
         owner
         Subscriptions {
+          nextToken
+        }
+        Favorites {
           nextToken
         }
         Contents {
