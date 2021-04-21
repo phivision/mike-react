@@ -19,15 +19,20 @@ export const listUserProfiles = /* GraphQL */ `
         StripeID
         UserImage
         BgImage
+        BgTitle
         LastName
         FirstName
         UserRole
         Weight
         Description
+        Biography
         createdAt
         updatedAt
         owner
         Subscriptions {
+          nextToken
+        }
+        Favorites {
           nextToken
         }
         Contents {
@@ -51,11 +56,13 @@ export const getUserProfile = /* GraphQL */ `
       StripeID
       UserImage
       BgImage
+      BgTitle
       LastName
       FirstName
       UserRole
       Weight
       Description
+      Biography
       createdAt
       updatedAt
       owner
@@ -71,11 +78,31 @@ export const getUserProfile = /* GraphQL */ `
           StripeID
           UserImage
           BgImage
+          BgTitle
           LastName
           FirstName
           UserRole
           Weight
           Description
+          Biography
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      Favorites {
+        items {
+          id
+          CreatorID
+          ContentName
+          Description
+          Level
+          Length
+          IsDemo
+          ViewCount
+          Thumbnail
+          Preview
           createdAt
           updatedAt
           owner
@@ -88,6 +115,7 @@ export const getUserProfile = /* GraphQL */ `
           CreatorID
           ContentName
           Description
+          Level
           Length
           IsDemo
           ViewCount
@@ -128,15 +156,20 @@ export const searchUserProfiles = /* GraphQL */ `
         StripeID
         UserImage
         BgImage
+        BgTitle
         LastName
         FirstName
         UserRole
         Weight
         Description
+        Biography
         createdAt
         updatedAt
         owner
         Subscriptions {
+          nextToken
+        }
+        Favorites {
           nextToken
         }
         Contents {
@@ -155,6 +188,7 @@ export const getUserContent = /* GraphQL */ `
       CreatorID
       ContentName
       Description
+      Level
       Length
       IsDemo
       ViewCount
@@ -173,15 +207,20 @@ export const getUserContent = /* GraphQL */ `
         StripeID
         UserImage
         BgImage
+        BgTitle
         LastName
         FirstName
         UserRole
         Weight
         Description
+        Biography
         createdAt
         updatedAt
         owner
         Subscriptions {
+          nextToken
+        }
+        Favorites {
           nextToken
         }
         Contents {
@@ -204,6 +243,7 @@ export const listUserContents = /* GraphQL */ `
         CreatorID
         ContentName
         Description
+        Level
         Length
         IsDemo
         ViewCount
@@ -222,11 +262,13 @@ export const listUserContents = /* GraphQL */ `
           StripeID
           UserImage
           BgImage
+          BgTitle
           LastName
           FirstName
           UserRole
           Weight
           Description
+          Biography
           createdAt
           updatedAt
           owner
