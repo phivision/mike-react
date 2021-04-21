@@ -4,11 +4,12 @@ import Person from "@material-ui/icons/Person";
 import PeopleIcon from "@material-ui/icons/People";
 import Notifications from "@material-ui/icons/Notifications";
 import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
+import SettingsIcon from "@material-ui/icons/Settings";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
 import TrainerList from "views/TableList/TrainerList.js";
-
+import Settings from "views/Settings/Settings";
 import NotificationsPage from "views/Notifications/Notifications.js";
 
 //core components/views for Home layout
@@ -24,7 +25,6 @@ const routes = [
   {
     path: "/dashboard",
     name: "Dashboard",
-    rtlName: "Dashboard",
     icon: Dashboard,
     component: DashboardPage,
     layout: "/admin",
@@ -32,15 +32,20 @@ const routes = [
   {
     path: "/user",
     name: "User Profile",
-    rtlName: "User Profile",
     icon: Person,
     component: UserProfile,
     layout: "/admin",
   },
   {
+    path: "/settings",
+    name: "User Settings",
+    icon: SettingsIcon,
+    component: Settings,
+    layout: "/admin",
+  },
+  {
     path: "/table",
-    name: "Trainer List",
-    rtlName: "Trainer List",
+    name: "Find Trainer",
     icon: PeopleIcon,
     component: TrainerList,
     layout: "/admin",
@@ -48,7 +53,6 @@ const routes = [
   {
     path: "/video",
     name: "Video Uploading",
-    rtlName: "Video Uploading",
     icon: VideoLibraryIcon,
     component: VideoUpload,
     layout: "/admin",
@@ -56,7 +60,6 @@ const routes = [
   {
     path: "/notifications",
     name: "Notifications",
-    rtlName: "Notifications",
     icon: Notifications,
     component: NotificationsPage,
     layout: "/admin",
@@ -79,7 +82,6 @@ const routes = [
   {
     path: "/landingpage/:id",
     name: "Landing Page",
-    rtlName: "Landing Page",
     icon: Person,
     component: LandingPage,
     layout: "/home",

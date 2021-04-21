@@ -6,23 +6,76 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
-import Navbar from "../components/Navbars/Navbar.js";
-import Footer from "../components/Footer/Footer.js";
-import Sidebar from "../components/Sidebar/Sidebar.js";
+import Navbar from "components/Navbars/Navbar.js";
+import Footer from "components/Footer/Footer.js";
+import Sidebar from "components/Sidebar/Sidebar.js";
 
-import routes from "../routes.js";
+import routes from "routes.js";
 
-import styles from "../assets/jss/material-dashboard-react/layouts/adminStyle.js";
+import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
-import bgImage from "../assets/img/sidebar-2.jpg";
-import logo from "../assets/img/reactlogo.png";
+import bgImage from "assets/img/sidebar-2.jpg";
+import logo from "assets/img/reactlogo.png";
 import PropTypes from "prop-types";
 
 let ps;
 
+const userRoutes = [
+  "Dashboard",
+  "User Profile",
+  "User Settings",
+  "Find Trainer",
+  "Notifications",
+];
+
+const trainerRoutes = [
+  "Dashboard",
+  "User Profile",
+  "User Settings",
+  "Video Uploading",
+  "Notifications",
+];
+
 const useStyles = makeStyles(styles);
 
+const switchRoutes = (user, routes, url) => {
+  return (
+    <Switch>
+      {routes.map((prop, key) => {
+        if (prop.layout === "/admin") {
+          return (
+            <Route
+              path={url + prop.path}
+              render={() => <prop.component user={user} />}
+              key={key}
+              exact
+            />
+          );
+        }
+        return null;
+      })}
+    </Switch>
+  );
+};
+
 const Admin = ({ user, ...rest }) => {
+  /*
+  The propagated object "user" contains all user data pulled from aws cognito endpoint
+  * */
+  const userRole = user.attributes["custom:role"];
+
+  const currentRoutes = routes.filter((route) => {
+    if (userRole === "trainer") {
+      if (trainerRoutes.includes(route.name)) {
+        return true;
+      }
+    } else {
+      if (userRoutes.includes(route.name)) {
+        return true;
+      }
+    }
+  });
+
   // styles
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
@@ -33,26 +86,6 @@ const Admin = ({ user, ...rest }) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const { path, url } = useRouteMatch();
   console.log(path);
-
-  const switchRoutes = (user) => {
-    return (
-      <Switch>
-        {routes.map((prop, key) => {
-          if (prop.layout === "/admin") {
-            return (
-              <Route
-                path={url + prop.path}
-                render={() => <prop.component user={user} />}
-                key={key}
-                exact
-              />
-            );
-          }
-          return null;
-        })}
-      </Switch>
-    );
-  };
 
   console.log(rest);
 
@@ -86,7 +119,7 @@ const Admin = ({ user, ...rest }) => {
     // {...rest} is removed
     <div className={classes.wrapper}>
       <Sidebar
-        routes={routes}
+        routes={currentRoutes}
         logoText={"MIKE"}
         logo={logo}
         image={image}
@@ -96,12 +129,14 @@ const Admin = ({ user, ...rest }) => {
       />
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar
-          routes={routes}
+          routes={currentRoutes}
           handleDrawerToggle={handleDrawerToggle}
           userName={user.username}
         />
         <div className={classes.content}>
-          <div className={classes.container}>{switchRoutes(user.username)}</div>
+          <div className={classes.container}>
+            {switchRoutes(user.username, currentRoutes, url)}
+          </div>
         </div>
         <Footer />
       </div>
@@ -110,7 +145,10 @@ const Admin = ({ user, ...rest }) => {
 };
 
 Admin.propTypes = {
-  user: PropTypes.shape({ username: PropTypes.string.isRequired }),
+  user: PropTypes.shape({
+    username: PropTypes.string.isRequired,
+    attributes: PropTypes.shape({ "custom:role": PropTypes.string.isRequired }),
+  }),
 };
 
 export default Admin;

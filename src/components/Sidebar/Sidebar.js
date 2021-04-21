@@ -23,25 +23,18 @@ export default function Sidebar(props) {
   const classes = useStyles();
   // verifies if routeName is the one active (in browser input)
   function activeRoute(routeName) {
-    return window.location.href.indexOf(routeName) > -1 ? true : false;
+    return window.location.href.indexOf(routeName) > -1;
   }
   const { color, logo, image, logoText, routes } = props;
-  var links = (
+  const links = (
     <List className={classes.list}>
       {routes.map((prop, key) => {
         if (prop.layout === "/admin") {
-          var activePro = " ";
-          var listItemClasses;
-          if (prop.path === "/upgrade-to-pro") {
-            activePro = classes.activePro + " ";
-            listItemClasses = classNames({
-              [" " + classes[color]]: true,
-            });
-          } else {
-            listItemClasses = classNames({
-              [" " + classes[color]]: activeRoute(prop.layout + prop.path),
-            });
-          }
+          const activePro = " ";
+          let listItemClasses;
+          listItemClasses = classNames({
+            [" " + classes[color]]: activeRoute(prop.layout + prop.path),
+          });
           const whiteFontClasses = classNames({
             [" " + classes.whiteFont]: activeRoute(prop.layout + prop.path),
           });
@@ -69,7 +62,7 @@ export default function Sidebar(props) {
                   />
                 )}
                 <ListItemText
-                  primary={props.rtlActive ? prop.rtlName : prop.name}
+                  primary={prop.name}
                   className={classNames(classes.itemText, whiteFontClasses, {
                     [classes.itemTextRTL]: props.rtlActive,
                   })}
@@ -82,7 +75,7 @@ export default function Sidebar(props) {
       })}
     </List>
   );
-  var brand = (
+  const brand = (
     <div className={classes.logo}>
       <a
         href="https://www.creative-tim.com?ref=mdr-sidebar"
