@@ -1,0 +1,5 @@
+{
+  "apiGraphQLAPIIdOutput": {
+    "Fn::GetAtt": ["apimikeAmplify", "Outputs.GraphQLAPIIdOutput"]
+  }
+}
