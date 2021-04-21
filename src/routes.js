@@ -68,11 +68,12 @@ const routes = [
     layout: "/admin",
   },
   {
-    path: "/checkout",
+    path: "/checkout/:id",
     name: "Checkout",
     icon: Person,
     component: Checkout,
     layout: "/admin",
+    exact: true,
   },
   {
     path: "/payment",
