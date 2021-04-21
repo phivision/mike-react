@@ -6,6 +6,8 @@ import CenteredGrid from "./LandingLayout";
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
 import landingPageStyle from "assets/jss/material-dashboard-react/views/landingpageStyle";
+import avatar from "assets/img/faces/marc.jpg";
+import cover from "assets/img/cover.jpeg";
 
 //TODO: Add payment functionality
 //TODO: Add cards for payment tiers
@@ -44,10 +46,13 @@ export default function LandingPage({ ...props }) {
     console.log("userProfile", userProfile);
     if (userProfile.UserImage) {
       userProfile.ImageURL = await Storage.get(userProfile.UserImage);
+    } else {
+      userProfile.ImageURL = avatar;
     }
-    console.log("ImageURL", userProfile.ImageURL, userProfile.UserImage);
     if (userProfile.BgImage) {
       userProfile.BgURL = await Storage.get(userProfile.BgImage);
+    } else {
+      userProfile.BgURL = cover;
     }
     if (userProfile) {
       setProfile(userProfile);
