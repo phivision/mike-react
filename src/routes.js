@@ -4,11 +4,12 @@ import Person from "@material-ui/icons/Person";
 import PeopleIcon from "@material-ui/icons/People";
 import Notifications from "@material-ui/icons/Notifications";
 import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
+import SettingsIcon from "@material-ui/icons/Settings";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
 import TrainerList from "views/TableList/TrainerList.js";
-
+import Settings from "views/Settings/Settings";
 import NotificationsPage from "views/Notifications/Notifications.js";
 
 //core components/views for Home layout
@@ -36,8 +37,15 @@ const routes = [
     layout: "/admin",
   },
   {
+    path: "/settings",
+    name: "User Settings",
+    icon: SettingsIcon,
+    component: Settings,
+    layout: "/admin",
+  },
+  {
     path: "/table",
-    name: "Trainer List",
+    name: "Find Trainer",
     icon: PeopleIcon,
     component: TrainerList,
     layout: "/admin",

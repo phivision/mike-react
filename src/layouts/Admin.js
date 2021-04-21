@@ -23,24 +23,17 @@ let ps;
 const userRoutes = [
   "Dashboard",
   "User Profile",
-  "Trainer List",
+  "User Settings",
+  "Find Trainer",
   "Notifications",
 ];
 
 const trainerRoutes = [
   "Dashboard",
   "User Profile",
+  "User Settings",
   "Video Uploading",
   "Notifications",
-];
-
-const commonRoutes = [
-  "Home",
-  "Search Results",
-  "Landing Page",
-  "Sign In",
-  "Sign Up",
-  "Verify your email",
 ];
 
 const useStyles = makeStyles(styles);
@@ -73,17 +66,11 @@ const Admin = ({ user, ...rest }) => {
 
   const currentRoutes = routes.filter((route) => {
     if (userRole === "trainer") {
-      if (
-        trainerRoutes.includes(route.name) ||
-        commonRoutes.includes(route.name)
-      ) {
+      if (trainerRoutes.includes(route.name)) {
         return true;
       }
     } else {
-      if (
-        userRoutes.includes(route.name) ||
-        commonRoutes.includes(route.name)
-      ) {
+      if (userRoutes.includes(route.name)) {
         return true;
       }
     }
