@@ -24,7 +24,6 @@ const routes = [
   {
     path: "/dashboard",
     name: "Dashboard",
-    rtlName: "Dashboard",
     icon: Dashboard,
     component: DashboardPage,
     layout: "/admin",
@@ -32,7 +31,6 @@ const routes = [
   {
     path: "/user",
     name: "User Profile",
-    rtlName: "User Profile",
     icon: Person,
     component: UserProfile,
     layout: "/admin",
@@ -40,7 +38,6 @@ const routes = [
   {
     path: "/table",
     name: "Trainer List",
-    rtlName: "Trainer List",
     icon: PeopleIcon,
     component: TrainerList,
     layout: "/admin",
@@ -48,7 +45,6 @@ const routes = [
   {
     path: "/video",
     name: "Video Uploading",
-    rtlName: "Video Uploading",
     icon: VideoLibraryIcon,
     component: VideoUpload,
     layout: "/admin",
@@ -56,7 +52,6 @@ const routes = [
   {
     path: "/notifications",
     name: "Notifications",
-    rtlName: "Notifications",
     icon: Notifications,
     component: NotificationsPage,
     layout: "/admin",
@@ -79,7 +74,6 @@ const routes = [
   {
     path: "/landingpage/:id",
     name: "Landing Page",
-    rtlName: "Landing Page",
     icon: Person,
     component: LandingPage,
     layout: "/home",

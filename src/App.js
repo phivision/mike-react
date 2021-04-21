@@ -34,7 +34,6 @@ const App = () => {
     });
   }, []);
 
-  //TODO: Need to fix functionality with going back in browser.
   return (
     <BrowserRouter>
       <Switch>
