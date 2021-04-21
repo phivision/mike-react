@@ -2,10 +2,16 @@ import React, { useEffect } from "react";
 import { API, Storage } from "aws-amplify";
 import { getUserProfile } from "graphql/queries";
 import PropTypes from "prop-types";
-import CenteredGrid from "./LandingLayout";
-import Container from "@material-ui/core/Container";
+import {
+  Container,
+  Grid,
+  Card,
+  Typography,
+  CardContent,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import landingPageStyle from "assets/jss/material-dashboard-react/views/landingpageStyle";
+import ShowProfile from "./ShowProfile";
 import avatar from "assets/img/faces/marc.jpg";
 import cover from "assets/img/cover.jpeg";
 
@@ -71,7 +77,32 @@ export default function LandingPage({ ...props }) {
     "Loading..."
   ) : (
     <Container className={classes.container}>
-      <CenteredGrid profile={profile}></CenteredGrid>
+      <Grid
+        container
+        className={classes.BImage}
+        style={{
+          background: `url(${profile.BgURL}) left top / 100% no-repeat`,
+        }}
+      >
+        <Typography className={classes.BannerTitle}>
+          {"You're not alone"}
+          {"\n"}
+          {"The best way to practice"}
+        </Typography>
+      </Grid>
+      <Grid container className={classes.profileSection}>
+        <Grid item xs={6}>
+          <ShowProfile profile={profile} />
+        </Grid>
+        <Grid item xs={6} className={classes.courseSection}>
+          <Typography variant="h4">Featured Courses</Typography>
+          <Card className={classes.CardStlye}>
+            <CardContent className={classes.CourseCardTitle}>
+              8 weeks Flexibility exercise
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
     </Container>
   );
 }
