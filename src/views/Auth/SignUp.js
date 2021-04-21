@@ -54,7 +54,7 @@ export default function SignUp({ ...props }) {
         username: state.email,
         password: state.password,
         attributes: {
-          "custom:role": "student",
+          "custom:role": props.props.match.params.role,
           "custom:first_name": state.firstName,
           "custom:last_name": state.lastName,
         },
@@ -170,6 +170,11 @@ export default function SignUp({ ...props }) {
 
 SignUp.propTypes = {
   props: PropTypes.shape({
+    match: PropTypes.shape({
+      params: PropTypes.shape({
+        role: PropTypes.string,
+      }),
+    }),
     location: PropTypes.shape({
       state: PropTypes.shape({
         next: PropTypes.object,

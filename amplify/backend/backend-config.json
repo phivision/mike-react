@@ -27,20 +27,6 @@
         }
       }
     },
-    "stripe": {
-      "service": "API Gateway",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "stripeAPI",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        }
-      ]
-    },
     "stripeWebhook": {
       "service": "API Gateway",
       "providerPlugin": "awscloudformation",

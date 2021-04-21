@@ -44,7 +44,7 @@ export default function Header() {
         <Link to="/home/signin" color="inherit" className={classes.login}>
           Log In
         </Link>
-        <Link to="/home/trainersignup">
+        <Link to="/home/signup/trainer">
           <Button variant="contained" className={classes.buttonStyle}>
             Coach on Mike
           </Button>
