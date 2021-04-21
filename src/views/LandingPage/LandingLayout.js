@@ -13,7 +13,13 @@ const CenteredGrid = ({ profile }) => {
     "Loading..."
   ) : (
     <div>
-      <Grid container className={classes.BImage}>
+      <Grid
+        container
+        className={classes.BImage}
+        style={{
+          background: `url(${profile.BgURL}) left top / 100% no-repeat`,
+        }}
+      >
         <Typography className={classes.BannerTitle}>
           {"You're not alone"}
           {"\n"}

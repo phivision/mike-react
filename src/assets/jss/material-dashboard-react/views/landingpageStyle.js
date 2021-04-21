@@ -14,12 +14,9 @@ const landingPageStyle = () => ({
     paddingRight: 0,
   },
   BImage: {
-    background: `url(${"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2620721125,1355879679&fm=26&gp=0.jpg"})`,
-    backgroundSize: "100% 100%",
     height: "40vh",
     maxWidth: "none",
     overflow: "hidden",
-    backgroundPosition: "left",
   },
   BannerTitle: {
     color: "#606b6c",

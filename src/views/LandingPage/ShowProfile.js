@@ -29,7 +29,7 @@ const ShowProfile = ({ profile }) => {
           <Avatar
             aria-label="recipe"
             className={classes.avatar}
-            src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3879298782,3698363030&fm=26&gp=0.jpg"
+            src={profile.ImageURL}
           />
         }
         title={
