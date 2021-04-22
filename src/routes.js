@@ -11,6 +11,8 @@ import UserProfile from "views/UserProfile/UserProfile.js";
 import TrainerList from "views/TableList/TrainerList.js";
 import Settings from "views/Settings/Settings";
 import NotificationsPage from "views/Notifications/Notifications.js";
+import Checkout from "views/Checkout/Checkout.js";
+import Payment from "views/Payment/Payment.js";
 
 //core components/views for Home layout
 import LandingPage from "views/LandingPage/LandingPage.js";
@@ -65,9 +67,23 @@ const routes = [
     layout: "/admin",
   },
   {
+    path: "/checkout/:id",
+    name: "Checkout",
+    icon: Person,
+    component: Checkout,
+    layout: "/admin",
+    exact: true,
+  },
+  {
+    path: "/payment",
+    name: "Payment",
+    icon: Person,
+    component: Payment,
+    layout: "/admin",
+  },
+  {
     path: "/",
     name: "Home",
-    icon: Person,
     component: Home,
     layout: "/home",
     exact: true,
@@ -106,7 +122,7 @@ const routes = [
     name: "Verify your email",
     component: Verify,
     layout: "/home",
-    exact: true,
+    exact: false,
   },
 ];
 

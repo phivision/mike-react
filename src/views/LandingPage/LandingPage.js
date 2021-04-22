@@ -14,6 +14,8 @@ import landingPageStyle from "assets/jss/material-dashboard-react/views/landingp
 import ShowProfile from "./ShowProfile";
 import avatar from "assets/img/faces/marc.jpg";
 import cover from "assets/img/cover.jpeg";
+import { Button } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 
 //TODO: Add payment functionality
 //TODO: Add cards for payment tiers
@@ -41,6 +43,7 @@ const useStyles = makeStyles(landingPageStyle);
 
 export default function LandingPage({ ...props }) {
   const [profile, setProfile] = React.useState(initialProfileState);
+  const history = useHistory();
 
   async function userQuery() {
     const userProfileData = await API.graphql({
@@ -66,6 +69,12 @@ export default function LandingPage({ ...props }) {
       console.log("cannot find user profile!");
     }
   }
+
+  const onSubmit = () => {
+    history.push({
+      pathname: "/admin/checkout/" + profile.id,
+    });
+  };
 
   useEffect(() => {
     userQuery();
@@ -103,6 +112,12 @@ export default function LandingPage({ ...props }) {
           </Card>
         </Grid>
       </Grid>
+      <div>
+        <h4>{profile.FirstName + " " + profile.LastName}</h4>
+        <p>{profile.Description}</p>
+        <p>{profile.Price}</p>
+        <Button onClick={() => onSubmit()}>Subscribe</Button>
+      </div>
     </Container>
   );
 }

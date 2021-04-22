@@ -34,6 +34,7 @@ const trainerRoutes = [
   "User Settings",
   "Video Uploading",
   "Notifications",
+  "Payment",
 ];
 
 const useStyles = makeStyles(styles);

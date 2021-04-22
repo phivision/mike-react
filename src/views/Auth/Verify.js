@@ -9,6 +9,7 @@ import Container from "@material-ui/core/Container";
 import { Auth } from "aws-amplify";
 import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom";
+import { API } from "aws-amplify";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -53,6 +54,32 @@ export default function Verify({ ...props }) {
     }
   };
 
+  const stripeOnboarding = async (cognitoID) => {
+    if (props.props.location.state.isTrainer) {
+      const myInit = {
+        headers: {}, // AWS-IAM authorization if using empty headers
+        body: {
+          email: props.props.location.state.username,
+          id: cognitoID,
+        },
+        response: true,
+      };
+
+      await API.post("stripeAPI", "/stripe/api/createtrainer", myInit);
+    } else {
+      const myInit = {
+        headers: {}, // AWS-IAM authorization if using empty headers
+        body: {
+          email: props.props.location.state.username,
+          id: cognitoID,
+        },
+        response: true,
+      };
+
+      await API.post("stripeAPI", "/stripe/api/createuser", myInit);
+    }
+  };
+
   async function handleSubmit(e) {
     e.preventDefault();
     let code =
@@ -68,13 +95,15 @@ export default function Verify({ ...props }) {
           await Auth.signIn(
             props.props.location.state.username,
             props.props.location.state.password
-          ).then(() => {
-            if (props.props.location.state !== undefined) {
-              if (props.props.location.state.next !== undefined) {
-                history.push(props.props.location.state.next);
+          ).then(async (user) => {
+            await stripeOnboarding(user.username).then(() => {
+              if (props.props.location.state !== undefined) {
+                if (props.props.location.state.next !== undefined) {
+                  history.push(props.props.location.state.next);
+                }
               }
-            }
-            history.push("/admin/dashboard/");
+              history.push("/admin/dashboard/");
+            });
           });
         }
       );
@@ -140,6 +169,7 @@ Verify.propTypes = {
       state: PropTypes.shape({
         username: PropTypes.string.isRequired,
         password: PropTypes.string.isRequired,
+        isTrainer: PropTypes.bool,
         next: PropTypes.object,
       }),
     }),
