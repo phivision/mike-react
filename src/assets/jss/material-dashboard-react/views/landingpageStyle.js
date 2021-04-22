@@ -90,13 +90,14 @@ const landingPageStyle = () => ({
     minWidth: "600px",
   },
   profileContainer: {
-    padding: "20px",
+    padding: "30px",
   },
   input: {
     display: "none",
   },
-  cardfooter: {
+  centerAlign: {
     margin: "20px auto",
+    textAlign: "center",
   },
 });
 

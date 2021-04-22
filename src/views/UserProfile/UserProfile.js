@@ -207,7 +207,7 @@ export default function UserProfile(props) {
               type="file"
               onChange={handleImageChange}
             />
-            <InputLabel htmlFor="photo-upload">
+            <InputLabel htmlFor="photo-upload" className={classes.centerAlign}>
               <Button variant="contained" color="rose" component="span">
                 Replace Photo
               </Button>
@@ -215,7 +215,7 @@ export default function UserProfile(props) {
           </Grid>
           <Grid item xs={8}>
             <GridContainer>
-              <GridItem xs={6} sm={6} md={3}>
+              <GridItem xs={4}>
                 <TextField
                   id="last-name"
                   label="Last Name"
@@ -224,7 +224,7 @@ export default function UserProfile(props) {
                   onChange={handleChange}
                 />
               </GridItem>
-              <GridItem xs={6} sm={6} md={3}>
+              <GridItem xs={4}>
                 <TextField
                   id="first-name"
                   label="First Name"
@@ -233,7 +233,7 @@ export default function UserProfile(props) {
                   onChange={handleChange}
                 />
               </GridItem>
-              <GridItem xs={6} sm={6} md={3}>
+              <GridItem xs={4}>
                 <TextField
                   id="birthday"
                   label="Birthday"
@@ -244,9 +244,7 @@ export default function UserProfile(props) {
                   InputLabelProps={{ shrink: true, readOnly: false }}
                 />
               </GridItem>
-            </GridContainer>
-            <GridContainer>
-              <GridItem xs={6} sm={6} md={3}>
+              <GridItem xs={4}>
                 <TextField
                   id="gender"
                   select
@@ -263,7 +261,7 @@ export default function UserProfile(props) {
                   ))}
                 </TextField>
               </GridItem>
-              <GridItem xs={6} sm={6} md={3}>
+              <GridItem xs={4}>
                 <TextField
                   id="height"
                   label="Height (cm)"
@@ -273,7 +271,7 @@ export default function UserProfile(props) {
                   onChange={handleChange}
                 />
               </GridItem>
-              <GridItem xs={6} sm={6} md={3}>
+              <GridItem xs={4}>
                 <TextField
                   id="weight"
                   label="Weight (pound)"
@@ -283,10 +281,22 @@ export default function UserProfile(props) {
                   onChange={handleChange}
                 />
               </GridItem>
+              <GridItem xs={12}>
+                <TextField
+                  id="description"
+                  name="Description"
+                  label="Description"
+                  multiline
+                  rows={4}
+                  value={profile.Description || ""}
+                  // onChange={handleChange}
+                  className={classes.BioDescription}
+                />
+              </GridItem>
             </GridContainer>
           </Grid>
         </Grid>
-        <CardContent>
+        <CardContent className={classes.profileContainer}>
           <CardContent className={classes.CardBox}>
             <Typography variant="h4" component="h1">
               Biograpghy
@@ -295,16 +305,19 @@ export default function UserProfile(props) {
               id="description"
               name="Description"
               multiline
+              fullWidth
+              margin="normal"
               rows={4}
               value={profile.Description || ""}
               onChange={handleChange}
+              style={{ lineHeight: "2rem" }}
               className={classes.BioDescription}
             />
           </CardContent>
         </CardContent>
-        <CardContent className={classes.cardfooter}>
+        <CardContent className={classes.centerAlign}>
           <Button color="rose" onClick={userUpdate}>
-            Save All Changes
+            Submit All Changes
           </Button>
         </CardContent>
       </Card>
