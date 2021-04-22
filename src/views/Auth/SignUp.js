@@ -67,6 +67,7 @@ export default function SignUp({ ...props }) {
             state: {
               username: state.email,
               password: state.password,
+              role: props.props.match.params.role,
               next: props.props.location.state.next,
             },
           });
@@ -77,6 +78,7 @@ export default function SignUp({ ...props }) {
           state: {
             username: state.email,
             password: state.password,
+            role: props.props.match.params.role,
           },
         });
       }
