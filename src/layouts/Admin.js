@@ -20,23 +20,6 @@ import PropTypes from "prop-types";
 
 let ps;
 
-const userRoutes = [
-  "Dashboard",
-  "User Profile",
-  "User Settings",
-  "Find Trainer",
-  "Notifications",
-];
-
-const trainerRoutes = [
-  "Dashboard",
-  "User Profile",
-  "User Settings",
-  "Video Uploading",
-  "Notifications",
-  "Payment",
-];
-
 const useStyles = makeStyles(styles);
 
 const switchRoutes = (user, routes, url) => {
@@ -66,14 +49,12 @@ const Admin = ({ user, ...rest }) => {
   const userRole = user.attributes["custom:role"];
 
   const currentRoutes = routes.filter((route) => {
-    if (userRole === "trainer") {
-      if (trainerRoutes.includes(route.name)) {
-        return true;
-      }
-    } else {
-      if (userRoutes.includes(route.name)) {
-        return true;
-      }
+    if (
+      (userRole === "trainer" && route.layoutCategory === "trainer") ||
+      (userRole === "student" && route.layoutCategory === "student") ||
+      route.layoutCategory === "both"
+    ) {
+      return true;
     }
   });
 
