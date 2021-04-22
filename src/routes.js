@@ -30,6 +30,7 @@ const routes = [
     icon: Dashboard,
     component: DashboardPage,
     layout: "/admin",
+    layoutCategory: "both", // if layout category is "both", the route will be shown for both student and trainer
   },
   {
     path: "/user",
@@ -37,6 +38,7 @@ const routes = [
     icon: Person,
     component: UserProfile,
     layout: "/admin",
+    layoutCategory: "both",
   },
   {
     path: "/settings",
@@ -44,6 +46,7 @@ const routes = [
     icon: SettingsIcon,
     component: Settings,
     layout: "/admin",
+    layoutCategory: "both",
   },
   {
     path: "/table",
@@ -51,6 +54,7 @@ const routes = [
     icon: PeopleIcon,
     component: TrainerList,
     layout: "/admin",
+    layoutCategory: "student",
   },
   {
     path: "/video",
@@ -58,13 +62,7 @@ const routes = [
     icon: VideoLibraryIcon,
     component: VideoUpload,
     layout: "/admin",
-  },
-  {
-    path: "/notifications",
-    name: "Notifications",
-    icon: Notifications,
-    component: NotificationsPage,
-    layout: "/admin",
+    layoutCategory: "trainer",
   },
   {
     path: "/checkout/:id",
@@ -73,6 +71,7 @@ const routes = [
     component: Checkout,
     layout: "/admin",
     exact: true,
+    layoutCategory: "student",
   },
   {
     path: "/payment",
@@ -80,6 +79,15 @@ const routes = [
     icon: Person,
     component: Payment,
     layout: "/admin",
+    layoutCategory: "trainer",
+  },
+  {
+    path: "/notifications",
+    name: "Notifications",
+    icon: Notifications,
+    component: NotificationsPage,
+    layout: "/admin",
+    layoutCategory: "both",
   },
   {
     path: "/",
