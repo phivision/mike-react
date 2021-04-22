@@ -55,7 +55,7 @@ export default function Verify({ ...props }) {
   };
 
   const stripeOnboarding = async (cognitoID) => {
-    if (props.props.location.state.isTrainer) {
+    if (props.props.location.state.role === "trainer") {
       const myInit = {
         headers: {}, // AWS-IAM authorization if using empty headers
         body: {
@@ -64,7 +64,6 @@ export default function Verify({ ...props }) {
         },
         response: true,
       };
-
       await API.post("stripeAPI", "/stripe/api/createtrainer", myInit);
     } else {
       const myInit = {
@@ -169,7 +168,7 @@ Verify.propTypes = {
       state: PropTypes.shape({
         username: PropTypes.string.isRequired,
         password: PropTypes.string.isRequired,
-        isTrainer: PropTypes.bool,
+        role: PropTypes.string.isRequired,
         next: PropTypes.object,
       }),
     }),
