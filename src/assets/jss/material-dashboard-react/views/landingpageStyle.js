@@ -31,10 +31,12 @@ const landingPageStyle = () => ({
   avatar: {
     width: "250px",
     height: "250px",
+    margin: "20px auto",
     boxShadow: `-5px -5px 0 10px ${primaryColor[4]}`,
   },
   CardBox: {
     minHeight: "200px",
+    maxWidth: "800px",
     backgroundColor: "#f0f8fc",
     padding: "20px",
     marginTop: "10px",
@@ -85,6 +87,16 @@ const landingPageStyle = () => ({
     lineHeight: "1.5em",
     color: "#6c7076",
     fontWeight: 500,
+    minWidth: "600px",
+  },
+  profileContainer: {
+    padding: "20px",
+  },
+  input: {
+    display: "none",
+  },
+  cardfooter: {
+    margin: "20px auto",
   },
 });
 
