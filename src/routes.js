@@ -10,7 +10,6 @@ import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
 import TrainerList from "views/TableList/TrainerList.js";
 import Settings from "views/Settings/Settings";
-import Payment from "views/Payment/Payment.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
 import Checkout from "views/Checkout/Checkout.js";
 import Payment from "views/Payment/Payment.js";

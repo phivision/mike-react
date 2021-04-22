@@ -14,8 +14,8 @@ export default function Checkout({ ...props }) {
           trainerID: props.user,
           success_url: "https://www.google.com",
           cancel_url: "https://www.google.com",
-          // refreshUrl: window.location.href,
-          // returnUrl: window.location.href,
+          // success_url: window.location.href,
+          // cancel_url: window.location.href,
         },
         response: true,
       };
@@ -33,12 +33,13 @@ export default function Checkout({ ...props }) {
 
   return (
     <div>
+      Hello
       <Button
         onClick={() => {
           getLink();
         }}
       >
-        Stripe Dashboard
+        Stripe Checkout
       </Button>
     </div>
   );
