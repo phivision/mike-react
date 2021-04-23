@@ -14,13 +14,13 @@ const landingPageStyle = () => ({
     paddingRight: 0,
   },
   BImage: {
-    height: "40vh",
+    minHeight: "50vh",
     maxWidth: "none",
     overflow: "hidden",
   },
   BannerTitle: {
     color: "#606b6c",
-    fontSize: "3rem",
+    fontSize: "2.5rem",
     fontWeight: 500,
     fontFamily: "Arial Rounded MT Bold",
     lineHeight: 1.4,
@@ -31,10 +31,12 @@ const landingPageStyle = () => ({
   avatar: {
     width: "250px",
     height: "250px",
+    margin: "20px auto",
     boxShadow: `-5px -5px 0 10px ${primaryColor[4]}`,
   },
   CardBox: {
     minHeight: "200px",
+    maxWidth: "800px",
     backgroundColor: "#f0f8fc",
     padding: "20px",
     marginTop: "10px",
@@ -47,7 +49,7 @@ const landingPageStyle = () => ({
   },
   CardStlye: {
     border: "none",
-    background: `url(${fitness}) no-repeat center top`,
+    background: `url(${fitness}) no-repeat center top / cover`,
     minHeight: "300px",
     backgroundSize: "100% 100%",
     overflow: "hidden",
@@ -78,6 +80,7 @@ const landingPageStyle = () => ({
     whiteSpace: "pre-line",
     lineHeight: "1.5em",
     color: "#6c7076",
+    textAlign: "left",
   },
   BioDescription: {
     fontSize: "1.5rem",
@@ -85,6 +88,31 @@ const landingPageStyle = () => ({
     lineHeight: "1.5em",
     color: "#6c7076",
     fontWeight: 500,
+  },
+  profileContainer: {
+    padding: "30px",
+  },
+  input: {
+    display: "none",
+  },
+  centerAlign: {
+    margin: "auto auto",
+    textAlign: "center",
+    padding: "10px",
+  },
+  userCard: {
+    width: "55%",
+    minHeight: "300px",
+    padding: "20px",
+    borderRadius: "20px",
+    boxShadow: "10px 5px 20px 20px #e4e5e6",
+    margin: "20px auto",
+  },
+  readmore: {
+    textAlign: "right",
+    color: `${primaryColor[4]}`,
+    fontWeight: 600,
+    marginTop: "20px",
   },
 });
 
