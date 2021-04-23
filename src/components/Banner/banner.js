@@ -8,7 +8,7 @@ const useStyles = makeStyles(() => ({
     flexGrow: 1,
   },
   BannerImage: {
-    height: "60vh",
+    minHeight: "40vh",
     maxWidth: "none",
     overflow: "hidden",
     backgroundPosition: "left",
@@ -31,7 +31,9 @@ const Banner = ({ bannerURL, bannerText }) => {
     <Grid
       container
       className={classes.BannerImage}
-      style={{ background: `url(${bannerURL}) no-repeat center top /100%` }}
+      style={{
+        background: `url(${bannerURL}) no-repeat center top /100% auto`,
+      }}
     >
       <Typography className={classes.BannerTitle}>{bannerText}</Typography>
     </Grid>

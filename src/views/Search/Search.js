@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
 import { API } from "aws-amplify";
 import { searchUserProfiles } from "graphql/queries";
 import PropTypes from "prop-types";
@@ -7,25 +6,6 @@ import { Container } from "@material-ui/core";
 import Banner from "../../components/Banner/banner";
 import banner from "assets/img/banner2.jpeg";
 import TrainerCard from "../TrainerCard/TrainerCard";
-
-//TODO: Need to add card functionality
-const trainerList = (trainers) => {
-  if (!trainers) {
-    return;
-  }
-
-  return (
-    <div>
-      {trainers.map((query, key) => {
-        return (
-          <Link key={key} to={{ pathname: "/home/landingpage/" + query.id }}>
-            {"Trainer: " + query.FirstName + " " + query.LastName}
-          </Link>
-        );
-      })}
-    </div>
-  );
-};
 
 export default function Search({ ...props }) {
   const [trainers, setTrainers] = React.useState([]);
@@ -59,13 +39,11 @@ export default function Search({ ...props }) {
   return (
     <div>
       <Banner bannerURL={banner} bannerText="Pilates" />
-      <Container>
+      <Container style={{ backgroundColor: "white", padding: "20px" }}>
         {trainers.map((trainer, idx) => {
           return <TrainerCard key={idx} id={trainer.id} />;
         })}
       </Container>
-      <div>Search Results</div>
-      <div>{trainerList(trainers)}</div>
     </div>
   );
 }

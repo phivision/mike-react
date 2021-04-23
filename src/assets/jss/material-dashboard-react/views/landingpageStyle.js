@@ -14,13 +14,13 @@ const landingPageStyle = () => ({
     paddingRight: 0,
   },
   BImage: {
-    height: "40vh",
+    minHeight: "40vh",
     maxWidth: "none",
     overflow: "hidden",
   },
   BannerTitle: {
     color: "#606b6c",
-    fontSize: "3rem",
+    fontSize: "2.5rem",
     fontWeight: 500,
     fontFamily: "Arial Rounded MT Bold",
     lineHeight: 1.4,
@@ -88,7 +88,6 @@ const landingPageStyle = () => ({
     lineHeight: "1.5em",
     color: "#6c7076",
     fontWeight: 500,
-    minWidth: "600px",
   },
   profileContainer: {
     padding: "30px",
@@ -103,16 +102,17 @@ const landingPageStyle = () => ({
   },
   userCard: {
     width: "60%",
-    height: "300px",
+    minHeight: "300px",
     padding: "20px",
     borderRadius: "20px",
     boxShadow: "10px 5px 20px 20px #e4e5e6",
-    margin: "auto",
+    margin: "20px auto",
   },
   readmore: {
     textAlign: "right",
     color: `${primaryColor[4]}`,
     fontWeight: 600,
+    marginTop: "20px",
   },
 });
 

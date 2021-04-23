@@ -287,6 +287,7 @@ export default function UserProfile(props) {
                   name="Description"
                   label="Description"
                   multiline
+                  fullWidth
                   rows={4}
                   value={profile.Description || ""}
                   // onChange={handleChange}
