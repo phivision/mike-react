@@ -8,14 +8,14 @@ const useStyles = makeStyles(() => ({
     flexGrow: 1,
   },
   BannerImage: {
-    minHeight: "40vh",
+    minHeight: "50vh",
     maxWidth: "none",
     overflow: "hidden",
     backgroundPosition: "left",
   },
   BannerTitle: {
     color: "white",
-    fontSize: "4.5rem",
+    fontSize: "2.5rem",
     fontWeight: 500,
     fontFamily: "Arial Rounded MT Bold",
     lineHeight: 1.4,
@@ -32,7 +32,7 @@ const Banner = ({ bannerURL, bannerText }) => {
       container
       className={classes.BannerImage}
       style={{
-        background: `url(${bannerURL}) no-repeat center top /100% auto`,
+        background: `url(${bannerURL}) no-repeat center top /cover`,
       }}
     >
       <Typography className={classes.BannerTitle}>{bannerText}</Typography>

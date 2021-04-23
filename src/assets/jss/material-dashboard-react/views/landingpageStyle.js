@@ -14,7 +14,7 @@ const landingPageStyle = () => ({
     paddingRight: 0,
   },
   BImage: {
-    minHeight: "40vh",
+    minHeight: "50vh",
     maxWidth: "none",
     overflow: "hidden",
   },
@@ -49,7 +49,7 @@ const landingPageStyle = () => ({
   },
   CardStlye: {
     border: "none",
-    background: `url(${fitness}) no-repeat center top`,
+    background: `url(${fitness}) no-repeat center top / cover`,
     minHeight: "300px",
     backgroundSize: "100% 100%",
     overflow: "hidden",
@@ -101,7 +101,7 @@ const landingPageStyle = () => ({
     padding: "10px",
   },
   userCard: {
-    width: "60%",
+    width: "55%",
     minHeight: "300px",
     padding: "20px",
     borderRadius: "20px",

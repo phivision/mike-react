@@ -75,7 +75,7 @@ const TrainerCard = ({ id }) => {
   return (
     <Card className={classes.userCard}>
       <Grid container>
-        <Grid item xs={7} className={classes.centerAlign}>
+        <Grid item xs={8} className={classes.centerAlign}>
           <Avatar
             aria-label="image"
             className={classes.avatar}
@@ -94,8 +94,8 @@ const TrainerCard = ({ id }) => {
             {"read more >>"}
           </div>
         </Grid>
-        <Grid item xs={5}>
-          <GridList cellHeight={120} cols={1} spacing={20}>
+        <Grid item xs={4}>
+          <GridList cellHeight={100} cols={1} spacing={38}>
             <img src={yoga1} alt="yoga1" />
             <img src={yoga2} alt="yoga2" />
           </GridList>

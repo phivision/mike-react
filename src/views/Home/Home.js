@@ -47,7 +47,7 @@ export default function Home() {
   }, [trainers.length]);
 
   return (
-    <div>
+    <div style={{ backgroundColor: "white" }}>
       <Banner bannerURL={banner} bannerText="A better way change your life" />
       <HomeSearch />
       <MikeIntro />

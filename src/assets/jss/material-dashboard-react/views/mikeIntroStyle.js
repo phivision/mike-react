@@ -2,8 +2,7 @@ import fitness from "assets/img/fitness.jpg";
 
 const mikeIntroStyle = {
   FitnessImage: {
-    background: `url(${fitness}) no-repeat center top`,
-    backgroundSize: "100% 100%",
+    background: `url(${fitness}) no-repeat center top / cover`,
     maxWidth: "none",
     minHeight: "490px",
     overflow: "hidden",

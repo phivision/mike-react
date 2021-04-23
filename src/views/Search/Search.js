@@ -39,7 +39,9 @@ export default function Search({ ...props }) {
   return (
     <div>
       <Banner bannerURL={banner} bannerText="Pilates" />
-      <Container style={{ backgroundColor: "white", padding: "20px" }}>
+      <Container
+        style={{ backgroundColor: "white", padding: "20px", maxWidth: "none" }}
+      >
         {trainers.map((trainer, idx) => {
           return <TrainerCard key={idx} id={trainer.id} />;
         })}
