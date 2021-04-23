@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { API } from "aws-amplify";
 import { listUserProfiles } from "graphql/queries";
 import Banner from "../../components/Banner/banner";
-import HomeSearch from "../HomeSearch/HomeSearch";
-import MikeIntro from "../MikeIntro/MikeIntro";
+import HomeSearch from "../../components/Search/HomeSearch";
+import MikeIntro from "../../components/Introduction/MikeIntro";
 import banner from "assets/img/banner.jpg";
 
 const trainerList = (trainers) => {

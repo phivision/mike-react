@@ -48,7 +48,7 @@ const ShowProfile = ({ profile }) => {
       <CardContent>
         <CardContent className={classes.CardBox}>
           <Typography variant="h4" component="h1">
-            Biograpghy
+            Biography
           </Typography>
           <p className={classes.BioDescription}>{profile.Description}</p>
         </CardContent>

@@ -37,7 +37,7 @@ const initialProfileState = {
   UserImage: null,
   ImageURL: null,
   BgImage: null,
-  BgURL: cover,
+  BgURL: null,
   RegDate: "",
   Birthday: null,
   Email: "",
@@ -51,32 +51,36 @@ const initialProfileState = {
 export default function UserProfile(props) {
   const [profile, setProfile] = React.useState(initialProfileState);
 
-  async function userQuery() {
-    try {
-      const userProfileData = await API.graphql(
-        graphqlOperation(getUserProfile, { id: props.user })
-      );
-      const userProfile = userProfileData.data.getUserProfile;
-      if (userProfile.UserImage) {
-        // get url for the user image and update it to the profile view
-        userProfile.ImageURL = await Storage.get(userProfile.UserImage);
-      } else {
-        // if image is not yet uploaded, use local avatar
-        userProfile.ImageURL = avatar;
-      }
-      if (userProfile.BgImage) {
-        userProfile.BgURL = await Storage.get(userProfile.BgImage);
-      } else {
-        userProfile.BgURL = cover;
-      }
-      if (userProfile) {
-        setProfile(userProfile);
-      } else {
-        console.log("cannot find user profile!");
-      }
-    } catch (e) {
-      console.log(e);
+  async function updateUserImages(userProfile) {
+    if (userProfile.UserImage) {
+      // get url for the user image and update it to the profile view
+      userProfile.ImageURL = await Storage.get(userProfile.UserImage);
+    } else {
+      // if image is not yet uploaded, use local avatar
+      userProfile.ImageURL = avatar;
     }
+    if (userProfile.BgImage) {
+      userProfile.BgURL = await Storage.get(userProfile.BgImage);
+    } else {
+      userProfile.BgURL = cover;
+    }
+  }
+
+  async function userQuery() {
+    const userProfileData = await API.graphql(
+      graphqlOperation(getUserProfile, { id: props.user })
+    );
+    const userProfile = userProfileData.data.getUserProfile;
+    updateUserImages(userProfile)
+      .then(() => {
+        if (userProfile) {
+          setProfile(userProfile);
+        }
+      })
+      .catch((e) => {
+        console.log("cannot find user profile!");
+        console.log(e);
+      });
   }
 
   async function userUpdate() {
@@ -92,32 +96,23 @@ export default function UserProfile(props) {
       BgImage: profile.BgImage,
       Description: profile.Description,
     };
-    try {
-      const resultedProfile = await API.graphql(
-        graphqlOperation(updateUserProfile, {
-          input: updatedProfile,
-        })
-      );
-      const updatedUserProfile = resultedProfile.data.updateUserProfile;
-      // if user image uploaded, replace the local path with s3 url and update the local webpage
-      if (profile.UserImage) {
-        updatedUserProfile.ImageURL = await Storage.get(profile.UserImage);
-      } else {
-        updatedUserProfile.ImageURL = avatar;
-      }
-      if (profile.BgImage) {
-        updatedUserProfile.BgURL = await Storage.get(profile.BgImage);
-      } else {
-        updatedUserProfile.BgURL = cover;
-      }
-      if (updatedUserProfile) {
-        setProfile(updatedUserProfile);
-      } else {
+    const resultedProfile = await API.graphql(
+      graphqlOperation(updateUserProfile, {
+        input: updatedProfile,
+      })
+    );
+    const updatedUserProfile = resultedProfile.data.updateUserProfile;
+    // if user image uploaded, replace the local path with s3 url and update the local webpage
+    updateUserImages(updatedUserProfile)
+      .then(() => {
+        if (updatedUserProfile) {
+          setProfile(updatedUserProfile);
+        }
+      })
+      .catch((e) => {
         console.log("cannot update user profile!");
-      }
-    } catch (e) {
-      console.log(e);
-    }
+        console.log(e);
+      });
   }
 
   const handleChange = (event) => {

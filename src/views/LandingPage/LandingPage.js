@@ -53,16 +53,12 @@ export default function LandingPage({ ...props }) {
     });
     const userProfile = userProfileData.data.getUserProfile;
     console.log("userProfile", userProfile);
-    if (userProfile.UserImage) {
-      userProfile.ImageURL = await Storage.get(userProfile.UserImage);
-    } else {
-      userProfile.ImageURL = avatar;
-    }
-    if (userProfile.BgImage) {
-      userProfile.BgURL = await Storage.get(userProfile.BgImage);
-    } else {
-      userProfile.BgURL = cover;
-    }
+    userProfile.ImageURL = userProfile.UserImage
+      ? await Storage.get(userProfile.UserImage)
+      : avatar;
+    userProfile.BgURL = userProfile.BgImage
+      ? await Storage.get(userProfile.BgImage)
+      : cover;
     if (userProfile) {
       setProfile(userProfile);
     } else {

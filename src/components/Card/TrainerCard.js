@@ -9,7 +9,6 @@ import landingPageStyle from "assets/jss/material-dashboard-react/views/landingp
 import yoga1 from "assets/img/yoga1.jpeg";
 import yoga2 from "assets/img/yoga2.jpeg";
 import avatar from "assets/img/faces/marc.jpg";
-import cover from "assets/img/cover.jpeg";
 
 const initialProfileState = {
   id: "",
@@ -47,16 +46,9 @@ const TrainerCard = ({ id }) => {
       authMode: "AWS_IAM",
     });
     const userProfile = userProfileData.data.getUserProfile;
-    if (userProfile.UserImage) {
-      userProfile.ImageURL = await Storage.get(userProfile.UserImage);
-    } else {
-      userProfile.ImageURL = avatar;
-    }
-    if (userProfile.BgImage) {
-      userProfile.BgURL = await Storage.get(userProfile.BgImage);
-    } else {
-      userProfile.BgURL = cover;
-    }
+    userProfile.ImageURL = userProfile.UserImage
+      ? await Storage.get(userProfile.UserImage)
+      : avatar;
     if (userProfile) {
       setProfile(userProfile);
     } else {

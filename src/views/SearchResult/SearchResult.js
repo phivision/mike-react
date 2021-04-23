@@ -5,9 +5,9 @@ import PropTypes from "prop-types";
 import { Container } from "@material-ui/core";
 import Banner from "../../components/Banner/banner";
 import banner from "assets/img/banner2.jpeg";
-import TrainerCard from "../TrainerCard/TrainerCard";
+import TrainerCard from "../../components/Card/TrainerCard";
 
-export default function Search({ ...props }) {
+export default function SearchResult({ ...props }) {
   const [trainers, setTrainers] = React.useState([]);
 
   async function trainerQuery() {
@@ -50,7 +50,7 @@ export default function Search({ ...props }) {
   );
 }
 
-Search.propTypes = {
+SearchResult.propTypes = {
   props: PropTypes.shape({
     match: PropTypes.shape({
       params: PropTypes.shape({
