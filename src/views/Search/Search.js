@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import { API } from "aws-amplify";
 import { searchUserProfiles } from "graphql/queries";
 import PropTypes from "prop-types";
+import { Container } from "@material-ui/core";
 import Banner from "../../components/Banner/banner";
 import banner from "assets/img/banner2.jpeg";
+import TrainerCard from "../TrainerCard/TrainerCard";
 
 //TODO: Need to add card functionality
 const trainerList = (trainers) => {
@@ -57,6 +59,11 @@ export default function Search({ ...props }) {
   return (
     <div>
       <Banner bannerURL={banner} bannerText="Pilates" />
+      <Container>
+        {trainers.map((trainer, idx) => {
+          return <TrainerCard key={idx} id={trainer.id} />;
+        })}
+      </Container>
       <div>Search Results</div>
       <div>{trainerList(trainers)}</div>
     </div>

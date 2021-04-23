@@ -80,6 +80,7 @@ const landingPageStyle = () => ({
     whiteSpace: "pre-line",
     lineHeight: "1.5em",
     color: "#6c7076",
+    textAlign: "left",
   },
   BioDescription: {
     fontSize: "1.5rem",
@@ -96,8 +97,22 @@ const landingPageStyle = () => ({
     display: "none",
   },
   centerAlign: {
-    margin: "20px auto",
+    margin: "auto auto",
     textAlign: "center",
+    padding: "10px",
+  },
+  userCard: {
+    width: "60%",
+    height: "300px",
+    padding: "20px",
+    borderRadius: "20px",
+    boxShadow: "10px 5px 20px 20px #e4e5e6",
+    margin: "auto",
+  },
+  readmore: {
+    textAlign: "right",
+    color: `${primaryColor[4]}`,
+    fontWeight: 600,
   },
 });
 
