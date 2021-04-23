@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { API } from "aws-amplify";
 import { searchUserProfiles } from "graphql/queries";
 import PropTypes from "prop-types";
+import Banner from "../../components/Banner/banner";
+import banner from "assets/img/banner2.jpeg";
 
 //TODO: Need to add card functionality
 const trainerList = (trainers) => {
@@ -54,6 +56,7 @@ export default function Search({ ...props }) {
 
   return (
     <div>
+      <Banner bannerURL={banner} bannerText="Pilates" />
       <div>Search Results</div>
       <div>{trainerList(trainers)}</div>
     </div>

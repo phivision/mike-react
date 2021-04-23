@@ -1,15 +1,13 @@
 import React from "react";
-import { Grid, Typography } from "@material-ui/core";
+import { Card } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import banner from "assets/img/banner.jpg";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1,
   },
   BannerImage: {
-    background: `url(${banner}) no-repeat center top`,
-    backgroundSize: "100% 100%",
     height: "60vh",
     maxWidth: "none",
     overflow: "hidden",
@@ -27,15 +25,18 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Banner = () => {
+const TrainerCard = ({ id }) => {
   const classes = useStyles();
   return (
-    <Grid container className={classes.BannerImage}>
-      <Typography className={classes.BannerTitle}>
-        A better way change your life
-      </Typography>
-    </Grid>
+    <Card>
+      {id}
+    </Card>
+
   );
 };
 
-export default Banner;
+export default TrainerCard;
+
+TrainerCard.propTypes = {
+  id: PropTypes.string,
+};
