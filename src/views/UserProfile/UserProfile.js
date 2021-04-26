@@ -26,31 +26,12 @@ import { updateUserProfile } from "graphql/mutations";
 // resources
 import avatar from "assets/img/faces/marc.jpg";
 import cover from "assets/img/cover.jpeg";
-//load landing page style
+// load landing page style
 import landingPageStyle from "assets/jss/material-dashboard-react/views/landingpageStyle";
+// import initial profile
+import initialProfileState from "variables/profile.js";
 
 const useStyles = makeStyles(landingPageStyle);
-
-const initialProfileState = {
-  id: "",
-  LastName: "",
-  FirstName: "",
-  Description: null,
-  UserImage: null,
-  ImageURL: null,
-  BgImage: null,
-  BgURL: null,
-  RegDate: "",
-  Birthday: null,
-  Email: "",
-  Gender: null,
-  Height: null,
-  Weight: null,
-  Price: null,
-  StripID: null,
-  Biography: "Please input your biography.",
-  BgTitle: "Please input the Title of background image.",
-};
 
 export default function UserProfile(props) {
   const [profile, setProfile] = React.useState(initialProfileState);
