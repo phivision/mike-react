@@ -114,6 +114,9 @@ const landingPageStyle = () => ({
     fontWeight: 600,
     marginTop: "20px",
   },
+  cardContainer: {
+    marginTop: "110px",
+  },
 });
 
 export default landingPageStyle;

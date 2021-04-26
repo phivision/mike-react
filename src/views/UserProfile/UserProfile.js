@@ -9,14 +9,16 @@ import {
   TextField,
   MenuItem,
   Grid,
+  Card,
   CardContent,
   Typography,
+  Container,
 } from "@material-ui/core";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Button from "components/CustomButtons/Button.js";
-import Card from "components/Card/Card.js";
+// import Card from "components/Card/Card.js";
 import PropTypes from "prop-types";
 import { API, Storage, graphqlOperation } from "aws-amplify";
 import { getUserProfile } from "graphql/queries";
@@ -170,8 +172,8 @@ export default function UserProfile(props) {
 
   const classes = useStyles();
   return (
-    <GridContainer>
-      <Card>
+    <Container className={classes.container}>
+      <Card className={classes.cardContainer}>
         <CardMedia
           className={classes.BImage}
           image={profile.BgURL}
@@ -330,7 +332,7 @@ export default function UserProfile(props) {
           </Button>
         </CardContent>
       </Card>
-    </GridContainer>
+    </Container>
   );
 }
 
