@@ -300,7 +300,7 @@ export default function UserProfile(props) {
                   label="Description"
                   multiline
                   fullWidth
-                  rows={4}
+                  rowsMax={5}
                   value={profile.Description || ""}
                   onChange={handleChange}
                   className={classes.BioDescription}
@@ -320,7 +320,7 @@ export default function UserProfile(props) {
               label="Biography"
               multiline
               fullWidth
-              rows={4}
+              rowsMax={5}
               value={profile.Biography || ""}
               onChange={handleChange}
             />
