@@ -9,14 +9,16 @@ import {
   TextField,
   MenuItem,
   Grid,
+  Card,
   CardContent,
   Typography,
+  Container,
 } from "@material-ui/core";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Button from "components/CustomButtons/Button.js";
-import Card from "components/Card/Card.js";
+// import Card from "components/Card/Card.js";
 import PropTypes from "prop-types";
 import { API, Storage, graphqlOperation } from "aws-amplify";
 import { getUserProfile } from "graphql/queries";
@@ -46,6 +48,8 @@ const initialProfileState = {
   Weight: null,
   Price: null,
   StripID: null,
+  Biography: "Please input your biography.",
+  BgTitle: "Please input the Title of background image.",
 };
 
 export default function UserProfile(props) {
@@ -95,6 +99,8 @@ export default function UserProfile(props) {
       UserImage: profile.UserImage,
       BgImage: profile.BgImage,
       Description: profile.Description,
+      Biography: profile.Biography,
+      BgTitle: profile.BgTitle,
     };
     const resultedProfile = await API.graphql(
       graphqlOperation(updateUserProfile, {
@@ -166,8 +172,8 @@ export default function UserProfile(props) {
 
   const classes = useStyles();
   return (
-    <GridContainer>
-      <Card>
+    <Container className={classes.container}>
+      <Card className={classes.cardContainer}>
         <CardMedia
           className={classes.BImage}
           image={profile.BgURL}
@@ -186,6 +192,17 @@ export default function UserProfile(props) {
               Replace Image
             </Button>
           </InputLabel>
+          <TextField
+            id="BgTitle"
+            label="Background Title"
+            name="BgTitle"
+            variant="filled"
+            multiline
+            style={{ margin: "8%", width: "60%" }}
+            value={profile.BgTitle}
+            margin="normal"
+            onChange={handleChange}
+          />
         </CardMedia>
         <Grid container className={classes.profileContainer}>
           <Grid item xs={4}>
@@ -283,9 +300,9 @@ export default function UserProfile(props) {
                   label="Description"
                   multiline
                   fullWidth
-                  rows={4}
+                  rowsMax={5}
                   value={profile.Description || ""}
-                  // onChange={handleChange}
+                  onChange={handleChange}
                   className={classes.BioDescription}
                 />
               </GridItem>
@@ -298,16 +315,14 @@ export default function UserProfile(props) {
               Biograpghy
             </Typography>
             <TextField
-              id="description"
-              name="Description"
+              id="Biography"
+              name="Biography"
+              label="Biography"
               multiline
               fullWidth
-              margin="normal"
-              rows={4}
-              value={profile.Description || ""}
+              rowsMax={5}
+              value={profile.Biography || ""}
               onChange={handleChange}
-              style={{ lineHeight: "2rem" }}
-              className={classes.BioDescription}
             />
           </CardContent>
         </CardContent>
@@ -317,7 +332,7 @@ export default function UserProfile(props) {
           </Button>
         </CardContent>
       </Card>
-    </GridContainer>
+    </Container>
   );
 }
 

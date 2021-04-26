@@ -50,7 +50,7 @@ const ShowProfile = ({ profile }) => {
           <Typography variant="h4" component="h1">
             Biography
           </Typography>
-          <p className={classes.BioDescription}>{profile.Description}</p>
+          <p className={classes.BioDescription}>{profile.Biography}</p>
         </CardContent>
       </CardContent>
       <CardActions disableSpacing>
