@@ -315,9 +315,9 @@ export default function UserProfile(props) {
               Biograpghy
             </Typography>
             <TextField
-              id="BiograpghyText"
-              name="BiograpghyText"
-              label="Biograpghy"
+              id="Biography"
+              name="Biography"
+              label="Biography"
               multiline
               fullWidth
               rows={4}
