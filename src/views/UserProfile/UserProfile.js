@@ -46,6 +46,8 @@ const initialProfileState = {
   Weight: null,
   Price: null,
   StripID: null,
+  Biography: "Please input your biography.",
+  BgTitle: "Please input the Title of background image.",
 };
 
 export default function UserProfile(props) {
@@ -95,6 +97,8 @@ export default function UserProfile(props) {
       UserImage: profile.UserImage,
       BgImage: profile.BgImage,
       Description: profile.Description,
+      Biography: profile.Biography,
+      BgTitle: profile.BgTitle,
     };
     const resultedProfile = await API.graphql(
       graphqlOperation(updateUserProfile, {
@@ -186,6 +190,17 @@ export default function UserProfile(props) {
               Replace Image
             </Button>
           </InputLabel>
+          <TextField
+            id="BgTitle"
+            label="Background Title"
+            name="BgTitle"
+            variant="filled"
+            multiline
+            style={{ margin: "8%", width: "60%" }}
+            value={profile.BgTitle}
+            margin="normal"
+            onChange={handleChange}
+          />
         </CardMedia>
         <Grid container className={classes.profileContainer}>
           <Grid item xs={4}>
@@ -285,7 +300,7 @@ export default function UserProfile(props) {
                   fullWidth
                   rows={4}
                   value={profile.Description || ""}
-                  // onChange={handleChange}
+                  onChange={handleChange}
                   className={classes.BioDescription}
                 />
               </GridItem>
@@ -298,16 +313,14 @@ export default function UserProfile(props) {
               Biograpghy
             </Typography>
             <TextField
-              id="description"
-              name="Description"
+              id="BiograpghyText"
+              name="BiograpghyText"
+              label="Biograpghy"
               multiline
               fullWidth
-              margin="normal"
               rows={4}
-              value={profile.Description || ""}
+              value={profile.Biography || ""}
               onChange={handleChange}
-              style={{ lineHeight: "2rem" }}
-              className={classes.BioDescription}
             />
           </CardContent>
         </CardContent>

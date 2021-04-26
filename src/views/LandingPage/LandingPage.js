@@ -90,9 +90,7 @@ export default function LandingPage({ ...props }) {
         }}
       >
         <Typography className={classes.BannerTitle}>
-          {"You're not alone"}
-          {"\n"}
-          {"The best way to practice"}
+          {profile.BgTitle}
         </Typography>
       </Grid>
       <Grid container className={classes.profileSection}>
