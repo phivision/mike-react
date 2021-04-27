@@ -106,23 +106,10 @@ export default function UserProfile(props) {
     setProfile({ ...profile, [event.target.name]: event.target.value });
   };
 
-  async function handleImageChange(e) {
+  async function handleImageChange(imageKey, e) {
     if (!e.target.files[0]) return;
     const file = e.target.files[0];
-    setProfile({ ...profile, UserImage: file.name });
-    try {
-      await Storage.put(file.name, file, { contentType: "image/*" });
-    } catch (e) {
-      const msg = "Error uploading file: " + e.message;
-      console.log(e);
-      alert(msg);
-    }
-  }
-
-  async function handleBackgroundChange(e) {
-    if (!e.target.files[0]) return;
-    const file = e.target.files[0];
-    setProfile({ ...profile, BgImage: file.name });
+    setProfile({ ...profile, [imageKey]: file.name });
     try {
       await Storage.put(file.name, file, { contentType: "image/*" });
     } catch (e) {
@@ -166,7 +153,7 @@ export default function UserProfile(props) {
             className={classes.input}
             id="BgImage-upload-button"
             type="file"
-            onChange={handleBackgroundChange}
+            onChange={(e) => handleImageChange("BgImage", e)}
           />
           <InputLabel htmlFor="BgImage-upload-button">
             <Button variant="contained" color="rose" component="span">
@@ -198,7 +185,7 @@ export default function UserProfile(props) {
               className={classes.input}
               id="photo-upload"
               type="file"
-              onChange={handleImageChange}
+              onChange={(e) => handleImageChange("UserImage", e)}
             />
             <InputLabel htmlFor="photo-upload" className={classes.centerAlign}>
               <Button variant="contained" color="rose" component="span">
