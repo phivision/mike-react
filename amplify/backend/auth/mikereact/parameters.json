@@ -16,7 +16,7 @@
     "emailVerificationSubject": "Your MIKE verification code",
     "emailVerificationMessage": "Your MIKE verification code is {####}",
     "defaultPasswordPolicy": false,
-    "passwordPolicyMinLength": 8
+    "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
     "requiredAttributes": [
         "email"
@@ -34,7 +34,7 @@
         "given_name"
     ],
     "userpoolClientLambdaRole": "mikere862a812d_userpoolclient_lambda_role",
-    "userpoolClientSetAttributes": false,
+    "userpoolClientSetAttributes": true,
     "sharedId": "862a812d",
     "resourceName": "mikereact",
     "authSelections": "identityPoolAndUserPool",
@@ -71,5 +71,5 @@
         "Ref": "AWS::StackId"
     },
     "permissions": [],
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"mike://\",\"mike://\"],\"LogoutURLs\":[\"mike://\"]}"
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"mikeios://\",\"mike://\"],\"LogoutURLs\":[\"mike://\"]}"
 }
