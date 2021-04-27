@@ -30,7 +30,7 @@ const switchRoutes = (user, routes, url) => {
           return (
             <Route
               path={url + prop.path}
-              render={() => <prop.component user={user} />}
+              render={(props) => <prop.component user={user} props={props} />}
               key={key}
               exact
             />
@@ -66,8 +66,7 @@ const Admin = ({ user, ...rest }) => {
   const image = bgImage;
   const color = "blue";
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const { path, url } = useRouteMatch();
-  console.log(path);
+  const match = useRouteMatch();
 
   console.log(rest);
 
@@ -117,7 +116,7 @@ const Admin = ({ user, ...rest }) => {
         />
         <div className={classes.content}>
           <div className={classes.container}>
-            {switchRoutes(user.username, currentRoutes, url)}
+            {switchRoutes(user.username, currentRoutes, match.url)}
           </div>
         </div>
         <Footer />
