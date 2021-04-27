@@ -1,34 +1,38 @@
 {
     "identityPoolName": "testAuthIdentityPool",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "mikere862a812d",
     "userPoolName": "mikereact",
     "autoVerifiedAttributes": [
-        "phone_number"
+        "email"
     ],
-    "mfaConfiguration": "OFF",
+    "mfaConfiguration": "OPTIONAL",
     "mfaTypes": [
-        "SMS Text Message"
+        "SMS Text Message",
+        "TOTP"
     ],
-    "smsAuthenticationMessage": "Your authentication code is {####}",
-    "smsVerificationMessage": "Forgot password code: {####}",
-    "emailVerificationSubject": "Your verification code",
-    "emailVerificationMessage": "Your verification code is {####}",
+    "smsAuthenticationMessage": "Your MIKE authentication code is {####}",
+    "smsVerificationMessage": "Your MIKE verification code is {####}",
+    "emailVerificationSubject": "Your MIKE verification code",
+    "emailVerificationMessage": "Your MIKE verification code is {####}",
     "defaultPasswordPolicy": false,
-    "passwordPolicyMinLength": 8,
-    "passwordPolicyCharacters": [
-        "Requires Lowercase",
-        "Requires Numbers",
-        "Requires Symbols",
-        "Requires Uppercase"
-    ],
+    "passwordPolicyMinLength": 8
+    "passwordPolicyCharacters": [],
     "requiredAttributes": [
         "email"
     ],
     "userpoolClientGenerateSecret": false,
     "userpoolClientRefreshTokenValidity": 30,
-    "userpoolClientWriteAttributes": [],
-    "userpoolClientReadAttributes": [],
+    "userpoolClientWriteAttributes": [
+        "family_name",
+        "given_name",
+        "email"
+    ],
+    "userpoolClientReadAttributes": [
+        "email",
+        "family_name",
+        "given_name"
+    ],
     "userpoolClientLambdaRole": "mikere862a812d_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
     "sharedId": "862a812d",
@@ -54,8 +58,18 @@
     "userPoolGroups": false,
     "userPoolGroupList": [],
     "adminQueries": false,
-    "thirdPartyAuth": false,
-    "authProviders": [],
     "usernameCaseSensitive": false,
-    "dependsOn": []
+    "dependsOn": [],
+    "authProviders": [],
+    "thirdPartyAuth": false,
+    "triggers": "{}",
+    "hostedUI": true,
+    "hostedUIDomainName": "mikereactd9688095-d9688095",
+    "authProvidersUserPool": [],
+    "hostedUIProviderMeta": "[]",
+    "parentStack": {
+        "Ref": "AWS::StackId"
+    },
+    "permissions": [],
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"mike://\",\"mike://\"],\"LogoutURLs\":[\"mike://\"]}"
 }
