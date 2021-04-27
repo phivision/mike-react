@@ -76,6 +76,9 @@ export default function UserProfile(props) {
     const updatedUserProfile = resultedProfile.data.updateUserProfile;
     // if user image uploaded, replace the local path with s3 url and update the local webpage
     if (updatedUserProfile) {
+      // by pass current image URLs
+      updatedUserProfile.ImageURL = profile.ImageURL;
+      updatedUserProfile.BgURL = profile.BgURL;
       setProfile(updatedUserProfile);
     }
   }
@@ -87,11 +90,16 @@ export default function UserProfile(props) {
   async function handleImageChange(imageKey, urlKey, e) {
     if (!e.target.files[0]) return;
     const file = e.target.files[0];
-    setProfile({ ...profile, [imageKey]: file.name });
-    Storage.put(file.name, file, { contentType: "image/*" })
+    // upload image, then, get uploaded image and update the UI
+    const newFileName = imageKey + props.user;
+    Storage.put(newFileName, file, { contentType: "image/*" })
       .then(() => {
-        Storage.get(file.name).then((imageURL) => {
-          setProfile({ ...profile, [imageKey]: file.name, [urlKey]: imageURL });
+        Storage.get(newFileName).then((imageURL) => {
+          setProfile({
+            ...profile,
+            [imageKey]: newFileName,
+            [urlKey]: imageURL,
+          });
         });
       })
       .catch((e) => {
