@@ -18,6 +18,10 @@ import PublicRoute from "./components/Routes/PublicRoute";
 // amplify config
 Amplify.configure(awsconfig);
 
+const stripePromise = loadStripe(
+  "pk_test_51IWoNlAXegvVyt5sEGxoPrV9MfyryI7OR5vKuY4bLXUgqWIE2Dv0TmtY5R9BVHpjhg3qssoAF3z5GhtkgHrc8Mc400VDRuU2yX"
+);
+
 //TODO: Remove excess components
 const App = () => {
   const [authState, setAuthState] = React.useState(false);
@@ -35,10 +39,6 @@ const App = () => {
       }
     });
   }, []);
-
-  const stripePromise = loadStripe(
-    "pk_test_51IWoNlAXegvVyt5sEGxoPrV9MfyryI7OR5vKuY4bLXUgqWIE2Dv0TmtY5R9BVHpjhg3qssoAF3z5GhtkgHrc8Mc400VDRuU2yX"
-  );
 
   return (
     <Elements stripe={stripePromise}>
