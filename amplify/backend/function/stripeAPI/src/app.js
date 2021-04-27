@@ -26,7 +26,7 @@ app.use(function (req, res, next) {
 
 const stripe = require("stripe")(process.env.SECRET_TEST_KEY);
 
-app.post("/stripe/api/createtrainer", function (req, res) {
+app.post("/stripe/api/trainer/create", function (req, res) {
   const create = async () => {
     let account = await stripe.accounts.create({
       email: req.body.email,
@@ -64,7 +64,7 @@ app.post("/stripe/api/createtrainer", function (req, res) {
     });
 });
 
-app.post("/stripe/api/createuser", function (req, res) {
+app.post("/stripe/api/user/create", function (req, res) {
   const create = async () => {
     let account = await stripe.customers.create({
       email: req.body.email,
@@ -104,7 +104,7 @@ app.post("/stripe/api/createuser", function (req, res) {
 });
 
 //refresh + return url have to be https
-app.post("/stripe/api/onboarding", function (req, res) {
+app.post("/stripe/api/trainer/onboarding", function (req, res) {
   const onboard = async () => {
     const accountLinks = await stripe.accountLinks.create({
       account: req.body.connectedID,
@@ -124,7 +124,7 @@ app.post("/stripe/api/onboarding", function (req, res) {
     });
 });
 
-app.post("/stripe/api/checkout", function (req, res) {
+app.post("/stripe/api/user/checkout", function (req, res) {
   const checkout = async (p) => {
     const session = await stripe.checkout.sessions.create(
       {

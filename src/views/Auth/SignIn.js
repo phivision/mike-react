@@ -9,32 +9,17 @@ import {
   Grid,
   Checkbox,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 import { Auth } from "aws-amplify";
 import { Link, useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
-
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
+// import auth styles
+import authStyles from "../../assets/jss/material-dashboard-react/views/authStyle";
 
 //TODO: Modularize the sign-in/sign-up system into components
 //TODO: Setup forgot password page
 //TODO: Error handling for authentication
 export default function SignIn({ ...props }) {
-  const classes = useStyles();
+  const classes = authStyles();
   const history = useHistory();
 
   const [state, setState] = React.useState(
