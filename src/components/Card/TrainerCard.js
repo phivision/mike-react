@@ -9,25 +9,8 @@ import landingPageStyle from "assets/jss/material-dashboard-react/views/landingp
 import yoga1 from "assets/img/yoga1.jpeg";
 import yoga2 from "assets/img/yoga2.jpeg";
 import avatar from "assets/img/faces/marc.jpg";
-
-const initialProfileState = {
-  id: "",
-  LastName: "",
-  FirstName: "",
-  Description: null,
-  UserImage: null,
-  ImageURL: null,
-  BgImage: null,
-  BgURL: null,
-  RegDate: "",
-  Birthday: null,
-  Email: "",
-  Gender: null,
-  Height: null,
-  Weight: null,
-  Price: null,
-  StripID: null,
-};
+// import initial profile
+import initialProfileState from "variables/profile.js";
 
 const useStyles = makeStyles(landingPageStyle);
 
@@ -60,7 +43,7 @@ const TrainerCard = ({ id }) => {
     userQuery();
   }, [id]);
 
-  var description = profile.Description
+  const description = profile.Description
     ? profile.Description.substr(0, 100) + "..."
     : "";
 

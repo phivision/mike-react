@@ -26,47 +26,23 @@ import { updateUserProfile } from "graphql/mutations";
 // resources
 import avatar from "assets/img/faces/marc.jpg";
 import cover from "assets/img/cover.jpeg";
-//load landing page style
+// load landing page style
 import landingPageStyle from "assets/jss/material-dashboard-react/views/landingpageStyle";
+// import initial profile
+import initialProfileState from "variables/profile.js";
 
 const useStyles = makeStyles(landingPageStyle);
-
-const initialProfileState = {
-  id: "",
-  LastName: "",
-  FirstName: "",
-  Description: null,
-  UserImage: null,
-  ImageURL: null,
-  BgImage: null,
-  BgURL: null,
-  RegDate: "",
-  Birthday: null,
-  Email: "",
-  Gender: null,
-  Height: null,
-  Weight: null,
-  Price: null,
-  StripID: null,
-  Biography: "Please input your biography.",
-  BgTitle: "Please input the Title of background image.",
-};
 
 export default function UserProfile(props) {
   const [profile, setProfile] = React.useState(initialProfileState);
 
-  async function updateUserImages(userProfile) {
-    if (userProfile.UserImage) {
+  async function updateImage(imageKey, urlKey, urlAvatar, userProfile) {
+    if (userProfile[imageKey]) {
       // get url for the user image and update it to the profile view
-      userProfile.ImageURL = await Storage.get(userProfile.UserImage);
+      userProfile[urlKey] = await Storage.get(userProfile[imageKey]);
     } else {
       // if image is not yet uploaded, use local avatar
-      userProfile.ImageURL = avatar;
-    }
-    if (userProfile.BgImage) {
-      userProfile.BgURL = await Storage.get(userProfile.BgImage);
-    } else {
-      userProfile.BgURL = cover;
+      userProfile[urlKey] = urlAvatar;
     }
   }
 
@@ -74,17 +50,7 @@ export default function UserProfile(props) {
     const userProfileData = await API.graphql(
       graphqlOperation(getUserProfile, { id: props.user })
     );
-    const userProfile = userProfileData.data.getUserProfile;
-    updateUserImages(userProfile)
-      .then(() => {
-        if (userProfile) {
-          setProfile(userProfile);
-        }
-      })
-      .catch((e) => {
-        console.log("cannot find user profile!");
-        console.log(e);
-      });
+    return userProfileData.data.getUserProfile;
   }
 
   async function userUpdate() {
@@ -109,46 +75,38 @@ export default function UserProfile(props) {
     );
     const updatedUserProfile = resultedProfile.data.updateUserProfile;
     // if user image uploaded, replace the local path with s3 url and update the local webpage
-    updateUserImages(updatedUserProfile)
-      .then(() => {
-        if (updatedUserProfile) {
-          setProfile(updatedUserProfile);
-        }
-      })
-      .catch((e) => {
-        console.log("cannot update user profile!");
-        console.log(e);
-      });
+    if (updatedUserProfile) {
+      // by pass current image URLs
+      updatedUserProfile.ImageURL = profile.ImageURL;
+      updatedUserProfile.BgURL = profile.BgURL;
+      setProfile(updatedUserProfile);
+    }
   }
 
   const handleChange = (event) => {
     setProfile({ ...profile, [event.target.name]: event.target.value });
   };
 
-  async function handleImageChange(e) {
+  async function handleImageChange(imageKey, urlKey, e) {
     if (!e.target.files[0]) return;
     const file = e.target.files[0];
-    setProfile({ ...profile, UserImage: file.name });
-    try {
-      await Storage.put(file.name, file, { contentType: "image/*" });
-    } catch (e) {
-      const msg = "Error uploading file: " + e.message;
-      console.log(e);
-      alert(msg);
-    }
-  }
-
-  async function handleBackgroundChange(e) {
-    if (!e.target.files[0]) return;
-    const file = e.target.files[0];
-    setProfile({ ...profile, BgImage: file.name });
-    try {
-      await Storage.put(file.name, file, { contentType: "image/*" });
-    } catch (e) {
-      const msg = "Error uploading file: " + e.message;
-      console.log(e);
-      alert(msg);
-    }
+    // upload image, then, get uploaded image and update the UI
+    const newFileName = imageKey + props.user;
+    Storage.put(newFileName, file, { contentType: "image/*" })
+      .then(() => {
+        Storage.get(newFileName).then((imageURL) => {
+          setProfile({
+            ...profile,
+            [imageKey]: newFileName,
+            [urlKey]: imageURL,
+          });
+        });
+      })
+      .catch((e) => {
+        const msg = "Error uploading file: " + e.message;
+        console.log(e);
+        alert(msg);
+      });
   }
 
   const genders = [
@@ -167,7 +125,21 @@ export default function UserProfile(props) {
   ];
 
   useEffect(() => {
-    userQuery();
+    userQuery()
+      .then((userProfile) => {
+        Promise.all([
+          updateImage("UserImage", "ImageURL", avatar, userProfile),
+          updateImage("BgImage", "BgURL", cover, userProfile),
+        ]).then(() => {
+          if (userProfile) {
+            setProfile(userProfile);
+          }
+        });
+      })
+      .catch((e) => {
+        console.log("cannot find user profile!");
+        console.log(e);
+      });
   }, [props.user]);
 
   const classes = useStyles();
@@ -185,7 +157,7 @@ export default function UserProfile(props) {
             className={classes.input}
             id="BgImage-upload-button"
             type="file"
-            onChange={handleBackgroundChange}
+            onChange={(e) => handleImageChange("BgImage", "BgURL", e)}
           />
           <InputLabel htmlFor="BgImage-upload-button">
             <Button variant="contained" color="rose" component="span">
@@ -199,7 +171,7 @@ export default function UserProfile(props) {
             variant="filled"
             multiline
             style={{ margin: "8%", width: "60%" }}
-            value={profile.BgTitle}
+            value={profile.BgTitle || ""}
             margin="normal"
             onChange={handleChange}
           />
@@ -217,7 +189,7 @@ export default function UserProfile(props) {
               className={classes.input}
               id="photo-upload"
               type="file"
-              onChange={handleImageChange}
+              onChange={(e) => handleImageChange("UserImage", "ImageURL", e)}
             />
             <InputLabel htmlFor="photo-upload" className={classes.centerAlign}>
               <Button variant="contained" color="rose" component="span">
@@ -328,7 +300,7 @@ export default function UserProfile(props) {
         </CardContent>
         <CardContent className={classes.centerAlign}>
           <Button color="rose" onClick={userUpdate}>
-            Submit All Changes
+            Submit Profile Changes
           </Button>
         </CardContent>
       </Card>

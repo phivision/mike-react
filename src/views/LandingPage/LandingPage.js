@@ -17,27 +17,12 @@ import cover from "assets/img/cover.jpeg";
 import { Button } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
+// import initial profile
+import initialProfileState from "variables/profile.js";
+
 //TODO: Add payment functionality
 //TODO: Add cards for payment tiers
 //TODO: Add images + description, nicely formatted
-const initialProfileState = {
-  id: "",
-  LastName: "",
-  FirstName: "",
-  Description: null,
-  UserImage: null,
-  ImageURL: null,
-  BgImage: null,
-  BgURL: null,
-  RegDate: "",
-  Birthday: null,
-  Email: "",
-  Gender: null,
-  Height: null,
-  Weight: null,
-  Price: null,
-  StripID: null,
-};
 
 const useStyles = makeStyles(landingPageStyle);
 
