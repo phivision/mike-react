@@ -26,15 +26,18 @@ export const listUserProfiles = /* GraphQL */ `
         Weight
         Description
         Biography
-        createdAt
-        updatedAt
-        owner
-        Subscriptions {
-          nextToken
-        }
         Favorites {
           nextToken
         }
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
         Contents {
           nextToken
         }
@@ -63,52 +66,36 @@ export const getUserProfile = /* GraphQL */ `
       Weight
       Description
       Biography
-      createdAt
-      updatedAt
-      owner
-      Subscriptions {
-        items {
-          id
-          Birthday
-          Email
-          Gender
-          Height
-          Price
-          RegDate
-          StripeID
-          UserImage
-          BgImage
-          BgTitle
-          LastName
-          FirstName
-          UserRole
-          Weight
-          Description
-          Biography
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
       Favorites {
         items {
           id
-          CreatorID
-          ContentName
-          Description
-          Level
-          Length
-          IsDemo
-          ViewCount
-          Thumbnail
-          Preview
           createdAt
           updatedAt
           owner
         }
         nextToken
       }
+      Subscriptions {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      Users {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      owner
       Contents {
         items {
           id
@@ -163,71 +150,24 @@ export const searchUserProfiles = /* GraphQL */ `
         Weight
         Description
         Biography
-        createdAt
-        updatedAt
-        owner
-        Subscriptions {
-          nextToken
-        }
         Favorites {
           nextToken
         }
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
         Contents {
           nextToken
         }
       }
       nextToken
       total
-    }
-  }
-`;
-export const getUserContent = /* GraphQL */ `
-  query GetUserContent($id: ID!) {
-    getUserContent(id: $id) {
-      id
-      CreatorID
-      ContentName
-      Description
-      Level
-      Length
-      IsDemo
-      ViewCount
-      Thumbnail
-      Preview
-      createdAt
-      updatedAt
-      Creator {
-        id
-        Birthday
-        Email
-        Gender
-        Height
-        Price
-        RegDate
-        StripeID
-        UserImage
-        BgImage
-        BgTitle
-        LastName
-        FirstName
-        UserRole
-        Weight
-        Description
-        Biography
-        createdAt
-        updatedAt
-        owner
-        Subscriptions {
-          nextToken
-        }
-        Favorites {
-          nextToken
-        }
-        Contents {
-          nextToken
-        }
-      }
-      owner
     }
   }
 `;
@@ -249,6 +189,9 @@ export const listUserContents = /* GraphQL */ `
         ViewCount
         Thumbnail
         Preview
+        FavoriteUser {
+          nextToken
+        }
         createdAt
         updatedAt
         Creator {
@@ -276,6 +219,68 @@ export const listUserContents = /* GraphQL */ `
         owner
       }
       nextToken
+    }
+  }
+`;
+export const getUserContent = /* GraphQL */ `
+  query GetUserContent($id: ID!) {
+    getUserContent(id: $id) {
+      id
+      CreatorID
+      ContentName
+      Description
+      Level
+      Length
+      IsDemo
+      ViewCount
+      Thumbnail
+      Preview
+      FavoriteUser {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      Creator {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        Price
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        Description
+        Biography
+        Favorites {
+          nextToken
+        }
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+        Contents {
+          nextToken
+        }
+      }
+      owner
     }
   }
 `;
