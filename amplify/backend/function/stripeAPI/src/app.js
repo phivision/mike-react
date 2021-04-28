@@ -27,11 +27,35 @@ app.use(function (req, res, next) {
 const stripe = require("stripe")(process.env.SECRET_TEST_KEY);
 
 app.post("/stripe/api/trainer/create", function (req, res) {
-  const create = async () => {
+  const queryName = async (id) => {
+    const params = {
+      TableName: process.env.TABLE_NAME,
+      Key: { id: id },
+    };
+
+    return await docClient.get(params).promise();
+  };
+
+  const create = async (id) => {
     let account = await stripe.accounts.create({
       email: req.body.email,
       type: "express",
     });
+    const query = await queryName(id);
+    const product = await stripe.products.create(
+      { name: query.FirstName + " " + query.LastName },
+      { stripeAccount: account.id }
+    );
+
+    await stripe.prices.create(
+      {
+        unit_amount: 0,
+        currency: "usd",
+        recurring: { interval: "month" },
+        product: product.id,
+      },
+      { stripeAccount: account.id }
+    );
     return account.id;
   };
 
@@ -54,7 +78,7 @@ app.post("/stripe/api/trainer/create", function (req, res) {
     return await docClient.update(params).promise();
   };
 
-  create()
+  create(req.body.id)
     .then((StripeID) => {
       setStripeID(req.body.id, StripeID).then(() => res.status(200).send());
     })
@@ -104,10 +128,19 @@ app.post("/stripe/api/user/create", function (req, res) {
 });
 
 //refresh + return url have to be https
-app.post("/stripe/api/trainer/onboarding", function (req, res) {
-  const onboard = async () => {
+app.post("/stripe/api/trainer/link/onboarding", function (req, res) {
+  const queryStripeID = async (id) => {
+    const params = {
+      TableName: process.env.TABLE_NAME,
+      Key: { id: id },
+    };
+
+    return await docClient.get(params).promise();
+  };
+
+  const onboard = async (StripeID) => {
     const accountLinks = await stripe.accountLinks.create({
-      account: req.body.connectedID,
+      account: StripeID,
       refresh_url: req.body.refreshUrl,
       return_url: req.body.returnUrl,
       type: "account_onboarding",
@@ -115,13 +148,64 @@ app.post("/stripe/api/trainer/onboarding", function (req, res) {
     return accountLinks;
   };
 
-  onboard()
-    .then((link) => res.json({ AccountLink: link.url }))
-    .catch((e) => {
-      console.log(req);
-      console.log(e);
-      res.status(500).send();
-    });
+  queryStripeID(req.body.id).then((p) => {
+    onboard(p.Item.StripeID)
+      .then((link) => res.json({ AccountLink: link.url }))
+      .catch((e) => {
+        console.log(e);
+        res.status(500).send();
+      });
+  });
+});
+
+//refresh + return url have to be https
+app.post("/stripe/api/trainer/link/login", function (req, res) {
+  const queryStripeID = async (id) => {
+    const params = {
+      TableName: process.env.TABLE_NAME,
+      Key: { id: id },
+    };
+
+    return await docClient.get(params).promise();
+  };
+
+  const getLink = async (StripeID) => {
+    const accountLinks = await stripe.accounts.createLoginLink(StripeID);
+    return accountLinks;
+  };
+
+  queryStripeID(req.body.id).then((p) => {
+    getLink(p.Item.StripeID)
+      .then((l) => res.json({ AccountLink: l.url }))
+      .catch((e) => {
+        console.log(e);
+        res.status(500).send();
+      });
+  });
+});
+
+app.post("/stripe/api/trainer/get/prices", function (req, res) {
+  const queryStripeID = async (id) => {
+    const params = {
+      TableName: process.env.TABLE_NAME,
+      Key: { id: id },
+    };
+
+    return await docClient.get(params).promise();
+  };
+
+  const getPrices = async (StripeID) => {
+    return await stripe.prices.list({ StripeID });
+  };
+
+  queryStripeID(req.body.id).then((p) => {
+    getPrices(p.Item.StripeID)
+      .then((p) => res.json(p))
+      .catch((e) => {
+        console.log(e);
+        res.status(500).send();
+      });
+  });
 });
 
 app.post("/stripe/api/user/checkout", function (req, res) {

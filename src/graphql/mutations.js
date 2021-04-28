@@ -24,52 +24,36 @@ export const createUserProfile = /* GraphQL */ `
       Weight
       Description
       Biography
-      createdAt
-      updatedAt
-      owner
-      Subscriptions {
-        items {
-          id
-          Birthday
-          Email
-          Gender
-          Height
-          Price
-          RegDate
-          StripeID
-          UserImage
-          BgImage
-          BgTitle
-          LastName
-          FirstName
-          UserRole
-          Weight
-          Description
-          Biography
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
       Favorites {
         items {
           id
-          CreatorID
-          ContentName
-          Description
-          Level
-          Length
-          IsDemo
-          ViewCount
-          Thumbnail
-          Preview
           createdAt
           updatedAt
           owner
         }
         nextToken
       }
+      Subscriptions {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      Users {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      owner
       Contents {
         items {
           id
@@ -114,52 +98,36 @@ export const updateUserProfile = /* GraphQL */ `
       Weight
       Description
       Biography
-      createdAt
-      updatedAt
-      owner
-      Subscriptions {
-        items {
-          id
-          Birthday
-          Email
-          Gender
-          Height
-          Price
-          RegDate
-          StripeID
-          UserImage
-          BgImage
-          BgTitle
-          LastName
-          FirstName
-          UserRole
-          Weight
-          Description
-          Biography
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
       Favorites {
         items {
           id
-          CreatorID
-          ContentName
-          Description
-          Level
-          Length
-          IsDemo
-          ViewCount
-          Thumbnail
-          Preview
           createdAt
           updatedAt
           owner
         }
         nextToken
       }
+      Subscriptions {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      Users {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      owner
       Contents {
         items {
           id
@@ -204,52 +172,36 @@ export const deleteUserProfile = /* GraphQL */ `
       Weight
       Description
       Biography
-      createdAt
-      updatedAt
-      owner
-      Subscriptions {
-        items {
-          id
-          Birthday
-          Email
-          Gender
-          Height
-          Price
-          RegDate
-          StripeID
-          UserImage
-          BgImage
-          BgTitle
-          LastName
-          FirstName
-          UserRole
-          Weight
-          Description
-          Biography
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
       Favorites {
         items {
           id
-          CreatorID
-          ContentName
-          Description
-          Level
-          Length
-          IsDemo
-          ViewCount
-          Thumbnail
-          Preview
           createdAt
           updatedAt
           owner
         }
         nextToken
       }
+      Subscriptions {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      Users {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      owner
       Contents {
         items {
           id
@@ -271,6 +223,510 @@ export const deleteUserProfile = /* GraphQL */ `
     }
   }
 `;
+export const createUserSubscriptionTrainer = /* GraphQL */ `
+  mutation CreateUserSubscriptionTrainer(
+    $input: CreateUserSubscriptionTrainerInput!
+    $condition: ModelUserSubscriptionTrainerConditionInput
+  ) {
+    createUserSubscriptionTrainer(input: $input, condition: $condition) {
+      id
+      createdAt
+      updatedAt
+      Trainer {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        Price
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        Description
+        Biography
+        Favorites {
+          nextToken
+        }
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+        Contents {
+          nextToken
+        }
+      }
+      User {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        Price
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        Description
+        Biography
+        Favorites {
+          nextToken
+        }
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+        Contents {
+          nextToken
+        }
+      }
+      owner
+    }
+  }
+`;
+export const updateUserSubscriptionTrainer = /* GraphQL */ `
+  mutation UpdateUserSubscriptionTrainer(
+    $input: UpdateUserSubscriptionTrainerInput!
+    $condition: ModelUserSubscriptionTrainerConditionInput
+  ) {
+    updateUserSubscriptionTrainer(input: $input, condition: $condition) {
+      id
+      createdAt
+      updatedAt
+      Trainer {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        Price
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        Description
+        Biography
+        Favorites {
+          nextToken
+        }
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+        Contents {
+          nextToken
+        }
+      }
+      User {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        Price
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        Description
+        Biography
+        Favorites {
+          nextToken
+        }
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+        Contents {
+          nextToken
+        }
+      }
+      owner
+    }
+  }
+`;
+export const deleteUserSubscriptionTrainer = /* GraphQL */ `
+  mutation DeleteUserSubscriptionTrainer(
+    $input: DeleteUserSubscriptionTrainerInput!
+    $condition: ModelUserSubscriptionTrainerConditionInput
+  ) {
+    deleteUserSubscriptionTrainer(input: $input, condition: $condition) {
+      id
+      createdAt
+      updatedAt
+      Trainer {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        Price
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        Description
+        Biography
+        Favorites {
+          nextToken
+        }
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+        Contents {
+          nextToken
+        }
+      }
+      User {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        Price
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        Description
+        Biography
+        Favorites {
+          nextToken
+        }
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+        Contents {
+          nextToken
+        }
+      }
+      owner
+    }
+  }
+`;
+export const createUserFavoriteContent = /* GraphQL */ `
+  mutation CreateUserFavoriteContent(
+    $input: CreateUserFavoriteContentInput!
+    $condition: ModelUserFavoriteContentConditionInput
+  ) {
+    createUserFavoriteContent(input: $input, condition: $condition) {
+      id
+      createdAt
+      updatedAt
+      User {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        Price
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        Description
+        Biography
+        Favorites {
+          nextToken
+        }
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+        Contents {
+          nextToken
+        }
+      }
+      owner
+      Content {
+        id
+        CreatorID
+        ContentName
+        Description
+        Level
+        Length
+        IsDemo
+        ViewCount
+        Thumbnail
+        Preview
+        FavoriteUser {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        Creator {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          Price
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          Description
+          Biography
+          createdAt
+          updatedAt
+          owner
+        }
+        owner
+      }
+    }
+  }
+`;
+export const updateUserFavoriteContent = /* GraphQL */ `
+  mutation UpdateUserFavoriteContent(
+    $input: UpdateUserFavoriteContentInput!
+    $condition: ModelUserFavoriteContentConditionInput
+  ) {
+    updateUserFavoriteContent(input: $input, condition: $condition) {
+      id
+      createdAt
+      updatedAt
+      User {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        Price
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        Description
+        Biography
+        Favorites {
+          nextToken
+        }
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+        Contents {
+          nextToken
+        }
+      }
+      owner
+      Content {
+        id
+        CreatorID
+        ContentName
+        Description
+        Level
+        Length
+        IsDemo
+        ViewCount
+        Thumbnail
+        Preview
+        FavoriteUser {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        Creator {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          Price
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          Description
+          Biography
+          createdAt
+          updatedAt
+          owner
+        }
+        owner
+      }
+    }
+  }
+`;
+export const deleteUserFavoriteContent = /* GraphQL */ `
+  mutation DeleteUserFavoriteContent(
+    $input: DeleteUserFavoriteContentInput!
+    $condition: ModelUserFavoriteContentConditionInput
+  ) {
+    deleteUserFavoriteContent(input: $input, condition: $condition) {
+      id
+      createdAt
+      updatedAt
+      User {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        Price
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        Description
+        Biography
+        Favorites {
+          nextToken
+        }
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+        Contents {
+          nextToken
+        }
+      }
+      owner
+      Content {
+        id
+        CreatorID
+        ContentName
+        Description
+        Level
+        Length
+        IsDemo
+        ViewCount
+        Thumbnail
+        Preview
+        FavoriteUser {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        Creator {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          Price
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          Description
+          Biography
+          createdAt
+          updatedAt
+          owner
+        }
+        owner
+      }
+    }
+  }
+`;
 export const createUserContent = /* GraphQL */ `
   mutation CreateUserContent(
     $input: CreateUserContentInput!
@@ -287,6 +743,15 @@ export const createUserContent = /* GraphQL */ `
       ViewCount
       Thumbnail
       Preview
+      FavoriteUser {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       Creator {
@@ -307,15 +772,18 @@ export const createUserContent = /* GraphQL */ `
         Weight
         Description
         Biography
-        createdAt
-        updatedAt
-        owner
-        Subscriptions {
-          nextToken
-        }
         Favorites {
           nextToken
         }
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
         Contents {
           nextToken
         }
@@ -340,6 +808,15 @@ export const updateUserContent = /* GraphQL */ `
       ViewCount
       Thumbnail
       Preview
+      FavoriteUser {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       Creator {
@@ -360,15 +837,18 @@ export const updateUserContent = /* GraphQL */ `
         Weight
         Description
         Biography
-        createdAt
-        updatedAt
-        owner
-        Subscriptions {
-          nextToken
-        }
         Favorites {
           nextToken
         }
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
         Contents {
           nextToken
         }
@@ -393,6 +873,15 @@ export const deleteUserContent = /* GraphQL */ `
       ViewCount
       Thumbnail
       Preview
+      FavoriteUser {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       Creator {
@@ -413,15 +902,18 @@ export const deleteUserContent = /* GraphQL */ `
         Weight
         Description
         Biography
-        createdAt
-        updatedAt
-        owner
-        Subscriptions {
-          nextToken
-        }
         Favorites {
           nextToken
         }
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
         Contents {
           nextToken
         }
