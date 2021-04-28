@@ -30,7 +30,7 @@ export default function Payment() {
           response: true,
         };
 
-        API.post("stripeAPI", "/stripe/api/trainer/onboarding", myInit)
+        API.post("stripeAPI", "/stripe/api/trainer/link/onboarding", myInit)
           .then((res) => {
             window.location.href = res.data.AccountLink;
           })
