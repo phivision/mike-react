@@ -197,7 +197,6 @@ app.post("/stripe/api/trainer/get/prices", function (req, res) {
   const getPrices = async (StripeID) => {
     return await stripe.prices.list({ StripeID });
   };
-
   queryStripeID(req.body.id).then((p) => {
     getPrices(p.Item.StripeID)
       .then((p) => res.json(p))

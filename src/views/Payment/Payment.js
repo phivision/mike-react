@@ -43,6 +43,42 @@ export default function Payment({ ...props }) {
       });
   };
 
+  const getPrices = async () => {
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        id: props.user,
+      },
+      response: true,
+    };
+
+    API.post("stripeAPI", "/stripe/api/trainer/get/prices", myInit)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const getBalance = async () => {
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        id: props.user,
+      },
+      response: true,
+    };
+
+    API.post("stripeAPI", "/stripe/api/trainer/get/balance", myInit)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <div>
       <p>
@@ -54,20 +90,10 @@ export default function Payment({ ...props }) {
         occaecat cupidatat non proident, sunt in culpa qui officia deserunt
         mollit anim id est laborum.
       </p>
-      <Button
-        onClick={() => {
-          onboard();
-        }}
-      >
-        Stripe Onboarding
-      </Button>
-      <Button
-        onClick={() => {
-          login();
-        }}
-      >
-        Stripe Login
-      </Button>
+      <Button onClick={() => onboard()}>Stripe Onboarding</Button>
+      <Button onClick={() => login()}>Stripe Login</Button>
+      <Button onClick={() => getPrices()}>Get Prices</Button>
+      <Button onClick={() => getBalance()}>Get Balance</Button>
     </div>
   );
 }
