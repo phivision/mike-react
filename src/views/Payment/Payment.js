@@ -52,7 +52,7 @@ export default function Payment({ ...props }) {
       response: true,
     };
 
-    API.post("stripeAPI", "/stripe/api/trainer/get/prices", myInit)
+    API.post("stripeAPI", "/stripe/api/trainer/get/price", myInit)
       .then((res) => {
         console.log(res);
       })

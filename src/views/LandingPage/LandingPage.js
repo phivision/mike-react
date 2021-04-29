@@ -28,6 +28,7 @@ const useStyles = makeStyles(landingPageStyle);
 
 export default function LandingPage({ ...props }) {
   const [profile, setProfile] = React.useState(initialProfileState);
+  const [price, setPrice] = React.useState("");
   const history = useHistory();
 
   async function userQuery() {
@@ -56,6 +57,29 @@ export default function LandingPage({ ...props }) {
       pathname: "/admin/checkout/" + profile.id,
     });
   };
+
+  const getPrice = async (id) => {
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        id: id,
+      },
+      response: true,
+    };
+
+    API.post("stripeAPI", "/stripe/api/trainer/get/price", myInit)
+      .then((res) => {
+        console.log(res);
+        setPrice(res.data.data[0].unit_amount);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    getPrice(props.props.match.params.id);
+  }, [props.props.match.params.id]);
 
   useEffect(() => {
     userQuery();
@@ -94,7 +118,7 @@ export default function LandingPage({ ...props }) {
       <div>
         <h4>{profile.FirstName + " " + profile.LastName}</h4>
         <p>{profile.Description}</p>
-        <p>{profile.Price}</p>
+        <p>{price}</p>
         <Button onClick={() => onSubmit()}>Subscribe</Button>
       </div>
     </Container>
