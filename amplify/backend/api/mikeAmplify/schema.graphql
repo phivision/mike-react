@@ -8,7 +8,6 @@
   Email: AWSEmail
   Gender: String
   Height: Float
-  Price: Float
   RegDate: String!
   StripeID: String
   UserImage: String
@@ -70,6 +69,7 @@ type UserContent @model
   CreatorID: ID!
   ContentName: String!
   Description: String
+  Title: String
   """
   The level indicates the difficulty of the training course, e.g. 1 => easy, 2=> medium, 3=>hard
   """
