@@ -209,9 +209,6 @@ app.post("/stripe/api/trainer/update/price", function (req, res) {
     stripe.prices
       .update(priceID, { active: false }, { stripeAccount: StripeID })
       .then(async () => {
-        console.log(
-          "Hello. It's me. I was wondering if after all these years you'd like to meet."
-        );
         await stripe.prices.create(
           {
             unit_amount: newPrice,

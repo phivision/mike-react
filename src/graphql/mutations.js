@@ -24,15 +24,9 @@ export const createUserProfile = /* GraphQL */ `
       Weight
       Description
       Biography
-      Favorites {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
+      createdAt
+      updatedAt
+      owner
       Subscriptions {
         items {
           id
@@ -51,9 +45,15 @@ export const createUserProfile = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
-      updatedAt
-      owner
+      Favorites {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       Contents {
         items {
           id
@@ -98,15 +98,9 @@ export const updateUserProfile = /* GraphQL */ `
       Weight
       Description
       Biography
-      Favorites {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
+      createdAt
+      updatedAt
+      owner
       Subscriptions {
         items {
           id
@@ -125,9 +119,15 @@ export const updateUserProfile = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
-      updatedAt
-      owner
+      Favorites {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       Contents {
         items {
           id
@@ -172,15 +172,9 @@ export const deleteUserProfile = /* GraphQL */ `
       Weight
       Description
       Biography
-      Favorites {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
+      createdAt
+      updatedAt
+      owner
       Subscriptions {
         items {
           id
@@ -199,9 +193,15 @@ export const deleteUserProfile = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
-      updatedAt
-      owner
+      Favorites {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       Contents {
         items {
           id
@@ -250,18 +250,18 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         Weight
         Description
         Biography
-        Favorites {
-          nextToken
-        }
+        createdAt
+        updatedAt
+        owner
         Subscriptions {
           nextToken
         }
         Users {
           nextToken
         }
-        createdAt
-        updatedAt
-        owner
+        Favorites {
+          nextToken
+        }
         Contents {
           nextToken
         }
@@ -284,18 +284,18 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         Weight
         Description
         Biography
-        Favorites {
-          nextToken
-        }
+        createdAt
+        updatedAt
+        owner
         Subscriptions {
           nextToken
         }
         Users {
           nextToken
         }
-        createdAt
-        updatedAt
-        owner
+        Favorites {
+          nextToken
+        }
         Contents {
           nextToken
         }
@@ -331,18 +331,18 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         Weight
         Description
         Biography
-        Favorites {
-          nextToken
-        }
+        createdAt
+        updatedAt
+        owner
         Subscriptions {
           nextToken
         }
         Users {
           nextToken
         }
-        createdAt
-        updatedAt
-        owner
+        Favorites {
+          nextToken
+        }
         Contents {
           nextToken
         }
@@ -365,18 +365,18 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         Weight
         Description
         Biography
-        Favorites {
-          nextToken
-        }
+        createdAt
+        updatedAt
+        owner
         Subscriptions {
           nextToken
         }
         Users {
           nextToken
         }
-        createdAt
-        updatedAt
-        owner
+        Favorites {
+          nextToken
+        }
         Contents {
           nextToken
         }
@@ -412,18 +412,18 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         Weight
         Description
         Biography
-        Favorites {
-          nextToken
-        }
+        createdAt
+        updatedAt
+        owner
         Subscriptions {
           nextToken
         }
         Users {
           nextToken
         }
-        createdAt
-        updatedAt
-        owner
+        Favorites {
+          nextToken
+        }
         Contents {
           nextToken
         }
@@ -446,18 +446,18 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         Weight
         Description
         Biography
-        Favorites {
-          nextToken
-        }
+        createdAt
+        updatedAt
+        owner
         Subscriptions {
           nextToken
         }
         Users {
           nextToken
         }
-        createdAt
-        updatedAt
-        owner
+        Favorites {
+          nextToken
+        }
         Contents {
           nextToken
         }
@@ -493,18 +493,18 @@ export const createUserFavoriteContent = /* GraphQL */ `
         Weight
         Description
         Biography
-        Favorites {
-          nextToken
-        }
+        createdAt
+        updatedAt
+        owner
         Subscriptions {
           nextToken
         }
         Users {
           nextToken
         }
-        createdAt
-        updatedAt
-        owner
+        Favorites {
+          nextToken
+        }
         Contents {
           nextToken
         }
@@ -521,9 +521,6 @@ export const createUserFavoriteContent = /* GraphQL */ `
         ViewCount
         Thumbnail
         Preview
-        FavoriteUser {
-          nextToken
-        }
         createdAt
         updatedAt
         Creator {
@@ -547,6 +544,9 @@ export const createUserFavoriteContent = /* GraphQL */ `
           createdAt
           updatedAt
           owner
+        }
+        FavoriteUser {
+          nextToken
         }
         owner
       }
@@ -580,18 +580,18 @@ export const updateUserFavoriteContent = /* GraphQL */ `
         Weight
         Description
         Biography
-        Favorites {
-          nextToken
-        }
+        createdAt
+        updatedAt
+        owner
         Subscriptions {
           nextToken
         }
         Users {
           nextToken
         }
-        createdAt
-        updatedAt
-        owner
+        Favorites {
+          nextToken
+        }
         Contents {
           nextToken
         }
@@ -608,9 +608,6 @@ export const updateUserFavoriteContent = /* GraphQL */ `
         ViewCount
         Thumbnail
         Preview
-        FavoriteUser {
-          nextToken
-        }
         createdAt
         updatedAt
         Creator {
@@ -634,6 +631,9 @@ export const updateUserFavoriteContent = /* GraphQL */ `
           createdAt
           updatedAt
           owner
+        }
+        FavoriteUser {
+          nextToken
         }
         owner
       }
@@ -667,18 +667,18 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
         Weight
         Description
         Biography
-        Favorites {
-          nextToken
-        }
+        createdAt
+        updatedAt
+        owner
         Subscriptions {
           nextToken
         }
         Users {
           nextToken
         }
-        createdAt
-        updatedAt
-        owner
+        Favorites {
+          nextToken
+        }
         Contents {
           nextToken
         }
@@ -695,9 +695,6 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
         ViewCount
         Thumbnail
         Preview
-        FavoriteUser {
-          nextToken
-        }
         createdAt
         updatedAt
         Creator {
@@ -722,6 +719,9 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
           updatedAt
           owner
         }
+        FavoriteUser {
+          nextToken
+        }
         owner
       }
     }
@@ -743,15 +743,6 @@ export const createUserContent = /* GraphQL */ `
       ViewCount
       Thumbnail
       Preview
-      FavoriteUser {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
       createdAt
       updatedAt
       Creator {
@@ -772,21 +763,30 @@ export const createUserContent = /* GraphQL */ `
         Weight
         Description
         Biography
-        Favorites {
-          nextToken
-        }
+        createdAt
+        updatedAt
+        owner
         Subscriptions {
           nextToken
         }
         Users {
           nextToken
         }
-        createdAt
-        updatedAt
-        owner
+        Favorites {
+          nextToken
+        }
         Contents {
           nextToken
         }
+      }
+      FavoriteUser {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
       }
       owner
     }
@@ -808,15 +808,6 @@ export const updateUserContent = /* GraphQL */ `
       ViewCount
       Thumbnail
       Preview
-      FavoriteUser {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
       createdAt
       updatedAt
       Creator {
@@ -837,21 +828,30 @@ export const updateUserContent = /* GraphQL */ `
         Weight
         Description
         Biography
-        Favorites {
-          nextToken
-        }
+        createdAt
+        updatedAt
+        owner
         Subscriptions {
           nextToken
         }
         Users {
           nextToken
         }
-        createdAt
-        updatedAt
-        owner
+        Favorites {
+          nextToken
+        }
         Contents {
           nextToken
         }
+      }
+      FavoriteUser {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
       }
       owner
     }
@@ -873,15 +873,6 @@ export const deleteUserContent = /* GraphQL */ `
       ViewCount
       Thumbnail
       Preview
-      FavoriteUser {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
       createdAt
       updatedAt
       Creator {
@@ -902,21 +893,30 @@ export const deleteUserContent = /* GraphQL */ `
         Weight
         Description
         Biography
-        Favorites {
-          nextToken
-        }
+        createdAt
+        updatedAt
+        owner
         Subscriptions {
           nextToken
         }
         Users {
           nextToken
         }
-        createdAt
-        updatedAt
-        owner
+        Favorites {
+          nextToken
+        }
         Contents {
           nextToken
         }
+      }
+      FavoriteUser {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
       }
       owner
     }
