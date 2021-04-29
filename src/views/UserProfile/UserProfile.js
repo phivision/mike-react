@@ -145,7 +145,7 @@ export default function UserProfile(props) {
   const classes = useStyles();
   return (
     <Container className={classes.container}>
-      <Card className={classes.cardContainer}>
+      <Card>
         <CardMedia
           className={classes.BImage}
           image={profile.BgURL}
