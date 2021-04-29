@@ -70,7 +70,6 @@ const routes = [
     icon: Person,
     component: Checkout,
     layout: "/admin",
-    exact: true,
     layoutCategory: "student",
   },
   {

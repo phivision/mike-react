@@ -49,7 +49,7 @@ export default function Verify({ ...props }) {
         },
         response: true,
       };
-      await API.post("stripeAPI", "/stripe/api/createtrainer", myInit);
+      await API.post("stripeAPI", "/stripe/api/trainer/create", myInit);
     } else {
       const myInit = {
         headers: {}, // AWS-IAM authorization if using empty headers
@@ -60,7 +60,7 @@ export default function Verify({ ...props }) {
         response: true,
       };
 
-      await API.post("stripeAPI", "/stripe/api/createuser", myInit);
+      await API.post("stripeAPI", "/stripe/api/user/create", myInit);
     }
   };
 
