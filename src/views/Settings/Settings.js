@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from "react";
 import Button from "components/CustomButtons/Button.js";
 import PropTypes from "prop-types";
-import { API, graphqlOperation } from "aws-amplify";
-import { getUserProfile } from "../../graphql/queries";
-import { updateUserProfile } from "../../graphql/mutations";
+import { API } from "aws-amplify";
 
 export default function Settings(props) {
   const [price, setPrice] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Submit");
-    console.log(price);
-    console.log(props.user);
-    const updatedProfile = { id: props.user, Price: price };
-    await API.graphql(
-      graphqlOperation(updateUserProfile, { input: updatedProfile })
-    )
-      .then(() => {
-        console.log("success");
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        id: props.user,
+        newPrice: price,
+      },
+      response: true,
+    };
+
+    API.post("stripeAPI", "/stripe/api/trainer/update/price", myInit)
+      .then((res) => {
+        console.log(res);
       })
-      .catch((e) => {
-        console.log("cannot update user profile!");
-        console.log(e);
+      .catch((err) => {
+        console.log(err);
       });
   };
 
@@ -31,10 +31,21 @@ export default function Settings(props) {
   };
 
   async function getPrice() {
-    const userProfileData = await API.graphql(
-      graphqlOperation(getUserProfile, { id: props.user })
-    );
-    setPrice(userProfileData.data.getUserProfile.Price);
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        id: props.user,
+      },
+      response: true,
+    };
+
+    API.post("stripeAPI", "/stripe/api/trainer/get/price", myInit)
+      .then((res) => {
+        setPrice(res.data.data[0].unit_amount);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   useEffect(() => {
