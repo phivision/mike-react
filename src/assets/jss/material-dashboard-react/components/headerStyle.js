@@ -92,6 +92,14 @@ const headerStyle = () => ({
     color: whiteColor,
     ...defaultBoxShadow,
   },
+  header: {
+    backgroundColor: whiteColor,
+    margin: "0 30px",
+    top: "0",
+    borderBottom: "1px solid " + grayColor[11],
+    padding: "15px 0",
+    ...defaultFont,
+  },
 });
 
 export default headerStyle;
