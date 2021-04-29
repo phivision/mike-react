@@ -42,8 +42,7 @@
 type UserSubscriptionTrainer @model(queries: null)
 @auth(rules: [{ allow: owner, operations: [create, delete, update] },
   { allow: private, operations: [read]},
-  { allow: public, provider: iam, operations: [read]}])
-{
+  { allow: public, provider: iam, operations: [read]}]){
   id: ID!
   Trainer: UserProfile! @connection(name: "bySubscriptedTrainer")
   User: UserProfile! @connection(name: "byUserSubscription")
@@ -52,8 +51,7 @@ type UserSubscriptionTrainer @model(queries: null)
 type UserFavoriteContent @model(queries: null)
 @auth(rules: [{ allow: owner, operations: [create, delete, update] },
   { allow: private, operations: [read]},
-  { allow: public, provider: iam, operations: [read]}])
-{
+  { allow: public, provider: iam, operations: [read]}]){
   id: ID!
   User: UserProfile! @connection(name: "byFavoriteContent")
   Content: UserContent! @connection(name: "byFavoriteUser")
