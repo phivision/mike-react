@@ -155,9 +155,32 @@ app.post("/stripe/api/trainer/get/price", function (req, res) {
     return await docClient.get(params).promise();
   };
 
-  const getPrices = async (StripeID) => {
-    return await stripe.prices.list({ StripeID });
+  const getPrices = async (StripeID) =>
+    await stripe.prices.list({ active: true }, { stripeAccount: StripeID });
+
+  queryStripeID(req.body.id).then((p) => {
+    getPrices(p.Item.StripeID)
+      .then((p) => res.json(p))
+      .catch((e) => {
+        console.log(e);
+        res.status(500).send();
+      });
+  });
+});
+
+app.post("/stripe/api/trainer/get/balance", function (req, res) {
+  const queryStripeID = async (id) => {
+    const params = {
+      TableName: process.env.TABLE_NAME,
+      Key: { id: id },
+    };
+
+    return await docClient.get(params).promise();
   };
+
+  const getPrices = async (StripeID) =>
+    await stripe.balance.retrieve({}, { stripeAccount: StripeID });
+
   queryStripeID(req.body.id).then((p) => {
     getPrices(p.Item.StripeID)
       .then((p) => res.json(p))
