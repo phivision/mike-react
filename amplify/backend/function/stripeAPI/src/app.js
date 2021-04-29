@@ -205,11 +205,14 @@ app.post("/stripe/api/trainer/update/price", function (req, res) {
   const getPrices = async (StripeID) =>
     await stripe.prices.list({ active: true }, { stripeAccount: StripeID });
 
-  const updatePrice = async (StripeID, priceID, newPrice, productID) => {
+  const updatePrice = (StripeID, priceID, newPrice, productID) => {
     stripe.prices
       .update(priceID, { active: false }, { stripeAccount: StripeID })
-      .then(() => {
-        stripe.prices.create(
+      .then(async () => {
+        console.log(
+          "Hello. It's me. I was wondering if after all these years you'd like to meet."
+        );
+        await stripe.prices.create(
           {
             unit_amount: newPrice,
             currency: "usd",
@@ -224,13 +227,13 @@ app.post("/stripe/api/trainer/update/price", function (req, res) {
   queryStripeID(req.body.id).then((q) => {
     getPrices(q.Item.StripeID)
       .then(async (p) => {
-        const response = await updatePrice(
+        await updatePrice(
           q.Item.StripeID,
           p.data[0].id,
           req.body.newPrice,
           p.data[0].product
         );
-        res.json(response);
+        res.status(200).send();
       })
       .catch((e) => {
         console.log(e);
@@ -337,7 +340,7 @@ app.post("/stripe/api/user/checkout", function (req, res) {
 });
 
 app.post("/*", function (req, res) {
-  console.log("Hello");
+  console.log("Route not found");
   res.status(404).send();
 });
 

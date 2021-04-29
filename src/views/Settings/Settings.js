@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { API } from "aws-amplify";
 
 export default function Settings(props) {
-  const [price, setPrice] = useState(null);
+  const [price, setPrice] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -41,6 +41,7 @@ export default function Settings(props) {
 
     API.post("stripeAPI", "/stripe/api/trainer/get/price", myInit)
       .then((res) => {
+        console.log(res);
         setPrice(res.data.data[0].unit_amount);
       })
       .catch((err) => {
