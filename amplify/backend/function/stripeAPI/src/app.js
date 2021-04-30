@@ -276,7 +276,7 @@ app.post("/stripe/api/user/create", function (req, res) {
     });
 });
 
-app.post("/stripe/api/user/checkout", function (req, res) {
+app.post("/stripe/api/user/create/subscription", function (req, res) {
   const query = async (id) => {
     const params = {
       TableName: process.env.TABLE_NAME,
@@ -339,6 +339,144 @@ app.post("/stripe/api/user/checkout", function (req, res) {
       console.log(e);
       res.status(500).send();
     });
+});
+
+app.post("/stripe/api/user/delete/subscription", function (req, res) {
+  const queryStripeID = async (id) => {
+    const params = {
+      TableName: process.env.TABLE_NAME,
+      Key: { id: id },
+    };
+
+    return await docClient.get(params).promise();
+  };
+
+  const unsubscribe = async (subscriptionID) =>
+    await stripe.subscriptions.update(subscriptionID, {
+      cancel_at_period_end: true,
+    });
+
+  queryStripeID(req.body.id).then((p) => {
+    unsubscribe(req.body.subscriptionID)
+      .then((p) => res.json(p))
+      .catch((e) => {
+        console.log(e);
+        res.status(500).send();
+      });
+  });
+});
+
+app.post("/stripe/api/user/get/payment", function (req, res) {
+  const queryStripeID = async (id) => {
+    const params = {
+      TableName: process.env.TABLE_NAME,
+      Key: { id: id },
+    };
+
+    return await docClient.get(params).promise();
+  };
+
+  const getPaymentMethods = async (StripeID) =>
+    await stripe.paymentMethods.list({ customer: StripeID, type: "card" });
+
+  queryStripeID(req.body.id).then((p) => {
+    getPaymentMethods(p.Item.StripeID)
+      .then((p) => res.json(p))
+      .catch((e) => {
+        console.log(e);
+        res.status(500).send();
+      });
+  });
+});
+
+app.post("/stripe/api/user/get/subscriptions", function (req, res) {
+  const queryStripeID = async (id) => {
+    const params = {
+      TableName: process.env.TABLE_NAME,
+      Key: { id: id },
+    };
+
+    return await docClient.get(params).promise();
+  };
+
+  const getSubscriptions = async (StripeID) =>
+    await stripe.subscriptions.list({ customer: StripeID });
+
+  queryStripeID(req.body.id).then((p) => {
+    getSubscriptions(p.Item.StripeID)
+      .then((p) => res.json(p))
+      .catch((e) => {
+        console.log(e);
+        res.status(500).send();
+      });
+  });
+});
+
+app.post("/stripe/api/user/create/payment", function (req, res) {
+  const queryStripeID = async (id) => {
+    const params = {
+      TableName: process.env.TABLE_NAME,
+      Key: { id: id },
+    };
+
+    return await docClient.get(params).promise();
+  };
+
+  const setPayment = async (customerID) => {
+    return await stripe.paymentMethods.attach(req.body.paymentMethodID, {
+      customer: customerID,
+    });
+  };
+
+  queryStripeID(req.body.id).then((p) => {
+    setPayment(p.Item.StripeID)
+      .then((p) => res.json(p))
+      .catch((e) => {
+        console.log(e);
+        res.status(500).send();
+      });
+  });
+});
+
+app.post("/stripe/api/user/delete/payment", function (req, res) {
+  const detachPayment = async () => {
+    return await stripe.paymentMethods.detach(req.body.paymentMethodID);
+  };
+
+  detachPayment()
+    .then((p) => res.json(p))
+    .catch((e) => {
+      console.log(e);
+      res.status(500).send();
+    });
+});
+
+app.post("/stripe/api/user/update/defaultpayment", function (req, res) {
+  const queryStripeID = async (id) => {
+    const params = {
+      TableName: process.env.TABLE_NAME,
+      Key: { id: id },
+    };
+
+    return await docClient.get(params).promise();
+  };
+
+  const setInvoice = async (customerID) => {
+    return await stripe.customers.update(customerID, {
+      invoice_settings: {
+        default_payment_method: req.body.paymentMethodID,
+      },
+    });
+  };
+
+  queryStripeID(req.body.id).then((p) => {
+    setInvoice(p.Item.StripeID)
+      .then((p) => res.json(p))
+      .catch((e) => {
+        console.log(e);
+        res.status(500).send();
+      });
+  });
 });
 
 app.post("/*", function (req, res) {
