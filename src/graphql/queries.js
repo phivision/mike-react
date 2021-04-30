@@ -14,7 +14,6 @@ export const listUserProfiles = /* GraphQL */ `
         Email
         Gender
         Height
-        Price
         RegDate
         StripeID
         UserImage
@@ -54,7 +53,6 @@ export const getUserProfile = /* GraphQL */ `
       Email
       Gender
       Height
-      Price
       RegDate
       StripeID
       UserImage
@@ -102,6 +100,7 @@ export const getUserProfile = /* GraphQL */ `
           CreatorID
           ContentName
           Description
+          Title
           Level
           Length
           IsDemo
@@ -138,7 +137,6 @@ export const searchUserProfiles = /* GraphQL */ `
         Email
         Gender
         Height
-        Price
         RegDate
         StripeID
         UserImage
@@ -183,6 +181,7 @@ export const listUserContents = /* GraphQL */ `
         CreatorID
         ContentName
         Description
+        Title
         Level
         Length
         IsDemo
@@ -197,7 +196,6 @@ export const listUserContents = /* GraphQL */ `
           Email
           Gender
           Height
-          Price
           RegDate
           StripeID
           UserImage
@@ -229,6 +227,7 @@ export const getUserContent = /* GraphQL */ `
       CreatorID
       ContentName
       Description
+      Title
       Level
       Length
       IsDemo
@@ -243,7 +242,6 @@ export const getUserContent = /* GraphQL */ `
         Email
         Gender
         Height
-        Price
         RegDate
         StripeID
         UserImage

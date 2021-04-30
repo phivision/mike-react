@@ -9,7 +9,6 @@ export const onCreateUserProfile = /* GraphQL */ `
       Email
       Gender
       Height
-      Price
       RegDate
       StripeID
       UserImage
@@ -57,6 +56,7 @@ export const onCreateUserProfile = /* GraphQL */ `
           CreatorID
           ContentName
           Description
+          Title
           Level
           Length
           IsDemo
@@ -80,7 +80,6 @@ export const onUpdateUserProfile = /* GraphQL */ `
       Email
       Gender
       Height
-      Price
       RegDate
       StripeID
       UserImage
@@ -128,6 +127,7 @@ export const onUpdateUserProfile = /* GraphQL */ `
           CreatorID
           ContentName
           Description
+          Title
           Level
           Length
           IsDemo
@@ -151,7 +151,6 @@ export const onDeleteUserProfile = /* GraphQL */ `
       Email
       Gender
       Height
-      Price
       RegDate
       StripeID
       UserImage
@@ -199,6 +198,7 @@ export const onDeleteUserProfile = /* GraphQL */ `
           CreatorID
           ContentName
           Description
+          Title
           Level
           Length
           IsDemo
@@ -226,7 +226,6 @@ export const onCreateUserSubscriptionTrainer = /* GraphQL */ `
         Email
         Gender
         Height
-        Price
         RegDate
         StripeID
         UserImage
@@ -260,7 +259,6 @@ export const onCreateUserSubscriptionTrainer = /* GraphQL */ `
         Email
         Gender
         Height
-        Price
         RegDate
         StripeID
         UserImage
@@ -304,7 +302,6 @@ export const onUpdateUserSubscriptionTrainer = /* GraphQL */ `
         Email
         Gender
         Height
-        Price
         RegDate
         StripeID
         UserImage
@@ -338,7 +335,6 @@ export const onUpdateUserSubscriptionTrainer = /* GraphQL */ `
         Email
         Gender
         Height
-        Price
         RegDate
         StripeID
         UserImage
@@ -382,7 +378,6 @@ export const onDeleteUserSubscriptionTrainer = /* GraphQL */ `
         Email
         Gender
         Height
-        Price
         RegDate
         StripeID
         UserImage
@@ -416,7 +411,6 @@ export const onDeleteUserSubscriptionTrainer = /* GraphQL */ `
         Email
         Gender
         Height
-        Price
         RegDate
         StripeID
         UserImage
@@ -460,7 +454,6 @@ export const onCreateUserFavoriteContent = /* GraphQL */ `
         Email
         Gender
         Height
-        Price
         RegDate
         StripeID
         UserImage
@@ -494,6 +487,7 @@ export const onCreateUserFavoriteContent = /* GraphQL */ `
         CreatorID
         ContentName
         Description
+        Title
         Level
         Length
         IsDemo
@@ -508,7 +502,6 @@ export const onCreateUserFavoriteContent = /* GraphQL */ `
           Email
           Gender
           Height
-          Price
           RegDate
           StripeID
           UserImage
@@ -544,7 +537,6 @@ export const onUpdateUserFavoriteContent = /* GraphQL */ `
         Email
         Gender
         Height
-        Price
         RegDate
         StripeID
         UserImage
@@ -578,6 +570,7 @@ export const onUpdateUserFavoriteContent = /* GraphQL */ `
         CreatorID
         ContentName
         Description
+        Title
         Level
         Length
         IsDemo
@@ -592,7 +585,6 @@ export const onUpdateUserFavoriteContent = /* GraphQL */ `
           Email
           Gender
           Height
-          Price
           RegDate
           StripeID
           UserImage
@@ -628,7 +620,6 @@ export const onDeleteUserFavoriteContent = /* GraphQL */ `
         Email
         Gender
         Height
-        Price
         RegDate
         StripeID
         UserImage
@@ -662,6 +653,7 @@ export const onDeleteUserFavoriteContent = /* GraphQL */ `
         CreatorID
         ContentName
         Description
+        Title
         Level
         Length
         IsDemo
@@ -676,7 +668,6 @@ export const onDeleteUserFavoriteContent = /* GraphQL */ `
           Email
           Gender
           Height
-          Price
           RegDate
           StripeID
           UserImage
@@ -707,6 +698,7 @@ export const onCreateUserContent = /* GraphQL */ `
       CreatorID
       ContentName
       Description
+      Title
       Level
       Length
       IsDemo
@@ -721,7 +713,6 @@ export const onCreateUserContent = /* GraphQL */ `
         Email
         Gender
         Height
-        Price
         RegDate
         StripeID
         UserImage
@@ -769,6 +760,7 @@ export const onUpdateUserContent = /* GraphQL */ `
       CreatorID
       ContentName
       Description
+      Title
       Level
       Length
       IsDemo
@@ -783,7 +775,6 @@ export const onUpdateUserContent = /* GraphQL */ `
         Email
         Gender
         Height
-        Price
         RegDate
         StripeID
         UserImage
@@ -831,6 +822,7 @@ export const onDeleteUserContent = /* GraphQL */ `
       CreatorID
       ContentName
       Description
+      Title
       Level
       Length
       IsDemo
@@ -845,7 +837,6 @@ export const onDeleteUserContent = /* GraphQL */ `
         Email
         Gender
         Height
-        Price
         RegDate
         StripeID
         UserImage

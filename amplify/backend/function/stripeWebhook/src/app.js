@@ -22,7 +22,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-const stripe = require("Stripe")(process.env.SECRET_TEST_KEY);
+const stripe = require("stripe")(process.env.SECRET_TEST_KEY);
 
 app.post(
   "/stripe/webhook",
@@ -43,14 +43,15 @@ app.post(
       return response.status(400).send(`Webhook Error: ${err.message}`);
     }
 
-    const handleCompletedCheckoutSession = (s) => {
-      console.log(JSON.stringify(session));
-    };
-
     // Handle the event
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object;
-      handleCompletedCheckoutSession(session);
+    switch (event.type) {
+      case "invoice.paid":
+        const paymentIntent = event.data.object;
+        console.log(paymentIntent);
+        console.log("PaymentIntent was successful!");
+        break;
+      default:
+        console.log(`Unhandled event type ${event.type}`);
     }
 
     // Return a response to acknowledge receipt of the event
