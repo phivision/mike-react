@@ -116,6 +116,58 @@ export const getUserProfile = /* GraphQL */ `
     }
   }
 `;
+export const profilesByStripeID = /* GraphQL */ `
+  query ProfilesByStripeID(
+    $StripeID: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserProfileFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    profilesByStripeID(
+      StripeID: $StripeID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        Description
+        Biography
+        createdAt
+        updatedAt
+        owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
+      }
+      nextToken
+    }
+  }
+`;
 export const searchUserProfiles = /* GraphQL */ `
   query SearchUserProfiles(
     $filter: SearchableUserProfileFilterInput
