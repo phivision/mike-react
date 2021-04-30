@@ -41,7 +41,6 @@ export default function Settings(props) {
 
     API.post("stripeAPI", "/stripe/api/trainer/get/price", myInit)
       .then((res) => {
-        console.log(res);
         setPrice(res.data.data[0].unit_amount);
       })
       .catch((err) => {
