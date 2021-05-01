@@ -3,17 +3,17 @@
 	REGION
 	STORAGE_MIKE_REACT9AA15861_BUCKETNAME
 Amplify Params - DO NOT EDIT */
-var express = require("express");
-var bodyParser = require("body-parser");
-var awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
+const express = require("express");
+const bodyParser = require("body-parser");
+const awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
 const AWS = require("aws-sdk");
 const docClient = new AWS.DynamoDB.DocumentClient();
-const { v4: uuidv4 } = require("uuid");
+const v5 = require("uuid/v5");
 
 require("dotenv").config();
 
 // declare a new express app
-var app = express();
+const app = express();
 
 app.use(awsServerlessExpressMiddleware.eventContext());
 
@@ -46,7 +46,7 @@ app.post(
     }
 
     const createSubscription = async (trainerID, userID) => {
-      const i = uuidv4();
+      const i = v5(trainerID + userID, process.env.UUID);
       const time = new Date();
       const params = {
         TableName: process.env.SUB_TABLE_NAME,
