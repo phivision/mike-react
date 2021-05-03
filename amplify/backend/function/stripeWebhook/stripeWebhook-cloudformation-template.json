@@ -15,6 +15,9 @@
     },
     "s3Key": {
       "Type": "String"
+    },
+    "apiGraphQLAPIIdOutput": {
+      "Type": "String"
     }
   },
   "Conditions": {
@@ -69,6 +72,16 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
+            },
+            "TABLE_NAME": {
+              "Fn::ImportValue": {
+                "Fn::Sub": "${apiGraphQLAPIIdOutput}:GetAtt:UserProfileTable:Name"
+              }
+            },
+            "SUB_TABLE_NAME": {
+              "Fn::ImportValue": {
+                "Fn::Sub": "${apiGraphQLAPIIdOutput}:GetAtt:UserSubscriptionTrainerTable:Name"
+              }
             }
           }
         },

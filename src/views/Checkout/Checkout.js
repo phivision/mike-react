@@ -18,7 +18,7 @@ export default function Checkout({ ...props }) {
       response: true,
     };
 
-    API.post("stripeAPI", "/stripe/api/user/checkout", myInit)
+    API.post("stripeAPI", "/stripe/api/user/create/subscription", myInit)
       .then((res) => {
         console.log(res);
       })
@@ -29,6 +29,7 @@ export default function Checkout({ ...props }) {
         return result;
       })
       .then((result) => {
+        alert("Payment is successful!");
         return {
           subscription: result,
         };

@@ -2,6 +2,7 @@
 @auth(rules: [{ allow: owner, operations: [create, delete, update] },
   { allow: private, operations: [read]},
   { allow: public, provider: iam, operations: [read]}])
+@key(name: "profilesByStripeID", fields: ["StripeID"], queryField: "profilesByStripeID")
 {
   id: ID!
   Birthday: AWSDate
