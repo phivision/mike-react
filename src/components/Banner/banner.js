@@ -1,23 +1,21 @@
 import React from "react";
 import { Grid, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import banner from "assets/img/banner.jpg";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1,
   },
   BannerImage: {
-    background: `url(${banner}) no-repeat center top`,
-    backgroundSize: "100% 100%",
-    height: "60vh",
+    minHeight: "50vh",
     maxWidth: "none",
     overflow: "hidden",
     backgroundPosition: "left",
   },
   BannerTitle: {
     color: "white",
-    fontSize: "4.5rem",
+    fontSize: "2.5rem",
     fontWeight: 500,
     fontFamily: "Arial Rounded MT Bold",
     lineHeight: 1.4,
@@ -27,15 +25,24 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Banner = () => {
+const Banner = ({ bannerURL, bannerText }) => {
   const classes = useStyles();
   return (
-    <Grid container className={classes.BannerImage}>
-      <Typography className={classes.BannerTitle}>
-        A better way change your life
-      </Typography>
+    <Grid
+      container
+      className={classes.BannerImage}
+      style={{
+        background: `url(${bannerURL}) no-repeat center top /cover`,
+      }}
+    >
+      <Typography className={classes.BannerTitle}>{bannerText}</Typography>
     </Grid>
   );
 };
 
 export default Banner;
+
+Banner.propTypes = {
+  bannerURL: PropTypes.string,
+  bannerText: PropTypes.string,
+};

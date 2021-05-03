@@ -4,14 +4,7 @@
             "name": "/stripe/api",
             "lambdaFunction": "stripeAPI",
             "privacy": {
-                "private": true,
-                "auth": [
-                    "/POST",
-                    "/GET",
-                    "/PUT",
-                    "/PATCH",
-                    "/DELETE"
-                ]
+                "open": true
             },
             "policyResourceName": "/stripe/api"
         }
@@ -24,7 +17,7 @@
         }
     ],
     "privacy": {
-        "auth": 1,
+        "auth": 0,
         "unauth": 0,
         "authRoleName": "amplify-mike-react-dev-150010-authRole",
         "unAuthRoleName": "amplify-mike-react-dev-150010-unauthRole"

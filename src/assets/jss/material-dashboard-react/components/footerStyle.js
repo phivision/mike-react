@@ -3,6 +3,7 @@ import {
   container,
   primaryColor,
   grayColor,
+  whiteColor,
 } from "assets/jss/material-dashboard-react.js";
 
 const footerStyle = {
@@ -29,12 +30,13 @@ const footerStyle = {
     float: "right!important",
   },
   footer: {
+    backgroundColor: whiteColor,
+    margin: "0 30px",
     bottom: "0",
     borderTop: "1px solid " + grayColor[11],
     padding: "15px 0",
     ...defaultFont,
   },
-  container,
   a: {
     color: primaryColor,
     textDecoration: "none",
@@ -44,11 +46,18 @@ const footerStyle = {
     marginBottom: "0",
     padding: "0",
     marginTop: "0",
+    textAlign: "center",
   },
   inlineBlock: {
     display: "inline-block",
     padding: "0px",
     width: "auto",
+  },
+  container: {
+    ...container,
+    maxWidth: "none",
+    paddingLeft: 0,
+    paddingRight: 0,
   },
 };
 export default footerStyle;

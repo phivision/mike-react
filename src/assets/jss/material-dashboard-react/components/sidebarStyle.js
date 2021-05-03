@@ -72,7 +72,6 @@ const sidebarStyle = (theme) => ({
       height: "1px",
       right: "15px",
       width: "calc(100% - 30px)",
-      backgroundColor: "rgba(" + hexToRgb(grayColor[6]) + ", 0.3)",
     },
   },
   logoLink: {
@@ -124,8 +123,8 @@ const sidebarStyle = (theme) => ({
       height: "100%",
       content: '""',
       display: "block",
-      background: blackColor,
       opacity: ".8",
+      backgroundColor: grayColor[12],
     },
   },
   list: {
@@ -177,6 +176,7 @@ const sidebarStyle = (theme) => ({
     margin: "0",
     lineHeight: "30px",
     fontSize: "14px",
+    fontWeight: 550,
     color: whiteColor,
   },
   itemTextRTL: {

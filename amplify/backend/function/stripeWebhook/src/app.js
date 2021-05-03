@@ -3,15 +3,17 @@
 	REGION
 	STORAGE_MIKE_REACT9AA15861_BUCKETNAME
 Amplify Params - DO NOT EDIT */
-var express = require("express");
-var bodyParser = require("body-parser");
-var awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
+const express = require("express");
+const bodyParser = require("body-parser");
+const awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
 const AWS = require("aws-sdk");
 const docClient = new AWS.DynamoDB.DocumentClient();
+const v5 = require("uuid/v5");
+
 require("dotenv").config();
 
 // declare a new express app
-var app = express();
+const app = express();
 
 app.use(awsServerlessExpressMiddleware.eventContext());
 
@@ -22,7 +24,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-const stripe = require("Stripe")(process.env.SECRET_TEST_KEY);
+const stripe = require("stripe")(process.env.SECRET_TEST_KEY);
 
 app.post(
   "/stripe/webhook",
@@ -43,18 +45,58 @@ app.post(
       return response.status(400).send(`Webhook Error: ${err.message}`);
     }
 
-    const handleCompletedCheckoutSession = (s) => {
-      console.log(JSON.stringify(session));
+    const createSubscription = async (trainerID, userID) => {
+      const i = v5(trainerID + userID, process.env.UUID);
+      const time = new Date();
+      const params = {
+        TableName: process.env.SUB_TABLE_NAME,
+        Item: {
+          id: i,
+          __typename: "UserSubscriptionTrainer",
+          createdAt: time.toISOString(),
+          userSubscriptionTrainerTrainerId: trainerID,
+          userSubscriptionTrainerUserId: userID,
+          updatedAt: time.toISOString(),
+        },
+      };
+
+      return await docClient.put(params).promise();
+    };
+
+    const query = async (stripeID) => {
+      const params = {
+        TableName: process.env.TABLE_NAME,
+        IndexName: "profilesByStripeID",
+        KeyConditionExpression: "StripeID = :s",
+        ExpressionAttributeValues: {
+          ":s": stripeID,
+        },
+      };
+
+      return await docClient.query(params).promise();
     };
 
     // Handle the event
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object;
-      handleCompletedCheckoutSession(session);
+    switch (event.type) {
+      case "invoice.paid":
+        const paymentIntent = event.data.object;
+        console.log(paymentIntent);
+        query(paymentIntent.customer).then((user) => {
+          query(paymentIntent.transfer_data.destination).then((trainer) => {
+            console.log("IDs");
+            console.log(trainer.Items[0].id);
+            console.log(user.Items[0].id);
+            createSubscription(trainer.Items[0].id, user.Items[0].id).then(() =>
+              response.json({ received: true })
+            );
+          });
+        });
+        break;
+      default:
+        console.log(`Unhandled event type ${event.type}`);
+        // Return a response to acknowledge receipt of the event
+        response.json({ received: true });
     }
-
-    // Return a response to acknowledge receipt of the event
-    response.json({ received: true });
   }
 );
 

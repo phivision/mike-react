@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { API } from "aws-amplify";
 import { listUserProfiles } from "graphql/queries";
-import Banner from "../Banner/banner";
-import HomeSearch from "../HomeSearch/HomeSearch";
-import MikeIntro from "../MikeIntro/MikeIntro";
+import Banner from "../../components/Banner/banner";
+import HomeSearch from "../../components/Search/HomeSearch";
+import MikeIntro from "../../components/Introduction/MikeIntro";
+import banner from "assets/img/banner.jpg";
 
 const trainerList = (trainers) => {
   if (!trainers) {
@@ -46,8 +47,8 @@ export default function Home() {
   }, [trainers.length]);
 
   return (
-    <div>
-      <Banner />
+    <div style={{ backgroundColor: "white" }}>
+      <Banner bannerURL={banner} bannerText="A better way change your life" />
       <HomeSearch />
       <MikeIntro />
       <div>Welcome to Mike</div>
