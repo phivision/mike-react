@@ -29,6 +29,7 @@ export default function Checkout({ ...props }) {
         return result;
       })
       .then((result) => {
+        alert("Payment is successful!");
         return {
           subscription: result,
         };
