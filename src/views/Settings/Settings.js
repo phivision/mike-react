@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { API } from "aws-amplify";
+import { Button } from "@material-ui/core";
 import ChangePassword from "../../components/Settings/ChangePassword";
 
 export default function Settings(props) {
@@ -48,6 +49,25 @@ export default function Settings(props) {
       });
   }
 
+  const deleteSubscription = async () => {
+    const myInit = {
+      headers: {},
+      body: {
+        id: props.user,
+        subscriptionID: "sub_JOtvIJgjqMEkGE",
+      },
+      response: true,
+    };
+
+    API.post("stripeAPI", "/stripe/api/user/delete/subscription", myInit)
+      .then((res) => {
+        setPrice(res.data.data[0].unit_amount);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     getPrice();
   }, [props.user]);
@@ -56,6 +76,7 @@ export default function Settings(props) {
     <div>
       <ChangePassword />
       <div>{"User ID:" + props.user}</div>
+      <Button onClick={() => deleteSubscription()}>Delete Subscription</Button>
       <form onSubmit={(e) => handleSubmit(e)}>
         <label>
           <input type="text" value={price} onChange={(e) => handleChange(e)} />

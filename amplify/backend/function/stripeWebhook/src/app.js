@@ -63,6 +63,21 @@ app.post(
       return await docClient.put(params).promise();
     };
 
+    const deleteSubscription = async (trainerID, userID) => {
+      const i = v5(trainerID + userID, process.env.UUID);
+      console.log(i);
+      const params = {
+        TableName: process.env.SUB_TABLE_NAME,
+        Key: { id: i },
+      };
+
+      return await docClient.delete(params).promise();
+    };
+
+    const getTrainer = async (priceID) => {
+      return await stripe.prices.retrieve(priceID);
+    };
+
     const query = async (stripeID) => {
       const params = {
         TableName: process.env.TABLE_NAME,
@@ -80,18 +95,33 @@ app.post(
     switch (event.type) {
       case "invoice.paid":
         const paymentIntent = event.data.object;
+        console.log("Invoice Paid.");
         console.log(paymentIntent);
         query(paymentIntent.customer).then((user) => {
           query(paymentIntent.transfer_data.destination).then((trainer) => {
-            console.log("IDs");
-            console.log(trainer.Items[0].id);
-            console.log(user.Items[0].id);
             createSubscription(trainer.Items[0].id, user.Items[0].id).then(() =>
               response.json({ received: true })
             );
           });
         });
         break;
+
+      case "customer.subscription.deleted":
+        const subscription = event.data.object;
+        console.log("Customer Subscription Delete.");
+        console.log(subscription);
+        query(subscription.customer).then((user) => {
+          getTrainer(subscription.plan.id).then((trainerStripeID) => {
+            query(trainerStripeID.lookup_key).then((trainer) => {
+              deleteSubscription(
+                trainer.Items[0].id,
+                user.Items[0].id
+              ).then(() => response.json({ received: true }));
+            });
+          });
+        });
+        break;
+
       default:
         console.log(`Unhandled event type ${event.type}`);
         // Return a response to acknowledge receipt of the event
