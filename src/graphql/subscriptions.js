@@ -63,6 +63,7 @@ export const onCreateUserProfile = /* GraphQL */ `
           ViewCount
           Thumbnail
           Preview
+          Segments
           createdAt
           updatedAt
           owner
@@ -134,6 +135,7 @@ export const onUpdateUserProfile = /* GraphQL */ `
           ViewCount
           Thumbnail
           Preview
+          Segments
           createdAt
           updatedAt
           owner
@@ -205,6 +207,7 @@ export const onDeleteUserProfile = /* GraphQL */ `
           ViewCount
           Thumbnail
           Preview
+          Segments
           createdAt
           updatedAt
           owner
@@ -494,6 +497,7 @@ export const onCreateUserFavoriteContent = /* GraphQL */ `
         ViewCount
         Thumbnail
         Preview
+        Segments
         createdAt
         updatedAt
         Creator {
@@ -577,6 +581,7 @@ export const onUpdateUserFavoriteContent = /* GraphQL */ `
         ViewCount
         Thumbnail
         Preview
+        Segments
         createdAt
         updatedAt
         Creator {
@@ -660,6 +665,7 @@ export const onDeleteUserFavoriteContent = /* GraphQL */ `
         ViewCount
         Thumbnail
         Preview
+        Segments
         createdAt
         updatedAt
         Creator {
@@ -705,6 +711,7 @@ export const onCreateUserContent = /* GraphQL */ `
       ViewCount
       Thumbnail
       Preview
+      Segments
       createdAt
       updatedAt
       Creator {
@@ -767,6 +774,7 @@ export const onUpdateUserContent = /* GraphQL */ `
       ViewCount
       Thumbnail
       Preview
+      Segments
       createdAt
       updatedAt
       Creator {
@@ -829,6 +837,7 @@ export const onDeleteUserContent = /* GraphQL */ `
       ViewCount
       Thumbnail
       Preview
+      Segments
       createdAt
       updatedAt
       Creator {

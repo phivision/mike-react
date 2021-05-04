@@ -107,6 +107,7 @@ export const getUserProfile = /* GraphQL */ `
           ViewCount
           Thumbnail
           Preview
+          Segments
           createdAt
           updatedAt
           owner
@@ -240,6 +241,7 @@ export const listUserContents = /* GraphQL */ `
         ViewCount
         Thumbnail
         Preview
+        Segments
         createdAt
         updatedAt
         Creator {
@@ -286,6 +288,7 @@ export const getUserContent = /* GraphQL */ `
       ViewCount
       Thumbnail
       Preview
+      Segments
       createdAt
       updatedAt
       Creator {

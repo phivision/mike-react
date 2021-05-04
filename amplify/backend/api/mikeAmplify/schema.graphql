@@ -80,6 +80,7 @@ type UserContent @model
   ViewCount: Int
   Thumbnail: String
   Preview: String
+  Segments: AWSJSON
   Creator: UserProfile @connection(fields: ["CreatorID"])
   """
   A list of users who like this content

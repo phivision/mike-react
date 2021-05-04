@@ -24,7 +24,7 @@
       "function": {
         "stripeAPI": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/stripeAPI-467862374875624f4e4f-build.zip"
+          "s3Key": "amplify-builds/stripeAPI-5969416838704a335162-build.zip"
         },
         "stripeWebhook": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
