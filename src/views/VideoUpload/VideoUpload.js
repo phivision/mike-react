@@ -47,6 +47,7 @@ const initialVideoForm = {
   Description: null,
   IsDemo: false,
   createdAt: "",
+  segments: "No Segments",
 };
 
 const styles = {
@@ -108,6 +109,7 @@ export default function VideoUpload(props) {
   // TODO: use a guide video to replace this dummy video for first time uploader
   const [videoURL, setVideoURL] = React.useState(demoURL);
   const [open, setOpen] = React.useState(false);
+  const [segments, setSegments] = React.useState([]);
   const fileRef = React.useRef();
 
   const handleVideoUpload = () => {
@@ -163,6 +165,7 @@ export default function VideoUpload(props) {
               ContentName: videoForm.ContentName,
               Description: videoForm.Description,
               IsDemo: videoForm.IsDemo,
+              Segments: JSON.stringify(segments),
             },
           })
         ),
@@ -287,6 +290,19 @@ export default function VideoUpload(props) {
     setVideoForm({ ...videoForm, ContentName: contentName });
   };
 
+  const handleSegmentChange = (e) => {
+    let s = [...segments];
+    s[e.target.dataset.id][e.target.className] = e.target.value;
+    setSegments(s);
+  };
+
+  const addSegment = () => {
+    setSegments([
+      ...segments,
+      { Name: "", Timestamp: "", Sets: "", Reps: "", RPE: "" },
+    ]);
+  };
+
   const classes = useStyles();
 
   return (
@@ -320,6 +336,51 @@ export default function VideoUpload(props) {
                 inputRef={fileRef}
                 onChange={handleVideoChange}
               />
+              <form onChange={handleSegmentChange}>
+                {segments.map((value, idx) => {
+                  return (
+                    <div key={idx}>
+                      <label>{"Movement " + (idx + 1)}</label>
+                      <input
+                        type="text"
+                        data-id={idx}
+                        id={"name" + idx}
+                        value={segments[idx].name}
+                        className="name"
+                      />
+                      <input
+                        type="text"
+                        data-id={idx}
+                        id={"timestamp" + idx}
+                        value={segments[idx].timestamp}
+                        className="timestamp"
+                      />
+                      <input
+                        type="text"
+                        data-id={idx}
+                        id={"sets" + idx}
+                        value={segments[idx].sets}
+                        className="sets"
+                      />
+                      <input
+                        type="text"
+                        data-id={idx}
+                        id={"reps" + idx}
+                        value={segments[idx].reps}
+                        className="reps"
+                      />
+                      <input
+                        type="text"
+                        data-id={idx}
+                        id={"rpe" + idx}
+                        value={segments[idx].rpe}
+                        className="rpe"
+                      />
+                    </div>
+                  );
+                })}
+              </form>
+              <Button onClick={addSegment}>Add a segment</Button>
               <Button color="primary" onClick={handleVideoUpload}>
                 Upload Video
               </Button>
@@ -363,6 +424,7 @@ export default function VideoUpload(props) {
                   <TableCell>File Name</TableCell>
                   <TableCell>View</TableCell>
                   <TableCell>Description</TableCell>
+                  <TableCell>Segments</TableCell>
                   <TableCell>Delete</TableCell>
                 </TableRow>
               </TableHead>
@@ -414,6 +476,7 @@ export default function VideoUpload(props) {
                       </Button>
                     </TableCell>
                     <TableCell>{video.Description}</TableCell>
+                    <TableCell>{video.Segments}</TableCell>
                     <TableCell>
                       <Button
                         color="primary"
