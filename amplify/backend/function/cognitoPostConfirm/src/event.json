@@ -1,0 +1,13 @@
+{
+  "request": {
+    "userAttributes": {
+      "email": "user@example.com",
+      "email_verified": true,
+      "sub": "testID101",
+      "custom:role": "student",
+      "custom:first_name": "Mike",
+      "custom:last_name": "Smith"
+    }
+  },
+  "response": {}
+}
