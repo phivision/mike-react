@@ -21,7 +21,6 @@ const SearchButton = styled(SearchBar)`
   }
 `;
 
-//TODO: (For Later) Add functionality to display profile when signed in
 export default function Header() {
   const classes = useStyles();
   let history = useHistory();

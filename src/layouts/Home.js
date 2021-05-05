@@ -6,7 +6,7 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
-import Homebar from "../components/Homebar/Homebar.js";
+import Header from "../components/Header/Header.js";
 import Footer from "../components/Footer/Footer.js";
 import routes from "../routes.js";
 import { Container } from "@material-ui/core";
@@ -61,7 +61,7 @@ const Home = () => {
 
   return (
     <Container maxWidth={false} disableGutters={true}>
-      <Homebar />
+      <Header />
       <div className={classes.content}>
         <div className={classes.container}>{switchRoutes()}</div>
       </div>
