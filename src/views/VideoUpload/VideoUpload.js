@@ -9,6 +9,7 @@ import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
+import ContentCard from "components/ContentCard/ContentCard.js";
 import CardFooter from "components/Card/CardFooter.js";
 // material ui components
 import Input from "@material-ui/core/Input";
@@ -47,6 +48,8 @@ const initialVideoForm = {
   Description: null,
   IsDemo: false,
   createdAt: "",
+  Thumbnail: "",
+  ThumbnailURL: "",
   segments: "No Segments",
 };
 
@@ -108,9 +111,15 @@ export default function VideoUpload(props) {
   const [response, setResponse] = React.useState("");
   // TODO: use a guide video to replace this dummy video for first time uploader
   const [videoURL, setVideoURL] = React.useState(demoURL);
+  const [thumb, setThumb] = React.useState();
   const [open, setOpen] = React.useState(false);
   const [segments, setSegments] = React.useState([]);
   const fileRef = React.useRef();
+
+  async function handleThumbnailChange(e) {
+    if (!e.target.files[0]) return;
+    setThumb(e.target.files[0]);
+  }
 
   const handleVideoUpload = () => {
     // check video duplication
@@ -165,10 +174,14 @@ export default function VideoUpload(props) {
               ContentName: videoForm.ContentName,
               Description: videoForm.Description,
               IsDemo: videoForm.IsDemo,
+              Thumbnail: "Thumbnail" + videoForm.ContentName,
               Segments: JSON.stringify(segments),
             },
           })
         ),
+        Storage.put("Thumbnail" + videoForm.ContentName, thumb, {
+          contentType: "image/*",
+        }),
         Storage.put(videoForm.ContentName, videoFile, {
           contentType: "video/*",
           customPrefix: {
@@ -262,6 +275,7 @@ export default function VideoUpload(props) {
             public: "input/",
           },
         }),
+        Storage.remove(deleteVideo.Thumbnail),
         // delete content from database
         API.graphql(graphqlOperation(deleteUserContent, { input: { id } })),
       ])
@@ -335,6 +349,12 @@ export default function VideoUpload(props) {
                 accept="video/*"
                 inputRef={fileRef}
                 onChange={handleVideoChange}
+              />
+              <Input
+                type="file"
+                name="Thumbnail"
+                accept="image/*"
+                onChange={handleThumbnailChange}
               />
               <form onChange={handleSegmentChange}>
                 {segments.map((value, idx) => {
@@ -414,6 +434,10 @@ export default function VideoUpload(props) {
             </CardFooter>
           </Card>
         </GridItem>
+        {videos.map((video, idx) => {
+          console.log(video);
+          return <ContentCard post={video} key={idx} />;
+        })}
         <GridItem xs={12} sm={12} md={8}>
           <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="caption table">
