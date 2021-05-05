@@ -6,6 +6,7 @@ import styles from "assets/jss/material-dashboard-react/components/headerStyle.j
 import styled from "styled-components";
 import SearchBar from "material-ui-search-bar";
 import logo from "../../assets/img/logo.jpg";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles(styles);
 const SearchButton = styled(SearchBar)`
@@ -21,7 +22,12 @@ const SearchButton = styled(SearchBar)`
   }
 `;
 
-export default function Header() {
+Header.propTypes = {
+  auth: PropTypes.bool,
+};
+
+export default function Header(props) {
+  console.log(props.auth);
   const classes = useStyles();
   let history = useHistory();
   const [query, setQuery] = React.useState("");

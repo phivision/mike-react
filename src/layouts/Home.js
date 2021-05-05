@@ -11,11 +11,12 @@ import Footer from "../components/Footer/Footer.js";
 import routes from "../routes.js";
 import { Container } from "@material-ui/core";
 import styles from "../assets/jss/material-dashboard-react/layouts/homeStyle.js";
+import PropTypes from "prop-types";
 
 let ps;
 const useStyles = makeStyles(styles);
 
-const Home = () => {
+const Home = (props) => {
   // styles
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
@@ -61,13 +62,17 @@ const Home = () => {
 
   return (
     <Container maxWidth={false} disableGutters={true}>
-      <Header />
+      <Header auth={props.auth} />
       <div className={classes.content}>
         <div className={classes.container}>{switchRoutes()}</div>
       </div>
       <Footer />
     </Container>
   );
+};
+
+Home.propTypes = {
+  auth: PropTypes.bool,
 };
 
 export default Home;
