@@ -15,19 +15,25 @@ export default function Footer() {
     <footer>
       <Grid container>
         <Grid item xs>
-          <Typography variant="body2" color="textSecondary" align="left">
+          <Typography variant="body1" color="textSecondary" align="left">
             {"Copyright © " +
               new Date().getFullYear() +
               " PhiVision Inc. All rights reserved."}
           </Typography>
         </Grid>
         <Grid item xs={1}>
-          <Link href="https://www.iubenda.com/privacy-policy/84247709">
+          <Link
+            variant="body1"
+            href="https://www.iubenda.com/privacy-policy/84247709"
+          >
             Privacy Policy
           </Link>
         </Grid>
         <Grid item xs={1}>
-          <Link href="https://www.iubenda.com/terms-and-conditions/84247709">
+          <Link
+            variant="body1"
+            href="https://www.iubenda.com/terms-and-conditions/84247709"
+          >
             Terms of Use
           </Link>
         </Grid>
