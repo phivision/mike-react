@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
-import { Card, Grid, Typography, Link, CardMedia } from "@material-ui/core";
+import { Card, Grid, Typography, CardMedia } from "@material-ui/core";
 import { FavoriteBorder } from "@material-ui/icons";
 
 import { Storage } from "aws-amplify";
 import IconButton from "@material-ui/core/IconButton";
+import EditIcon from "@material-ui/icons/Edit";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 
 export default function ContentCard({ ...props }) {
   const [img, setImg] = useState();
-  const [favorite, setFavorite] = useState(false);
+  const [liked, setLiked] = useState(false);
+
+  useEffect(() => {
+    props.favorite ? setLiked(true) : setLiked(false);
+  }, [props.favorite]);
 
   useEffect(() => {
     Storage.get(props.post.Thumbnail).then((url) => {
       setImg(url);
     });
-  }, [img]);
+  }, [props.post.Thumbnail]);
 
   return (
     <Card>
@@ -30,10 +35,11 @@ export default function ContentCard({ ...props }) {
               aria-label="favorite this post"
               color="primary"
               onClick={() => {
-                setFavorite(!favorite);
+                setLiked(!liked);
+                props.favoriteCallback(props.favorite, props.post.id);
               }}
             >
-              {favorite ? <FavoriteIcon /> : <FavoriteBorder />}
+              {liked ? <FavoriteIcon /> : <FavoriteBorder />}
             </IconButton>
           </Grid>
         </Grid>
@@ -52,7 +58,7 @@ export default function ContentCard({ ...props }) {
           </Grid>
           <Grid item xs>
             <Typography variant="body2">
-              {props.post.Creator.FirstName + " " + props.post.Creator.LastName}
+              {props.user.FirstName + " " + props.user.LastName}
             </Typography>
           </Grid>
         </Grid>
@@ -60,15 +66,16 @@ export default function ContentCard({ ...props }) {
       {() => {
         if (props.editCallback) {
           return (
-            <Link
-              variant="h2"
+            <IconButton
+              aria-label="edit this post"
+              color="primary"
               onClick={(e) => {
                 e.preventDefault();
-                props.editCallback();
+                props.editCallback(props.favorite);
               }}
             >
-              Edit
-            </Link>
+              <EditIcon />
+            </IconButton>
           );
         }
       }}
@@ -78,13 +85,16 @@ export default function ContentCard({ ...props }) {
 
 ContentCard.propTypes = {
   post: PropTypes.shape({
+    id: PropTypes.string.isRequired,
     Description: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
-    Creator: PropTypes.shape({
-      FirstName: PropTypes.string.isRequired,
-      LastName: PropTypes.string.isRequired,
-    }),
     Thumbnail: PropTypes.string.isRequired,
   }),
+  user: PropTypes.shape({
+    FirstName: PropTypes.string.isRequired,
+    LastName: PropTypes.string.isRequired,
+  }),
+  favorite: PropTypes.object,
+  favoriteCallback: PropTypes.func.isRequired,
   editCallback: PropTypes.func,
 };

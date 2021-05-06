@@ -29,8 +29,12 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 // amplify components
 import { API, Storage, graphqlOperation } from "aws-amplify";
-import { listUserContents } from "graphql/queries";
-import { createUserContent, deleteUserContent } from "graphql/mutations";
+import {
+  createUserContent,
+  createUserFavoriteContent,
+  deleteUserContent,
+  deleteUserFavoriteContent,
+} from "graphql/mutations";
 
 import PropTypes from "prop-types";
 
@@ -55,6 +59,11 @@ const initialVideoForm = {
     FirstName: "",
     LastName: "",
   },
+};
+
+const initialUser = {
+  FirstName: "",
+  LastName: "",
 };
 
 const styles = {
@@ -109,9 +118,12 @@ const videoPropsEqual = (prevVideo, nextVideo) => {
 };
 
 const MemoVideoPlayer = React.memo(VideoPlayer, videoPropsEqual);
+
 export default function VideoUpload(props) {
+  const [user, setUser] = React.useState(initialUser);
   const [videoForm, setVideoForm] = React.useState(initialVideoForm);
   const [videos, setVideos] = React.useState([]);
+  const [favorites, setFavorites] = React.useState([]);
   const [response, setResponse] = React.useState("");
   // TODO: use a guide video to replace this dummy video for first time uploader
   const [videoURL, setVideoURL] = React.useState(demoURL);
@@ -159,12 +171,70 @@ export default function VideoUpload(props) {
   }, [props.user, videoURL]);
 
   async function fetchVideos() {
-    const apiData = await API.graphql(
-      graphqlOperation(listUserContents, {
-        filter: { CreatorID: { eq: props.user } },
+    const query = /* GraphQL */ `
+      query GetUserProfile($id: ID!) {
+        getUserProfile(id: $id) {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          Description
+          Biography
+          createdAt
+          updatedAt
+          Favorites {
+            items {
+              id
+              Content {
+                id
+              }
+            }
+            nextToken
+          }
+          Contents {
+            items {
+              id
+              CreatorID
+              ContentName
+              Description
+              Title
+              Level
+              Length
+              IsDemo
+              ViewCount
+              Thumbnail
+              Preview
+              Segments
+              createdAt
+              updatedAt
+              owner
+            }
+            nextToken
+          }
+        }
+      }
+    `;
+
+    API.graphql(graphqlOperation(query, { id: props.user }))
+      .then((d) => {
+        setVideos(d.data.getUserProfile.Contents.items);
+        setFavorites(d.data.getUserProfile.Favorites.items);
+        setUser({
+          FirstName: d.data.getUserProfile.FirstName,
+          LastName: d.data.getUserProfile.LastName,
+        });
       })
-    );
-    setVideos(apiData.data.listUserContents.items);
+      .catch((e) => console.log(e));
   }
 
   async function createVideo() {
@@ -331,6 +401,38 @@ export default function VideoUpload(props) {
     ]);
   };
 
+  const editFavorite = (id, contentId) => {
+    if (id) {
+      console.log("Deleting subscription: " + id.id);
+      API.graphql(
+        graphqlOperation(deleteUserFavoriteContent, {
+          input: { id: id.id },
+        })
+      )
+        .then(() => {
+          const i = favorites.findIndex((e) => e.Content.id === contentId);
+          favorites.splice(i, 1);
+        })
+        .catch(console.log);
+    } else {
+      console.log(
+        "Creating subscription for " + props.user + " and content " + contentId
+      );
+      API.graphql(
+        graphqlOperation(createUserFavoriteContent, {
+          input: {
+            userFavoriteContentUserId: props.user,
+            userFavoriteContentContentId: contentId,
+          },
+        })
+      )
+        .then((d) => {
+          favorites.push(d.data.createUserFavoriteContent);
+        })
+        .catch(console.log);
+    }
+  };
+
   const classes = useStyles();
 
   return (
@@ -449,8 +551,16 @@ export default function VideoUpload(props) {
           </Card>
         </GridItem>
         {videos.map((video, idx) => {
-          console.log(video);
-          return <ContentCard post={video} key={idx} />;
+          let f = favorites.findIndex((e) => e.Content.id === video.id);
+          return (
+            <ContentCard
+              post={video}
+              user={user}
+              favorite={favorites[f]}
+              favoriteCallback={editFavorite}
+              key={idx}
+            />
+          );
         })}
         <GridItem xs={12} sm={12} md={8}>
           <TableContainer component={Paper}>
@@ -467,67 +577,70 @@ export default function VideoUpload(props) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {videos.map((video) => (
-                  <TableRow key={video.createdAt}>
-                    <TableCell component={"th"} scope="row" type="date">
-                      {video.createdAt}
-                    </TableCell>
-                    <TableCell>
-                      <Checkbox disabled checked={video.IsDemo} />
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        whiteSpace: "normal",
-                        wordBreak: "break-word",
-                      }}
-                    >
-                      {video.ContentName}
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        color="primary"
-                        value={video.ContentName}
-                        onClick={async (e) => {
-                          const videoName = e.currentTarget.value.split(".")[0];
-                          checkS3PrefixReady(videoName, "output/hls/")
-                            .then((lists) => {
-                              const videoFiles = lists[0];
-                              const headerFiles = lists[1];
-                              return (
-                                videoFiles.length + headerFiles.length >=
-                                videoTranscodeCount + 1
-                              );
-                            })
-                            .then((ready) => {
-                              if (ready) {
-                                // if transcoding is ready, view the video
-                                setVideoURL(
-                                  videoEndpoint + videoName + ".m3u8"
+                {videos &&
+                  videos.map((video) => (
+                    <TableRow key={video.createdAt}>
+                      <TableCell component={"th"} scope="row" type="date">
+                        {video.createdAt}
+                      </TableCell>
+                      <TableCell>
+                        <Checkbox disabled checked={video.IsDemo} />
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          whiteSpace: "normal",
+                          wordBreak: "break-word",
+                        }}
+                      >
+                        {video.ContentName}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          color="primary"
+                          value={video.ContentName}
+                          onClick={async (e) => {
+                            const videoName = e.currentTarget.value.split(
+                              "."
+                            )[0];
+                            checkS3PrefixReady(videoName, "output/hls/")
+                              .then((lists) => {
+                                const videoFiles = lists[0];
+                                const headerFiles = lists[1];
+                                return (
+                                  videoFiles.length + headerFiles.length >=
+                                  videoTranscodeCount + 1
                                 );
-                              } else {
-                                alert("Video transcoding is not ready!");
-                              }
-                            });
-                        }}
-                      >
-                        View Video
-                      </Button>
-                    </TableCell>
-                    <TableCell>{video.Description}</TableCell>
-                    <TableCell>{video.Segments}</TableCell>
-                    <TableCell>
-                      <Button
-                        color="primary"
-                        value={video.id}
-                        onClick={(e) => {
-                          deleteVideo(e.currentTarget.value);
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                              })
+                              .then((ready) => {
+                                if (ready) {
+                                  // if transcoding is ready, view the video
+                                  setVideoURL(
+                                    videoEndpoint + videoName + ".m3u8"
+                                  );
+                                } else {
+                                  alert("Video transcoding is not ready!");
+                                }
+                              });
+                          }}
+                        >
+                          View Video
+                        </Button>
+                      </TableCell>
+                      <TableCell>{video.Description}</TableCell>
+                      <TableCell>{video.Segments}</TableCell>
+                      <TableCell>
+                        <Button
+                          color="primary"
+                          value={video.id}
+                          onClick={(e) => {
+                            deleteVideo(e.currentTarget.value);
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
