@@ -82,17 +82,6 @@ export default function Header(props) {
   const classes = useStyles();
   let history = useHistory();
   const [query, setQuery] = React.useState("");
-  const Search = () => {
-    return (
-      <SearchButton
-        value={query}
-        placeholder={"Find a trainer"}
-        onChange={(q) => setQuery(q)}
-        onRequestSearch={() => history.push("/home/search/" + query)}
-        className={classes.searchBar}
-      />
-    );
-  };
 
   const ContentUploadButton = () => {
     const route = headerRoutes.videoUpload;
@@ -116,52 +105,33 @@ export default function Header(props) {
     );
   };
 
-  const HeaderBar = ({ role, className }) => {
-    let elementArray = [];
-    elementArray.push({ component: Logo, props: null });
-    if (role === userRoles.STUDENT || role === userRoles.UNKNOWN) {
-      elementArray.push({ component: Search, props: null });
-    }
-    if (role === userRoles.TRAINER) {
-      elementArray.push({ component: ContentUploadButton, props: null });
-    }
-    if (role === userRoles.STUDENT || role === userRoles.TRAINER) {
-      elementArray.push({
-        component: UserIcon,
-        props: { route: headerRoutes.userProfile },
-      });
-      elementArray.push({
-        component: UserIcon,
-        props: { route: headerRoutes.settings },
-      });
-    }
-    if (role === userRoles.UNKNOWN) {
-      elementArray.push({
-        component: SignInLink,
-        props: { className: classes.login },
-      });
-      elementArray.push({
-        component: SignUpLink,
-        props: { className: classes.buttonStyle },
-      });
-    }
-    return (
-      <Toolbar className={className}>
-        {elementArray.map((block) => {
-          return React.createElement(block.component, { ...block.props });
-        })}
-      </Toolbar>
-    );
-  };
-
-  HeaderBar.propTypes = {
-    role: PropTypes.string,
-    className: PropTypes.string,
-  };
-
   return (
     <AppBar className={classes.appBar}>
-      <HeaderBar role={userRole} className={classes.container} />
+      <Toolbar className={classes.container}>
+        <Logo />
+        {userRole === userRoles.STUDENT || userRole === userRoles.UNKNOWN ? (
+          <SearchButton
+            value={query}
+            placeholder={"Find a trainer"}
+            onChange={(q) => setQuery(q)}
+            onRequestSearch={() => history.push("/home/search/" + query)}
+            className={classes.searchBar}
+          />
+        ) : null}
+        {userRole === userRoles.TRAINER ? <ContentUploadButton /> : null}
+        {userRole === userRoles.STUDENT || userRole === userRoles.TRAINER ? (
+          <UserIcon route={headerRoutes.userProfile} />
+        ) : null}
+        {userRole === userRoles.STUDENT || userRole === userRoles.TRAINER ? (
+          <UserIcon route={headerRoutes.settings} />
+        ) : null}
+        {userRole === userRoles.UNKNOWN ? (
+          <SignInLink className={classes.login} />
+        ) : null}
+        {userRole === userRoles.UNKNOWN ? (
+          <SignUpLink className={classes.buttonStyle} />
+        ) : null}
+      </Toolbar>
     </AppBar>
   );
 }
