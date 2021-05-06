@@ -56,7 +56,7 @@ export default function SignInForm({ ...props }) {
             history.push(props.props.location.state.next);
           }
         } else {
-          history.push("/admin/dashboard/");
+          history.push("/admin/user/");
         }
       });
     } catch (error) {

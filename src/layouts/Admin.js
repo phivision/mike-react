@@ -5,6 +5,7 @@ import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+import { Container } from "@material-ui/core";
 // core components
 import Footer from "components/Footer/Footer.js";
 import Header from "components/Header/Header";
@@ -82,17 +83,15 @@ const Admin = ({ user, ...rest }) => {
   }, [mainPanel]);
   return (
     // {...rest} is removed
-    <div className={classes.wrapper}>
+    <Container maxWidth={false} disableGutters={true}>
       <Header user={user} />
-      <div className={classes.mainPanel} ref={mainPanel}>
-        <div className={classes.content}>
-          <div className={classes.container}>
-            {switchRoutes(user.username, currentRoutes, match.url)}
-          </div>
+      <div className={classes.content}>
+        <div className={classes.container}>
+          {switchRoutes(user.username, currentRoutes, match.url)}
         </div>
-        <Footer />
       </div>
-    </div>
+      <Footer />
+    </Container>
   );
 };
 

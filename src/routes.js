@@ -1,16 +1,10 @@
 // @material-ui/icons
-import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
-import PeopleIcon from "@material-ui/icons/People";
-import Notifications from "@material-ui/icons/Notifications";
 import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
 import SettingsIcon from "@material-ui/icons/Settings";
 // core components/views for Admin layout
-import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
-import TrainerList from "views/TableList/TrainerList.js";
 import Settings from "views/Settings/Settings";
-import NotificationsPage from "views/Notifications/Notifications.js";
 import Checkout from "views/Checkout/Checkout.js";
 import Payment from "views/Payment/Payment.js";
 
@@ -24,14 +18,6 @@ import SignUp from "views/Auth/SignUp.js";
 import Verify from "views/Auth/Verify.js";
 
 const routes = [
-  {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: Dashboard,
-    component: DashboardPage,
-    layout: "/admin",
-    layoutCategory: "both", // if layout category is "both", the route will be shown for both student and trainer
-  },
   {
     path: "/user",
     name: "User Profile",
@@ -47,14 +33,6 @@ const routes = [
     component: Settings,
     layout: "/admin",
     layoutCategory: "both",
-  },
-  {
-    path: "/table",
-    name: "Find Trainer",
-    icon: PeopleIcon,
-    component: TrainerList,
-    layout: "/admin",
-    layoutCategory: "student",
   },
   {
     path: "/video",
@@ -79,14 +57,6 @@ const routes = [
     component: Payment,
     layout: "/admin",
     layoutCategory: "trainer",
-  },
-  {
-    path: "/notifications",
-    name: "Notifications",
-    icon: Notifications,
-    component: NotificationsPage,
-    layout: "/admin",
-    layoutCategory: "both",
   },
   {
     path: "/",

@@ -3,15 +3,14 @@ import { API } from "aws-amplify";
 import { Button } from "@material-ui/core";
 import PropTypes from "prop-types";
 
-//TODO: replace with Live URL
 export default function Payment({ ...props }) {
   const onboard = async () => {
     const myInit = {
       headers: {}, // AWS-IAM authorization if using empty headers
       body: {
         id: props.user,
-        refreshUrl: "http://localhost:3000/admin/dashboard",
-        returnUrl: "http://localhost:3000/admin/dashboard",
+        refreshUrl: window.location.href,
+        returnUrl: window.location.href,
       },
       response: true,
     };

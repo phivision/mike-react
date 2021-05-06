@@ -35,19 +35,15 @@ const SignUpLink = ({ className }) => {
 };
 
 SignUpLink.propTypes = {
-  className: PropTypes.object,
+  className: PropTypes.string,
 };
 
-const SignInLink = ({ className }) => {
+const SignInLink = () => {
   return (
-    <Link to="/home/signin" color="inherit" className={className}>
+    <Link to="/home/signin" variant="h3">
       Log In
     </Link>
   );
-};
-
-SignInLink.propTypes = {
-  className: PropTypes.object,
 };
 
 const UserIcon = ({ route }) => {
@@ -125,9 +121,7 @@ export default function Header(props) {
         {userRole === userRoles.STUDENT || userRole === userRoles.TRAINER ? (
           <UserIcon route={headerRoutes.settings} />
         ) : null}
-        {userRole === userRoles.UNKNOWN ? (
-          <SignInLink className={classes.login} />
-        ) : null}
+        {userRole === userRoles.UNKNOWN ? <SignInLink /> : null}
         {userRole === userRoles.UNKNOWN ? (
           <SignUpLink className={classes.buttonStyle} />
         ) : null}
