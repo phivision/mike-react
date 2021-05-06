@@ -25,6 +25,12 @@ const theme = createMuiTheme({
       letterSpacing: "0.014 em",
       color: "#4C5980",
     },
+    body2: {
+      fontWeight: 500,
+      fontSize: 14,
+      letterSpacing: "0.014 em",
+      color: "#9C9EB9",
+    },
     h1: {
       fontWeight: 600,
       fontSize: 32,
