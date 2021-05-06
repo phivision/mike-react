@@ -133,4 +133,31 @@ const routes = [
   },
 ];
 
-export default routes;
+const headerRoutes = {
+  userProfile: {
+    path: "/user",
+    name: "User Profile",
+    icon: Person,
+    component: UserProfile,
+    layout: "/admin",
+    layoutCategory: "both",
+  },
+  videoUpload: {
+    path: "/video",
+    name: "Video Uploading",
+    icon: VideoLibraryIcon,
+    component: VideoUpload,
+    layout: "/admin",
+    layoutCategory: "trainer",
+  },
+  settings: {
+    path: "/settings",
+    name: "User Settings",
+    icon: SettingsIcon,
+    component: Settings,
+    layout: "/admin",
+    layoutCategory: "both",
+  },
+};
+
+export { routes, headerRoutes };

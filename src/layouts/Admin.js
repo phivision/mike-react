@@ -6,16 +6,13 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
-import Navbar from "components/Navbars/Navbar.js";
 import Footer from "components/Footer/Footer.js";
-import Sidebar from "components/Sidebar/Sidebar.js";
+import Header from "components/Header/Header";
 
-import routes from "routes.js";
+import { routes } from "routes.js";
 
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
-import bgImage from "assets/img/sidebar-2.jpg";
-import logo from "assets/img/reactlogo.png";
 import PropTypes from "prop-types";
 
 let ps;
@@ -25,13 +22,13 @@ const useStyles = makeStyles(styles);
 const switchRoutes = (user, routes, url) => {
   return (
     <Switch>
-      {routes.map((prop, key) => {
+      {routes.map((prop) => {
         if (prop.layout === "/admin") {
           return (
             <Route
               path={url + prop.path}
               render={(props) => <prop.component user={user} props={props} />}
-              key={key}
+              key={prop.name}
               exact
             />
           );
@@ -63,21 +60,10 @@ const Admin = ({ user, ...rest }) => {
   // ref to help us initialize PerfectScrollbar on windows devices
   const mainPanel = React.createRef();
   // states and functions
-  const image = bgImage;
-  const color = "blue";
-  const [mobileOpen, setMobileOpen] = React.useState(false);
   const match = useRouteMatch();
 
   console.log(rest);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-  const resizeFunction = () => {
-    if (window.innerWidth >= 960) {
-      setMobileOpen(false);
-    }
-  };
   // initialize and destroy the PerfectScrollbar plugin
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
@@ -87,33 +73,18 @@ const Admin = ({ user, ...rest }) => {
       });
       document.body.style.overflow = "hidden";
     }
-    window.addEventListener("resize", resizeFunction);
     // Specify how to clean up after this effect:
     return function cleanup() {
       if (navigator.platform.indexOf("Win") > -1) {
         ps.destroy();
       }
-      window.removeEventListener("resize", resizeFunction);
     };
   }, [mainPanel]);
   return (
     // {...rest} is removed
     <div className={classes.wrapper}>
-      <Sidebar
-        routes={currentRoutes}
-        logoText={"MIKE"}
-        logo={logo}
-        image={image}
-        handleDrawerToggle={handleDrawerToggle}
-        open={mobileOpen}
-        color={color}
-      />
+      <Header user={user} />
       <div className={classes.mainPanel} ref={mainPanel}>
-        <Navbar
-          routes={currentRoutes}
-          handleDrawerToggle={handleDrawerToggle}
-          userName={user.username}
-        />
         <div className={classes.content}>
           <div className={classes.container}>
             {switchRoutes(user.username, currentRoutes, match.url)}
