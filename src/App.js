@@ -48,7 +48,7 @@ const App = () => {
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
           <Switch>
-            <PublicRoute path="/home" component={Home} />
+            <PublicRoute path="/home" auth={authState} component={Home} />
             <PrivateRoute
               path="/admin"
               user={user}
