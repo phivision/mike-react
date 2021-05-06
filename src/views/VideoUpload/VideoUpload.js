@@ -165,6 +165,7 @@ export default function VideoUpload(props) {
 
   async function createVideo() {
     if (videoForm.ContentName) {
+      const date = Date.now();
       // upload video on S3
       await Promise.all([
         API.graphql(
@@ -174,14 +175,19 @@ export default function VideoUpload(props) {
               ContentName: videoForm.ContentName,
               Description: videoForm.Description,
               IsDemo: videoForm.IsDemo,
-              Thumbnail: "Thumbnail" + videoForm.ContentName,
+              Thumbnail:
+                "Thumbnail" + videoForm.ContentName.split(".")[0] + date,
               Segments: JSON.stringify(segments),
             },
           })
         ),
-        Storage.put("Thumbnail" + videoForm.ContentName, thumb, {
-          contentType: "image/*",
-        }),
+        Storage.put(
+          "Thumbnail" + videoForm.ContentName.split(".")[0] + date,
+          thumb,
+          {
+            contentType: "image/*",
+          }
+        ),
         Storage.put(videoForm.ContentName, videoFile, {
           contentType: "video/*",
           customPrefix: {
