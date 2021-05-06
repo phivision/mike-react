@@ -239,7 +239,11 @@ export default function VideoUpload(props) {
 
   async function createVideo() {
     if (videoForm.ContentName) {
-      const date = Date.now();
+      const thumbnailName = (
+        "Thumbnail" +
+        props.user +
+        thumb.name.split(".")[1]
+      ).replace(/[^0-9a-z]/gi, "");
       // upload video on S3
       await Promise.all([
         API.graphql(
@@ -249,19 +253,14 @@ export default function VideoUpload(props) {
               ContentName: videoForm.ContentName,
               Description: videoForm.Description,
               IsDemo: videoForm.IsDemo,
-              Thumbnail:
-                "Thumbnail" + videoForm.ContentName.split(".")[0] + date,
+              Thumbnail: thumbnailName,
               Segments: JSON.stringify(segments),
             },
           })
         ),
-        Storage.put(
-          "Thumbnail" + videoForm.ContentName.split(".")[0] + date,
-          thumb,
-          {
-            contentType: "image/*",
-          }
-        ),
+        Storage.put(thumbnailName, thumb, {
+          contentType: "image/*",
+        }),
         Storage.put(videoForm.ContentName, videoFile, {
           contentType: "video/*",
           customPrefix: {
@@ -384,7 +383,9 @@ export default function VideoUpload(props) {
     // combine filename with owner id and remove non alphanumeric value from the string
     const fileName = videoFile.name.split(".");
     const contentName =
-      (fileName[0] + props.user).replace(/[^0-9a-z]/gi, "") + "." + fileName[1];
+      (fileName[0] + props.user + Date.now()).replace(/[^0-9a-z]/gi, "") +
+      "." +
+      fileName[1];
     setVideoForm({ ...videoForm, ContentName: contentName });
   };
 
