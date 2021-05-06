@@ -433,6 +433,10 @@ export default function VideoUpload(props) {
     }
   };
 
+  const click = () => {
+    console.log("Clicked!!");
+  };
+
   const classes = useStyles();
 
   return (
@@ -558,6 +562,7 @@ export default function VideoUpload(props) {
               user={user}
               favorite={favorites[f]}
               favoriteCallback={editFavorite}
+              clickCallback={click}
               key={idx}
             />
           );
