@@ -51,6 +51,10 @@ const initialVideoForm = {
   Thumbnail: "",
   ThumbnailURL: "",
   segments: "No Segments",
+  Creator: {
+    FirstName: "",
+    LastName: "",
+  },
 };
 
 const styles = {
@@ -200,6 +204,10 @@ export default function VideoUpload(props) {
           // updated video form with returned id and timestamp
           videoForm.id = result[0].data.createUserContent.id;
           videoForm.createdAt = result[0].data.createUserContent.createdAt;
+          videoForm.Creator.FirstName =
+            result[0].data.createUserContent.Creator.FirstName;
+          videoForm.Creator.LastName =
+            result[0].data.createUserContent.Creator.LastName;
           // response with uploading results
           setResponse(`Success uploading file: ${videoFile.name}!`);
           setVideos((prevVideos) => {

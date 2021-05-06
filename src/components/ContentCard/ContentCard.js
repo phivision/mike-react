@@ -12,14 +12,11 @@ export default function ContentCard({ ...props }) {
   const [img, setImg] = useState();
   const [favorite, setFavorite] = useState(false);
 
-  console.log(favorite);
-
   useEffect(() => {
-    Storage.get("Thumbnail" + props.post.ContentName).then((url) => {
-      console.log(url);
+    Storage.get(props.post.Thumbnail).then((url) => {
       setImg(url);
     });
-  }, [props]);
+  }, [img]);
 
   return (
     <Card>
@@ -41,7 +38,11 @@ export default function ContentCard({ ...props }) {
           </Grid>
         </Grid>
         <Grid item container xs>
-          <CardMedia image={img} />
+          <CardMedia
+            image={img}
+            style={{ height: "250px", width: "250px", paddingTop: "2%" }}
+            title="Content Thumbnail"
+          />
         </Grid>
         <Grid item container xs>
           <Grid item xs>
@@ -83,7 +84,7 @@ ContentCard.propTypes = {
       FirstName: PropTypes.string.isRequired,
       LastName: PropTypes.string.isRequired,
     }),
-    ContentName: PropTypes.string.isRequired,
+    Thumbnail: PropTypes.string.isRequired,
   }),
   editCallback: PropTypes.func,
 };
