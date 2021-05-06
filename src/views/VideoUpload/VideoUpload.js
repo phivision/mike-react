@@ -9,7 +9,6 @@ import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-import ContentCard from "components/ContentCard/ContentCard.js";
 import CardFooter from "components/Card/CardFooter.js";
 // material ui components
 import Input from "@material-ui/core/Input";
@@ -31,12 +30,13 @@ import Paper from "@material-ui/core/Paper";
 import { API, Storage, graphqlOperation } from "aws-amplify";
 import {
   createUserContent,
-  createUserFavoriteContent,
+  // createUserFavoriteContent,
   deleteUserContent,
-  deleteUserFavoriteContent,
+  // deleteUserFavoriteContent,
 } from "graphql/mutations";
 
 import PropTypes from "prop-types";
+import WorkoutCard from "../../components/WorkoutCard/WorkoutCard";
 
 // load YAML file for video endpoints info
 // TODO: try to use aws SDK to pull the info from aws server
@@ -123,7 +123,7 @@ export default function VideoUpload(props) {
   const [user, setUser] = React.useState(initialUser);
   const [videoForm, setVideoForm] = React.useState(initialVideoForm);
   const [videos, setVideos] = React.useState([]);
-  const [favorites, setFavorites] = React.useState([]);
+  // const [favorites, setFavorites] = React.useState([]);
   const [response, setResponse] = React.useState("");
   // TODO: use a guide video to replace this dummy video for first time uploader
   const [videoURL, setVideoURL] = React.useState(demoURL);
@@ -228,7 +228,7 @@ export default function VideoUpload(props) {
     API.graphql(graphqlOperation(query, { id: props.user }))
       .then((d) => {
         setVideos(d.data.getUserProfile.Contents.items);
-        setFavorites(d.data.getUserProfile.Favorites.items);
+        // setFavorites(d.data.getUserProfile.Favorites.items);
         setUser({
           FirstName: d.data.getUserProfile.FirstName,
           LastName: d.data.getUserProfile.LastName,
@@ -402,37 +402,37 @@ export default function VideoUpload(props) {
     ]);
   };
 
-  const editFavorite = (id, contentId) => {
-    if (id) {
-      console.log("Deleting subscription: " + id.id);
-      API.graphql(
-        graphqlOperation(deleteUserFavoriteContent, {
-          input: { id: id.id },
-        })
-      )
-        .then(() => {
-          const i = favorites.findIndex((e) => e.Content.id === contentId);
-          favorites.splice(i, 1);
-        })
-        .catch(console.log);
-    } else {
-      console.log(
-        "Creating subscription for " + props.user + " and content " + contentId
-      );
-      API.graphql(
-        graphqlOperation(createUserFavoriteContent, {
-          input: {
-            userFavoriteContentUserId: props.user,
-            userFavoriteContentContentId: contentId,
-          },
-        })
-      )
-        .then((d) => {
-          favorites.push(d.data.createUserFavoriteContent);
-        })
-        .catch(console.log);
-    }
-  };
+  // const editFavorite = (id, contentId) => {
+  //   if (id) {
+  //     console.log("Deleting subscription: " + id.id);
+  //     API.graphql(
+  //       graphqlOperation(deleteUserFavoriteContent, {
+  //         input: { id: id.id },
+  //       })
+  //     )
+  //       .then(() => {
+  //         const i = favorites.findIndex((e) => e.Content.id === contentId);
+  //         favorites.splice(i, 1);
+  //       })
+  //       .catch(console.log);
+  //   } else {
+  //     console.log(
+  //       "Creating subscription for " + props.user + " and content " + contentId
+  //     );
+  //     API.graphql(
+  //       graphqlOperation(createUserFavoriteContent, {
+  //         input: {
+  //           userFavoriteContentUserId: props.user,
+  //           userFavoriteContentContentId: contentId,
+  //         },
+  //       })
+  //     )
+  //       .then((d) => {
+  //         favorites.push(d.data.createUserFavoriteContent);
+  //       })
+  //       .catch(console.log);
+  //   }
+  // };
 
   const click = () => {
     console.log("Clicked!!");
@@ -487,35 +487,35 @@ export default function VideoUpload(props) {
                         data-id={idx}
                         id={"name" + idx}
                         value={segments[idx].name}
-                        className="name"
+                        className="Name"
                       />
                       <input
                         type="text"
                         data-id={idx}
                         id={"timestamp" + idx}
                         value={segments[idx].timestamp}
-                        className="timestamp"
+                        className="Timestamp"
                       />
                       <input
                         type="text"
                         data-id={idx}
                         id={"sets" + idx}
                         value={segments[idx].sets}
-                        className="sets"
+                        className="Sets"
                       />
                       <input
                         type="text"
                         data-id={idx}
                         id={"reps" + idx}
                         value={segments[idx].reps}
-                        className="reps"
+                        className="Reps"
                       />
                       <input
                         type="text"
                         data-id={idx}
                         id={"rpe" + idx}
                         value={segments[idx].rpe}
-                        className="rpe"
+                        className="RPE"
                       />
                     </div>
                   );
@@ -556,13 +556,13 @@ export default function VideoUpload(props) {
           </Card>
         </GridItem>
         {videos.map((video, idx) => {
-          let f = favorites.findIndex((e) => e.Content.id === video.id);
+          // let f = favorites.findIndex((e) => e.Content.id === video.id);
+          console.log(video.Segments);
           return (
-            <ContentCard
+            <WorkoutCard
               post={video}
               user={user}
-              favorite={favorites[f]}
-              favoriteCallback={editFavorite}
+              segments={video.Segments}
               clickCallback={click}
               key={idx}
             />
