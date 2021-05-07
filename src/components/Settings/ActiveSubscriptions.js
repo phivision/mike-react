@@ -61,20 +61,20 @@ export default function ActiveSubscriptions(props) {
   return (
     <TableBody>
       <TableRow>
-        <TableCell rowSpan={props.trainers.length} variant="h3" align="top">
-          Active Subscriptions
+        <TableCell rowSpan={props.trainers.length + 1} align="left">
+          <Typography variant="h3">Active Subscriptions</Typography>
         </TableCell>
         <TableCell colSpan={2} />
       </TableRow>
       {props.trainers.map((trainerData, idx) => (
         <TableRow key={idx}>
-          <TableCell>
+          <TableCell align="left">
             <TrainerCard
               trainer={trainerData.Trainer}
               expire={trainerData.ExpireDate}
             />
           </TableCell>
-          <TableCell>
+          <TableCell align="right">
             <Button value={trainerData.StripeID} onClick={deleteSubscription}>
               Cancel Subscription
             </Button>

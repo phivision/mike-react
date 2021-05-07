@@ -85,15 +85,15 @@ export default function Settings(props) {
             <TableCell align="left" rowSpan={3}>
               <Typography variant="h1">Account</Typography>
             </TableCell>
+            <TableCell align="left" colSpan={2}>
+              {email}
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           <TableRow>
-            <TableCell rowSpan={4} variant="h3">
+            <TableCell rowSpan={4}>
               <Typography variant="h3">Membership and Billing</Typography>
-            </TableCell>
-            <TableCell align="left" colSpan={2}>
-              {email}
             </TableCell>
           </TableRow>
           <TableRow>
@@ -125,7 +125,9 @@ export default function Settings(props) {
             </TableCell>
           </TableRow>
         </TableBody>
-        <ActiveSubscriptions trainers={trainers} user={props.user} />
+        {userRole === userRoles.STUDENT ? (
+          <ActiveSubscriptions trainers={trainers} user={props.user} />
+        ) : null}
       </Table>
       <PasswordDialog />
     </TableContainer>
