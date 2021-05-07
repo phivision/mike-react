@@ -4,6 +4,7 @@ import { Card, CardMedia, Grid, Typography } from "@material-ui/core";
 import { Storage } from "aws-amplify";
 import { useHistory } from "react-router-dom";
 import CardActionArea from "@material-ui/core/CardActionArea";
+import TrainerMetrics from "../TrainerMetrics/TrainerMetrics";
 
 const ProfileCard = ({ ...props }) => {
   const [img, setImg] = useState();
@@ -43,47 +44,12 @@ const ProfileCard = ({ ...props }) => {
               </Typography>
             </Grid>
           </Grid>
-          <Grid item container direction="row" xs={6}>
-            <Grid item container direction="column" xs={2}>
-              <Grid item>
-                <Typography variant="h6">Weight</Typography>
-              </Grid>
-              <Grid item>
-                <Typography variant="h3" style={{ display: "inline-block" }}>
-                  {props.profile.Weight}
-                </Typography>
-                <Typography variant="body2" style={{ display: "inline-block" }}>
-                  lb
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid item container direction="column" xs={2}>
-              <Grid item>
-                <Typography variant="h6">Height</Typography>
-              </Grid>
-              <Grid item>
-                <Typography variant="h3" style={{ display: "inline-block" }}>
-                  {Math.floor(props.profile.Height / 12) +
-                    "' " +
-                    (props.profile.Height % 12) +
-                    '"'}
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid item container direction="column" xs={2}>
-              <Grid item>
-                <Typography variant="h6">Age</Typography>
-              </Grid>
-              <Grid item>
-                <Typography variant="h3" style={{ display: "inline-block" }}>
-                  {new Date().getFullYear() -
-                    new Date(props.profile.Birthday).getFullYear()}
-                </Typography>
-                <Typography variant="body2" style={{ display: "inline-block" }}>
-                  yr
-                </Typography>
-              </Grid>
-            </Grid>
+          <Grid item xs={6}>
+            <TrainerMetrics
+              weight={props.profile.Weight}
+              height={props.profile.Height}
+              birthday={props.profile.Birthday}
+            />
           </Grid>
         </Grid>
       </CardActionArea>

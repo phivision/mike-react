@@ -1,62 +1,129 @@
-import React, { useEffect } from "react";
-import { API, Storage } from "aws-amplify";
+import React, { useState, useEffect } from "react";
+import { API, graphqlOperation, Storage } from "aws-amplify";
 import { getUserProfile } from "graphql/queries";
 import PropTypes from "prop-types";
+import { Grid, Typography, Card, CardActionArea } from "@material-ui/core";
+import TrainerMetrics from "../../components/TrainerMetrics/TrainerMetrics";
+import ContentCard from "../../components/ContentCard/ContentCard";
 import {
-  Container,
-  Grid,
-  Card,
-  Typography,
-  CardContent,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import landingPageStyle from "assets/jss/material-dashboard-react/views/landingpageStyle";
-import ShowProfile from "./ShowProfile";
-import avatar from "assets/img/faces/marc.jpg";
-import cover from "assets/img/cover.jpeg";
-import { Button } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
+  createUserFavoriteContent,
+  deleteUserFavoriteContent,
+} from "../../graphql/mutations";
+import WorkoutCard from "../../components/WorkoutCard/WorkoutCard";
 
 // import initial profile
-import initialProfileState from "variables/profile.js";
-
+const initialProfileState = {
+  id: "",
+  LastName: "",
+  FirstName: "",
+  Description: null,
+  UserImage: null,
+  UserURL: null,
+  BgImage: null,
+  BgURL: null,
+  RegDate: "",
+  Birthday: null,
+  Email: "",
+  Gender: null,
+  Height: null,
+  Weight: null,
+  Price: null,
+  StripID: null,
+};
 //TODO: Add payment functionality
 //TODO: Add cards for payment tiers
 //TODO: Add images + description, nicely formatted
 
-const useStyles = makeStyles(landingPageStyle);
-
 export default function LandingPage({ ...props }) {
-  const [profile, setProfile] = React.useState(initialProfileState);
-  const [price, setPrice] = React.useState("");
-  const history = useHistory();
+  const [profile, setProfile] = useState(initialProfileState);
+  const [price, setPrice] = useState("");
+  const [favorites, setFavorites] = useState("");
+
+  const editFavorite = (id, contentId) => {
+    if (id) {
+      console.log("Deleting subscription: " + id.id);
+      API.graphql(
+        graphqlOperation(deleteUserFavoriteContent, {
+          input: { id: id.id },
+        })
+      )
+        .then(() => {
+          const i = favorites.findIndex((e) => e.Content.id === contentId);
+          favorites.splice(i, 1);
+        })
+        .catch(console.log);
+    } else {
+      console.log(
+        "Creating subscription for " + props.user + " and content " + contentId
+      );
+      API.graphql(
+        graphqlOperation(createUserFavoriteContent, {
+          input: {
+            userFavoriteContentUserId: props.user,
+            userFavoriteContentContentId: contentId,
+          },
+        })
+      )
+        .then((d) => {
+          favorites.push(d.data.createUserFavoriteContent);
+        })
+        .catch(console.log);
+    }
+  };
 
   async function userQuery() {
-    const userProfileData = await API.graphql({
-      query: getUserProfile,
-      variables: { id: props.props.match.params.id },
-      authMode: "AWS_IAM",
-    });
-    const userProfile = userProfileData.data.getUserProfile;
-    console.log("userProfile", userProfile);
-    userProfile.ImageURL = userProfile.UserImage
-      ? await Storage.get(userProfile.UserImage)
-      : avatar;
-    userProfile.BgURL = userProfile.BgImage
-      ? await Storage.get(userProfile.BgImage)
-      : cover;
-    if (userProfile) {
-      setProfile(userProfile);
-    } else {
-      console.log("cannot find user profile!");
-    }
-  }
+    const query = /* GraphQL */ `
+      query GetUserProfile($id: ID!) {
+        getUserProfile(id: $id) {
+          id
+          Birthday
+          Height
+          UserImage
+          BgImage
+          LastName
+          FirstName
+          Weight
+          Description
+          Favorites {
+            items {
+              id
+              Content {
+                id
+              }
+            }
+            nextToken
+          }
+          Contents {
+            items {
+              id
+              ContentName
+              Description
+              Title
+              Level
+              Length
+              IsDemo
+              Thumbnail
+              Segments
+              createdAt
+            }
+            nextToken
+          }
+        }
+      }
+    `;
+    const userProfileData = await API.graphql(
+      graphqlOperation(query, { id: props.user })
+    );
 
-  const onSubmit = () => {
-    history.push({
-      pathname: "/admin/checkout/" + profile.id,
-    });
-  };
+    setFavorites(userProfileData.data.getUserProfile.Favorites.items);
+    setProfile(userProfileData.data.getUserProfile);
+    userProfile.UserURL = await Storage.get(
+      userProfileData.data.getUserProfile.UserImage
+    );
+    userProfile.BgURL = await Storage.get(
+      userProfileData.data.getUserProfile.BgImage
+    );
+  }
 
   const getPrice = async (id) => {
     const myInit = {
@@ -77,51 +144,68 @@ export default function LandingPage({ ...props }) {
       });
   };
 
-  useEffect(() => {
-    getPrice(props.props.match.params.id);
-  }, [props.props.match.params.id]);
+  const onClick = () => {
+    console.log("Checkouts");
+  };
 
   useEffect(() => {
+    getPrice(props.props.match.params.id);
     userQuery();
   }, [props.props.match.params.id]);
 
-  const classes = useStyles();
-
-  return !profile ? (
-    "Loading..."
-  ) : (
-    <Container className={classes.container}>
-      <Grid
-        container
-        className={classes.BImage}
-        style={{
-          background: `url(${profile.BgURL}) left top / 100% no-repeat`,
-        }}
-      >
-        <Typography className={classes.BannerTitle}>
-          {profile.BgTitle}
-        </Typography>
-      </Grid>
-      <Grid container className={classes.profileSection}>
-        <Grid item xs={6}>
-          <ShowProfile profile={profile} />
+  return (
+    <Grid container direction="row">
+      <Grid item container direction="column" xs={4}>
+        <Grid item>
+          <img style={{ width: "200px" }} src={profile.UserURL} />
         </Grid>
-        <Grid item xs={6} className={classes.courseSection}>
-          <Typography variant="h4">Featured Courses</Typography>
-          <Card className={classes.CardStlye}>
-            <CardContent className={classes.CourseCardTitle}>
-              8 weeks Flexibility exercise
-            </CardContent>
+        <Grid item>
+          <Typography variant="h3">
+            {profile.FirstName + " " + profile.LastName}
+          </Typography>
+        </Grid>
+        <Grid item variant="body1">
+          {profile.Description}
+        </Grid>
+        <Grid item>
+          <TrainerMetrics
+            birthday={profile.Birthday}
+            weight={profile.Weight}
+            height={profile.Height}
+          />
+        </Grid>
+        <Grid item>
+          <Card>
+            <CardActionArea onClick={onClick}>
+              <Typography variant="h1">{price}</Typography>
+              <Typography>Join</Typography>
+            </CardActionArea>
           </Card>
         </Grid>
       </Grid>
-      <div>
-        <h4>{profile.FirstName + " " + profile.LastName}</h4>
-        <p>{profile.Description}</p>
-        <p>{price}</p>
-        <Button onClick={() => onSubmit()}>Subscribe</Button>
-      </div>
-    </Container>
+      <Grid item container xs={4}>
+        <Grid item>
+          <Typography variant="h1">Feed</Typography>
+        </Grid>
+        {videos.map((video, idx) => {
+          // let f = favorites.findIndex((e) => e.Content.id === video.id);
+          console.log(video.Segments);
+          return (
+              <WorkoutCard
+                  post={video}
+                  user={user}
+                  segments={video.Segments}
+                  clickCallback={click}
+                  key={idx}
+              />
+          );}
+      </Grid>
+      <Grid item container xs={4}>
+        <Grid item>
+          <Typography variant="h1">Favorite Workouts</Typography>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 }
 
