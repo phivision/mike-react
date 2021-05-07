@@ -1,92 +1,140 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { API } from "aws-amplify";
-import { Button } from "@material-ui/core";
+import { Button, Dialog, Typography } from "@material-ui/core";
 import ChangePassword from "../../components/Settings/ChangePassword";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+import CreditCardIcon from "@material-ui/icons/CreditCard";
+// local variables
+import { userRoles } from "variables/userRoles";
+// local components
+import ActiveSubscriptions from "../../components/Settings/ActiveSubscriptions";
+// amplify components
+import { API, graphqlOperation } from "aws-amplify";
+
+const getUserSettings = /* GraphQL */ `
+  query GetUserProfile($id: ID!) {
+    getUserProfile(id: $id) {
+      Email
+      Subscriptions {
+        items {
+          Trainer {
+            UserImage
+            LastName
+            FirstName
+          }
+          ExpireDate
+          StripeID
+        }
+      }
+    }
+  }
+`;
 
 export default function Settings(props) {
-  const [price, setPrice] = useState("");
+  const [email, setEmail] = useState("");
+  const [trainers, setTrainers] = useState([]);
+  const [openDialog, setOpenDialog] = React.useState(false);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const myInit = {
-      headers: {}, // AWS-IAM authorization if using empty headers
-      body: {
-        id: props.user,
-        newPrice: price,
-      },
-      response: true,
-    };
-
-    API.post("stripeAPI", "/stripe/api/trainer/update/price", myInit)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const handleOpenPassword = () => {
+    setOpenDialog(true);
   };
 
-  const handleChange = (event) => {
-    setPrice(event.target.value);
+  const handleClosePassword = () => {
+    setOpenDialog(false);
   };
 
-  async function getPrice() {
-    const myInit = {
-      headers: {}, // AWS-IAM authorization if using empty headers
-      body: {
-        id: props.user,
-      },
-      response: true,
-    };
+  const userRole = props.role;
 
-    API.post("stripeAPI", "/stripe/api/trainer/get/price", myInit)
-      .then((res) => {
-        setPrice(res.data.data[0].unit_amount);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const PasswordDialog = () => {
+    return (
+      <Dialog open={openDialog} onClose={handleClosePassword}>
+        <div>
+          <ChangePassword />
+        </div>
+      </Dialog>
+    );
+  };
+
+  async function fetchSettings() {
+    const userSettingData = await API.graphql(
+      graphqlOperation(getUserSettings, { id: props.user })
+    );
+    setEmail(userSettingData.data.getUserProfile.Email);
+    return userSettingData.data.getUserProfile.Subscriptions.items;
   }
 
-  const deleteSubscription = async () => {
-    const myInit = {
-      headers: {},
-      body: {
-        id: props.user,
-        subscriptionID: "sub_JOtvIJgjqMEkGE",
-      },
-      response: true,
-    };
-
-    API.post("stripeAPI", "/stripe/api/user/delete/subscription", myInit)
-      .then((res) => {
-        setPrice(res.data.data[0].unit_amount);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   useEffect(() => {
-    getPrice();
+    fetchSettings().then((subs) => {
+      if (userRole === userRoles.STUDENT) {
+        setTrainers(subs);
+      }
+    });
   }, [props.user]);
 
   return (
-    <div>
-      <ChangePassword />
-      <div>{"User ID:" + props.user}</div>
-      <Button onClick={() => deleteSubscription()}>Delete Subscription</Button>
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <label>
-          <input type="text" value={price} onChange={(e) => handleChange(e)} />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
-    </div>
+    <TableContainer component={Paper}>
+      <Table aria-label="spanning table">
+        <TableHead>
+          <TableRow>
+            <TableCell align="left" rowSpan={3}>
+              <Typography variant="h1">Account</Typography>
+            </TableCell>
+            <TableCell align="left" colSpan={2}>
+              {email}
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell rowSpan={4}>
+              <Typography variant="h3">Membership and Billing</Typography>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell align="left">Password: ********</TableCell>
+            <TableCell align="right">
+              <Button onClick={handleOpenPassword}>Change password</Button>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell align="left">
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                }}
+              >
+                <CreditCardIcon />
+                <span>**** **** **** 4242</span>
+              </div>
+            </TableCell>
+            <TableCell align="right">
+              <Button>Manage billing info</Button>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell colSpan={2} align="right">
+              <Button>Billing details</Button>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+        {userRole === userRoles.STUDENT ? (
+          <ActiveSubscriptions trainers={trainers} user={props.user} />
+        ) : null}
+      </Table>
+      <PasswordDialog />
+    </TableContainer>
   );
 }
 
 Settings.propTypes = {
-  user: PropTypes.string,
+  user: PropTypes.string.isRequired,
+  role: PropTypes.string.isRequired,
 };

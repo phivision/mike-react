@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import { AppBar, Toolbar, Button, Icon } from "@material-ui/core";
+import { AppBar, Toolbar, Button, Icon, IconButton } from "@material-ui/core";
 import styles from "assets/jss/material-dashboard-react/components/headerStyle.js";
 import styled from "styled-components";
 import SearchBar from "material-ui-search-bar";
@@ -74,6 +74,7 @@ export default function Header(props) {
   } else {
     userRole = userRoles.UNKNOWN;
   }
+  const handleOpenSettings = props.onSettings;
 
   const classes = useStyles();
   let history = useHistory();
@@ -101,6 +102,18 @@ export default function Header(props) {
     );
   };
 
+  const SettingButton = () => {
+    return (
+      <IconButton onClick={handleOpenSettings}>
+        {typeof headerRoutes.settings.icon === "string" ? (
+          <Icon>{headerRoutes.settings.icon}</Icon>
+        ) : (
+          <headerRoutes.settings.icon />
+        )}
+      </IconButton>
+    );
+  };
+
   return (
     <AppBar className={classes.appBar}>
       <Toolbar className={classes.container}>
@@ -119,7 +132,7 @@ export default function Header(props) {
           <UserIcon route={headerRoutes.userProfile} />
         ) : null}
         {userRole === userRoles.STUDENT || userRole === userRoles.TRAINER ? (
-          <UserIcon route={headerRoutes.settings} />
+          <SettingButton />
         ) : null}
         {userRole === userRoles.UNKNOWN ? <SignInLink /> : null}
         {userRole === userRoles.UNKNOWN ? (
@@ -134,4 +147,5 @@ Header.propTypes = {
   user: PropTypes.shape({
     attributes: PropTypes.shape({ "custom:role": PropTypes.string }),
   }),
+  onSettings: PropTypes.func,
 };

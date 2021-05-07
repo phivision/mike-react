@@ -27,14 +27,6 @@ const routes = [
     layoutCategory: "both",
   },
   {
-    path: "/settings",
-    name: "User Settings",
-    icon: SettingsIcon,
-    component: Settings,
-    layout: "/admin",
-    layoutCategory: "both",
-  },
-  {
     path: "/video",
     name: "Video Uploading",
     icon: VideoLibraryIcon,
