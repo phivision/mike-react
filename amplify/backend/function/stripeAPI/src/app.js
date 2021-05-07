@@ -8,7 +8,6 @@ var bodyParser = require("body-parser");
 var awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
 const AWS = require("aws-sdk");
 const docClient = new AWS.DynamoDB.DocumentClient();
-require("dotenv").config();
 
 // declare a new express app
 var app = express();
@@ -24,7 +23,17 @@ app.use(function (req, res, next) {
   next();
 });
 
-const stripe = require("stripe")(process.env.SECRET_TEST_KEY);
+let stripe;
+
+if (process.env.ENV === "prod") {
+  stripe = require("stripe")(
+    "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"
+  );
+} else {
+  stripe = require("stripe")(
+    "sk_test_51IWoNlAXegvVyt5s8RgdmlA7kMtgxRkk5ckcNHQYVjgTyMCxKHDlgJm810tTm3KIVXe34FvDSlnsqzigH25AwsLU00nIkry9yo"
+  );
+}
 
 app.post("/stripe/api/trainer/create", function (req, res) {
   const queryName = async (id) => {
