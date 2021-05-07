@@ -18,7 +18,7 @@ const HomeSearch = () => {
       </Typography>
       <SearchButton
         value={query}
-        placeholder={"SearchResult your liked trainer"}
+        placeholder={"Search your liked trainer"}
         onChange={(q) => setQuery(q)}
         onRequestSearch={() => history.push("/home/search/" + query)}
       />
