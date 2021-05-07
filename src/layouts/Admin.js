@@ -62,26 +62,26 @@ const Admin = ({ user, ...rest }) => {
   const mainPanel = React.createRef();
   // states and functions
   const match = useRouteMatch();
-  const [openModal, setOpenModal] = React.useState(false);
+  const [openDialog, setOpenDialog] = React.useState(false);
 
   const handleOpenSettings = () => {
-    setOpenModal(true);
+    setOpenDialog(true);
   };
 
   const handleCloseSettings = () => {
-    setOpenModal(false);
+    setOpenDialog(false);
   };
 
   console.log(rest);
 
-  const SettingModal = () => {
+  const SettingDialog = () => {
     const body = (
       <div>
-        <headerRoutes.settings.component user={user.username} />
+        <headerRoutes.settings.component user={user.username} role={userRole} />
       </div>
     );
     return (
-      <Dialog open={openModal} onClose={handleCloseSettings}>
+      <Dialog open={openDialog} onClose={handleCloseSettings}>
         {body}
       </Dialog>
     );
@@ -109,7 +109,7 @@ const Admin = ({ user, ...rest }) => {
       <div className={classes.content}>
         <div className={classes.container}>
           {switchRoutes(user.username, currentRoutes, match.url)}
-          <SettingModal />
+          <SettingDialog />
         </div>
       </div>
       <Footer />
