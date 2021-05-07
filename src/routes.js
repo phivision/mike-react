@@ -11,7 +11,7 @@ import Payment from "views/Payment/Payment.js";
 //core components/views for Home layout
 import LandingPage from "views/LandingPage/LandingPage.js";
 import Home from "views/Home/Home.js";
-import SearchResult from "views/SearchResult/SearchResult.js";
+import Search from "views/Search/Search.js";
 import VideoUpload from "./views/VideoUpload/VideoUpload";
 import SignIn from "views/Auth/SignIn.js";
 import SignUp from "views/Auth/SignUp.js";
@@ -67,8 +67,8 @@ const routes = [
   },
   {
     path: "/search/:query",
-    name: "Search Results",
-    component: SearchResult,
+    name: "Search",
+    component: Search,
     layout: "/home",
     exact: true,
   },
