@@ -41,22 +41,28 @@ TrainerCard.propTypes = {
 };
 
 export default function ActiveSubscriptions(props) {
-  const deleteSubscription = async (subID) => {
+  const deleteSubscription = async (e) => {
     const myInit = {
       headers: {},
       body: {
         id: props.user,
-        subscriptionID: subID,
+        subscriptionID: e.currentTarget.value,
       },
       response: true,
     };
 
-    API.post("stripeAPI", "/stripe/api/user/delete/subscription", myInit).catch(
-      (err) => {
-        console.log(err);
-      }
-    );
+    console.log(myInit);
+
+    await API.post(
+      "stripeAPI",
+      "/stripe/api/user/delete/subscription",
+      myInit
+    ).catch((err) => {
+      console.log(err);
+    });
   };
+
+  console.log(props.trainers);
 
   return (
     <TableBody>
