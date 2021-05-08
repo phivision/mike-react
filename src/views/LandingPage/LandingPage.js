@@ -128,7 +128,7 @@ export default function LandingPage({ ...props }) {
 
     API.post("stripeAPI", "/stripe/api/trainer/get/price", myInit)
       .then((res) => {
-        setPrice(res.data.data[0].unit_amount);
+        setPrice(res.data.data[0].unit_amount / 100);
       })
       .catch((err) => {
         console.log(err);
@@ -176,7 +176,7 @@ export default function LandingPage({ ...props }) {
           <Grid item>
             <Card>
               <CardActionArea onClick={onClick}>
-                <Typography variant="h1">{price}</Typography>
+                <Typography variant="h1">{"$ " + price}</Typography>
                 <Typography>Join</Typography>
               </CardActionArea>
             </Card>
