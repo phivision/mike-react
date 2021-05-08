@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { Grid, Typography, Card, CardActionArea } from "@material-ui/core";
 import TrainerMetrics from "../../components/TrainerMetrics/TrainerMetrics";
 import ContentCard from "../../components/ContentCard/ContentCard";
+import WorkoutCard from "../../components/WorkoutCard/WorkoutCard";
 import Banner from "assets/img/banner.jpeg";
 import {
   createUserFavoriteContent,
@@ -34,8 +35,6 @@ export default function LandingPage({ ...props }) {
   const [userImg, setUserImg] = useState("");
 
   const editFavorite = (id, contentId) => {
-    console.log(id);
-    console.log(contentId);
     if (id) {
       API.graphql(
         graphqlOperation(deleteUserFavoriteContent, {
@@ -109,10 +108,6 @@ export default function LandingPage({ ...props }) {
         setContent(Contents.items);
         setFavorites(Favorites.items);
         setProfile(p);
-        console.log(content);
-        console.log(favorites);
-        console.log(p);
-        console.log(profile);
         Storage.get(d.data.getUserProfile.UserImage)
           .then((d) => {
             setUserImg(d);
@@ -211,14 +206,17 @@ export default function LandingPage({ ...props }) {
             <Typography variant="h1">Favorite Workouts</Typography>
           </Grid>
           {favorites.map((fav, idx) => {
-            let f = content.findIndex((e) => e.id === fav.id);
-            if (f) {
+            let f = content.findIndex((e) => {
+              return e.id === fav.Content.id;
+            });
+            console.log(f);
+            if (f > -1) {
               return (
-                <ContentCard
-                  post={content}
+                <WorkoutCard
+                  post={content[f]}
                   user={profile}
                   favorite={fav}
-                  segments={content.Segments}
+                  segments={content[f].Segments}
                   clickCallback={onClick}
                   favoriteCallback={editFavorite}
                   key={idx}
