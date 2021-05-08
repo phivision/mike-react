@@ -24,6 +24,7 @@ app.use(function (req, res, next) {
 
 let stripe;
 let ENDPOINT_SECRET;
+let UUID = "d2b157d4-5a66-49ca-b868-c83008f1e126";
 
 if (process.env.ENV === "prod") {
   stripe = require("stripe")(
@@ -62,7 +63,7 @@ app.post(
       subscriptionID,
       expireDate
     ) => {
-      const i = v5(trainerID + userID, process.env.UUID);
+      const i = v5(trainerID + userID, UUID);
       const time = new Date();
       const expire = new Date(expireDate).toISOString();
       const exp = expire.slice(0, 10);

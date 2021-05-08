@@ -54,18 +54,14 @@ export default function WorkoutCard({ ...props }) {
   const [segments, setSegments] = useState();
 
   useEffect(() => {
-    console.log(props);
     if (props.segments) {
       const segs = JSON.parse(props.segments);
       setSegments(segs);
     }
-  }, [props.segments]);
-
-  useEffect(() => {
     Storage.get(props.post.Thumbnail).then((url) => {
       setImg(url);
     });
-  }, [props.post.Thumbnail]);
+  }, [props.post.Thumbnail, props.segments]);
 
   return (
     <Card>

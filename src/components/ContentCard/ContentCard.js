@@ -25,46 +25,46 @@ export default function ContentCard({ ...props }) {
 
   return (
     <Card>
-      <CardActionArea onClick={props.clickCallback}>
-        <Grid container direction="column">
-          <Grid item container xs>
-            <Grid item xs>
-              <Typography variant="h3">{props.post.Description}</Typography>
-            </Grid>
-            <Grid item xs>
-              <IconButton
-                aria-label="favorite this post"
-                color="primary"
-                onClick={() => {
-                  setLiked(!liked);
-                  props.favoriteCallback(props.favorite, props.post.id);
-                }}
-              >
-                {liked ? <FavoriteIcon /> : <FavoriteBorder />}
-              </IconButton>
-            </Grid>
+      <Grid container direction="column">
+        <Grid item container xs>
+          <Grid item xs>
+            <Typography variant="h3">{props.post.Description}</Typography>
           </Grid>
-          <Grid item container xs>
+          <Grid item xs>
+            <IconButton
+              aria-label="favorite this post"
+              color="primary"
+              onClick={() => {
+                setLiked(!liked);
+                props.favoriteCallback(props.favorite, props.post.id);
+              }}
+            >
+              {liked ? <FavoriteIcon /> : <FavoriteBorder />}
+            </IconButton>
+          </Grid>
+        </Grid>
+        <Grid item container xs>
+          <CardActionArea onClick={props.clickCallback}>
             <CardMedia
               image={img}
               style={{ height: "250px", width: "250px", paddingTop: "2%" }}
               title="Content Thumbnail"
             />
+          </CardActionArea>
+        </Grid>
+        <Grid item container xs>
+          <Grid item xs>
+            <Typography variant="body2">
+              {new Date(props.post.createdAt).toDateString()}
+            </Typography>
           </Grid>
-          <Grid item container xs>
-            <Grid item xs>
-              <Typography variant="body2">
-                {new Date(props.post.createdAt).toDateString()}
-              </Typography>
-            </Grid>
-            <Grid item xs>
-              <Typography variant="body2">
-                {props.user.FirstName + " " + props.user.LastName}
-              </Typography>
-            </Grid>
+          <Grid item xs>
+            <Typography variant="body2">
+              {props.user.FirstName + " " + props.user.LastName}
+            </Typography>
           </Grid>
         </Grid>
-      </CardActionArea>
+      </Grid>
     </Card>
   );
 }
