@@ -7,6 +7,7 @@ import UserProfile from "views/UserProfile/UserProfile.js";
 import Settings from "views/Settings/Settings";
 import Checkout from "views/Checkout/Checkout.js";
 import Payment from "views/Payment/Payment.js";
+import UserFeed from "views/UserFeed/UserFeed.js";
 
 //core components/views for Home layout
 import LandingPage from "views/LandingPage/LandingPage.js";
@@ -20,9 +21,8 @@ import Verify from "views/Auth/Verify.js";
 const routes = [
   {
     path: "/user",
-    name: "User Profile",
-    icon: Person,
-    component: UserProfile,
+    name: "Feed",
+    component: UserFeed,
     layout: "/admin",
     layoutCategory: "both",
   },
