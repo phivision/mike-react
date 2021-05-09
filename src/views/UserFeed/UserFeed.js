@@ -17,8 +17,6 @@ const initialProfileState = {
   Height: null,
   UserImage: null,
   UserURL: null,
-  BgImage: null,
-  BgURL: null,
   LastName: "",
   FirstName: "",
   Weight: null,
@@ -96,7 +94,6 @@ export default function UserFeed({ ...props }) {
                 }
               }
             }
-            BgImage
             LastName
             FirstName
             UserImage
@@ -109,12 +106,7 @@ export default function UserFeed({ ...props }) {
         const { Subscriptions, Favorites, ...p } = d.data.getUserProfile;
         setProfile(p);
         setFavorites(Favorites.items);
-        Subscriptions.items.map((sub) => {
-          console.log(sub);
-          setSubscriptions([...subscriptions, sub.Trainer]);
-          setContent([...content, ...sub.Trainer.Content]);
-          console.log(sub);
-        });
+        setSubscriptions(Subscriptions.items);
       })
       .catch(console.log);
   }
@@ -126,13 +118,16 @@ export default function UserFeed({ ...props }) {
   }, [subscriptions]);
 
   useEffect(() => {
+    subscriptions.map((sub) => {
+      setContent([...content, ...sub.Trainer.Contents.items]);
+    });
+  }, [subscriptions]);
+
+  useEffect(() => {
     Storage.get(profile.UserImage).then((d) => {
       setProfile({ ...profile, UserURL: d });
     });
-    Storage.get(profile.BgImage).then((d) => {
-      setProfile({ ...profile, BgURL: d });
-    });
-  }, [profile]);
+  }, [profile.UserImage]);
 
   useEffect(() => {
     userQuery();
@@ -169,7 +164,11 @@ export default function UserFeed({ ...props }) {
           <Grid item container direction="rows">
             {subscriptions.map((sub, idx) => {
               console.log(sub);
-              return <Avatar src={sub.UserURL} key={idx} />;
+              console.log("UserURL: " + sub.UserURL);
+              console.log(sub);
+              return (
+                <Avatar alt="Profile Picture" src={sub.UserURL} key={idx} />
+              );
             })}
           </Grid>
         </Grid>
@@ -179,8 +178,6 @@ export default function UserFeed({ ...props }) {
           </Grid>
           {content.map((c, idx) => {
             let f = favorites.findIndex((e) => e.Content.id === c.id);
-            console.log(c);
-            console.log(content);
             return (
               <ContentCard
                 post={c}
@@ -202,7 +199,6 @@ export default function UserFeed({ ...props }) {
             let f = content.findIndex((e) => {
               return e.id === fav.Content.id;
             });
-            console.log(f);
             if (f > -1) {
               return (
                 <WorkoutCard
@@ -224,5 +220,5 @@ export default function UserFeed({ ...props }) {
 }
 
 UserFeed.propTypes = {
-  user: PropTypes.shape,
+  user: PropTypes.string,
 };
