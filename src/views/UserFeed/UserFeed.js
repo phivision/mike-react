@@ -27,6 +27,22 @@ const initialProfileState = {
 //TODO: Add cards for payment tiers
 //TODO: Add images + description, nicely formatted
 
+const TrainerAvatar = ({ UserImage: UserImage, ...p }) => {
+  const [UserURL, setURL] = useState("");
+
+  useEffect(() => {
+    Storage.get(UserImage).then((d) => {
+      setURL(d);
+    });
+  }, [UserImage]);
+
+  return <Avatar {...p} src={UserURL} />;
+};
+
+TrainerAvatar.propTypes = {
+  UserImage: PropTypes.string.isRequired,
+};
+
 export default function UserFeed({ ...props }) {
   const [profile, setProfile] = useState(initialProfileState);
   const [subscriptions, setSubscriptions] = useState([]);
@@ -120,14 +136,6 @@ export default function UserFeed({ ...props }) {
 
   useEffect(() => {
     subscriptions.map((sub) => {
-      Storage.get(sub.Trainer.UserImage).then((d) => {
-        sub.UserURL = d;
-      });
-    });
-  }, [subscriptions]);
-
-  useEffect(() => {
-    subscriptions.map((sub) => {
       setContent([...content, ...sub.Trainer.Contents.items]);
     });
   }, [subscriptions]);
@@ -172,15 +180,13 @@ export default function UserFeed({ ...props }) {
           </Grid>
           <Grid item>
             {subscriptions.map((sub, idx) => {
-              console.log(sub);
-              console.log(sub.UserURL);
               return (
-                <Avatar
+                <TrainerAvatar
+                  UserImage={sub.Trainer.UserImage}
                   onClick={() =>
                     history.push(`/home/landingpage/${sub.Trainer.id}`)
                   }
                   alt="Profile Picture"
-                  src={sub.UserURL}
                   key={idx}
                 />
               );
