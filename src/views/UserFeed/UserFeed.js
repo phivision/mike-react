@@ -9,6 +9,7 @@ import {
   createUserFavoriteContent,
   deleteUserFavoriteContent,
 } from "../../graphql/mutations";
+import { useHistory } from "react-router-dom";
 
 // import initial profile
 const initialProfileState = {
@@ -31,11 +32,13 @@ export default function UserFeed({ ...props }) {
   const [subscriptions, setSubscriptions] = useState([]);
   const [content, setContent] = useState([]);
   const [favorites, setFavorites] = useState([]);
+  const history = useHistory();
 
   const onClick = () => {};
 
   const editFavorite = (id, contentId) => {
     if (id) {
+      console.log("Deleting Favorite" + id);
       API.graphql(
         graphqlOperation(deleteUserFavoriteContent, {
           input: { id: id.id },
@@ -47,6 +50,7 @@ export default function UserFeed({ ...props }) {
         })
         .catch(console.log);
     } else {
+      console.log("Creating favorite: " + contentId + " " + profile.id);
       API.graphql(
         graphqlOperation(createUserFavoriteContent, {
           input: {
@@ -74,6 +78,7 @@ export default function UserFeed({ ...props }) {
                       Description
                       createdAt
                       Thumbnail
+                      Segments
                     }
                   }
                   FirstName
@@ -94,6 +99,7 @@ export default function UserFeed({ ...props }) {
                 }
               }
             }
+            id
             LastName
             FirstName
             UserImage
@@ -163,16 +169,20 @@ export default function UserFeed({ ...props }) {
           </Grid>
           <Grid item container direction="rows">
             {subscriptions.map((sub, idx) => {
-              console.log(sub);
-              console.log("UserURL: " + sub.UserURL);
-              console.log(sub);
               return (
-                <Avatar alt="Profile Picture" src={sub.UserURL} key={idx} />
+                <Avatar
+                  onClick={() =>
+                    history.push(`/home/landingpage/${sub.Trainer.id}`)
+                  }
+                  alt="Profile Picture"
+                  src={sub.UserURL}
+                  key={idx}
+                />
               );
             })}
           </Grid>
         </Grid>
-        <Grid item container xs={4}>
+        <Grid item container direction="column" xs={4}>
           <Grid item>
             <Typography variant="h1">Feed</Typography>
           </Grid>
@@ -191,7 +201,7 @@ export default function UserFeed({ ...props }) {
             );
           })}
         </Grid>
-        <Grid item container xs={4}>
+        <Grid item container direction="column" xs={4}>
           <Grid item>
             <Typography variant="h1">Favorite Workouts</Typography>
           </Grid>
