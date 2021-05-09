@@ -76,6 +76,7 @@ export default function UserFeed({ ...props }) {
                     items {
                       id
                       Description
+                      Title
                       createdAt
                       Thumbnail
                       Segments
@@ -119,7 +120,9 @@ export default function UserFeed({ ...props }) {
 
   useEffect(() => {
     subscriptions.map((sub) => {
-      Storage.get(sub.UserImage).then((d) => (sub.UserURL = d));
+      Storage.get(sub.Trainer.UserImage).then((d) => {
+        sub.UserURL = d;
+      });
     });
   }, [subscriptions]);
 
@@ -167,8 +170,10 @@ export default function UserFeed({ ...props }) {
           <Grid item>
             <Typography variant="h3">My Trainers</Typography>
           </Grid>
-          <Grid item container direction="rows">
+          <Grid item>
             {subscriptions.map((sub, idx) => {
+              console.log(sub);
+              console.log(sub.UserURL);
               return (
                 <Avatar
                   onClick={() =>

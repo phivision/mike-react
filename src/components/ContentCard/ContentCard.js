@@ -45,11 +45,13 @@ export default function ContentCard({ ...props }) {
         </Grid>
         <Grid item container xs>
           <CardActionArea onClick={props.clickCallback}>
-            <CardMedia
-              image={img}
-              style={{ height: "250px", width: "250px", paddingTop: "2%" }}
-              title="Content Thumbnail"
-            />
+            {img && (
+              <CardMedia
+                image={img}
+                style={{ height: "250px", width: "250px", paddingTop: "2%" }}
+                title="Content Thumbnail"
+              />
+            )}
           </CardActionArea>
         </Grid>
         <Grid item container xs>
