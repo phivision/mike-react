@@ -14,7 +14,7 @@ const SegmentCard = ({ ...props }) => {
       <ListItem>
         <Grid container>
           <Grid item>
-            <Typography variant="H3">{props.segment.Name}</Typography>
+            <Typography variant="h3">{props.segment.Name}</Typography>
             <Typography variant="body2">{props.segment.Timestamp}</Typography>
           </Grid>
           <Grid item>
@@ -68,11 +68,13 @@ export default function WorkoutCard({ ...props }) {
       <CardActionArea onClick={props.clickCallback}>
         <Grid container direction="column">
           <Grid item container xs>
-            <CardMedia
-              image={img}
-              style={{ height: "250px", width: "250px", paddingTop: "2%" }}
-              title="Content Thumbnail"
-            />
+            {img && (
+              <CardMedia
+                image={img}
+                style={{ height: "250px", width: "250px", paddingTop: "2%" }}
+                title="Content Thumbnail"
+              />
+            )}
           </Grid>
           <Grid item container xs>
             <Grid item xs>
@@ -101,7 +103,7 @@ WorkoutCard.propTypes = {
     createdAt: PropTypes.string.isRequired,
     Thumbnail: PropTypes.string.isRequired,
   }),
-  segments: PropTypes.object,
+  segments: PropTypes.string,
   user: PropTypes.shape({
     FirstName: PropTypes.string.isRequired,
     LastName: PropTypes.string.isRequired,

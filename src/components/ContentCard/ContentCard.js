@@ -8,6 +8,7 @@ import { Storage } from "aws-amplify";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import CardActionArea from "@material-ui/core/CardActionArea";
+import TrainerAvatar from "../TrainerAvatar/TrainerAvatar";
 
 export default function ContentCard({ ...props }) {
   const [img, setImg] = useState();
@@ -45,22 +46,29 @@ export default function ContentCard({ ...props }) {
         </Grid>
         <Grid item container xs>
           <CardActionArea onClick={props.clickCallback}>
-            <CardMedia
-              image={img}
-              style={{ height: "250px", width: "250px", paddingTop: "2%" }}
-              title="Content Thumbnail"
-            />
+            {img && (
+              <CardMedia
+                image={img}
+                style={{ height: "250px", width: "250px", paddingTop: "2%" }}
+                title="Content Thumbnail"
+              />
+            )}
           </CardActionArea>
         </Grid>
         <Grid item container xs>
+          {props.UserImage && (
+            <Grid item xs>
+              <TrainerAvatar UserImage={props.UserImage} />
+            </Grid>
+          )}
           <Grid item xs>
             <Typography variant="body2">
-              {new Date(props.post.createdAt).toDateString()}
+              {props.user.FirstName + " " + props.user.LastName}
             </Typography>
           </Grid>
           <Grid item xs>
             <Typography variant="body2">
-              {props.user.FirstName + " " + props.user.LastName}
+              {new Date(props.post.createdAt).toDateString()}
             </Typography>
           </Grid>
         </Grid>
@@ -80,6 +88,7 @@ ContentCard.propTypes = {
     FirstName: PropTypes.string.isRequired,
     LastName: PropTypes.string.isRequired,
   }),
+  UserImage: PropTypes.string,
   favorite: PropTypes.object,
   favoriteCallback: PropTypes.func.isRequired,
   clickCallback: PropTypes.func,
