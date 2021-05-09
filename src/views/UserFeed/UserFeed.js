@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import PropTypes from "prop-types";
-import { Avatar, Grid, Typography, Button } from "@material-ui/core";
+import { Grid, Typography, Button } from "@material-ui/core";
 import ContentCard from "../../components/ContentCard/ContentCard";
 import WorkoutCard from "../../components/WorkoutCard/WorkoutCard";
 import Banner from "assets/img/banner.jpeg";
@@ -10,6 +10,7 @@ import {
   deleteUserFavoriteContent,
 } from "../../graphql/mutations";
 import { useHistory } from "react-router-dom";
+import TrainerAvatar from "../../components/TrainerAvatar/TrainerAvatar";
 
 // import initial profile
 const initialProfileState = {
@@ -26,22 +27,6 @@ const initialProfileState = {
 //TODO: Add payment functionality
 //TODO: Add cards for payment tiers
 //TODO: Add images + description, nicely formatted
-
-const TrainerAvatar = ({ UserImage: UserImage, ...p }) => {
-  const [UserURL, setURL] = useState("");
-
-  useEffect(() => {
-    Storage.get(UserImage).then((d) => {
-      setURL(d);
-    });
-  }, [UserImage]);
-
-  return <Avatar {...p} src={UserURL} />;
-};
-
-TrainerAvatar.propTypes = {
-  UserImage: PropTypes.string.isRequired,
-};
 
 export default function UserFeed({ ...props }) {
   const [profile, setProfile] = useState(initialProfileState);
@@ -96,6 +81,9 @@ export default function UserFeed({ ...props }) {
                       createdAt
                       Thumbnail
                       Segments
+                      Creator {
+                        UserImage
+                      }
                     }
                   }
                   FirstName
@@ -186,7 +174,6 @@ export default function UserFeed({ ...props }) {
                   onClick={() =>
                     history.push(`/home/landingpage/${sub.Trainer.id}`)
                   }
-                  alt="Profile Picture"
                   key={idx}
                 />
               );
@@ -202,6 +189,7 @@ export default function UserFeed({ ...props }) {
             return (
               <ContentCard
                 post={c}
+                UserImage={c.Creator.UserImage}
                 user={profile}
                 favorite={favorites[f]}
                 segments={c.Segments}
