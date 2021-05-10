@@ -87,6 +87,7 @@ export default function UserFeed({ ...props }) {
                     Thumbnail
                     createdAt
                     Description
+                    Segments
                   }
                   id
                 }
@@ -122,6 +123,7 @@ export default function UserFeed({ ...props }) {
                     Thumbnail
                     createdAt
                     Description
+                    Segments
                   }
                   id
                 }
@@ -193,6 +195,7 @@ export default function UserFeed({ ...props }) {
                   Thumbnail
                   createdAt
                   Description
+                  Segments
                 }
                 id
               }
@@ -372,22 +375,17 @@ export default function UserFeed({ ...props }) {
             <Typography variant="h1">Favorite Workouts</Typography>
           </Grid>
           {favorites.map((fav, idx) => {
-            let f = content.findIndex((e) => {
-              return e.id === fav.Content.id;
-            });
-            if (f > -1) {
-              return (
-                <WorkoutCard
-                  post={content[f]}
-                  user={profile}
-                  favorite={fav}
-                  segments={content[f].Segments}
-                  clickCallback={onClick}
-                  favoriteCallback={editFavorite}
-                  key={idx}
-                />
-              );
-            }
+            return (
+              <WorkoutCard
+                post={fav.Content}
+                user={profile}
+                favorite={fav}
+                segments={fav.Content.Segments}
+                clickCallback={onClick}
+                favoriteCallback={editFavorite}
+                key={idx}
+              />
+            );
           })}
         </Grid>
       </Grid>
