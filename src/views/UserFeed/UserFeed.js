@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { API, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation, Storage } from "aws-amplify";
 import PropTypes from "prop-types";
 import { Grid, Typography, Button } from "@material-ui/core";
 import ContentCard from "../../components/ContentCard/ContentCard";
 import WorkoutCard from "../../components/WorkoutCard/WorkoutCard";
 import Banner from "assets/img/banner.jpeg";
-import {
-  createUserFavoriteContent,
-  deleteUserFavoriteContent,
-  updateUserProfile,
-} from "../../graphql/mutations";
+import { updateUserProfile } from "../../graphql/mutations";
 import { useHistory } from "react-router-dom";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
 import EditableTypography from "../../components/EditableTypography/EditableTypography";
@@ -57,7 +53,7 @@ export default function UserFeed({ ...props }) {
     }
   };
 
-  const clickEdit = (type) => {
+  const clickEdit = async (type) => {
     if (edit) {
       if (type === "submit-changes") {
         API.graphql({
@@ -73,21 +69,68 @@ export default function UserFeed({ ...props }) {
     setEdit(!edit);
   };
 
-  const editFavorite = (id, contentId) => {
-    if (id) {
-      console.log("Deleting Favorite" + id);
+  const editFavorite = (fav, contentId) => {
+    if (fav) {
+      console.log("Deleting favorite: " + fav.id);
+
+      const deleteUserFavoriteContent = /* GraphQL */ `
+        mutation DeleteUserFavoriteContent(
+          $input: DeleteUserFavoriteContentInput!
+        ) {
+          deleteUserFavoriteContent(input: $input) {
+            User {
+              Favorites {
+                items {
+                  Content {
+                    id
+                    Title
+                    Thumbnail
+                    createdAt
+                    Description
+                  }
+                  id
+                }
+              }
+            }
+          }
+        }
+      `;
+
       API.graphql(
         graphqlOperation(deleteUserFavoriteContent, {
-          input: { id: id.id },
+          input: { id: fav.id },
         })
       )
-        .then(() => {
-          const i = favorites.findIndex((e) => e.Content.id === contentId);
-          favorites.splice(i, 1);
+        .then((d) => {
+          setFavorites(d.data.deleteUserFavoriteContent.User.Favorites.items);
         })
         .catch(console.log);
     } else {
       console.log("Creating favorite: " + contentId + " " + profile.id);
+
+      const createUserFavoriteContent = /* GraphQL */ `
+        mutation CreateUserFavoriteContent(
+          $input: CreateUserFavoriteContentInput!
+        ) {
+          createUserFavoriteContent(input: $input) {
+            User {
+              Favorites {
+                items {
+                  Content {
+                    id
+                    Title
+                    Thumbnail
+                    createdAt
+                    Description
+                  }
+                  id
+                }
+              }
+            }
+          }
+        }
+      `;
+
       API.graphql(
         graphqlOperation(createUserFavoriteContent, {
           input: {
@@ -97,10 +140,23 @@ export default function UserFeed({ ...props }) {
         })
       )
         .then((d) => {
-          favorites.push(d.data.createUserFavoriteContent);
+          setFavorites(d.data.createUserFavoriteContent.User.Favorites.items);
         })
         .catch(console.log);
     }
+  };
+
+  const handleImageChange = async (e) => {
+    if (!e.target.files[0]) return;
+    const nameArray = e.target.files[0].name.split(".");
+    const userImageName =
+      ("UserImage" + props.user + Date.now()).replace(/[^0-9a-z]/gi, "") +
+      "." +
+      nameArray[nameArray.length - 1];
+    await Storage.put(userImageName, e.target.files[0], {
+      contentType: "image/*",
+    });
+    setProfile({ ...profile, UserImage: userImageName });
   };
 
   async function userQuery() {
@@ -138,6 +194,7 @@ export default function UserFeed({ ...props }) {
                   createdAt
                   Description
                 }
+                id
               }
             }
             id
@@ -186,6 +243,7 @@ export default function UserFeed({ ...props }) {
                   accept="image/*"
                   id="profile-upload"
                   type="file"
+                  onChange={handleImageChange}
                   style={{ display: "none" }}
                 />
                 <label htmlFor="profile-upload">
@@ -240,7 +298,7 @@ export default function UserFeed({ ...props }) {
               variant="body1"
               edit={edit}
               label="Description"
-              fullWidth="true"
+              fullWidth={true}
               onChange={onChange}
               id="description"
               text={profile.Description}
@@ -252,7 +310,7 @@ export default function UserFeed({ ...props }) {
                 <Button
                   color="primary"
                   variant="contained"
-                  fullWidth="true"
+                  fullWidth={true}
                   onClick={() => clickEdit("submit-changes")}
                 >
                   Submit Changes
@@ -266,7 +324,7 @@ export default function UserFeed({ ...props }) {
                 color="primary"
                 variant="contained"
                 onClick={clickEdit}
-                fullWidth="true"
+                fullWidth={true}
               >
                 Edit
               </Button>

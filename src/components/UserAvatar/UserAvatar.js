@@ -16,7 +16,7 @@ const UserAvatar = ({ UserImage: UserImage, ...p }) => {
 };
 
 UserAvatar.propTypes = {
-  UserImage: PropTypes.string.isRequired,
+  UserImage: PropTypes.string,
 };
 
 export default UserAvatar;
