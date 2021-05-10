@@ -3,7 +3,7 @@ import { Storage } from "aws-amplify";
 import { Avatar } from "@material-ui/core";
 import PropTypes from "prop-types";
 
-const TrainerAvatar = ({ UserImage: UserImage, ...p }) => {
+const UserAvatar = ({ UserImage: UserImage, ...p }) => {
   const [UserURL, setURL] = useState("");
 
   useEffect(() => {
@@ -15,8 +15,8 @@ const TrainerAvatar = ({ UserImage: UserImage, ...p }) => {
   return <Avatar {...p} alt="Profile Picture" src={UserURL} />;
 };
 
-TrainerAvatar.propTypes = {
+UserAvatar.propTypes = {
   UserImage: PropTypes.string.isRequired,
 };
 
-export default TrainerAvatar;
+export default UserAvatar;

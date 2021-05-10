@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { API, graphqlOperation, Storage } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 import PropTypes from "prop-types";
 import { Grid, Typography, Button } from "@material-ui/core";
 import ContentCard from "../../components/ContentCard/ContentCard";
@@ -8,9 +8,13 @@ import Banner from "assets/img/banner.jpeg";
 import {
   createUserFavoriteContent,
   deleteUserFavoriteContent,
+  updateUserProfile,
 } from "../../graphql/mutations";
 import { useHistory } from "react-router-dom";
-import TrainerAvatar from "../../components/TrainerAvatar/TrainerAvatar";
+import UserAvatar from "../../components/UserAvatar/UserAvatar";
+import EditableTypography from "../../components/EditableTypography/EditableTypography";
+import Container from "@material-ui/core/Container";
+import IconButton from "@material-ui/core/IconButton";
 
 // import initial profile
 const initialProfileState = {
@@ -18,12 +22,13 @@ const initialProfileState = {
   Birthday: null,
   Height: null,
   UserImage: null,
-  UserURL: null,
   LastName: "",
   FirstName: "",
   Weight: null,
   Description: null,
 };
+let tempProfile;
+
 //TODO: Add payment functionality
 //TODO: Add cards for payment tiers
 //TODO: Add images + description, nicely formatted
@@ -33,9 +38,40 @@ export default function UserFeed({ ...props }) {
   const [subscriptions, setSubscriptions] = useState([]);
   const [content, setContent] = useState([]);
   const [favorites, setFavorites] = useState([]);
+  const [edit, setEdit] = useState(false);
   const history = useHistory();
 
   const onClick = () => {};
+
+  const onChange = (e) => {
+    switch (e.target.id) {
+      case "firstName":
+        setProfile({ ...profile, FirstName: e.target.value });
+        break;
+      case "lastName":
+        setProfile({ ...profile, LastName: e.target.value });
+        break;
+      case "description":
+        setProfile({ ...profile, Description: e.target.value });
+        break;
+    }
+  };
+
+  const clickEdit = (type) => {
+    if (edit) {
+      if (type === "submit-changes") {
+        API.graphql({
+          query: updateUserProfile,
+          variables: { input: profile },
+        });
+      } else {
+        setProfile(tempProfile);
+      }
+    } else {
+      tempProfile = { ...profile };
+    }
+    setEdit(!edit);
+  };
 
   const editFavorite = (id, contentId) => {
     if (id) {
@@ -129,12 +165,6 @@ export default function UserFeed({ ...props }) {
   }, [subscriptions]);
 
   useEffect(() => {
-    Storage.get(profile.UserImage).then((d) => {
-      setProfile({ ...profile, UserURL: d });
-    });
-  }, [profile.UserImage]);
-
-  useEffect(() => {
     userQuery();
   }, [props.user]);
 
@@ -150,18 +180,97 @@ export default function UserFeed({ ...props }) {
       <Grid item container direction="row">
         <Grid item container direction="column" xs={4}>
           <Grid item>
-            <img style={{ width: "200px" }} src={profile.UserURL} />
+            {edit ? (
+              <div>
+                <input
+                  accept="image/*"
+                  id="profile-upload"
+                  type="file"
+                  style={{ display: "none" }}
+                />
+                <label htmlFor="profile-upload">
+                  <IconButton component="span">
+                    <UserAvatar
+                      style={{
+                        width: "200px",
+                        height: "200px",
+                      }}
+                      UserImage={profile.UserImage}
+                    />
+                  </IconButton>
+                </label>
+              </div>
+            ) : (
+              <UserAvatar
+                style={{
+                  width: "200px",
+                  height: "200px",
+                }}
+                UserImage={profile.UserImage}
+              />
+            )}
           </Grid>
           <Grid item>
-            <Typography variant="h3">
-              {profile.FirstName + " " + profile.LastName}
-            </Typography>
+            <EditableTypography
+              variant="h3"
+              label="First Name"
+              text={profile.FirstName}
+              edit={edit}
+              onChange={onChange}
+              id="firstName"
+              style={{ display: "inline" }}
+            />
+            <EditableTypography
+              variant="h3"
+              text={" "}
+              style={{ display: "inline" }}
+            />
+            <EditableTypography
+              variant="h3"
+              label="Last Name"
+              text={profile.LastName}
+              edit={edit}
+              onChange={onChange}
+              id="lastName"
+              style={{ display: "inline" }}
+            />
           </Grid>
           <Grid item variant="body1">
-            {profile.Description}
+            <EditableTypography
+              variant="body1"
+              edit={edit}
+              label="Description"
+              fullWidth="true"
+              onChange={onChange}
+              id="description"
+              text={profile.Description}
+            />
           </Grid>
           <Grid item>
-            <Button>Edit</Button>
+            {edit ? (
+              <Container>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  fullWidth="true"
+                  onClick={() => clickEdit("submit-changes")}
+                >
+                  Submit Changes
+                </Button>
+                <Button variant="text" onClick={clickEdit}>
+                  Discard Changes
+                </Button>
+              </Container>
+            ) : (
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={clickEdit}
+                fullWidth="true"
+              >
+                Edit
+              </Button>
+            )}
           </Grid>
           <Grid item>
             <Typography variant="h3">My Trainers</Typography>
@@ -169,7 +278,7 @@ export default function UserFeed({ ...props }) {
           <Grid item>
             {subscriptions.map((sub, idx) => {
               return (
-                <TrainerAvatar
+                <UserAvatar
                   UserImage={sub.Trainer.UserImage}
                   onClick={() =>
                     history.push(`/home/landingpage/${sub.Trainer.id}`)
