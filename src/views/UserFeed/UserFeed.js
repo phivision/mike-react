@@ -5,12 +5,12 @@ import { Grid, Typography, Button } from "@material-ui/core";
 import ContentCard from "../../components/ContentCard/ContentCard";
 import WorkoutCard from "../../components/WorkoutCard/WorkoutCard";
 import Banner from "assets/img/banner.jpeg";
-import {
-  createUserFavoriteContent,
-  deleteUserFavoriteContent,
-} from "../../graphql/mutations";
+import { updateUserProfile } from "../../graphql/mutations";
 import { useHistory } from "react-router-dom";
-import TrainerAvatar from "../../components/TrainerAvatar/TrainerAvatar";
+import UserAvatar from "../../components/UserAvatar/UserAvatar";
+import EditableTypography from "../../components/EditableTypography/EditableTypography";
+import Container from "@material-ui/core/Container";
+import IconButton from "@material-ui/core/IconButton";
 
 // import initial profile
 const initialProfileState = {
@@ -18,12 +18,13 @@ const initialProfileState = {
   Birthday: null,
   Height: null,
   UserImage: null,
-  UserURL: null,
   LastName: "",
   FirstName: "",
   Weight: null,
   Description: null,
 };
+let tempProfile;
+
 //TODO: Add payment functionality
 //TODO: Add cards for payment tiers
 //TODO: Add images + description, nicely formatted
@@ -33,25 +34,105 @@ export default function UserFeed({ ...props }) {
   const [subscriptions, setSubscriptions] = useState([]);
   const [content, setContent] = useState([]);
   const [favorites, setFavorites] = useState([]);
+  const [edit, setEdit] = useState(false);
   const history = useHistory();
 
   const onClick = () => {};
 
-  const editFavorite = (id, contentId) => {
-    if (id) {
-      console.log("Deleting Favorite" + id);
+  const onChange = (e) => {
+    switch (e.target.id) {
+      case "firstName":
+        setProfile({ ...profile, FirstName: e.target.value });
+        break;
+      case "lastName":
+        setProfile({ ...profile, LastName: e.target.value });
+        break;
+      case "description":
+        setProfile({ ...profile, Description: e.target.value });
+        break;
+    }
+  };
+
+  const clickEdit = async (type) => {
+    if (edit) {
+      if (type === "submit-changes") {
+        API.graphql({
+          query: updateUserProfile,
+          variables: { input: profile },
+        });
+      } else {
+        setProfile(tempProfile);
+      }
+    } else {
+      tempProfile = { ...profile };
+    }
+    setEdit(!edit);
+  };
+
+  const editFavorite = (fav, contentId) => {
+    if (fav) {
+      console.log("Deleting favorite: " + fav.id);
+
+      const deleteUserFavoriteContent = /* GraphQL */ `
+        mutation DeleteUserFavoriteContent(
+          $input: DeleteUserFavoriteContentInput!
+        ) {
+          deleteUserFavoriteContent(input: $input) {
+            User {
+              Favorites {
+                items {
+                  Content {
+                    id
+                    Title
+                    Thumbnail
+                    createdAt
+                    Description
+                    Segments
+                  }
+                  id
+                }
+              }
+            }
+          }
+        }
+      `;
+
       API.graphql(
         graphqlOperation(deleteUserFavoriteContent, {
-          input: { id: id.id },
+          input: { id: fav.id },
         })
       )
-        .then(() => {
-          const i = favorites.findIndex((e) => e.Content.id === contentId);
-          favorites.splice(i, 1);
+        .then((d) => {
+          setFavorites(d.data.deleteUserFavoriteContent.User.Favorites.items);
         })
         .catch(console.log);
     } else {
       console.log("Creating favorite: " + contentId + " " + profile.id);
+
+      const createUserFavoriteContent = /* GraphQL */ `
+        mutation CreateUserFavoriteContent(
+          $input: CreateUserFavoriteContentInput!
+        ) {
+          createUserFavoriteContent(input: $input) {
+            User {
+              Favorites {
+                items {
+                  Content {
+                    id
+                    Title
+                    Thumbnail
+                    createdAt
+                    Description
+                    Segments
+                  }
+                  id
+                }
+              }
+            }
+          }
+        }
+      `;
+
       API.graphql(
         graphqlOperation(createUserFavoriteContent, {
           input: {
@@ -61,10 +142,23 @@ export default function UserFeed({ ...props }) {
         })
       )
         .then((d) => {
-          favorites.push(d.data.createUserFavoriteContent);
+          setFavorites(d.data.createUserFavoriteContent.User.Favorites.items);
         })
         .catch(console.log);
     }
+  };
+
+  const handleImageChange = async (e) => {
+    if (!e.target.files[0]) return;
+    const nameArray = e.target.files[0].name.split(".");
+    const userImageName =
+      ("UserImage" + props.user + Date.now()).replace(/[^0-9a-z]/gi, "") +
+      "." +
+      nameArray[nameArray.length - 1];
+    await Storage.put(userImageName, e.target.files[0], {
+      contentType: "image/*",
+    });
+    setProfile({ ...profile, UserImage: userImageName });
   };
 
   async function userQuery() {
@@ -101,7 +195,9 @@ export default function UserFeed({ ...props }) {
                   Thumbnail
                   createdAt
                   Description
+                  Segments
                 }
+                id
               }
             }
             id
@@ -129,12 +225,6 @@ export default function UserFeed({ ...props }) {
   }, [subscriptions]);
 
   useEffect(() => {
-    Storage.get(profile.UserImage).then((d) => {
-      setProfile({ ...profile, UserURL: d });
-    });
-  }, [profile.UserImage]);
-
-  useEffect(() => {
     userQuery();
   }, [props.user]);
 
@@ -150,18 +240,98 @@ export default function UserFeed({ ...props }) {
       <Grid item container direction="row">
         <Grid item container direction="column" xs={4}>
           <Grid item>
-            <img style={{ width: "200px" }} src={profile.UserURL} />
+            {edit ? (
+              <div>
+                <input
+                  accept="image/*"
+                  id="profile-upload"
+                  type="file"
+                  onChange={handleImageChange}
+                  style={{ display: "none" }}
+                />
+                <label htmlFor="profile-upload">
+                  <IconButton component="span">
+                    <UserAvatar
+                      style={{
+                        width: "200px",
+                        height: "200px",
+                      }}
+                      UserImage={profile.UserImage}
+                    />
+                  </IconButton>
+                </label>
+              </div>
+            ) : (
+              <UserAvatar
+                style={{
+                  width: "200px",
+                  height: "200px",
+                }}
+                UserImage={profile.UserImage}
+              />
+            )}
           </Grid>
           <Grid item>
-            <Typography variant="h3">
-              {profile.FirstName + " " + profile.LastName}
-            </Typography>
+            <EditableTypography
+              variant="h3"
+              label="First Name"
+              text={profile.FirstName}
+              edit={edit}
+              onChange={onChange}
+              id="firstName"
+              style={{ display: "inline" }}
+            />
+            <EditableTypography
+              variant="h3"
+              text={" "}
+              style={{ display: "inline" }}
+            />
+            <EditableTypography
+              variant="h3"
+              label="Last Name"
+              text={profile.LastName}
+              edit={edit}
+              onChange={onChange}
+              id="lastName"
+              style={{ display: "inline" }}
+            />
           </Grid>
           <Grid item variant="body1">
-            {profile.Description}
+            <EditableTypography
+              variant="body1"
+              edit={edit}
+              label="Description"
+              fullWidth={true}
+              onChange={onChange}
+              id="description"
+              text={profile.Description}
+            />
           </Grid>
           <Grid item>
-            <Button>Edit</Button>
+            {edit ? (
+              <Container>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  fullWidth={true}
+                  onClick={() => clickEdit("submit-changes")}
+                >
+                  Submit Changes
+                </Button>
+                <Button variant="text" onClick={clickEdit}>
+                  Discard Changes
+                </Button>
+              </Container>
+            ) : (
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={clickEdit}
+                fullWidth={true}
+              >
+                Edit
+              </Button>
+            )}
           </Grid>
           <Grid item>
             <Typography variant="h3">My Trainers</Typography>
@@ -169,7 +339,7 @@ export default function UserFeed({ ...props }) {
           <Grid item>
             {subscriptions.map((sub, idx) => {
               return (
-                <TrainerAvatar
+                <UserAvatar
                   UserImage={sub.Trainer.UserImage}
                   onClick={() =>
                     history.push(`/home/landingpage/${sub.Trainer.id}`)
@@ -205,22 +375,17 @@ export default function UserFeed({ ...props }) {
             <Typography variant="h1">Favorite Workouts</Typography>
           </Grid>
           {favorites.map((fav, idx) => {
-            let f = content.findIndex((e) => {
-              return e.id === fav.Content.id;
-            });
-            if (f > -1) {
-              return (
-                <WorkoutCard
-                  post={content[f]}
-                  user={profile}
-                  favorite={fav}
-                  segments={content[f].Segments}
-                  clickCallback={onClick}
-                  favoriteCallback={editFavorite}
-                  key={idx}
-                />
-              );
-            }
+            return (
+              <WorkoutCard
+                post={fav.Content}
+                user={profile}
+                favorite={fav}
+                segments={fav.Content.Segments}
+                clickCallback={onClick}
+                favoriteCallback={editFavorite}
+                key={idx}
+              />
+            );
           })}
         </Grid>
       </Grid>

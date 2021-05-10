@@ -8,7 +8,7 @@ import { Storage } from "aws-amplify";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import CardActionArea from "@material-ui/core/CardActionArea";
-import TrainerAvatar from "../TrainerAvatar/TrainerAvatar";
+import UserAvatar from "../UserAvatar/UserAvatar";
 
 export default function ContentCard({ ...props }) {
   const [img, setImg] = useState();
@@ -56,16 +56,18 @@ export default function ContentCard({ ...props }) {
           </CardActionArea>
         </Grid>
         <Grid item container xs>
-          {props.UserImage && (
-            <Grid item xs>
-              <TrainerAvatar UserImage={props.UserImage} />
-            </Grid>
+          {props.showTrainer && (
+            <>
+              <Grid item xs>
+                <UserAvatar UserImage={props.UserImage} />
+              </Grid>
+              <Grid item xs>
+                <Typography variant="body2">
+                  {props.user.FirstName + " " + props.user.LastName}
+                </Typography>
+              </Grid>
+            </>
           )}
-          <Grid item xs>
-            <Typography variant="body2">
-              {props.user.FirstName + " " + props.user.LastName}
-            </Typography>
-          </Grid>
           <Grid item xs>
             <Typography variant="body2">
               {new Date(props.post.createdAt).toDateString()}
@@ -92,4 +94,5 @@ ContentCard.propTypes = {
   favorite: PropTypes.object,
   favoriteCallback: PropTypes.func.isRequired,
   clickCallback: PropTypes.func,
+  showTrainer: PropTypes.bool,
 };
