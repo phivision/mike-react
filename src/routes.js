@@ -1,23 +1,18 @@
 // @material-ui/icons
-import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
-import PeopleIcon from "@material-ui/icons/People";
-import Notifications from "@material-ui/icons/Notifications";
 import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
 import SettingsIcon from "@material-ui/icons/Settings";
 // core components/views for Admin layout
-import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
-import TrainerList from "views/TableList/TrainerList.js";
 import Settings from "views/Settings/Settings";
-import NotificationsPage from "views/Notifications/Notifications.js";
 import Checkout from "views/Checkout/Checkout.js";
 import Payment from "views/Payment/Payment.js";
+import UserFeed from "views/UserFeed/UserFeed.js";
 
 //core components/views for Home layout
 import LandingPage from "views/LandingPage/LandingPage.js";
 import Home from "views/Home/Home.js";
-import SearchResult from "views/SearchResult/SearchResult.js";
+import Search from "views/Search/Search.js";
 import VideoUpload from "./views/VideoUpload/VideoUpload";
 import SignIn from "views/Auth/SignIn.js";
 import SignUp from "views/Auth/SignUp.js";
@@ -25,36 +20,11 @@ import Verify from "views/Auth/Verify.js";
 
 const routes = [
   {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: Dashboard,
-    component: DashboardPage,
-    layout: "/admin",
-    layoutCategory: "both", // if layout category is "both", the route will be shown for both student and trainer
-  },
-  {
     path: "/user",
-    name: "User Profile",
-    icon: Person,
-    component: UserProfile,
+    name: "Feed",
+    component: UserFeed,
     layout: "/admin",
     layoutCategory: "both",
-  },
-  {
-    path: "/settings",
-    name: "User Settings",
-    icon: SettingsIcon,
-    component: Settings,
-    layout: "/admin",
-    layoutCategory: "both",
-  },
-  {
-    path: "/table",
-    name: "Find Trainer",
-    icon: PeopleIcon,
-    component: TrainerList,
-    layout: "/admin",
-    layoutCategory: "student",
   },
   {
     path: "/video",
@@ -81,14 +51,6 @@ const routes = [
     layoutCategory: "trainer",
   },
   {
-    path: "/notifications",
-    name: "Notifications",
-    icon: Notifications,
-    component: NotificationsPage,
-    layout: "/admin",
-    layoutCategory: "both",
-  },
-  {
     path: "/",
     name: "Home",
     component: Home,
@@ -97,8 +59,8 @@ const routes = [
   },
   {
     path: "/search/:query",
-    name: "Search Results",
-    component: SearchResult,
+    name: "Search",
+    component: Search,
     layout: "/home",
     exact: true,
   },
@@ -133,4 +95,31 @@ const routes = [
   },
 ];
 
-export default routes;
+const headerRoutes = {
+  userProfile: {
+    path: "/user",
+    name: "User Profile",
+    icon: Person,
+    component: UserProfile,
+    layout: "/admin",
+    layoutCategory: "both",
+  },
+  videoUpload: {
+    path: "/video",
+    name: "Video Uploading",
+    icon: VideoLibraryIcon,
+    component: VideoUpload,
+    layout: "/admin",
+    layoutCategory: "trainer",
+  },
+  settings: {
+    path: "/settings",
+    name: "User Settings",
+    icon: SettingsIcon,
+    component: Settings,
+    layout: "/admin",
+    layoutCategory: "both",
+  },
+};
+
+export { routes, headerRoutes };

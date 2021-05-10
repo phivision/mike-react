@@ -1,4 +1,4 @@
-﻿type UserProfile @model @searchable
+﻿type UserProfile @model(subscriptions: null) @searchable
 @auth(rules: [{ allow: owner, operations: [create, delete, update] },
   { allow: private, operations: [read]},
   { allow: public, provider: iam, operations: [read]}])
@@ -39,16 +39,18 @@
 }
 
 # create a join model and disable query for m2m relationship
-type UserSubscriptionTrainer @model(queries: null)
+type UserSubscriptionTrainer @model(subscriptions: null)
 @auth(rules: [{ allow: owner, operations: [create, delete, update] },
   { allow: private, operations: [read]},
   { allow: public, provider: iam, operations: [read]}]){
   id: ID!
+  StripeID: String!
+  ExpireDate: AWSDate!
   Trainer: UserProfile! @connection(name: "bySubscriptedTrainer")
   User: UserProfile! @connection(name: "byUserSubscription")
 }
 
-type UserFavoriteContent @model(queries: null)
+type UserFavoriteContent @model(queries: null, subscriptions: null)
 @auth(rules: [{ allow: owner, operations: [create, delete, update] },
   { allow: private, operations: [read]},
   { allow: public, provider: iam, operations: [read]}]){
@@ -57,7 +59,7 @@ type UserFavoriteContent @model(queries: null)
   Content: UserContent! @connection(name: "byFavoriteUser")
 }
 
-type UserContent @model
+type UserContent @model(subscriptions: null)
 @auth(rules: [{ allow: owner, operations: [create, delete, update] },
   { allow: private, operations: [read]},
   { allow: public, provider: iam, operations: [read]}])

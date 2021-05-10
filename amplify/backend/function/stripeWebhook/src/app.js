@@ -10,8 +10,6 @@ const AWS = require("aws-sdk");
 const docClient = new AWS.DynamoDB.DocumentClient();
 const v5 = require("uuid/v5");
 
-require("dotenv").config();
-
 // declare a new express app
 const app = express();
 
@@ -24,7 +22,25 @@ app.use(function (req, res, next) {
   next();
 });
 
-const stripe = require("stripe")(process.env.SECRET_TEST_KEY);
+let stripe;
+let ENDPOINT_SECRET;
+let UUID = "d2b157d4-5a66-49ca-b868-c83008f1e126";
+
+if (process.env.ENV === "prod") {
+  stripe = require("stripe")(
+    "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"
+  );
+  ENDPOINT_SECRET = "whsec_QlApDvB6XPkqQEZv40xzjrLBUMu7mENM";
+} else {
+  if (process.env.ENV === "dev") {
+    ENDPOINT_SECRET = "whsec_DjCSZgxymENwj2yF0iAyIUKsJ1da0kIO";
+  } else {
+    ENDPOINT_SECRET = "whsec_XMAGthm9Glxu8vSlrdYNDHMZ36LSmOvu";
+  }
+  stripe = require("stripe")(
+    "sk_test_51IWoNlAXegvVyt5s8RgdmlA7kMtgxRkk5ckcNHQYVjgTyMCxKHDlgJm810tTm3KIVXe34FvDSlnsqzigH25AwsLU00nIkry9yo"
+  );
+}
 
 app.post(
   "/stripe/webhook",
@@ -36,18 +52,21 @@ app.post(
     let event;
 
     try {
-      event = stripe.webhooks.constructEvent(
-        payload,
-        sig,
-        process.env.ENDPOINT_SECRET
-      );
+      event = stripe.webhooks.constructEvent(payload, sig, ENDPOINT_SECRET);
     } catch (err) {
       return response.status(400).send(`Webhook Error: ${err.message}`);
     }
 
-    const createSubscription = async (trainerID, userID) => {
-      const i = v5(trainerID + userID, process.env.UUID);
+    const createSubscription = async (
+      trainerID,
+      userID,
+      subscriptionID,
+      expireDate
+    ) => {
+      const i = v5(trainerID + userID, UUID);
       const time = new Date();
+      const expire = new Date(expireDate).toISOString();
+      const exp = expire.slice(0, 10);
       const params = {
         TableName: process.env.SUB_TABLE_NAME,
         Item: {
@@ -56,6 +75,8 @@ app.post(
           createdAt: time.toISOString(),
           userSubscriptionTrainerTrainerId: trainerID,
           userSubscriptionTrainerUserId: userID,
+          StripeID: subscriptionID,
+          ExpireDate: exp,
           updatedAt: time.toISOString(),
         },
       };
@@ -99,9 +120,16 @@ app.post(
         console.log(paymentIntent);
         query(paymentIntent.customer).then((user) => {
           query(paymentIntent.transfer_data.destination).then((trainer) => {
-            createSubscription(trainer.Items[0].id, user.Items[0].id).then(() =>
-              response.json({ received: true })
-            );
+            stripe.subscriptions
+              .retrieve(paymentIntent.subscription)
+              .then((subscription) => {
+                createSubscription(
+                  trainer.Items[0].id,
+                  user.Items[0].id,
+                  subscription.id,
+                  subscription.current_period_end
+                ).then(() => response.json({ received: true }));
+              });
           });
         });
         break;

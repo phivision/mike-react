@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import PropTypes from "prop-types";
-import { Grid, Typography, Card, CardActionArea } from "@material-ui/core";
-import TrainerMetrics from "../../components/TrainerMetrics/TrainerMetrics";
+import { Grid, Typography, Button } from "@material-ui/core";
 import ContentCard from "../../components/ContentCard/ContentCard";
 import WorkoutCard from "../../components/WorkoutCard/WorkoutCard";
 import Banner from "assets/img/banner.jpeg";
@@ -10,6 +9,8 @@ import {
   createUserFavoriteContent,
   deleteUserFavoriteContent,
 } from "../../graphql/mutations";
+import { useHistory } from "react-router-dom";
+import TrainerAvatar from "../../components/TrainerAvatar/TrainerAvatar";
 
 // import initial profile
 const initialProfileState = {
@@ -17,7 +18,7 @@ const initialProfileState = {
   Birthday: null,
   Height: null,
   UserImage: null,
-  BgImage: null,
+  UserURL: null,
   LastName: "",
   FirstName: "",
   Weight: null,
@@ -27,15 +28,18 @@ const initialProfileState = {
 //TODO: Add cards for payment tiers
 //TODO: Add images + description, nicely formatted
 
-export default function LandingPage({ ...props }) {
+export default function UserFeed({ ...props }) {
   const [profile, setProfile] = useState(initialProfileState);
+  const [subscriptions, setSubscriptions] = useState([]);
   const [content, setContent] = useState([]);
-  const [price, setPrice] = useState("");
   const [favorites, setFavorites] = useState([]);
-  const [userImg, setUserImg] = useState("");
+  const history = useHistory();
+
+  const onClick = () => {};
 
   const editFavorite = (id, contentId) => {
     if (id) {
+      console.log("Deleting Favorite" + id);
       API.graphql(
         graphqlOperation(deleteUserFavoriteContent, {
           input: { id: id.id },
@@ -47,6 +51,7 @@ export default function LandingPage({ ...props }) {
         })
         .catch(console.log);
     } else {
+      console.log("Creating favorite: " + contentId + " " + profile.id);
       API.graphql(
         graphqlOperation(createUserFavoriteContent, {
           input: {
@@ -63,86 +68,75 @@ export default function LandingPage({ ...props }) {
   };
 
   async function userQuery() {
-    const query = /* GraphQL */ `
-      query GetUserProfile($id: ID!) {
-        getUserProfile(id: $id) {
-          id
-          Birthday
-          Height
-          UserImage
-          BgImage
-          LastName
-          FirstName
-          Weight
-          Description
-          Favorites {
-            items {
-              id
-              Content {
-                id
+    const query = `query GetUserProfile ($id: ID!) {
+          getUserProfile(id: $id) {
+            Subscriptions {
+              items {
+                Trainer {
+                  Contents {
+                    items {
+                      id
+                      Description
+                      Title
+                      createdAt
+                      Thumbnail
+                      Segments
+                      Creator {
+                        UserImage
+                      }
+                    }
+                  }
+                  FirstName
+                  LastName
+                  id
+                  UserImage
+                }
               }
             }
-            nextToken
-          }
-          Contents {
-            items {
-              id
-              ContentName
-              Description
-              Title
-              Level
-              Length
-              IsDemo
-              Thumbnail
-              Segments
-              createdAt
+            Favorites {
+              items {
+                Content {
+                  id
+                  Title
+                  Thumbnail
+                  createdAt
+                  Description
+                }
+              }
             }
-            nextToken
+            id
+            LastName
+            FirstName
+            UserImage
+            Description
           }
-        }
-      }
-    `;
-    API.graphql(graphqlOperation(query, { id: props.props.match.params.id }))
+        }`;
+
+    API.graphql(graphqlOperation(query, { id: props.user }))
       .then((d) => {
-        const { Contents, Favorites, ...p } = d.data.getUserProfile;
-        setContent(Contents.items);
-        setFavorites(Favorites.items);
+        const { Subscriptions, Favorites, ...p } = d.data.getUserProfile;
         setProfile(p);
-        Storage.get(d.data.getUserProfile.UserImage)
-          .then((d) => {
-            setUserImg(d);
-          })
-          .catch(console.log);
+        setFavorites(Favorites.items);
+        setSubscriptions(Subscriptions.items);
       })
       .catch(console.log);
   }
 
-  const getPrice = async (id) => {
-    const myInit = {
-      headers: {}, // AWS-IAM authorization if using empty headers
-      body: {
-        id: id,
-      },
-      response: true,
-    };
-
-    API.post("stripeAPI", "/stripe/api/trainer/get/price", myInit)
-      .then((res) => {
-        setPrice(res.data.data[0].unit_amount / 100);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const onClick = () => {
-    console.log("Checkouts");
-  };
+  useEffect(() => {
+    subscriptions.map((sub) => {
+      setContent([...content, ...sub.Trainer.Contents.items]);
+    });
+  }, [subscriptions]);
 
   useEffect(() => {
-    getPrice(props.props.match.params.id);
+    Storage.get(profile.UserImage).then((d) => {
+      setProfile({ ...profile, UserURL: d });
+    });
+  }, [profile.UserImage]);
+
+  useEffect(() => {
     userQuery();
-  }, [props.props.match.params.id]);
+  }, [props.user]);
 
   return (
     <Grid container direction="column">
@@ -156,7 +150,7 @@ export default function LandingPage({ ...props }) {
       <Grid item container direction="row">
         <Grid item container direction="column" xs={4}>
           <Grid item>
-            <img style={{ width: "200px" }} src={userImg} />
+            <img style={{ width: "200px" }} src={profile.UserURL} />
           </Grid>
           <Grid item>
             <Typography variant="h3">
@@ -167,33 +161,38 @@ export default function LandingPage({ ...props }) {
             {profile.Description}
           </Grid>
           <Grid item>
-            <TrainerMetrics
-              birthday={profile.Birthday}
-              weight={profile.Weight}
-              height={profile.Height}
-            />
+            <Button>Edit</Button>
           </Grid>
           <Grid item>
-            <Card>
-              <CardActionArea onClick={onClick}>
-                <Typography variant="h1">{"$ " + price}</Typography>
-                <Typography>Join</Typography>
-              </CardActionArea>
-            </Card>
+            <Typography variant="h3">My Trainers</Typography>
+          </Grid>
+          <Grid item>
+            {subscriptions.map((sub, idx) => {
+              return (
+                <TrainerAvatar
+                  UserImage={sub.Trainer.UserImage}
+                  onClick={() =>
+                    history.push(`/home/landingpage/${sub.Trainer.id}`)
+                  }
+                  key={idx}
+                />
+              );
+            })}
           </Grid>
         </Grid>
-        <Grid item container xs={4}>
+        <Grid item container direction="column" xs={4}>
           <Grid item>
             <Typography variant="h1">Feed</Typography>
           </Grid>
-          {content.map((content, idx) => {
-            let f = favorites.findIndex((e) => e.Content.id === content.id);
+          {content.map((c, idx) => {
+            let f = favorites.findIndex((e) => e.Content.id === c.id);
             return (
               <ContentCard
-                post={content}
+                post={c}
+                UserImage={c.Creator.UserImage}
                 user={profile}
                 favorite={favorites[f]}
-                segments={content.Segments}
+                segments={c.Segments}
                 clickCallback={onClick}
                 favoriteCallback={editFavorite}
                 key={idx}
@@ -201,7 +200,7 @@ export default function LandingPage({ ...props }) {
             );
           })}
         </Grid>
-        <Grid item container xs={4}>
+        <Grid item container direction="column" xs={4}>
           <Grid item>
             <Typography variant="h1">Favorite Workouts</Typography>
           </Grid>
@@ -209,7 +208,6 @@ export default function LandingPage({ ...props }) {
             let f = content.findIndex((e) => {
               return e.id === fav.Content.id;
             });
-            console.log(f);
             if (f > -1) {
               return (
                 <WorkoutCard
@@ -230,12 +228,6 @@ export default function LandingPage({ ...props }) {
   );
 }
 
-LandingPage.propTypes = {
-  props: PropTypes.shape({
-    match: PropTypes.shape({
-      params: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-      }),
-    }),
-  }),
+UserFeed.propTypes = {
+  user: PropTypes.string,
 };

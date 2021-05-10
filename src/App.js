@@ -15,6 +15,9 @@ import "assets/css/material-dashboard-react.css?v=1.9.0";
 import PrivateRoute from "./components/Routes/PrivateRoute";
 import PublicRoute from "./components/Routes/PublicRoute";
 
+import theme from "./theme.js";
+import { MuiThemeProvider } from "@material-ui/core/styles";
+
 // amplify config
 Amplify.configure(awsconfig);
 
@@ -42,18 +45,20 @@ const App = () => {
 
   return (
     <Elements stripe={stripePromise}>
-      <BrowserRouter>
-        <Switch>
-          <PublicRoute path="/home" component={Home} />
-          <PrivateRoute
-            path="/admin"
-            user={user}
-            auth={authState}
-            component={Admin}
-          />
-          <Redirect to="/home" />
-        </Switch>
-      </BrowserRouter>
+      <MuiThemeProvider theme={theme}>
+        <BrowserRouter>
+          <Switch>
+            <PublicRoute path="/home" auth={authState} component={Home} />
+            <PrivateRoute
+              path="/admin"
+              user={user}
+              auth={authState}
+              component={Admin}
+            />
+            <Redirect to="/home" />
+          </Switch>
+        </BrowserRouter>
+      </MuiThemeProvider>
     </Elements>
   );
 };

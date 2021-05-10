@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import { API } from "aws-amplify";
 import { listUserProfiles } from "graphql/queries";
 import Banner from "../../components/Banner/banner";
-import HomeSearch from "../../components/Search/HomeSearch";
-import MikeIntro from "../../components/Introduction/MikeIntro";
 import banner from "assets/img/banner.jpg";
 
 const trainerList = (trainers) => {
@@ -49,8 +47,6 @@ export default function Home() {
   return (
     <div style={{ backgroundColor: "white" }}>
       <Banner bannerURL={banner} bannerText="A better way change your life" />
-      <HomeSearch />
-      <MikeIntro />
       <div>Welcome to Mike</div>
       <div>{trainerList(trainers)}</div>
     </div>

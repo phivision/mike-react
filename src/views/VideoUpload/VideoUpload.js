@@ -28,10 +28,15 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 // amplify components
 import { API, Storage, graphqlOperation } from "aws-amplify";
-import { listUserContents } from "graphql/queries";
-import { createUserContent, deleteUserContent } from "graphql/mutations";
+import {
+  createUserContent,
+  // createUserFavoriteContent,
+  deleteUserContent,
+  // deleteUserFavoriteContent,
+} from "graphql/mutations";
 
 import PropTypes from "prop-types";
+import WorkoutCard from "../../components/WorkoutCard/WorkoutCard";
 
 // load YAML file for video endpoints info
 // TODO: try to use aws SDK to pull the info from aws server
@@ -47,7 +52,18 @@ const initialVideoForm = {
   Description: null,
   IsDemo: false,
   createdAt: "",
+  Thumbnail: "",
+  ThumbnailURL: "",
   segments: "No Segments",
+  Creator: {
+    FirstName: "",
+    LastName: "",
+  },
+};
+
+const initialUser = {
+  FirstName: "",
+  LastName: "",
 };
 
 const styles = {
@@ -102,15 +118,24 @@ const videoPropsEqual = (prevVideo, nextVideo) => {
 };
 
 const MemoVideoPlayer = React.memo(VideoPlayer, videoPropsEqual);
+
 export default function VideoUpload(props) {
+  const [user, setUser] = React.useState(initialUser);
   const [videoForm, setVideoForm] = React.useState(initialVideoForm);
   const [videos, setVideos] = React.useState([]);
+  // const [favorites, setFavorites] = React.useState([]);
   const [response, setResponse] = React.useState("");
   // TODO: use a guide video to replace this dummy video for first time uploader
   const [videoURL, setVideoURL] = React.useState(demoURL);
+  const [thumb, setThumb] = React.useState();
   const [open, setOpen] = React.useState(false);
   const [segments, setSegments] = React.useState([]);
   const fileRef = React.useRef();
+
+  async function handleThumbnailChange(e) {
+    if (!e.target.files[0]) return;
+    setThumb(e.target.files[0]);
+  }
 
   const handleVideoUpload = () => {
     // check video duplication
@@ -146,16 +171,79 @@ export default function VideoUpload(props) {
   }, [props.user, videoURL]);
 
   async function fetchVideos() {
-    const apiData = await API.graphql(
-      graphqlOperation(listUserContents, {
-        filter: { CreatorID: { eq: props.user } },
+    const query = /* GraphQL */ `
+      query GetUserProfile($id: ID!) {
+        getUserProfile(id: $id) {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          Description
+          Biography
+          createdAt
+          updatedAt
+          Favorites {
+            items {
+              id
+              Content {
+                id
+              }
+            }
+            nextToken
+          }
+          Contents {
+            items {
+              id
+              CreatorID
+              ContentName
+              Description
+              Title
+              Level
+              Length
+              IsDemo
+              ViewCount
+              Thumbnail
+              Preview
+              Segments
+              createdAt
+              updatedAt
+              owner
+            }
+            nextToken
+          }
+        }
+      }
+    `;
+
+    API.graphql(graphqlOperation(query, { id: props.user }))
+      .then((d) => {
+        setVideos(d.data.getUserProfile.Contents.items);
+        // setFavorites(d.data.getUserProfile.Favorites.items);
+        setUser({
+          FirstName: d.data.getUserProfile.FirstName,
+          LastName: d.data.getUserProfile.LastName,
+        });
       })
-    );
-    setVideos(apiData.data.listUserContents.items);
+      .catch((e) => console.log(e));
   }
 
   async function createVideo() {
     if (videoForm.ContentName) {
+      const thumbnailName = (
+        "Thumbnail" +
+        props.user +
+        thumb.name.split(".")[1]
+      ).replace(/[^0-9a-z]/gi, "");
       // upload video on S3
       await Promise.all([
         API.graphql(
@@ -165,10 +253,14 @@ export default function VideoUpload(props) {
               ContentName: videoForm.ContentName,
               Description: videoForm.Description,
               IsDemo: videoForm.IsDemo,
+              Thumbnail: thumbnailName,
               Segments: JSON.stringify(segments),
             },
           })
         ),
+        Storage.put(thumbnailName, thumb, {
+          contentType: "image/*",
+        }),
         Storage.put(videoForm.ContentName, videoFile, {
           contentType: "video/*",
           customPrefix: {
@@ -181,6 +273,10 @@ export default function VideoUpload(props) {
           // updated video form with returned id and timestamp
           videoForm.id = result[0].data.createUserContent.id;
           videoForm.createdAt = result[0].data.createUserContent.createdAt;
+          videoForm.Creator.FirstName =
+            result[0].data.createUserContent.Creator.FirstName;
+          videoForm.Creator.LastName =
+            result[0].data.createUserContent.Creator.LastName;
           // response with uploading results
           setResponse(`Success uploading file: ${videoFile.name}!`);
           setVideos((prevVideos) => {
@@ -262,6 +358,7 @@ export default function VideoUpload(props) {
             public: "input/",
           },
         }),
+        Storage.remove(deleteVideo.Thumbnail),
         // delete content from database
         API.graphql(graphqlOperation(deleteUserContent, { input: { id } })),
       ])
@@ -286,7 +383,9 @@ export default function VideoUpload(props) {
     // combine filename with owner id and remove non alphanumeric value from the string
     const fileName = videoFile.name.split(".");
     const contentName =
-      (fileName[0] + props.user).replace(/[^0-9a-z]/gi, "") + "." + fileName[1];
+      (fileName[0] + props.user + Date.now()).replace(/[^0-9a-z]/gi, "") +
+      "." +
+      fileName[1];
     setVideoForm({ ...videoForm, ContentName: contentName });
   };
 
@@ -301,6 +400,42 @@ export default function VideoUpload(props) {
       ...segments,
       { Name: "", Timestamp: "", Sets: "", Reps: "", RPE: "" },
     ]);
+  };
+
+  // const editFavorite = (id, contentId) => {
+  //   if (id) {
+  //     console.log("Deleting subscription: " + id.id);
+  //     API.graphql(
+  //       graphqlOperation(deleteUserFavoriteContent, {
+  //         input: { id: id.id },
+  //       })
+  //     )
+  //       .then(() => {
+  //         const i = favorites.findIndex((e) => e.Content.id === contentId);
+  //         favorites.splice(i, 1);
+  //       })
+  //       .catch(console.log);
+  //   } else {
+  //     console.log(
+  //       "Creating subscription for " + props.user + " and content " + contentId
+  //     );
+  //     API.graphql(
+  //       graphqlOperation(createUserFavoriteContent, {
+  //         input: {
+  //           userFavoriteContentUserId: props.user,
+  //           userFavoriteContentContentId: contentId,
+  //         },
+  //       })
+  //     )
+  //       .then((d) => {
+  //         favorites.push(d.data.createUserFavoriteContent);
+  //       })
+  //       .catch(console.log);
+  //   }
+  // };
+
+  const click = () => {
+    console.log("Clicked!!");
   };
 
   const classes = useStyles();
@@ -336,6 +471,12 @@ export default function VideoUpload(props) {
                 inputRef={fileRef}
                 onChange={handleVideoChange}
               />
+              <Input
+                type="file"
+                name="Thumbnail"
+                accept="image/*"
+                onChange={handleThumbnailChange}
+              />
               <form onChange={handleSegmentChange}>
                 {segments.map((value, idx) => {
                   return (
@@ -346,35 +487,35 @@ export default function VideoUpload(props) {
                         data-id={idx}
                         id={"name" + idx}
                         value={segments[idx].name}
-                        className="name"
+                        className="Name"
                       />
                       <input
                         type="text"
                         data-id={idx}
                         id={"timestamp" + idx}
                         value={segments[idx].timestamp}
-                        className="timestamp"
+                        className="Timestamp"
                       />
                       <input
                         type="text"
                         data-id={idx}
                         id={"sets" + idx}
                         value={segments[idx].sets}
-                        className="sets"
+                        className="Sets"
                       />
                       <input
                         type="text"
                         data-id={idx}
                         id={"reps" + idx}
                         value={segments[idx].reps}
-                        className="reps"
+                        className="Reps"
                       />
                       <input
                         type="text"
                         data-id={idx}
                         id={"rpe" + idx}
                         value={segments[idx].rpe}
-                        className="rpe"
+                        className="RPE"
                       />
                     </div>
                   );
@@ -414,6 +555,19 @@ export default function VideoUpload(props) {
             </CardFooter>
           </Card>
         </GridItem>
+        {videos.map((video, idx) => {
+          // let f = favorites.findIndex((e) => e.Content.id === video.id);
+          console.log(video.Segments);
+          return (
+            <WorkoutCard
+              post={video}
+              user={user}
+              segments={video.Segments}
+              clickCallback={click}
+              key={idx}
+            />
+          );
+        })}
         <GridItem xs={12} sm={12} md={8}>
           <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="caption table">
@@ -429,67 +583,70 @@ export default function VideoUpload(props) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {videos.map((video) => (
-                  <TableRow key={video.createdAt}>
-                    <TableCell component={"th"} scope="row" type="date">
-                      {video.createdAt}
-                    </TableCell>
-                    <TableCell>
-                      <Checkbox disabled checked={video.IsDemo} />
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        whiteSpace: "normal",
-                        wordBreak: "break-word",
-                      }}
-                    >
-                      {video.ContentName}
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        color="primary"
-                        value={video.ContentName}
-                        onClick={async (e) => {
-                          const videoName = e.currentTarget.value.split(".")[0];
-                          checkS3PrefixReady(videoName, "output/hls/")
-                            .then((lists) => {
-                              const videoFiles = lists[0];
-                              const headerFiles = lists[1];
-                              return (
-                                videoFiles.length + headerFiles.length >=
-                                videoTranscodeCount + 1
-                              );
-                            })
-                            .then((ready) => {
-                              if (ready) {
-                                // if transcoding is ready, view the video
-                                setVideoURL(
-                                  videoEndpoint + videoName + ".m3u8"
+                {videos &&
+                  videos.map((video) => (
+                    <TableRow key={video.createdAt}>
+                      <TableCell component={"th"} scope="row" type="date">
+                        {video.createdAt}
+                      </TableCell>
+                      <TableCell>
+                        <Checkbox disabled checked={video.IsDemo} />
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          whiteSpace: "normal",
+                          wordBreak: "break-word",
+                        }}
+                      >
+                        {video.ContentName}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          color="primary"
+                          value={video.ContentName}
+                          onClick={async (e) => {
+                            const videoName = e.currentTarget.value.split(
+                              "."
+                            )[0];
+                            checkS3PrefixReady(videoName, "output/hls/")
+                              .then((lists) => {
+                                const videoFiles = lists[0];
+                                const headerFiles = lists[1];
+                                return (
+                                  videoFiles.length + headerFiles.length >=
+                                  videoTranscodeCount + 1
                                 );
-                              } else {
-                                alert("Video transcoding is not ready!");
-                              }
-                            });
-                        }}
-                      >
-                        View Video
-                      </Button>
-                    </TableCell>
-                    <TableCell>{video.Description}</TableCell>
-                    <TableCell>{video.Segments}</TableCell>
-                    <TableCell>
-                      <Button
-                        color="primary"
-                        value={video.id}
-                        onClick={(e) => {
-                          deleteVideo(e.currentTarget.value);
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                              })
+                              .then((ready) => {
+                                if (ready) {
+                                  // if transcoding is ready, view the video
+                                  setVideoURL(
+                                    videoEndpoint + videoName + ".m3u8"
+                                  );
+                                } else {
+                                  alert("Video transcoding is not ready!");
+                                }
+                              });
+                          }}
+                        >
+                          View Video
+                        </Button>
+                      </TableCell>
+                      <TableCell>{video.Description}</TableCell>
+                      <TableCell>{video.Segments}</TableCell>
+                      <TableCell>
+                        <Button
+                          color="primary"
+                          value={video.id}
+                          onClick={(e) => {
+                            deleteVideo(e.currentTarget.value);
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
