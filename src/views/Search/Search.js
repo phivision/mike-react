@@ -2,8 +2,9 @@ import React, { useEffect } from "react";
 import { API } from "aws-amplify";
 import { searchUserProfiles } from "graphql/queries";
 import PropTypes from "prop-types";
-import { Container } from "@material-ui/core";
 import ProfileCard from "../../components/ProfileCard/ProfileCard.js";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 
 export default function Search({ ...props }) {
   const [trainers, setTrainers] = React.useState([]);
@@ -34,14 +35,18 @@ export default function Search({ ...props }) {
 
   return (
     <div>
-      <Container
-        style={{ backgroundColor: "white", padding: "20px", maxWidth: "none" }}
-      >
-        {trainers.map((trainer, idx) => {
-          console.log(trainer);
-          return <ProfileCard key={idx} profile={trainer} />;
-        })}
-      </Container>
+      <Grid direction="row">
+        <Grid item xs={3}>
+          <Typography variant="h1">
+            {"Results for: " + props.props.match.params.query}
+          </Typography>
+        </Grid>
+        <Grid item xs={9}>
+          {trainers.map((trainer, idx) => {
+            return <ProfileCard key={idx} profile={trainer} />;
+          })}
+        </Grid>
+      </Grid>
     </div>
   );
 }
