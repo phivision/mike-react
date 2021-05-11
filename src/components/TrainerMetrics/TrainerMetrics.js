@@ -5,7 +5,7 @@ import React from "react";
 const TrainerMetrics = ({ ...props }) => {
   return (
     <Grid container>
-      <Grid item container direction="column" xs={2}>
+      <Grid item container direction="column" xs={3}>
         <Grid item>
           <Typography variant="h6">Weight</Typography>
         </Grid>
@@ -18,17 +18,7 @@ const TrainerMetrics = ({ ...props }) => {
           </Typography>
         </Grid>
       </Grid>
-      <Grid item container direction="column" xs={2}>
-        <Grid item>
-          <Typography variant="h6">Height</Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant="h3" style={{ display: "inline-block" }}>
-            {Math.floor(props.height / 12) + "' " + (props.height % 12) + '"'}
-          </Typography>
-        </Grid>
-      </Grid>
-      <Grid item container direction="column" xs={2}>
+      <Grid item container direction="column" xs={3}>
         <Grid item>
           <Typography variant="h6">Age</Typography>
         </Grid>
@@ -38,6 +28,16 @@ const TrainerMetrics = ({ ...props }) => {
           </Typography>
           <Typography variant="body2" style={{ display: "inline-block" }}>
             yr
+          </Typography>
+        </Grid>
+      </Grid>
+      <Grid item container direction="column" xs={4}>
+        <Grid item>
+          <Typography variant="h6">Height</Typography>
+        </Grid>
+        <Grid item>
+          <Typography variant="h3" style={{ display: "inline-block" }}>
+            {Math.floor(props.height / 12) + "' " + (props.height % 12) + '"'}
           </Typography>
         </Grid>
       </Grid>

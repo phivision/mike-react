@@ -5,9 +5,25 @@ import { Storage } from "aws-amplify";
 import { useHistory } from "react-router-dom";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import TrainerMetrics from "../TrainerMetrics/TrainerMetrics";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles(() => ({
+  CardStyle: {
+    borderRadius: "20px",
+  },
+  CardGrid: {
+    padding: "20px",
+  },
+  CardIcon: {
+    height: "100px",
+    width: "100px",
+    borderRadius: "30px",
+  },
+}));
 
 const ProfileCard = ({ ...props }) => {
   const [img, setImg] = useState();
+  const classes = useStyles();
   let history = useHistory();
 
   useEffect(() => {
@@ -21,16 +37,11 @@ const ProfileCard = ({ ...props }) => {
   };
 
   return (
-    <Card>
+    <Card className={classes.CardStyle}>
       <CardActionArea onClick={link}>
-        <Grid container direction="row">
+        <Grid container direction="row" className={classes.CardGrid}>
           <Grid item xs={2}>
-            {img && (
-              <CardMedia
-                image={img}
-                style={{ height: "100px", width: "100px", paddingTop: "2%" }}
-              />
-            )}
+            {img && <CardMedia image={img} className={classes.CardIcon} />}
           </Grid>
           <Grid item container direction="column" xs={5}>
             <Grid item>
