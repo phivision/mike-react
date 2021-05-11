@@ -20,26 +20,6 @@ let ps;
 
 const useStyles = makeStyles(styles);
 
-const switchRoutes = (user, routes, url) => {
-  return (
-    <Switch>
-      {routes.map((prop) => {
-        if (prop.layout === "/admin") {
-          return (
-            <Route
-              path={url + prop.path}
-              render={(props) => <prop.component user={user} props={props} />}
-              key={prop.name}
-              exact
-            />
-          );
-        }
-        return null;
-      })}
-    </Switch>
-  );
-};
-
 const Admin = ({ user, ...rest }) => {
   /*
   The propagated object "user" contains all user data pulled from aws cognito endpoint
@@ -55,6 +35,28 @@ const Admin = ({ user, ...rest }) => {
       return true;
     }
   });
+
+  const switchRoutes = (user, routes, url) => {
+    return (
+      <Switch>
+        {routes.map((prop) => {
+          if (prop.layout === "/admin") {
+            return (
+              <Route
+                path={url + prop.path}
+                render={(props) => (
+                  <prop.component user={user} props={props} role={userRole} />
+                )}
+                key={prop.name}
+                exact
+              />
+            );
+          }
+          return null;
+        })}
+      </Switch>
+    );
+  };
 
   // styles
   const classes = useStyles();

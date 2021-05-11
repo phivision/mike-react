@@ -39,6 +39,7 @@ const getUserSettings = /* GraphQL */ `
 export default function Settings(props) {
   const [email, setEmail] = useState("");
   const [trainers, setTrainers] = useState([]);
+  const [paymentMethods, setPaymentMethods] = useState([]);
   const [openDialog, setOpenDialog] = React.useState(false);
 
   const handleOpenPassword = () => {
@@ -76,6 +77,24 @@ export default function Settings(props) {
       }
     });
   }, [props.user]);
+
+  useEffect(() => {
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        id: props.user,
+      },
+      response: true,
+    };
+
+    API.post("stripeAPI", "/stripe/api/user/get/payment", myInit)
+      .then((d) => {
+        setPaymentMethods(d.data.data);
+      })
+      .catch(console.log);
+  }, [props.user]);
+
+  console.log(paymentMethods);
 
   return (
     <TableContainer component={Paper}>
