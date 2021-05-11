@@ -24,7 +24,7 @@ const ProfileCard = ({ ...props }) => {
     <Card>
       <CardActionArea onClick={link}>
         <Grid container direction="row">
-          <Grid item xs={1}>
+          <Grid item xs={2}>
             {img && (
               <CardMedia
                 image={img}
@@ -44,7 +44,7 @@ const ProfileCard = ({ ...props }) => {
               </Typography>
             </Grid>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={5}>
             <TrainerMetrics
               weight={props.profile.Weight}
               height={props.profile.Height}
