@@ -292,7 +292,7 @@ export default function UserFeed({ ...props }) {
         const { Contents, Favorites, ...p } = d.data.getUserProfile;
         setProfile(p);
         setFavorites(Favorites.items);
-        setContent(Contents.items);
+        setSortedContent(Contents.items);
       })
       .catch(console.log);
   };
@@ -302,7 +302,7 @@ export default function UserFeed({ ...props }) {
     subscriptions.map((sub) => {
       temp = [...temp, ...sub.Trainer.Contents.items];
     });
-    setContent(temp);
+    setSortedContent(temp);
   }, [subscriptions]);
 
   useEffect(() => {
@@ -310,11 +310,16 @@ export default function UserFeed({ ...props }) {
   }, []);
 
   useEffect(() => {
-    const sorted = [...content].sort((a, b) => {
+    console.log("sorting...");
+    setSortedContent(content);
+  }, [content.length]);
+
+  const setSortedContent = (content) => {
+    const sorted = content.sort((a, b) => {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
     setContent(sorted);
-  }, [content.length]);
+  };
 
   const editPost = (id) => {
     setActiveVideo(id);
