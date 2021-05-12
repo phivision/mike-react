@@ -147,16 +147,25 @@ export default function ContentUpload(props) {
   async function handleThumbnailChange(e) {
     if (!e.target.files[0]) return;
     thumbFile = e.target.files[0];
-    const thumbnailName = (
-      "Thumbnail" +
-      props.user +
-      thumbFile.name.split(".")[1]
-    ).replace(/[^0-9a-z]/gi, "");
+    const thumbnailName = ("Thumbnail" + props.user + Date.now()).replace(
+      /[^0-9a-z]/gi,
+      ""
+    );
     setVideoForm({ ...videoForm, Thumbnail: thumbnailName });
     // read file into local memory
     thumbReader.readAsDataURL(e.target.files[0]);
   }
-
+  const handleVideoFileChange = (event) => {
+    if (!event.target.files[0]) return;
+    videoFile = event.target.files[0];
+    // combine filename with owner id and remove non alphanumeric value from the string
+    const fileName = videoFile.name.split(".");
+    const contentName =
+      (fileName[0] + props.user + Date.now()).replace(/[^0-9a-z]/gi, "") +
+      "." +
+      fileName[1];
+    setVideoForm({ ...videoForm, ContentName: contentName });
+  };
   const handleSegmentJSONChange = (s) => {
     setVideoForm({ ...videoForm, Segments: JSON.stringify(s) });
   };
@@ -315,18 +324,6 @@ export default function ContentUpload(props) {
     setVideoForm({ ...videoForm, [event.target.name]: event.target.checked });
   };
 
-  const handleVideoFileChange = (event) => {
-    if (!event.target.files[0]) return;
-    videoFile = event.target.files[0];
-    // combine filename with owner id and remove non alphanumeric value from the string
-    const fileName = videoFile.name.split(".");
-    const contentName =
-      (fileName[0] + props.user + Date.now()).replace(/[^0-9a-z]/gi, "") +
-      "." +
-      fileName[1];
-    setVideoForm({ ...videoForm, ContentName: contentName });
-  };
-
   return (
     <GridContainer>
       <GridItem xs={3}>
@@ -376,8 +373,7 @@ export default function ContentUpload(props) {
                     graphqlOperation(deleteUserContent, {
                       input: { id: videoForm.id },
                     })
-                  );
-                  props.onClose();
+                  ).then(props.onClose);
                 });
               }}
             >
@@ -416,7 +412,7 @@ export default function ContentUpload(props) {
           <UploadDialog
             open={openCloseDialog}
             title="Close Content Uploading"
-            text="The video is not yet uploaded, do you want to discard it?"
+            text="If the video is not uploaded, unsaved data may be lost, do you want to discard it?"
             onClickYes={handleCloseContentUpload}
             onClickNo={() => {
               setOpenCloseDialog(false);
