@@ -57,6 +57,7 @@ export default function WorkoutCard({ ...props }) {
   const [img, setImg] = useState();
   const [liked, setLiked] = useState(true);
   const [segments, setSegments] = useState();
+  console.log(props);
 
   useEffect(() => {
     if (props.segments) {

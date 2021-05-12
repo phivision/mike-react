@@ -14,6 +14,7 @@ import Button from "@material-ui/core/Button";
 export default function ContentCard({ ...props }) {
   const [img, setImg] = useState();
   const [liked, setLiked] = useState(false);
+  console.log(props);
 
   useEffect(() => {
     props.favorite ? setLiked(true) : setLiked(false);

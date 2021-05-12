@@ -26,9 +26,11 @@ const stripePromise = loadStripe(
   "pk_test_51IWoNlAXegvVyt5sEGxoPrV9MfyryI7OR5vKuY4bLXUgqWIE2Dv0TmtY5R9BVHpjhg3qssoAF3z5GhtkgHrc8Mc400VDRuU2yX"
 );
 
+const initialUser = { id: null, role: null };
+
 //TODO: Remove excess components
 const App = () => {
-  const [user, setUser] = React.useState();
+  const [user, setUser] = React.useState(initialUser);
   const [openDialog, setOpenDialog] = React.useState(false);
 
   const switchRoutes = (routes) => {
@@ -47,6 +49,7 @@ const App = () => {
             <PublicRoute
               path={route.path}
               component={route.component}
+              user={user}
               key={route.name}
               exact={route.exact}
             />
@@ -89,7 +92,7 @@ const App = () => {
         });
       }
       if (data.payload.event === "signOut") {
-        setUser(null);
+        setUser(initialUser);
         Amplify.configure({
           aws_appsync_authenticationType: "AWS_IAM",
         });
