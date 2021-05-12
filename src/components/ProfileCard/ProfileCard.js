@@ -1,29 +1,20 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Card, CardMedia, Grid, Typography } from "@material-ui/core";
 import { Storage } from "aws-amplify";
 import { useHistory } from "react-router-dom";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import TrainerMetrics from "../TrainerMetrics/TrainerMetrics";
-import { makeStyles } from "@material-ui/core/styles";
-
-const useStyles = makeStyles(() => ({
-  CardStyle: {
-    borderRadius: "20px",
-  },
-  CardGrid: {
-    padding: "20px",
-  },
-  CardIcon: {
-    height: "100px",
-    width: "100px",
-    borderRadius: "30px",
-  },
-}));
+import {
+  GridContainer,
+  GridItem,
+  CardStyled,
+  CardIcon,
+  H3title,
+  Text,
+} from "../StyledComponets/StyledComponets";
 
 const ProfileCard = ({ ...props }) => {
   const [img, setImg] = useState();
-  const classes = useStyles();
   let history = useHistory();
 
   useEffect(() => {
@@ -37,34 +28,32 @@ const ProfileCard = ({ ...props }) => {
   };
 
   return (
-    <Card className={classes.CardStyle}>
+    <CardStyled>
       <CardActionArea onClick={link}>
-        <Grid container direction="row" className={classes.CardGrid}>
-          <Grid item xs={2}>
-            {img && <CardMedia image={img} className={classes.CardIcon} />}
-          </Grid>
-          <Grid item container direction="column" xs={5}>
-            <Grid item>
-              <Typography variant="h3">
+        <GridContainer direction="row">
+          <GridItem xs={4} sm={2}>
+            <CardIcon src={img} />
+          </GridItem>
+          <GridContainer item direction="column" xs={8} sm={4}>
+            <GridItem>
+              <H3title>
                 {props.profile.FirstName + " " + props.profile.LastName}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="body1">
-                {props.profile.Description}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item xs={5}>
+              </H3title>
+            </GridItem>
+            <GridItem>
+              <Text>{props.profile.Description}</Text>
+            </GridItem>
+          </GridContainer>
+          <GridItem xs={12} sm={6}>
             <TrainerMetrics
               weight={props.profile.Weight}
               height={props.profile.Height}
               birthday={props.profile.Birthday}
             />
-          </Grid>
-        </Grid>
+          </GridItem>
+        </GridContainer>
       </CardActionArea>
-    </Card>
+    </CardStyled>
   );
 };
 

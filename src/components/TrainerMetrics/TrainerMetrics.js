@@ -1,47 +1,47 @@
-import { Grid, Typography } from "@material-ui/core";
 import PropTypes from "prop-types";
 import React from "react";
+import {
+  GridContainer,
+  GridItem,
+  AttriTitle,
+  Attribute,
+  Unit,
+} from "../StyledComponets/StyledComponets";
 
 const TrainerMetrics = ({ ...props }) => {
   return (
-    <Grid container>
-      <Grid item container direction="column" xs={3}>
-        <Grid item>
-          <Typography variant="h6">Weight</Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant="h3" style={{ display: "inline-block" }}>
-            {props.weight}
-          </Typography>
-          <Typography variant="body2" style={{ display: "inline-block" }}>
-            lb
-          </Typography>
-        </Grid>
-      </Grid>
-      <Grid item container direction="column" xs={3}>
-        <Grid item>
-          <Typography variant="h6">Age</Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant="h3" style={{ display: "inline-block" }}>
+    <GridContainer>
+      <GridContainer item direction="column" xs={4}>
+        <GridItem>
+          <AttriTitle>Weight</AttriTitle>
+        </GridItem>
+        <GridItem>
+          <Attribute>{props.weight}</Attribute>
+          <Unit>lb</Unit>
+        </GridItem>
+      </GridContainer>
+      <GridContainer item direction="column" xs={4}>
+        <GridItem>
+          <AttriTitle>Age</AttriTitle>
+        </GridItem>
+        <GridItem>
+          <Attribute>
             {new Date().getFullYear() - new Date(props.birthday).getFullYear()}
-          </Typography>
-          <Typography variant="body2" style={{ display: "inline-block" }}>
-            yr
-          </Typography>
-        </Grid>
-      </Grid>
-      <Grid item container direction="column" xs={4}>
-        <Grid item>
-          <Typography variant="h6">Height</Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant="h3" style={{ display: "inline-block" }}>
+          </Attribute>
+          <Unit>yr</Unit>
+        </GridItem>
+      </GridContainer>
+      <GridContainer item direction="column" xs={4}>
+        <GridItem>
+          <AttriTitle>Height</AttriTitle>
+        </GridItem>
+        <GridItem>
+          <Attribute>
             {Math.floor(props.height / 12) + "' " + (props.height % 12) + '"'}
-          </Typography>
-        </Grid>
-      </Grid>
-    </Grid>
+          </Attribute>
+        </GridItem>
+      </GridContainer>
+    </GridContainer>
   );
 };
 
