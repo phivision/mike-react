@@ -144,6 +144,28 @@ export default function LandingPage({ ...props }) {
       });
   };
 
+  const createSubscription = (paymentMethodId) => {
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        trainerID: props.match.params.id,
+        customerID: props.user.id,
+        paymentMethodID: paymentMethodId,
+      },
+      response: true,
+    };
+
+    API.post("stripeAPI", "/stripe/api/user/create/subscription", myInit).then(
+      (res) => {
+        if (res.error) {
+          checkoutError(res.error);
+        } else {
+          checkoutSuccess();
+        }
+      }
+    );
+  };
+
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
   };
@@ -292,10 +314,9 @@ export default function LandingPage({ ...props }) {
         open={openCheckout}
       >
         <Checkout
-          userID={props.user.id}
-          trainerID={props.match.params.id}
-          successCallback={checkoutSuccess}
           errorCallback={checkoutError}
+          paymentMethodCallback={createSubscription}
+          buttonTitle="Subscribe"
         />
       </Dialog>
     </>

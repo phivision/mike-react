@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Button, Dialog, Typography } from "@material-ui/core";
+import { Button, Dialog, Snackbar, Typography } from "@material-ui/core";
 import ChangePassword from "../../components/Settings/ChangePassword";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -9,18 +9,23 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import CreditCardIcon from "@material-ui/icons/CreditCard";
+import AddIcon from "@material-ui/icons/Add";
 // local variables
 import { userRoles } from "variables/userRoles";
 // local components
 import ActiveSubscriptions from "../../components/Settings/ActiveSubscriptions";
 // amplify components
 import { API, Auth, graphqlOperation } from "aws-amplify";
+import PaymentMethod from "../../components/PaymentMethod/PaymentMethod";
+import IconButton from "@material-ui/core/IconButton";
+import Checkout from "../../components/Checkout/Checkout";
+import CloseIcon from "@material-ui/icons/Close";
 
 const getUserSettings = /* GraphQL */ `
   query GetUserProfile($id: ID!) {
     getUserProfile(id: $id) {
       Email
+      StripeID
       Subscriptions {
         items {
           Trainer {
@@ -38,9 +43,13 @@ const getUserSettings = /* GraphQL */ `
 
 export default function Settings(props) {
   const [email, setEmail] = useState("");
+  const [defaultPaymentMethod, setDefaultPaymentMethod] = useState("");
   const [trainers, setTrainers] = useState([]);
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [openDialog, setOpenDialog] = React.useState(false);
+  const [openCheckout, setOpenCheckout] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const handleOpenPassword = () => {
     setOpenDialog(true);
@@ -71,14 +80,91 @@ export default function Settings(props) {
   }
 
   useEffect(() => {
-    fetchSettings().then((subs) => {
-      if (userRole === userRoles.STUDENT) {
-        setTrainers(subs);
-      }
-    });
-  }, [props.user.id]);
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        id: props.user.id,
+      },
+      response: true,
+    };
 
-  useEffect(() => {
+    API.post("stripeAPI", "/stripe/api/user/get/customer", myInit)
+      .then((d) => {
+        setDefaultPaymentMethod(d.data.invoice_settings.default_payment_method);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [props]);
+
+  const deletePaymentMethod = (id) => {
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        paymentMethodID: id,
+      },
+      response: true,
+    };
+
+    API.post("stripeAPI", "/stripe/api/user/delete/payment", myInit)
+      .then(() => {
+        checkoutSuccess("Successfully detached payment method");
+        fetchPaymentMethod();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const addPaymentMethod = (paymentMethodID) => {
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        id: props.user.id,
+        paymentMethodID: paymentMethodID,
+      },
+      response: true,
+    };
+
+    API.post("stripeAPI", "/stripe/api/user/create/payment", myInit)
+      .then(() => {
+        checkoutSuccess("Successfully created payment method");
+        fetchPaymentMethod();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const makeDefaultPaymentMethod = (paymentMethodID) => {
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        id: props.user.id,
+        paymentMethodID: paymentMethodID,
+      },
+      response: true,
+    };
+
+    API.post("stripeAPI", "/stripe/api/user/update/defaultpayment", myInit)
+      .then(() => {
+        checkoutSuccess("Successfully updated payment method");
+        setDefaultPaymentMethod(paymentMethodID);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
+  };
+
+  const handleCloseCheckout = () => {
+    setOpenCheckout(false);
+  };
+
+  const fetchPaymentMethod = () => {
     const myInit = {
       headers: {}, // AWS-IAM authorization if using empty headers
       body: {
@@ -92,7 +178,36 @@ export default function Settings(props) {
         setPaymentMethods(d.data.data);
       })
       .catch(console.log);
+  };
+
+  useEffect(() => {
+    fetchSettings().then((subs) => {
+      if (userRole === userRoles.STUDENT) {
+        setTrainers(subs);
+      }
+    });
   }, [props.user.id]);
+
+  useEffect(() => {
+    const sorted = [...paymentMethods].sort((a, b) => {
+      if (a.id === defaultPaymentMethod) {
+        return -1;
+      }
+      if (b.id === defaultPaymentMethod) {
+        return 1;
+      }
+      return 0;
+    });
+    setPaymentMethods(sorted);
+  }, [defaultPaymentMethod]);
+
+  useEffect(() => {
+    fetchPaymentMethod();
+  }, [props.user.id]);
+
+  const handleOpenCheckout = () => {
+    setOpenCheckout(true);
+  };
 
   const signOut = () => {
     Auth.signOut()
@@ -100,10 +215,38 @@ export default function Settings(props) {
       .catch(console.log);
   };
 
-  console.log(paymentMethods);
+  const checkoutError = (e) => {
+    console.log(e);
+    setSnackbarMessage("Adding payment method unsuccessful. Please try again.");
+    setOpenSnackbar(true);
+  };
+
+  const checkoutSuccess = (m) => {
+    handleCloseCheckout();
+    setSnackbarMessage(m);
+    setOpenSnackbar(true);
+  };
 
   return (
     <TableContainer component={Paper}>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+        action={
+          <React.Fragment>
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={handleSnackbarClose}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </React.Fragment>
+        }
+      />
       <Table aria-label="spanning table">
         <TableHead>
           <TableRow>
@@ -130,24 +273,21 @@ export default function Settings(props) {
           </TableRow>
           <TableRow>
             <TableCell align="left">
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  flexWrap: "wrap",
-                }}
-              >
-                <CreditCardIcon />
-                <span>**** **** **** 4242</span>
-              </div>
-            </TableCell>
-            <TableCell align="right">
-              <Button>Manage billing info</Button>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell colSpan={2} align="right">
-              <Button>Billing details</Button>
+              {paymentMethods.map((p, idx) => {
+                let isDefault = p.id === defaultPaymentMethod;
+                return (
+                  <PaymentMethod
+                    isDefault={isDefault}
+                    PaymentMethod={p}
+                    deleteCallback={deletePaymentMethod}
+                    defaultCallback={makeDefaultPaymentMethod}
+                    key={idx}
+                  />
+                );
+              })}
+              <IconButton onClick={handleOpenCheckout}>
+                <AddIcon />
+              </IconButton>
             </TableCell>
           </TableRow>
         </TableBody>
@@ -156,6 +296,18 @@ export default function Settings(props) {
         ) : null}
       </Table>
       <PasswordDialog />
+      <Dialog
+        onClose={handleCloseCheckout}
+        fullWidth
+        aria-labelledby="checkout-dialog"
+        open={openCheckout}
+      >
+        <Checkout
+          errorCallback={checkoutError}
+          paymentMethodCallback={addPaymentMethod}
+          buttonTitle="Add"
+        />
+      </Dialog>
     </TableContainer>
   );
 }
