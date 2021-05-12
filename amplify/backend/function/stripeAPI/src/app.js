@@ -246,6 +246,29 @@ app.post("/stripe/api/trainer/update/price", function (req, res) {
     });
 });
 
+app.post("/stripe/api/trainer/get/account", function (req, res) {
+  const queryStripeID = async (id) => {
+    const params = {
+      TableName: process.env.TABLE_NAME,
+      Key: { id: id },
+    };
+
+    return await docClient.get(params).promise();
+  };
+
+  const getAccount = async (StripeID) =>
+    await stripe.accounts.retrieve(StripeID);
+
+  queryStripeID(req.body.id).then((p) => {
+    getAccount(p.Item.StripeID)
+      .then((p) => res.json(p))
+      .catch((e) => {
+        console.log(e);
+        res.status(500).send();
+      });
+  });
+});
+
 app.post("/stripe/api/user/create", function (req, res) {
   const create = async () => {
     let account = await stripe.customers.create({

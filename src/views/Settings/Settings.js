@@ -46,6 +46,7 @@ export default function Settings(props) {
   const [defaultPaymentMethod, setDefaultPaymentMethod] = useState("");
   const [trainers, setTrainers] = useState([]);
   const [paymentMethods, setPaymentMethods] = useState([]);
+  const [isVerified, setVerified] = useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [openCheckout, setOpenCheckout] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -79,22 +80,33 @@ export default function Settings(props) {
     return userSettingData.data.getUserProfile.Subscriptions.items;
   }
 
-  useEffect(() => {
-    const myInit = {
-      headers: {}, // AWS-IAM authorization if using empty headers
-      body: {
-        id: props.user.id,
-      },
-      response: true,
-    };
+  const fetchDefaultPaymentMethod = () => {
+    if (props.user.role === userRoles.STUDENT) {
+      const myInit = {
+        headers: {}, // AWS-IAM authorization if using empty headers
+        body: {
+          id: props.user.id,
+        },
+        response: true,
+      };
 
-    API.post("stripeAPI", "/stripe/api/user/get/customer", myInit)
-      .then((d) => {
-        setDefaultPaymentMethod(d.data.invoice_settings.default_payment_method);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      API.post("stripeAPI", "/stripe/api/user/get/customer", myInit)
+        .then((d) => {
+          setDefaultPaymentMethod(
+            d.data.invoice_settings.default_payment_method
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  useEffect(() => {
+    if (props.user.role === userRoles.STUDENT) {
+      fetchDefaultPaymentMethod();
+      fetchPaymentMethod();
+    }
   }, [props]);
 
   const deletePaymentMethod = (id) => {
@@ -201,10 +213,6 @@ export default function Settings(props) {
     setPaymentMethods(sorted);
   }, [defaultPaymentMethod]);
 
-  useEffect(() => {
-    fetchPaymentMethod();
-  }, [props.user.id]);
-
   const handleOpenCheckout = () => {
     setOpenCheckout(true);
   };
@@ -215,8 +223,7 @@ export default function Settings(props) {
       .catch(console.log);
   };
 
-  const checkoutError = (e) => {
-    console.log(e);
+  const checkoutError = () => {
     setSnackbarMessage("Adding payment method unsuccessful. Please try again.");
     setOpenSnackbar(true);
   };
@@ -226,6 +233,72 @@ export default function Settings(props) {
     setSnackbarMessage(m);
     setOpenSnackbar(true);
   };
+
+  const onboard = async () => {
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        id: props.user.id,
+        refreshUrl: window.location.href,
+        returnUrl: window.location.href,
+      },
+      response: true,
+    };
+
+    API.post("stripeAPI", "/stripe/api/trainer/link/onboarding", myInit)
+      .then((res) => {
+        window.location.href = res.data.AccountLink;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const login = async () => {
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        id: props.user.id,
+      },
+      response: true,
+    };
+
+    API.post("stripeAPI", "/stripe/api/trainer/link/login", myInit)
+      .then((res) => {
+        window.location.href = res.data.AccountLink;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const getLink = () => {
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        id: props.user.id,
+      },
+      response: true,
+    };
+
+    API.post("stripeAPI", "/stripe/api/trainer/get/account", myInit)
+      .then((d) => {
+        console.log(d);
+        setVerified(d.data.details_submitted);
+      })
+      .catch(console.log);
+  };
+
+  useEffect(() => {
+    setSnackbarMessage(
+      "Please login to Stripe in the settings to complete account verification."
+    );
+    setOpenSnackbar(true);
+  }, [isVerified]);
+
+  useEffect(() => {
+    getLink();
+  }, [props]);
 
   return (
     <TableContainer component={Paper}>
@@ -271,25 +344,41 @@ export default function Settings(props) {
               <Button onClick={handleOpenPassword}>Change password</Button>
             </TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell align="left">
-              {paymentMethods.map((p, idx) => {
-                let isDefault = p.id === defaultPaymentMethod;
-                return (
-                  <PaymentMethod
-                    isDefault={isDefault}
-                    PaymentMethod={p}
-                    deleteCallback={deletePaymentMethod}
-                    defaultCallback={makeDefaultPaymentMethod}
-                    key={idx}
-                  />
-                );
-              })}
-              <IconButton onClick={handleOpenCheckout}>
-                <AddIcon />
-              </IconButton>
-            </TableCell>
-          </TableRow>
+          {userRole === userRoles.STUDENT ? (
+            <TableRow>
+              <TableCell align="left">
+                {paymentMethods.map((p, idx) => {
+                  let isDefault = p.id === defaultPaymentMethod;
+                  return (
+                    <PaymentMethod
+                      isDefault={isDefault}
+                      PaymentMethod={p}
+                      deleteCallback={deletePaymentMethod}
+                      defaultCallback={makeDefaultPaymentMethod}
+                      key={idx}
+                    />
+                  );
+                })}
+                <IconButton onClick={handleOpenCheckout}>
+                  <AddIcon />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          ) : (
+            <TableRow>
+              <TableCell>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={() => {
+                    isVerified ? login() : onboard();
+                  }}
+                >
+                  Login to Stripe
+                </Button>
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
         {userRole === userRoles.STUDENT ? (
           <ActiveSubscriptions trainers={trainers} user={props.user.id} />
@@ -314,7 +403,7 @@ export default function Settings(props) {
 
 Settings.propTypes = {
   user: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    role: PropTypes.string.isRequired,
+    id: PropTypes.string,
+    role: PropTypes.string,
   }),
 };

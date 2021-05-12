@@ -11,7 +11,6 @@ import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 
 const PaymentMethod = ({ ...props }) => {
-  console.log(props);
   const [image, setImage] = useState();
 
   const renderCardIcon = () => {
