@@ -1,8 +1,5 @@
 import React from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
-// creates a beautiful scrollbar
-import PerfectScrollbar from "perfect-scrollbar";
-import "perfect-scrollbar/css/perfect-scrollbar.css";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
@@ -13,14 +10,11 @@ import { Container } from "@material-ui/core";
 import styles from "../assets/jss/material-dashboard-react/layouts/homeStyle.js";
 import PropTypes from "prop-types";
 
-let ps;
 const useStyles = makeStyles(styles);
 
 const Home = () => {
   // styles
   const classes = useStyles();
-  // ref to help us initialize PerfectScrollbar on windows devices
-  const mainPanel = React.createRef();
   const match = useRouteMatch();
 
   const switchRoutes = () => {
@@ -42,23 +36,6 @@ const Home = () => {
       </Switch>
     );
   };
-
-  // initialize and destroy the PerfectScrollbar plugin
-  React.useEffect(() => {
-    if (navigator.platform.indexOf("Win") > -1) {
-      ps = new PerfectScrollbar(mainPanel.current, {
-        suppressScrollX: true,
-        suppressScrollY: false,
-      });
-      document.body.style.overflow = "hidden";
-    }
-    // Specify how to clean up after this effect:
-    return function cleanup() {
-      if (navigator.platform.indexOf("Win") > -1) {
-        ps.destroy();
-      }
-    };
-  }, [mainPanel]);
 
   return (
     <Container maxWidth={false} disableGutters={true}>

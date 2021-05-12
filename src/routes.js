@@ -5,8 +5,6 @@ import SettingsIcon from "@material-ui/icons/Settings";
 // core components/views for Admin layout
 import UserProfile from "views/UserProfile/UserProfile.js";
 import Settings from "views/Settings/Settings";
-import Checkout from "views/Checkout/Checkout.js";
-import Payment from "views/Payment/Payment.js";
 import UserFeed from "views/UserFeed/UserFeed.js";
 
 //core components/views for Home layout
@@ -23,45 +21,18 @@ const routes = [
     path: "/user",
     name: "Feed",
     component: UserFeed,
-    layout: "/admin",
-    layoutCategory: "both",
-  },
-  {
-    path: "/video",
-    name: "Video Uploading",
-    icon: VideoLibraryIcon,
-    component: VideoUpload,
-    layout: "/admin",
-    layoutCategory: "trainer",
-  },
-  {
-    path: "/checkout/:id",
-    name: "Checkout",
-    icon: Person,
-    component: Checkout,
-    layout: "/admin",
-    layoutCategory: "student",
-  },
-  {
-    path: "/payment",
-    name: "Payment",
-    icon: Person,
-    component: Payment,
-    layout: "/admin",
-    layoutCategory: "trainer",
+    auth: "both",
   },
   {
     path: "/",
     name: "Home",
     component: Home,
-    layout: "/home",
     exact: true,
   },
   {
     path: "/search/:query",
     name: "Search",
     component: Search,
-    layout: "/home",
     exact: true,
   },
   {
@@ -69,29 +40,31 @@ const routes = [
     name: "Landing Page",
     icon: Person,
     component: LandingPage,
-    layout: "/home",
     exact: true,
   },
   {
     path: "/signin",
     name: "Sign In",
     component: SignIn,
-    layout: "/home",
     exact: false,
   },
   {
     path: "/signup/:role",
     name: "Sign Up",
     component: SignUp,
-    layout: "/home",
     exact: false,
   },
   {
     path: "/verify",
     name: "Verify your email",
     component: Verify,
-    layout: "/home",
     exact: false,
+  },
+  {
+    path: "/settings",
+    name: "User Settings",
+    component: Settings,
+    auth: "both",
   },
 ];
 
@@ -101,24 +74,21 @@ const headerRoutes = {
     name: "User Profile",
     icon: Person,
     component: UserProfile,
-    layout: "/admin",
-    layoutCategory: "both",
+    auth: "both",
   },
   videoUpload: {
     path: "/video",
     name: "Video Uploading",
     icon: VideoLibraryIcon,
     component: VideoUpload,
-    layout: "/admin",
-    layoutCategory: "trainer",
+    auth: "trainer",
   },
   settings: {
     path: "/settings",
     name: "User Settings",
     icon: SettingsIcon,
     component: Settings,
-    layout: "/admin",
-    layoutCategory: "both",
+    auth: "both",
   },
 };
 
