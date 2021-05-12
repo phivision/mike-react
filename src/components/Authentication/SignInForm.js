@@ -12,7 +12,7 @@ import PropTypes from "prop-types";
 // import auth styles
 import authStyles from "../../assets/jss/material-dashboard-react/views/authStyle";
 
-export default function SignInForm({ ...props }) {
+export default function SignInForm({ openError: openError, ...props }) {
   const classes = authStyles();
   const history = useHistory();
 
@@ -60,7 +60,7 @@ export default function SignInForm({ ...props }) {
         }
       });
     } catch (error) {
-      console.log("error signing up:", error);
+      openError(error.message);
     }
   }
 
@@ -148,4 +148,5 @@ SignInForm.propTypes = {
       next: PropTypes.object,
     }),
   }),
+  openError: PropTypes.func,
 };
