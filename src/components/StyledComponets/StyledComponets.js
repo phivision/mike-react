@@ -16,6 +16,7 @@ export const GridItem = styled(Grid).attrs({
 
 export const CardStyled = styled(Card)`
   border-radius: 20px;
+  margin: 10px 0;
 `;
 
 export const CardIcon = styled.img`
