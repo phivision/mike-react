@@ -33,7 +33,7 @@ const ProfileCard = ({ ...props }) => {
   }, [props]);
 
   const link = () => {
-    history.push("/home/landingpage/" + props.profile.id);
+    history.push("/landingpage/" + props.profile.id);
   };
 
   return (

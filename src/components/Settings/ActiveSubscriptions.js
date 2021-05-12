@@ -62,8 +62,6 @@ export default function ActiveSubscriptions(props) {
     });
   };
 
-  console.log(props.trainers);
-
   return (
     <TableBody>
       <TableRow>

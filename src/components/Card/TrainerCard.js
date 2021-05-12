@@ -57,7 +57,7 @@ const TrainerCard = ({ id }) => {
             style={{ width: "100px", height: "100px" }}
             src={profile.ImageURL}
           />
-          <Link to={{ pathname: "/home/landingpage/" + id }}>
+          <Link to={{ pathname: "/landingpage/" + id }}>
             <Typography variant="h5">
               {profile.FirstName} {profile.LastName}
             </Typography>

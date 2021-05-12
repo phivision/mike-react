@@ -11,6 +11,7 @@ import UserAvatar from "../../components/UserAvatar/UserAvatar";
 import EditableTypography from "../../components/EditableTypography/EditableTypography";
 import Container from "@material-ui/core/Container";
 import IconButton from "@material-ui/core/IconButton";
+import { userRoles } from "../../variables/userRoles";
 
 // import initial profile
 const initialProfileState = {
@@ -37,8 +38,6 @@ export default function UserFeed({ ...props }) {
   const [edit, setEdit] = useState(false);
   const history = useHistory();
 
-  const onClick = () => {};
-
   const onChange = (e) => {
     switch (e.target.id) {
       case "firstName":
@@ -53,7 +52,7 @@ export default function UserFeed({ ...props }) {
     }
   };
 
-  const clickEdit = async (type) => {
+  const onClickEditProfile = async (type) => {
     if (edit) {
       if (type === "submit-changes") {
         API.graphql({
@@ -71,8 +70,6 @@ export default function UserFeed({ ...props }) {
 
   const editFavorite = (fav, contentId) => {
     if (fav) {
-      console.log("Deleting favorite: " + fav.id);
-
       const deleteUserFavoriteContent = /* GraphQL */ `
         mutation DeleteUserFavoriteContent(
           $input: DeleteUserFavoriteContentInput!
@@ -88,6 +85,7 @@ export default function UserFeed({ ...props }) {
                     createdAt
                     Description
                     Segments
+                    owner
                   }
                   id
                 }
@@ -107,8 +105,6 @@ export default function UserFeed({ ...props }) {
         })
         .catch(console.log);
     } else {
-      console.log("Creating favorite: " + contentId + " " + profile.id);
-
       const createUserFavoriteContent = /* GraphQL */ `
         mutation CreateUserFavoriteContent(
           $input: CreateUserFavoriteContentInput!
@@ -124,6 +120,7 @@ export default function UserFeed({ ...props }) {
                     createdAt
                     Description
                     Segments
+                    owner
                   }
                   id
                 }
@@ -152,7 +149,7 @@ export default function UserFeed({ ...props }) {
     if (!e.target.files[0]) return;
     const nameArray = e.target.files[0].name.split(".");
     const userImageName =
-      ("UserImage" + props.user + Date.now()).replace(/[^0-9a-z]/gi, "") +
+      ("UserImage" + props.user.id + Date.now()).replace(/[^0-9a-z]/gi, "") +
       "." +
       nameArray[nameArray.length - 1];
     await Storage.put(userImageName, e.target.files[0], {
@@ -175,6 +172,7 @@ export default function UserFeed({ ...props }) {
                       createdAt
                       Thumbnail
                       Segments
+                      owner
                       Creator {
                         UserImage
                       }
@@ -208,9 +206,10 @@ export default function UserFeed({ ...props }) {
           }
         }`;
 
-    API.graphql(graphqlOperation(query, { id: props.user }))
+    API.graphql(graphqlOperation(query, { id: props.user.id }))
       .then((d) => {
         const { Subscriptions, Favorites, ...p } = d.data.getUserProfile;
+        console.log(d.data.getUserProfile);
         setProfile(p);
         setFavorites(Favorites.items);
         setSubscriptions(Subscriptions.items);
@@ -218,15 +217,85 @@ export default function UserFeed({ ...props }) {
       .catch(console.log);
   }
 
+  const trainerQuery = () => {
+    const query = `query GetUserProfile ($id: ID!) {
+          getUserProfile(id: $id) {
+            Contents {
+              items {
+                id
+                Description
+                Title
+                createdAt
+                Thumbnail
+                Segments
+                Creator{
+                  UserImage
+                }
+                owner
+              }
+            }
+            Favorites {
+              items {
+                Content {
+                  id
+                  Title
+                  Thumbnail
+                  createdAt
+                  Description
+                  Segments
+                  owner
+                }
+                id
+              }
+            }
+            id
+            LastName
+            FirstName
+            UserImage
+            Description
+          }
+        }`;
+
+    API.graphql(graphqlOperation(query, { id: props.user.id }))
+      .then((d) => {
+        const { Contents, Favorites, ...p } = d.data.getUserProfile;
+        setProfile(p);
+        setFavorites(Favorites.items);
+        setContent(Contents.items);
+      })
+      .catch(console.log);
+  };
+
   useEffect(() => {
+    let temp = [];
     subscriptions.map((sub) => {
-      setContent([...content, ...sub.Trainer.Contents.items]);
+      temp = [...temp, ...sub.Trainer.Contents.items];
     });
+    setContent(temp);
   }, [subscriptions]);
 
   useEffect(() => {
-    userQuery();
-  }, [props.user]);
+    props.user.role === userRoles.STUDENT ? userQuery() : trainerQuery();
+  }, []);
+
+  useEffect(() => {
+    console.log("sorting...");
+    const sorted = [...content].sort((a, b) => {
+      const out = new Date(b.createdAt) - new Date(a.createdAt);
+      return out;
+    });
+    setContent(sorted);
+  }, [content.length]);
+
+  //TODO: Add edit callback
+  const editPost = (id) => {
+    console.log(id);
+  };
+
+  //TODO: Add open content callback
+  const openContent = (id) => {
+    console.log(id);
+  };
 
   return (
     <Grid container direction="column">
@@ -314,11 +383,11 @@ export default function UserFeed({ ...props }) {
                   color="primary"
                   variant="contained"
                   fullWidth={true}
-                  onClick={() => clickEdit("submit-changes")}
+                  onClick={() => onClickEditProfile("submit-changes")}
                 >
                   Submit Changes
                 </Button>
-                <Button variant="text" onClick={clickEdit}>
+                <Button variant="text" onClick={onClickEditProfile}>
                   Discard Changes
                 </Button>
               </Container>
@@ -326,29 +395,36 @@ export default function UserFeed({ ...props }) {
               <Button
                 color="primary"
                 variant="contained"
-                onClick={clickEdit}
+                onClick={onClickEditProfile}
                 fullWidth={true}
               >
                 Edit
               </Button>
             )}
           </Grid>
-          <Grid item>
-            <Typography variant="h3">My Trainers</Typography>
-          </Grid>
-          <Grid item>
-            {subscriptions.map((sub, idx) => {
-              return (
-                <UserAvatar
-                  UserImage={sub.Trainer.UserImage}
-                  onClick={() =>
-                    history.push(`/home/landingpage/${sub.Trainer.id}`)
-                  }
-                  key={idx}
-                />
-              );
-            })}
-          </Grid>
+          {props.user.role === userRoles.STUDENT ? (
+            <>
+              <Grid item>
+                <Typography variant="h3">My Trainers</Typography>
+              </Grid>
+              <Grid item container direction="row">
+                {subscriptions.map((sub, idx) => {
+                  return (
+                    <Grid item key={idx}>
+                      <UserAvatar
+                        UserImage={sub.Trainer.UserImage}
+                        onClick={() =>
+                          history.push(`/landingpage/${sub.Trainer.id}`)
+                        }
+                      />
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            </>
+          ) : (
+            <></>
+          )}
         </Grid>
         <Grid item container direction="column" xs={4}>
           <Grid item>
@@ -363,7 +439,8 @@ export default function UserFeed({ ...props }) {
                 user={profile}
                 favorite={favorites[f]}
                 segments={c.Segments}
-                clickCallback={onClick}
+                clickCallback={openContent}
+                editCallback={editPost}
                 favoriteCallback={editFavorite}
                 key={idx}
               />
@@ -381,7 +458,8 @@ export default function UserFeed({ ...props }) {
                 user={profile}
                 favorite={fav}
                 segments={fav.Content.Segments}
-                clickCallback={onClick}
+                clickCallback={openContent}
+                editCallback={editPost}
                 favoriteCallback={editFavorite}
                 key={idx}
               />
@@ -394,5 +472,8 @@ export default function UserFeed({ ...props }) {
 }
 
 UserFeed.propTypes = {
-  user: PropTypes.string,
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    role: PropTypes.string,
+  }),
 };

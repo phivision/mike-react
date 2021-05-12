@@ -7,16 +7,17 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
 import { BrowserRouter, Switch, Redirect } from "react-router-dom";
-// core components
-import Admin from "layouts/Admin.js";
-import Home from "layouts/Home.js";
 
 import "assets/css/material-dashboard-react.css?v=1.9.0";
-import PrivateRoute from "./components/Routes/PrivateRoute";
-import PublicRoute from "./components/Routes/PublicRoute";
 
 import theme from "./theme.js";
 import { MuiThemeProvider } from "@material-ui/core/styles";
+import Header from "./components/Header/Header";
+import { headerRoutes, routes } from "./routes";
+import Footer from "./components/Footer/Footer";
+import { Container, Dialog } from "@material-ui/core";
+import PrivateRoute from "./components/Routes/PrivateRoute";
+import PublicRoute from "./components/Routes/PublicRoute";
 
 // amplify config
 Amplify.configure(awsconfig);
@@ -27,18 +28,72 @@ const stripePromise = loadStripe(
 
 //TODO: Remove excess components
 const App = () => {
-  const [authState, setAuthState] = React.useState(false);
-  const [user, setUser] = React.useState(null);
+  const [user, setUser] = React.useState();
+  const [openDialog, setOpenDialog] = React.useState(false);
+
+  const switchRoutes = (routes) => {
+    return (
+      <Switch>
+        {routes.map((route) => {
+          return route.auth ? (
+            <PrivateRoute
+              path={route.path}
+              component={route.component}
+              user={user}
+              key={route.name}
+              exact={route.exact}
+            />
+          ) : (
+            <PublicRoute
+              path={route.path}
+              component={route.component}
+              key={route.name}
+              exact={route.exact}
+            />
+          );
+        })}
+      </Switch>
+    );
+  };
+
+  const handleOpenSettings = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseSettings = () => {
+    setOpenDialog(false);
+  };
+
+  const SettingDialog = () => {
+    const body = (
+      <div>
+        <headerRoutes.settings.component user={user} />
+      </div>
+    );
+    return (
+      <Dialog open={openDialog} onClose={handleCloseSettings}>
+        {body}
+      </Dialog>
+    );
+  };
 
   React.useEffect(() => {
     Hub.listen("auth", (data) => {
+      console.log(data);
       if (data.payload.event === "signIn") {
-        setUser(data.payload.data);
-        setAuthState(true);
+        setUser({
+          id: data.payload.data.attributes.sub,
+          role: data.payload.data.attributes["custom:role"],
+        });
+        Amplify.configure({
+          aws_appsync_authenticationType: "AMAZON_COGNITO_USER_POOLS",
+        });
       }
       if (data.payload.event === "signOut") {
         setUser(null);
-        setAuthState(false);
+        Amplify.configure({
+          aws_appsync_authenticationType: "AWS_IAM",
+        });
       }
     });
   }, []);
@@ -47,16 +102,17 @@ const App = () => {
     <Elements stripe={stripePromise}>
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
-          <Switch>
-            <PublicRoute path="/home" auth={authState} component={Home} />
-            <PrivateRoute
-              path="/admin"
-              user={user}
-              auth={authState}
-              component={Admin}
-            />
-            <Redirect to="/home" />
-          </Switch>
+          <Container maxWidth={false} disableGutters={true}>
+            <Header user={user} onSettings={handleOpenSettings} />
+            <div>
+              <Switch>
+                {switchRoutes(routes)}
+                <Redirect to="/" />
+              </Switch>
+              <SettingDialog />
+            </div>
+            <Footer />
+          </Container>
         </BrowserRouter>
       </MuiThemeProvider>
     </Elements>

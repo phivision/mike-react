@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { API, graphqlOperation, Storage } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 import PropTypes from "prop-types";
-import { Grid, Typography, Card, CardActionArea } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import TrainerMetrics from "../../components/TrainerMetrics/TrainerMetrics";
 import ContentCard from "../../components/ContentCard/ContentCard";
 import WorkoutCard from "../../components/WorkoutCard/WorkoutCard";
@@ -10,6 +10,8 @@ import {
   createUserFavoriteContent,
   deleteUserFavoriteContent,
 } from "../../graphql/mutations";
+import UserAvatar from "../../components/UserAvatar/UserAvatar";
+import Button from "@material-ui/core/Button";
 
 // import initial profile
 const initialProfileState = {
@@ -32,7 +34,6 @@ export default function LandingPage({ ...props }) {
   const [content, setContent] = useState([]);
   const [price, setPrice] = useState("");
   const [favorites, setFavorites] = useState([]);
-  const [userImg, setUserImg] = useState("");
 
   const editFavorite = (id, contentId) => {
     if (id) {
@@ -102,19 +103,14 @@ export default function LandingPage({ ...props }) {
         }
       }
     `;
-    API.graphql(graphqlOperation(query, { id: props.props.match.params.id }))
+    API.graphql(graphqlOperation(query, { id: props.match.params.id }))
       .then((d) => {
         const { Contents, Favorites, ...p } = d.data.getUserProfile;
         setContent(Contents.items);
         setFavorites(Favorites.items);
         setProfile(p);
-        Storage.get(d.data.getUserProfile.UserImage)
-          .then((d) => {
-            setUserImg(d);
-          })
-          .catch(console.log);
       })
-      .catch(console.log);
+      .catch((e) => console.log(e));
   }
 
   const getPrice = async (id) => {
@@ -140,9 +136,9 @@ export default function LandingPage({ ...props }) {
   };
 
   useEffect(() => {
-    getPrice(props.props.match.params.id);
+    getPrice(props.match.params.id);
     userQuery();
-  }, [props.props.match.params.id]);
+  }, [props.match.params.id]);
 
   return (
     <Grid container direction="column">
@@ -156,7 +152,13 @@ export default function LandingPage({ ...props }) {
       <Grid item container direction="row">
         <Grid item container direction="column" xs={4}>
           <Grid item>
-            <img style={{ width: "200px" }} src={userImg} />
+            <UserAvatar
+              style={{
+                width: "200px",
+                height: "200px",
+              }}
+              UserImage={profile.UserImage}
+            />
           </Grid>
           <Grid item>
             <Typography variant="h3">
@@ -174,12 +176,9 @@ export default function LandingPage({ ...props }) {
             />
           </Grid>
           <Grid item>
-            <Card>
-              <CardActionArea onClick={onClick}>
-                <Typography variant="h1">{"$ " + price}</Typography>
-                <Typography>Join</Typography>
-              </CardActionArea>
-            </Card>
+            <Button variant="contained" color="primary" onClick={onClick}>
+              {"Join for $" + price + " per month"}
+            </Button>
           </Grid>
         </Grid>
         <Grid item container xs={4}>
@@ -209,7 +208,6 @@ export default function LandingPage({ ...props }) {
             let f = content.findIndex((e) => {
               return e.id === fav.Content.id;
             });
-            console.log(f);
             if (f > -1) {
               return (
                 <WorkoutCard
@@ -231,11 +229,9 @@ export default function LandingPage({ ...props }) {
 }
 
 LandingPage.propTypes = {
-  props: PropTypes.shape({
-    match: PropTypes.shape({
-      params: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-      }),
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string.isRequired,
     }),
   }),
 };

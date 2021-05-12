@@ -9,6 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import UserAvatar from "../UserAvatar/UserAvatar";
+import Button from "@material-ui/core/Button";
 
 export default function ContentCard({ ...props }) {
   const [img, setImg] = useState();
@@ -45,7 +46,7 @@ export default function ContentCard({ ...props }) {
           </Grid>
         </Grid>
         <Grid item container xs>
-          <CardActionArea onClick={props.clickCallback}>
+          <CardActionArea onClick={() => props.clickCallback(props.post.id)}>
             {img && (
               <CardMedia
                 image={img}
@@ -73,6 +74,17 @@ export default function ContentCard({ ...props }) {
               {new Date(props.post.createdAt).toDateString()}
             </Typography>
           </Grid>
+          {props.post.owner === props.user.id && (
+            <Grid item xs>
+              <Button
+                onClick={() => {
+                  props.editCallback(props.post.id);
+                }}
+              >
+                Edit
+              </Button>
+            </Grid>
+          )}
         </Grid>
       </Grid>
     </Card>
@@ -85,14 +97,17 @@ ContentCard.propTypes = {
     Description: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
     Thumbnail: PropTypes.string.isRequired,
+    owner: PropTypes.string.isRequired,
   }),
   user: PropTypes.shape({
     FirstName: PropTypes.string.isRequired,
     LastName: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
   }),
   UserImage: PropTypes.string,
   favorite: PropTypes.object,
   favoriteCallback: PropTypes.func.isRequired,
+  editCallback: PropTypes.func,
   clickCallback: PropTypes.func,
   showTrainer: PropTypes.bool,
 };

@@ -83,7 +83,7 @@ export default function VerifyForm({ ...props }) {
                   history.push(props.props.location.state.next);
                 }
               }
-              history.push("/admin/user/");
+              history.push("/user/");
             });
           });
         }
