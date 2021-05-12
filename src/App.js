@@ -79,7 +79,6 @@ const App = () => {
 
   React.useEffect(() => {
     Hub.listen("auth", (data) => {
-      console.log(data);
       if (data.payload.event === "signIn") {
         setUser({
           id: data.payload.data.attributes.sub,
