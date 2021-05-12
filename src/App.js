@@ -15,7 +15,7 @@ import { MuiThemeProvider } from "@material-ui/core/styles";
 import Header from "./components/Header/Header";
 import { headerRoutes, routes } from "./routes";
 import Footer from "./components/Footer/Footer";
-import { Container, Dialog } from "@material-ui/core";
+import { Container, Dialog, DialogContent } from "@material-ui/core";
 import PrivateRoute from "./components/Routes/PrivateRoute";
 import PublicRoute from "./components/Routes/PublicRoute";
 
@@ -31,7 +31,7 @@ const initialUser = { id: null, role: null };
 //TODO: Remove excess components
 const App = () => {
   const [user, setUser] = React.useState(initialUser);
-  const [openDialog, setOpenDialog] = React.useState(false);
+  const [openContentUpload, setOpenContentUpload] = React.useState(false);
 
   const switchRoutes = (routes) => {
     return (
@@ -59,29 +59,17 @@ const App = () => {
     );
   };
 
-  const handleOpenSettings = () => {
-    setOpenDialog(true);
+  const handleOpenContentUpload = () => {
+    setOpenContentUpload(true);
   };
 
-  const handleCloseSettings = () => {
-    setOpenDialog(false);
-  };
-
-  const SettingDialog = () => {
-    const body = (
-      <div>
-        <headerRoutes.settings.component user={user} />
-      </div>
-    );
-    return (
-      <Dialog open={openDialog} onClose={handleCloseSettings}>
-        {body}
-      </Dialog>
-    );
+  const handleCloseContentUpload = () => {
+    setOpenContentUpload(false);
   };
 
   React.useEffect(() => {
     Hub.listen("auth", (data) => {
+      console.log(data);
       if (data.payload.event === "signIn") {
         setUser({
           id: data.payload.data.attributes.sub,
@@ -100,18 +88,34 @@ const App = () => {
     });
   }, []);
 
+  const ContentUploadDialog = () => {
+    const body = (
+      <DialogContent>
+        <headerRoutes.videoUpload.component
+          user={user.id}
+          onClose={handleCloseContentUpload}
+        />
+      </DialogContent>
+    );
+    return (
+      <Dialog open={openContentUpload} fullWidth maxWidth="md">
+        {body}
+      </Dialog>
+    );
+  };
+
   return (
     <Elements stripe={stripePromise}>
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
           <Container maxWidth={false} disableGutters={true}>
-            <Header user={user} onSettings={handleOpenSettings} />
+            <Header user={user} onContentUpload={handleOpenContentUpload} />
             <div>
               <Switch>
                 {switchRoutes(routes)}
                 <Redirect to="/" />
               </Switch>
-              <SettingDialog />
+              <ContentUploadDialog />
             </div>
             <Footer />
           </Container>

@@ -1,7 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import PropTypes from "prop-types";
-import { Grid, Typography, Button } from "@material-ui/core";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  Grid,
+  Typography,
+} from "@material-ui/core";
 import ContentCard from "../../components/ContentCard/ContentCard";
 import WorkoutCard from "../../components/WorkoutCard/WorkoutCard";
 import Banner from "assets/img/banner.jpeg";
@@ -12,13 +18,14 @@ import EditableTypography from "../../components/EditableTypography/EditableTypo
 import Container from "@material-ui/core/Container";
 import IconButton from "@material-ui/core/IconButton";
 import { userRoles } from "../../variables/userRoles";
+import ContentUpload from "../ContentUpload/ContentUpload";
 
 // import initial profile
 const initialProfileState = {
   id: "",
   Birthday: null,
   Height: null,
-  UserImage: null,
+  UserImage: "",
   LastName: "",
   FirstName: "",
   Weight: null,
@@ -30,136 +37,52 @@ let tempProfile;
 //TODO: Add cards for payment tiers
 //TODO: Add images + description, nicely formatted
 
-export default function UserFeed({ ...props }) {
-  const [profile, setProfile] = useState(initialProfileState);
-  const [subscriptions, setSubscriptions] = useState([]);
-  const [content, setContent] = useState([]);
-  const [favorites, setFavorites] = useState([]);
-  const [edit, setEdit] = useState(false);
-  const history = useHistory();
-
-  const onChange = (e) => {
-    switch (e.target.id) {
-      case "firstName":
-        setProfile({ ...profile, FirstName: e.target.value });
-        break;
-      case "lastName":
-        setProfile({ ...profile, LastName: e.target.value });
-        break;
-      case "description":
-        setProfile({ ...profile, Description: e.target.value });
-        break;
-    }
-  };
-
-  const onClickEditProfile = async (type) => {
-    if (edit) {
-      if (type === "submit-changes") {
-        API.graphql({
-          query: updateUserProfile,
-          variables: { input: profile },
-        });
-      } else {
-        setProfile(tempProfile);
+const deleteUserFavoriteContent = /* GraphQL */ `
+  mutation DeleteUserFavoriteContent($input: DeleteUserFavoriteContentInput!) {
+    deleteUserFavoriteContent(input: $input) {
+      User {
+        Favorites {
+          items {
+            Content {
+              id
+              Title
+              Thumbnail
+              createdAt
+              Description
+              Segments
+              owner
+            }
+            id
+          }
+        }
       }
-    } else {
-      tempProfile = { ...profile };
     }
-    setEdit(!edit);
-  };
+  }
+`;
 
-  const editFavorite = (fav, contentId) => {
-    if (fav) {
-      const deleteUserFavoriteContent = /* GraphQL */ `
-        mutation DeleteUserFavoriteContent(
-          $input: DeleteUserFavoriteContentInput!
-        ) {
-          deleteUserFavoriteContent(input: $input) {
-            User {
-              Favorites {
-                items {
-                  Content {
-                    id
-                    Title
-                    Thumbnail
-                    createdAt
-                    Description
-                    Segments
-                    owner
-                  }
-                  id
-                }
-              }
+const createUserFavoriteContent = /* GraphQL */ `
+  mutation CreateUserFavoriteContent($input: CreateUserFavoriteContentInput!) {
+    createUserFavoriteContent(input: $input) {
+      User {
+        Favorites {
+          items {
+            Content {
+              id
+              Title
+              Thumbnail
+              createdAt
+              Description
+              Segments
+              owner
             }
+            id
           }
         }
-      `;
-
-      API.graphql(
-        graphqlOperation(deleteUserFavoriteContent, {
-          input: { id: fav.id },
-        })
-      )
-        .then((d) => {
-          setFavorites(d.data.deleteUserFavoriteContent.User.Favorites.items);
-        })
-        .catch(console.log);
-    } else {
-      const createUserFavoriteContent = /* GraphQL */ `
-        mutation CreateUserFavoriteContent(
-          $input: CreateUserFavoriteContentInput!
-        ) {
-          createUserFavoriteContent(input: $input) {
-            User {
-              Favorites {
-                items {
-                  Content {
-                    id
-                    Title
-                    Thumbnail
-                    createdAt
-                    Description
-                    Segments
-                    owner
-                  }
-                  id
-                }
-              }
-            }
-          }
-        }
-      `;
-
-      API.graphql(
-        graphqlOperation(createUserFavoriteContent, {
-          input: {
-            userFavoriteContentUserId: profile.id,
-            userFavoriteContentContentId: contentId,
-          },
-        })
-      )
-        .then((d) => {
-          setFavorites(d.data.createUserFavoriteContent.User.Favorites.items);
-        })
-        .catch(console.log);
+      }
     }
-  };
-
-  const handleImageChange = async (e) => {
-    if (!e.target.files[0]) return;
-    const nameArray = e.target.files[0].name.split(".");
-    const userImageName =
-      ("UserImage" + props.user.id + Date.now()).replace(/[^0-9a-z]/gi, "") +
-      "." +
-      nameArray[nameArray.length - 1];
-    await Storage.put(userImageName, e.target.files[0], {
-      contentType: "image/*",
-    });
-    setProfile({ ...profile, UserImage: userImageName });
-  };
-
-  async function userQuery() {
-    const query = `query GetUserProfile ($id: ID!) {
+  }
+`;
+const userProfileQuery = `query GetUserProfile ($id: ID!) {
           getUserProfile(id: $id) {
             Subscriptions {
               items {
@@ -206,19 +129,7 @@ export default function UserFeed({ ...props }) {
           }
         }`;
 
-    API.graphql(graphqlOperation(query, { id: props.user.id }))
-      .then((d) => {
-        const { Subscriptions, Favorites, ...p } = d.data.getUserProfile;
-        console.log(d.data.getUserProfile);
-        setProfile(p);
-        setFavorites(Favorites.items);
-        setSubscriptions(Subscriptions.items);
-      })
-      .catch(console.log);
-  }
-
-  const trainerQuery = () => {
-    const query = `query GetUserProfile ($id: ID!) {
+const trainerProfileQuery = `query GetUserProfile ($id: ID!) {
           getUserProfile(id: $id) {
             Contents {
               items {
@@ -256,7 +167,127 @@ export default function UserFeed({ ...props }) {
           }
         }`;
 
-    API.graphql(graphqlOperation(query, { id: props.user.id }))
+export default function UserFeed({ ...props }) {
+  const [profile, setProfile] = useState(initialProfileState);
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [content, setContent] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+  const [edit, setEdit] = useState(false);
+  const [activeVideo, setActiveVideo] = useState("");
+  const [openContentEdit, setOpenContentEdit] = React.useState(false);
+  const history = useHistory();
+
+  const handleOpenContentEdit = () => {
+    setOpenContentEdit(true);
+  };
+
+  const handleCloseContentEdit = () => {
+    setOpenContentEdit(false);
+    // after close the dialog, update the feed
+    trainerQuery();
+  };
+
+  const onChange = (e) => {
+    switch (e.target.id) {
+      case "firstName":
+        setProfile({ ...profile, FirstName: e.target.value });
+        break;
+      case "lastName":
+        setProfile({ ...profile, LastName: e.target.value });
+        break;
+      case "description":
+        setProfile({ ...profile, Description: e.target.value });
+        break;
+    }
+  };
+
+  const onClickEditProfile = async (type) => {
+    if (edit) {
+      if (type === "submit-changes") {
+        API.graphql({
+          query: updateUserProfile,
+          variables: { input: profile },
+        });
+      } else {
+        setProfile(tempProfile);
+      }
+    } else {
+      tempProfile = { ...profile };
+    }
+    setEdit(!edit);
+  };
+
+  const editFavorite = (fav, contentId) => {
+    if (fav) {
+      API.graphql(
+        graphqlOperation(deleteUserFavoriteContent, {
+          input: { id: fav.id },
+        })
+      )
+        .then((d) => {
+          setFavorites(d.data.deleteUserFavoriteContent.User.Favorites.items);
+        })
+        .catch(console.log);
+    } else {
+      API.graphql(
+        graphqlOperation(createUserFavoriteContent, {
+          input: {
+            userFavoriteContentUserId: profile.id,
+            userFavoriteContentContentId: contentId,
+          },
+        })
+      )
+        .then((d) => {
+          setFavorites(d.data.createUserFavoriteContent.User.Favorites.items);
+        })
+        .catch(console.log);
+    }
+  };
+
+  const ContentEditDialog = () => {
+    const body = (
+      <DialogContent>
+        <ContentUpload
+          user={props.user.id}
+          video={activeVideo}
+          onClose={handleCloseContentEdit}
+        />
+      </DialogContent>
+    );
+    return (
+      <Dialog open={openContentEdit} fullWidth maxWidth="md">
+        {body}
+      </Dialog>
+    );
+  };
+
+  const handleImageChange = async (e) => {
+    if (!e.target.files[0]) return;
+    const nameArray = e.target.files[0].name.split(".");
+    const userImageName =
+      ("UserImage" + props.user.id + Date.now()).replace(/[^0-9a-z]/gi, "") +
+      "." +
+      nameArray[nameArray.length - 1];
+    await Storage.put(userImageName, e.target.files[0], {
+      contentType: "image/*",
+    });
+    setProfile({ ...profile, UserImage: userImageName });
+  };
+
+  async function userQuery() {
+    API.graphql(graphqlOperation(userProfileQuery, { id: props.user.id }))
+      .then((d) => {
+        const { Subscriptions, Favorites, ...p } = d.data.getUserProfile;
+        console.log(d.data.getUserProfile);
+        setProfile(p);
+        setFavorites(Favorites.items);
+        setSubscriptions(Subscriptions.items);
+      })
+      .catch(console.log);
+  }
+
+  const trainerQuery = () => {
+    API.graphql(graphqlOperation(trainerProfileQuery, { id: props.user.id }))
       .then((d) => {
         const { Contents, Favorites, ...p } = d.data.getUserProfile;
         setProfile(p);
@@ -280,15 +311,14 @@ export default function UserFeed({ ...props }) {
 
   useEffect(() => {
     const sorted = [...content].sort((a, b) => {
-      const out = new Date(b.createdAt) - new Date(a.createdAt);
-      return out;
+      return new Date(b.createdAt) - new Date(a.createdAt);
     });
     setContent(sorted);
   }, [content.length]);
 
-  //TODO: Add edit callback
   const editPost = (id) => {
-    console.log(id);
+    setActiveVideo(id);
+    handleOpenContentEdit();
   };
 
   //TODO: Add open content callback
@@ -445,6 +475,7 @@ export default function UserFeed({ ...props }) {
               />
             );
           })}
+          <ContentEditDialog />
         </Grid>
         <Grid item container direction="column" xs={4}>
           <Grid item>
