@@ -15,7 +15,7 @@ import { userRoles } from "variables/userRoles";
 // local components
 import ActiveSubscriptions from "../../components/Settings/ActiveSubscriptions";
 // amplify components
-import { API, graphqlOperation } from "aws-amplify";
+import { API, Auth, graphqlOperation } from "aws-amplify";
 
 const getUserSettings = /* GraphQL */ `
   query GetUserProfile($id: ID!) {
@@ -50,7 +50,7 @@ export default function Settings(props) {
     setOpenDialog(false);
   };
 
-  const userRole = props.role;
+  const userRole = props.user.role;
 
   const PasswordDialog = () => {
     return (
@@ -64,7 +64,7 @@ export default function Settings(props) {
 
   async function fetchSettings() {
     const userSettingData = await API.graphql(
-      graphqlOperation(getUserSettings, { id: props.user })
+      graphqlOperation(getUserSettings, { id: props.user.id })
     );
     setEmail(userSettingData.data.getUserProfile.Email);
     return userSettingData.data.getUserProfile.Subscriptions.items;
@@ -76,13 +76,13 @@ export default function Settings(props) {
         setTrainers(subs);
       }
     });
-  }, [props.user]);
+  }, [props.user.id]);
 
   useEffect(() => {
     const myInit = {
       headers: {}, // AWS-IAM authorization if using empty headers
       body: {
-        id: props.user,
+        id: props.user.id,
       },
       response: true,
     };
@@ -92,7 +92,13 @@ export default function Settings(props) {
         setPaymentMethods(d.data.data);
       })
       .catch(console.log);
-  }, [props.user]);
+  }, [props.user.id]);
+
+  const signOut = () => {
+    Auth.signOut()
+      .then(() => console.log("Successfully signed out."))
+      .catch(console.log);
+  };
 
   console.log(paymentMethods);
 
@@ -105,7 +111,8 @@ export default function Settings(props) {
               <Typography variant="h1">Account</Typography>
             </TableCell>
             <TableCell align="left" colSpan={2}>
-              {email}
+              <Typography variant="body1">{email}</Typography>
+              <Button onClick={signOut}>Sign out</Button>
             </TableCell>
           </TableRow>
         </TableHead>
@@ -145,7 +152,7 @@ export default function Settings(props) {
           </TableRow>
         </TableBody>
         {userRole === userRoles.STUDENT ? (
-          <ActiveSubscriptions trainers={trainers} user={props.user} />
+          <ActiveSubscriptions trainers={trainers} user={props.user.id} />
         ) : null}
       </Table>
       <PasswordDialog />
@@ -154,6 +161,8 @@ export default function Settings(props) {
 }
 
 Settings.propTypes = {
-  user: PropTypes.string.isRequired,
-  role: PropTypes.string.isRequired,
+  user: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    role: PropTypes.string.isRequired,
+  }),
 };

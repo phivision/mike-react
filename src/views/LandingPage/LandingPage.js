@@ -103,14 +103,14 @@ export default function LandingPage({ ...props }) {
         }
       }
     `;
-    API.graphql(graphqlOperation(query, { id: props.props.match.params.id }))
+    API.graphql(graphqlOperation(query, { id: props.match.params.id }))
       .then((d) => {
         const { Contents, Favorites, ...p } = d.data.getUserProfile;
         setContent(Contents.items);
         setFavorites(Favorites.items);
         setProfile(p);
       })
-      .catch(console.log);
+      .catch((e) => console.log(e));
   }
 
   const getPrice = async (id) => {
@@ -136,9 +136,9 @@ export default function LandingPage({ ...props }) {
   };
 
   useEffect(() => {
-    getPrice(props.props.match.params.id);
+    getPrice(props.match.params.id);
     userQuery();
-  }, [props.props.match.params.id]);
+  }, [props.match.params.id]);
 
   return (
     <Grid container direction="column">
@@ -208,7 +208,6 @@ export default function LandingPage({ ...props }) {
             let f = content.findIndex((e) => {
               return e.id === fav.Content.id;
             });
-            console.log(f);
             if (f > -1) {
               return (
                 <WorkoutCard
@@ -230,11 +229,9 @@ export default function LandingPage({ ...props }) {
 }
 
 LandingPage.propTypes = {
-  props: PropTypes.shape({
-    match: PropTypes.shape({
-      params: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-      }),
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string.isRequired,
     }),
   }),
 };

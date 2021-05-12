@@ -149,7 +149,7 @@ export default function UserFeed({ ...props }) {
     if (!e.target.files[0]) return;
     const nameArray = e.target.files[0].name.split(".");
     const userImageName =
-      ("UserImage" + props.user + Date.now()).replace(/[^0-9a-z]/gi, "") +
+      ("UserImage" + props.user.id + Date.now()).replace(/[^0-9a-z]/gi, "") +
       "." +
       nameArray[nameArray.length - 1];
     await Storage.put(userImageName, e.target.files[0], {
@@ -206,7 +206,7 @@ export default function UserFeed({ ...props }) {
           }
         }`;
 
-    API.graphql(graphqlOperation(query, { id: props.user }))
+    API.graphql(graphqlOperation(query, { id: props.user.id }))
       .then((d) => {
         const { Subscriptions, Favorites, ...p } = d.data.getUserProfile;
         console.log(d.data.getUserProfile);
@@ -256,7 +256,7 @@ export default function UserFeed({ ...props }) {
           }
         }`;
 
-    API.graphql(graphqlOperation(query, { id: props.user }))
+    API.graphql(graphqlOperation(query, { id: props.user.id }))
       .then((d) => {
         const { Contents, Favorites, ...p } = d.data.getUserProfile;
         setProfile(p);
@@ -275,8 +275,8 @@ export default function UserFeed({ ...props }) {
   }, [subscriptions]);
 
   useEffect(() => {
-    props.role === userRoles.STUDENT ? userQuery() : trainerQuery();
-  }, [props.user]);
+    props.user.role === userRoles.STUDENT ? userQuery() : trainerQuery();
+  }, []);
 
   useEffect(() => {
     console.log("sorting...");
@@ -402,7 +402,7 @@ export default function UserFeed({ ...props }) {
               </Button>
             )}
           </Grid>
-          {props.role === userRoles.STUDENT ? (
+          {props.user.role === userRoles.STUDENT ? (
             <>
               <Grid item>
                 <Typography variant="h3">My Trainers</Typography>
@@ -414,7 +414,7 @@ export default function UserFeed({ ...props }) {
                       <UserAvatar
                         UserImage={sub.Trainer.UserImage}
                         onClick={() =>
-                          history.push(`/home/landingpage/${sub.Trainer.id}`)
+                          history.push(`/landingpage/${sub.Trainer.id}`)
                         }
                       />
                     </Grid>
@@ -472,6 +472,8 @@ export default function UserFeed({ ...props }) {
 }
 
 UserFeed.propTypes = {
-  user: PropTypes.string,
-  role: PropTypes.string,
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    role: PropTypes.string,
+  }),
 };

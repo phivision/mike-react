@@ -4,7 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import PropTypes from "prop-types";
 import authStyles from "../../assets/jss/material-dashboard-react/views/authStyle";
-import SignUpForm from "../../components/Authentication/SingUpForm";
+import SignUpForm from "../../components/Authentication/SignUpForm";
 
 export default function SignUp({ ...props }) {
   const classes = authStyles();

@@ -17,8 +17,8 @@ export default function Search({ ...props }) {
         filter: {
           UserRole: { match: "trainer" },
           or: [
-            { FirstName: { match: props.props.match.params.query } },
-            { LastName: { match: props.props.match.params.query } },
+            { FirstName: { match: props.match.params.query } },
+            { LastName: { match: props.match.params.query } },
           ],
         },
       },
@@ -31,7 +31,7 @@ export default function Search({ ...props }) {
 
   useEffect(() => {
     trainerQuery().then((r) => setTrainers(r));
-  }, [props.props.match.params.query]);
+  }, [props.match.params.query]);
 
   return (
     <div>
@@ -52,11 +52,9 @@ export default function Search({ ...props }) {
 }
 
 Search.propTypes = {
-  props: PropTypes.shape({
-    match: PropTypes.shape({
-      params: PropTypes.shape({
-        query: PropTypes.string.isRequired,
-      }),
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      query: PropTypes.string.isRequired,
     }),
   }),
 };

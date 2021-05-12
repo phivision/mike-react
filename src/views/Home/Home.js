@@ -14,7 +14,7 @@ const trainerList = (trainers) => {
     <div>
       {trainers.map((trainer, idx) => {
         return (
-          <Link key={idx} to={{ pathname: "/home/landingpage/" + trainer.id }}>
+          <Link key={idx} to={{ pathname: "/landingpage/" + trainer.id }}>
             {"Trainer: " + trainer.FirstName + " " + trainer.LastName}
           </Link>
         );

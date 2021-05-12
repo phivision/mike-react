@@ -45,7 +45,7 @@ export default function SignUpForm({ ...props }) {
       if (props.props.location.state !== undefined) {
         if (props.props.location.state.next !== undefined) {
           history.push({
-            pathname: "/home/verify/",
+            pathname: "/verify/",
             state: {
               username: state.email,
               password: state.password,
@@ -56,7 +56,7 @@ export default function SignUpForm({ ...props }) {
         }
       } else {
         history.push({
-          pathname: "/home/verify/",
+          pathname: "/verify/",
           state: {
             username: state.email,
             password: state.password,
@@ -133,7 +133,7 @@ export default function SignUpForm({ ...props }) {
       </Button>
       <Grid container justify="flex-end">
         <Grid item>
-          <Link to="/home/signin">Already have an account? Sign in</Link>
+          <Link to="/signin">Already have an account? Sign in</Link>
         </Grid>
       </Grid>
     </form>
