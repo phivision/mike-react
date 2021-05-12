@@ -334,7 +334,10 @@ app.post("/stripe/api/user/create/subscription", function (req, res) {
   };
 
   const getPrices = async (StripeID) => {
-    price = await stripe.prices.list({ active: true, lookup_keys: [StripeID] });
+    const price = await stripe.prices.list({
+      active: true,
+      lookup_keys: [StripeID],
+    });
     return price.data[0];
   };
 
@@ -388,7 +391,7 @@ app.post("/stripe/api/user/delete/subscription", function (req, res) {
       cancel_at_period_end: true,
     });
 
-  queryStripeID(req.body.id).then((p) => {
+  queryStripeID(req.body.id).then(() => {
     unsubscribe(req.body.subscriptionID)
       .then((p) => res.json(p))
       .catch((e) => {

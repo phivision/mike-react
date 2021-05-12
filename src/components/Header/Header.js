@@ -70,18 +70,16 @@ export default function Header(props) {
   } else {
     userRole = userRoles.UNKNOWN;
   }
+  const handleOpenContentUpload = props.onContentUpload;
 
   let history = useHistory();
   const [query, setQuery] = React.useState("");
 
   const ContentUploadButton = () => {
-    const route = headerRoutes.videoUpload;
     return (
-      <Link to={route.path} key={route.name}>
-        <Button variant="contained" color="primary">
-          Upload Content
-        </Button>
-      </Link>
+      <Button onClick={handleOpenContentUpload} variant="contained">
+        Upload Content
+      </Button>
     );
   };
 
@@ -140,4 +138,5 @@ Header.propTypes = {
     id: PropTypes.string,
     role: PropTypes.string,
   }),
+  onContentUpload: PropTypes.func,
 };
