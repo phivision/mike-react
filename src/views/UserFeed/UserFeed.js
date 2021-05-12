@@ -279,7 +279,6 @@ export default function UserFeed({ ...props }) {
   }, []);
 
   useEffect(() => {
-    console.log("sorting...");
     const sorted = [...content].sort((a, b) => {
       const out = new Date(b.createdAt) - new Date(a.createdAt);
       return out;
