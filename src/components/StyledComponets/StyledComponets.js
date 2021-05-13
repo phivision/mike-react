@@ -6,10 +6,14 @@ import {
   Button,
   AppBar,
   Toolbar,
+  IconButton,
 } from "@material-ui/core";
 import SearchBar from "material-ui-search-bar";
 import { primaryColor } from "assets/jss/material-dashboard-react.js";
 import { Link } from "react-router-dom";
+import Person from "@material-ui/icons/Person";
+import SettingsIcon from "@material-ui/icons/Settings";
+import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
 
 export const GridContainer = styled(Grid).attrs({
   container: true,
@@ -92,4 +96,37 @@ export const LogoLink = styled(Link)`
 
 export const Nav = styled(Link)`
   margin: 10px;
+`;
+
+export const CustomIcon = styled(IconButton).attrs({
+  size: "small",
+  color: "action",
+})`
+  width: 36px;
+  height: 36px;
+  margin: 5px;
+  .MuiIconButton-label {
+    display: inline-block;
+  }
+`;
+
+export const SetIcon = styled(SettingsIcon).attrs({
+  fontSize: "large",
+  color: "action",
+})`
+  font-size: 30px;
+`;
+
+export const UserIcon = styled(Person).attrs({
+  fontSize: "large",
+  color: "action",
+})`
+  font-size: 30px;
+`;
+
+export const VideoLibrary = styled(VideoLibraryIcon).attrs({
+  fontSize: "large",
+  color: "action",
+})`
+  font-size: 30px;
 `;
