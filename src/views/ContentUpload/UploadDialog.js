@@ -52,5 +52,5 @@ UploadDialog.propTypes = {
   user: PropTypes.string,
   open: PropTypes.bool,
   video: PropTypes.string,
-  onClose: PropTypes.func,
+  onClose: PropTypes.func.isRequired,
 };

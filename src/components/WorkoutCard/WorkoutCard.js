@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { Card, Grid, Typography, ListItem } from "@material-ui/core";
 
 import { Storage } from "aws-amplify";
-import CardActionArea from "@material-ui/core/CardActionArea";
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import Button from "@material-ui/core/Button";
@@ -14,6 +13,7 @@ import { FavoriteBorder } from "@material-ui/icons";
 
 import ViewerDialog from "../../views/ContentViewer/ViewerDialog";
 import ImageButton from "../CustomButtons/ImageButton";
+import UploadDialog from "../../views/ContentUpload/UploadDialog";
 
 const SegmentCard = ({ ...props }) => {
   return (
@@ -61,6 +61,15 @@ export default function WorkoutCard({ ...props }) {
   const [liked, setLiked] = useState(true);
   const [segments, setSegments] = useState([]);
   const [openViewer, setOpenViewer] = React.useState(false);
+  const [openContentEdit, setOpenContentEdit] = React.useState(false);
+
+  const handleOpenContentEdit = () => {
+    setOpenContentEdit(true);
+  };
+
+  const handleCloseContentEdit = () => {
+    setOpenContentEdit(false);
+  };
 
   const handleOpenViewer = () => {
     setOpenViewer(true);
@@ -85,26 +94,18 @@ export default function WorkoutCard({ ...props }) {
   return (
     <Card>
       <Grid container direction="column">
-        <CardActionArea onClick={() => props.clickCallback(props.post.id)}>
-          <Grid item container xs>
-            {img && (
-              <ImageButton url={img} width="50%" onClick={handleOpenViewer} />
-            )}
-          </Grid>
-        </CardActionArea>
+        <Grid item container xs>
+          {img && (
+            <ImageButton url={img} width="50%" onClick={handleOpenViewer} />
+          )}
+        </Grid>
         <Grid item container xs>
           <Grid item xs>
             <Typography variant="h3">{props.post.Title}</Typography>
           </Grid>
           {props.post.owner === props.user.id && (
             <Grid item xs>
-              <Button
-                onClick={() => {
-                  props.editCallback(props.post.id);
-                }}
-              >
-                Edit
-              </Button>
+              <Button onClick={handleOpenContentEdit}>Edit</Button>
             </Grid>
           )}
           <Grid item xs>
@@ -134,6 +135,12 @@ export default function WorkoutCard({ ...props }) {
         onClose={handleCloseViewer}
         post={props.post}
       />
+      <UploadDialog
+        user={props.user.id}
+        open={openContentEdit}
+        video={props.post.id}
+        onClose={handleCloseContentEdit}
+      />
     </Card>
   );
 }
@@ -155,6 +162,5 @@ WorkoutCard.propTypes = {
   }),
   favorite: PropTypes.object,
   favoriteCallback: PropTypes.func.isRequired,
-  clickCallback: PropTypes.func,
   editCallback: PropTypes.func,
 };

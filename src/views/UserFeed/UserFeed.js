@@ -12,7 +12,6 @@ import EditableTypography from "../../components/EditableTypography/EditableTypo
 import Container from "@material-ui/core/Container";
 import IconButton from "@material-ui/core/IconButton";
 import { userRoles } from "../../variables/userRoles";
-import UploadDialog from "../ContentUpload/UploadDialog";
 
 // import initial profile
 const initialProfileState = {
@@ -173,19 +172,7 @@ export default function UserFeed({ ...props }) {
   const [content, setContent] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [edit, setEdit] = useState(false);
-  const [activeVideo, setActiveVideo] = useState("");
-  const [openContentEdit, setOpenContentEdit] = React.useState(false);
   const history = useHistory();
-
-  const handleOpenContentEdit = () => {
-    setOpenContentEdit(true);
-  };
-
-  const handleCloseContentEdit = () => {
-    setOpenContentEdit(false);
-    // after close the dialog, update the feed
-    trainerQuery();
-  };
 
   const onChange = (e) => {
     switch (e.target.id) {
@@ -302,16 +289,6 @@ export default function UserFeed({ ...props }) {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
     setContent(sorted);
-  };
-
-  const editPost = (id) => {
-    setActiveVideo(id);
-    handleOpenContentEdit();
-  };
-
-  //TODO: Add open content callback
-  const openContent = (id) => {
-    console.log(id);
   };
 
   return (
@@ -456,19 +433,11 @@ export default function UserFeed({ ...props }) {
                 user={profile}
                 favorite={favorites[f]}
                 segments={c.Segments}
-                clickCallback={openContent}
-                editCallback={editPost}
                 favoriteCallback={editFavorite}
                 key={idx}
               />
             );
           })}
-          <UploadDialog
-            user={props.user.id}
-            open={openContentEdit}
-            video={activeVideo}
-            onClose={handleCloseContentEdit}
-          />
         </Grid>
         <Grid item container direction="column" xs={4}>
           <Grid item>
@@ -481,8 +450,6 @@ export default function UserFeed({ ...props }) {
                 user={profile}
                 favorite={fav}
                 segments={fav.Content.Segments}
-                clickCallback={openContent}
-                editCallback={editPost}
                 favoriteCallback={editFavorite}
                 key={idx}
               />
