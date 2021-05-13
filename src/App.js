@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import Amplify from "aws-amplify";
+import Amplify, { API } from "aws-amplify";
 import awsconfig from "./aws-exports";
 import { Hub } from "aws-amplify";
 import { Elements } from "@stripe/react-stripe-js";
@@ -28,6 +28,7 @@ const stripePromise = loadStripe(
 );
 
 const initialUser = { id: null, role: null };
+let isVerified;
 
 //TODO: Remove excess components
 const App = () => {
@@ -60,7 +61,25 @@ const App = () => {
     );
   };
 
+  const checkVerification = () => {
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        id: user.id,
+      },
+      response: true,
+    };
+
+    API.post("stripeAPI", "/stripe/api/trainer/get/account", myInit)
+      .then((d) => {
+        return d.data.details_submitted;
+      })
+      .catch(console.log);
+    return false;
+  };
+
   const handleOpenContentUpload = () => {
+    isVerified = checkVerification();
     setOpenContentUpload(true);
   };
 
@@ -95,6 +114,7 @@ const App = () => {
         <headerRoutes.videoUpload.component
           user={user.id}
           onClose={handleCloseContentUpload}
+          isVerified={isVerified}
         />
       </DialogContent>
     );
