@@ -38,15 +38,15 @@ const SignInLink = () => {
 
 const UserIcon = ({ route }) => {
   return (
-    <CustomIcon>
-      <Nav to={route.path} key={route.name}>
+    <Nav to={route.path} key={route.name}>
+      <CustomIcon>
         {typeof route.icon === "string" ? (
           <Icon>{route.icon}</Icon>
         ) : (
           <route.icon />
         )}
-      </Nav>
-    </CustomIcon>
+      </CustomIcon>
+    </Nav>
   );
 };
 

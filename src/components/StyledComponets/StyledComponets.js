@@ -99,11 +99,14 @@ export const Nav = styled(Link)`
 `;
 
 export const CustomIcon = styled(IconButton).attrs({
-  size: "medium",
+  size: "small",
   color: "action",
 })`
+  width: 36px;
+  height: 36px;
+  margin: 5px;
   .MuiIconButton-label {
-    display: block;
+    display: inline-block;
   }
 `;
 
