@@ -27,18 +27,6 @@ export const CardIcon = styled.img`
   margin: auto;
 `;
 
-export const H3title = styled(Typography).attrs({
-  variant: "h3",
-})`
-  font-size: 26px;
-`;
-
-export const Text = styled(Typography).attrs({
-  variant: "body1",
-})`
-  font-size: 16px;
-`;
-
 export const AttriTitle = styled(Typography).attrs({
   variant: "h6",
 })`
