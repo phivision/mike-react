@@ -79,8 +79,12 @@ export default function Header(props) {
   };
 
   const Logo = () => {
-    return (
+    return props.user.role === userRoles.UNKNOWN ? (
       <LogoLink to="/">
+        <img src={logo} alt="logo" />
+      </LogoLink>
+    ) : (
+      <LogoLink to="/user">
         <img src={logo} alt="logo" />
       </LogoLink>
     );
