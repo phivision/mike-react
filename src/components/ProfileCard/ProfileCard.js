@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Storage } from "aws-amplify";
 import { useHistory } from "react-router-dom";
-import { responsiveFontSizes, ThemeProvider } from "@material-ui/core/styles";
 import { CardActionArea, Typography } from "@material-ui/core";
 import TrainerMetrics from "../TrainerMetrics/TrainerMetrics";
 import {
@@ -11,7 +10,6 @@ import {
   CardStyled,
   CardIcon,
 } from "../StyledComponets/StyledComponets";
-import theme from "theme.js";
 
 const ProfileCard = ({ ...props }) => {
   const [img, setImg] = useState();
@@ -28,36 +26,34 @@ const ProfileCard = ({ ...props }) => {
   };
 
   return (
-    <ThemeProvider theme={responsiveFontSizes(theme)}>
-      <CardStyled>
-        <CardActionArea onClick={link}>
-          <GridContainer direction="row">
-            <GridItem xs={4} sm={2}>
-              <CardIcon src={img} />
+    <CardStyled>
+      <CardActionArea onClick={link}>
+        <GridContainer direction="row">
+          <GridItem xs={4} sm={2}>
+            <CardIcon src={img} />
+          </GridItem>
+          <GridContainer item direction="column" xs={8} sm={4}>
+            <GridItem>
+              <Typography variant="h3">
+                {props.profile.FirstName + " " + props.profile.LastName}
+              </Typography>
             </GridItem>
-            <GridContainer item direction="column" xs={8} sm={4}>
-              <GridItem>
-                <Typography variant="h3">
-                  {props.profile.FirstName + " " + props.profile.LastName}
-                </Typography>
-              </GridItem>
-              <GridItem>
-                <Typography variant="body1">
-                  {props.profile.Description}
-                </Typography>
-              </GridItem>
-            </GridContainer>
-            <GridItem xs={12} sm={6}>
-              <TrainerMetrics
-                weight={props.profile.Weight}
-                height={props.profile.Height}
-                birthday={props.profile.Birthday}
-              />
+            <GridItem>
+              <Typography variant="body1">
+                {props.profile.Description}
+              </Typography>
             </GridItem>
           </GridContainer>
-        </CardActionArea>
-      </CardStyled>
-    </ThemeProvider>
+          <GridItem xs={12} sm={6}>
+            <TrainerMetrics
+              weight={props.profile.Weight}
+              height={props.profile.Height}
+              birthday={props.profile.Birthday}
+            />
+          </GridItem>
+        </GridContainer>
+      </CardActionArea>
+    </CardStyled>
   );
 };
 

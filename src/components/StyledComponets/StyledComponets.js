@@ -1,5 +1,15 @@
 import styled from "styled-components";
-import { Grid, Card, Typography } from "@material-ui/core";
+import {
+  Grid,
+  Card,
+  Typography,
+  Button,
+  AppBar,
+  Toolbar,
+  Link,
+} from "@material-ui/core";
+import SearchBar from "material-ui-search-bar";
+import { primaryColor } from "assets/jss/material-dashboard-react.js";
 
 export const GridContainer = styled(Grid).attrs({
   container: true,
@@ -45,4 +55,41 @@ export const Unit = styled(Typography).attrs({
   variant: "body2",
 })`
   display: inline-block;
+`;
+
+export const SearchButton = styled(SearchBar)`
+  &&& {
+    margin-right: 20px;
+    background-color: #eaeef1;
+    box-shadow: none;
+    border-radius: 20px;
+    min-width: 300px;
+    .MuiIconButton-label {
+      color: ${primaryColor[0]};
+    }
+  }
+`;
+
+export const CustomButton = styled(Button).attrs({
+  variant: "contained",
+  color: "primary",
+})`
+  border-radius: 20px;
+  font-weight: 700;
+`;
+
+export const AppHeader = styled(AppBar)`
+  position: static;
+`;
+
+export const Bars = styled(Toolbar)`
+  flexwrap: wrap;
+`;
+
+export const LogoLink = styled(Link)`
+  flex: 1;
+`;
+
+export const Nav = styled(Link)`
+  margin: 10px;
 `;
