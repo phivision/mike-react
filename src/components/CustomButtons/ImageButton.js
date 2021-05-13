@@ -1,6 +1,7 @@
-import { ButtonBase, makeStyles, Typography } from "@material-ui/core";
+import { ButtonBase, makeStyles } from "@material-ui/core";
 import React from "react";
 import PropTypes from "prop-types";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,12 +61,6 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0.4,
     transition: theme.transitions.create("opacity"),
   },
-  imageTitle: {
-    position: "relative",
-    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px ${
-      theme.spacing(1) + 6
-    }px`,
-  },
   imageMarked: {
     height: 3,
     width: 18,
@@ -98,22 +93,13 @@ export default function ImageButton(image) {
       />
       <span className={classes.imageBackdrop} />
       <span className={classes.imageButton}>
-        <Typography
-          component="span"
-          variant="subtitle1"
-          color="inherit"
-          className={classes.imageTitle}
-        >
-          {image.title}
-          <span className={classes.imageMarked} />
-        </Typography>
+        <PlayArrowIcon fontSize="large" />
       </span>
     </ButtonBase>
   );
 }
 
 ImageButton.propTypes = {
-  title: PropTypes.string,
   width: PropTypes.string,
   url: PropTypes.string.isRequired,
   onClick: PropTypes.func,

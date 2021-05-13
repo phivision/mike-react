@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
-import { Card, Grid, Typography, CardMedia, ListItem } from "@material-ui/core";
+import { Card, Grid, Typography, ListItem } from "@material-ui/core";
 
 import { Storage } from "aws-amplify";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -11,6 +11,9 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { FavoriteBorder } from "@material-ui/icons";
+
+import ViewerDialog from "../../views/ContentViewer/ViewerDialog";
+import ImageButton from "../CustomButtons/ImageButton";
 
 const SegmentCard = ({ ...props }) => {
   return (
@@ -56,7 +59,17 @@ SegmentCard.propTypes = {
 export default function WorkoutCard({ ...props }) {
   const [img, setImg] = useState();
   const [liked, setLiked] = useState(true);
-  const [segments, setSegments] = useState();
+  const [segments, setSegments] = useState([]);
+  const [openViewer, setOpenViewer] = React.useState(false);
+
+  const handleOpenViewer = () => {
+    setOpenViewer(true);
+  };
+
+  const handleCloseViewer = () => {
+    setOpenViewer(false);
+  };
+
   console.log(props);
 
   useEffect(() => {
@@ -75,11 +88,7 @@ export default function WorkoutCard({ ...props }) {
         <CardActionArea onClick={() => props.clickCallback(props.post.id)}>
           <Grid item container xs>
             {img && (
-              <CardMedia
-                image={img}
-                style={{ height: "250px", width: "250px", paddingTop: "2%" }}
-                title="Content Thumbnail"
-              />
+              <ImageButton url={img} width="50%" onClick={handleOpenViewer} />
             )}
           </Grid>
         </CardActionArea>
@@ -120,6 +129,11 @@ export default function WorkoutCard({ ...props }) {
           </List>
         </Grid>
       </Grid>
+      <ViewerDialog
+        open={openViewer}
+        onClose={handleCloseViewer}
+        post={props.post}
+      />
     </Card>
   );
 }
