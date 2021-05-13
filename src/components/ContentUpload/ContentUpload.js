@@ -19,10 +19,10 @@ import {
 import { getUserContent } from "graphql/queries";
 // resources
 import empty from "assets/img/empty.jpg";
-import ImageInput from "../../components/ContentUpload/ImageInput";
+import ImageInput from "./ImageInput";
 import useInterval from "../../useInterval";
-import SegmentEditor from "../../components/ContentUpload/SegmentEditor";
-import UploadDialog from "../../components/ContentUpload/UploadDialog";
+import SegmentEditor from "./SegmentEditor";
+import CustomDialog from "../Dialog/CustomDialog";
 import { Checkbox, FormControlLabel } from "@material-ui/core";
 import Input from "@material-ui/core/Input";
 // the video transcoder will generate a number of files in prefix
@@ -73,10 +73,8 @@ export default function ContentUpload(props) {
   const [openDuplicationDialog, setOpenDuplicationDialog] = React.useState(
     false
   );
-  const [openCloseDialog, setOpenCloseDialog] = React.useState(false);
   const videoFileRef = React.useRef();
   const thumbFileRef = React.useRef();
-  const handleCloseContentUpload = props.onClose;
   const thumbReader = new FileReader();
 
   // setup local image reader
@@ -395,7 +393,7 @@ export default function ContentUpload(props) {
               inputRef={videoFileRef}
               onChange={handleVideoFileChange}
             />
-            <UploadDialog
+            <CustomDialog
               open={openDuplicationDialog}
               title="Video Duplication Alert"
               text="The video has already been uploaded, do you still want to upload it?"
@@ -405,24 +403,6 @@ export default function ContentUpload(props) {
             />
           </GridItem>
           <GridItem xs={3}>
-            <div align="right">
-              <IconButton
-                onClick={() => {
-                  setOpenCloseDialog(true);
-                }}
-              >
-                <CloseIcon />
-              </IconButton>
-              <UploadDialog
-                open={openCloseDialog}
-                title="Close Content Uploading"
-                text="If the video is not uploaded, unsaved data may be lost, do you want to discard it?"
-                onClickYes={handleCloseContentUpload}
-                onClickNo={() => {
-                  setOpenCloseDialog(false);
-                }}
-              />
-            </div>
             <SegmentEditor
               segments={videoForm.Segments}
               onChange={handleSegmentJSONChange}

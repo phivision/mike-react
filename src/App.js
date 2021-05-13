@@ -13,12 +13,13 @@ import "assets/css/material-dashboard-react.css?v=1.9.0";
 import theme from "./theme.js";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import Header from "./components/Header/Header";
-import { headerRoutes, routes } from "./routes";
+import { routes } from "./routes";
 import Footer from "./components/Footer/Footer";
-import { Container, Dialog, DialogContent } from "@material-ui/core";
+import { Container } from "@material-ui/core";
 import PrivateRoute from "./components/Routes/PrivateRoute";
 import PublicRoute from "./components/Routes/PublicRoute";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import UploadDialog from "./views/ContentUpload/UploadDialog";
 
 // amplify config
 Amplify.configure(awsconfig);
@@ -106,23 +107,6 @@ const App = () => {
     });
   }, []);
 
-  const ContentUploadDialog = () => {
-    const body = (
-      <DialogContent>
-        <headerRoutes.videoUpload.component
-          user={user.id}
-          onClose={handleCloseContentUpload}
-          isVerified={verified}
-        />
-      </DialogContent>
-    );
-    return (
-      <Dialog open={openContentUpload} fullWidth maxWidth="md">
-        {body}
-      </Dialog>
-    );
-  };
-
   return (
     <Elements stripe={stripePromise}>
       <MuiThemeProvider theme={theme}>
@@ -135,7 +119,12 @@ const App = () => {
                 {switchRoutes(routes)}
                 <Redirect to="/" />
               </Switch>
-              <ContentUploadDialog />
+              <UploadDialog
+                open={openContentUpload}
+                onClose={handleCloseContentUpload}
+                user={user.id}
+                isVerified={verified}
+              />
             </div>
             <Footer />
           </Container>

@@ -7,7 +7,7 @@ import Button from "../CustomButtons/Button";
 import React from "react";
 import PropTypes from "prop-types";
 
-export default function UploadDialog({
+export default function CustomDialog({
   open,
   title,
   text,
@@ -40,7 +40,7 @@ export default function UploadDialog({
   );
 }
 
-UploadDialog.propTypes = {
+CustomDialog.propTypes = {
   open: PropTypes.bool,
   title: PropTypes.string,
   text: PropTypes.string,

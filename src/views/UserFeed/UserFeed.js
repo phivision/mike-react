@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import PropTypes from "prop-types";
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  Grid,
-  Typography,
-} from "@material-ui/core";
+import { Button, Grid, Typography } from "@material-ui/core";
 import ContentCard from "../../components/ContentCard/ContentCard";
 import WorkoutCard from "../../components/WorkoutCard/WorkoutCard";
 import Banner from "assets/img/banner.jpeg";
@@ -18,7 +12,7 @@ import EditableTypography from "../../components/EditableTypography/EditableTypo
 import Container from "@material-ui/core/Container";
 import IconButton from "@material-ui/core/IconButton";
 import { userRoles } from "../../variables/userRoles";
-import ContentUpload from "../ContentUpload/ContentUpload";
+import UploadDialog from "../ContentUpload/UploadDialog";
 
 // import initial profile
 const initialProfileState = {
@@ -250,23 +244,6 @@ export default function UserFeed({ ...props }) {
     }
   };
 
-  const ContentEditDialog = () => {
-    const body = (
-      <DialogContent>
-        <ContentUpload
-          user={props.user.id}
-          video={activeVideo}
-          onClose={handleCloseContentEdit}
-        />
-      </DialogContent>
-    );
-    return (
-      <Dialog open={openContentEdit} fullWidth maxWidth="md">
-        {body}
-      </Dialog>
-    );
-  };
-
   const handleImageChange = async (e) => {
     if (!e.target.files[0]) return;
     const nameArray = e.target.files[0].name.split(".");
@@ -486,7 +463,12 @@ export default function UserFeed({ ...props }) {
               />
             );
           })}
-          <ContentEditDialog />
+          <UploadDialog
+            user={props.user.id}
+            open={openContentEdit}
+            video={activeVideo}
+            onClose={handleCloseContentEdit}
+          />
         </Grid>
         <Grid item container direction="column" xs={4}>
           <Grid item>
