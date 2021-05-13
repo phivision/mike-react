@@ -15,7 +15,7 @@ const TrainerPrice = ({ ...props }) => {
     if (!edit) {
       setEdit(true);
     } else {
-      if (props.price != price * 100) {
+      if (props.price !== price * 100) {
         props.changePrice(price * 100);
       }
       setEdit(false);
