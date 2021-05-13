@@ -6,10 +6,10 @@ import {
   Button,
   AppBar,
   Toolbar,
-  Link,
 } from "@material-ui/core";
 import SearchBar from "material-ui-search-bar";
 import { primaryColor } from "assets/jss/material-dashboard-react.js";
+import { Link } from "react-router-dom";
 
 export const GridContainer = styled(Grid).attrs({
   container: true,

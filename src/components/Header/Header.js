@@ -12,6 +12,7 @@ import {
   Bars,
   LogoLink,
   Nav,
+  AttriTitle,
 } from "../StyledComponets/StyledComponets";
 
 const SignUpLink = () => {
@@ -29,7 +30,7 @@ SignUpLink.propTypes = {
 const SignInLink = () => {
   return (
     <Nav to="/signin" variant="h3">
-      Log In
+      <AttriTitle>Log In</AttriTitle>
     </Nav>
   );
 };
@@ -76,7 +77,7 @@ export default function Header(props) {
 
   const Logo = () => {
     return (
-      <LogoLink to="/home">
+      <LogoLink to="/">
         <img src={logo} alt="logo" />
       </LogoLink>
     );
