@@ -15,7 +15,10 @@ const TrainerPrice = ({ ...props }) => {
     if (!edit) {
       setEdit(true);
     } else {
-      props.changePrice(price * 100);
+      if (props.price != price * 100) {
+        props.changePrice(price * 100);
+      }
+      setEdit(false);
     }
   };
 
@@ -25,7 +28,7 @@ const TrainerPrice = ({ ...props }) => {
         <EditableTypography
           text={price}
           edit={edit}
-          label="price"
+          label="Monthly Subscription Price"
           onChange={(e) => {
             setPrice(e.target.value);
           }}
