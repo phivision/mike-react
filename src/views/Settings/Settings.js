@@ -301,7 +301,7 @@ export default function Settings(props) {
   };
 
   useEffect(() => {
-    if (props.user.role === userRoles.TRAINER) {
+    if (props.user.role === userRoles.TRAINER && !isVerified) {
       setSnackbarMessage(
         "Please login to Stripe in the settings to complete account verification."
       );
