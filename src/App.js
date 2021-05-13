@@ -28,11 +28,11 @@ const stripePromise = loadStripe(
 );
 
 const initialUser = { id: null, role: "unknown" };
-let isVerified;
 
 //TODO: Remove excess components
 const App = () => {
   const [user, setUser] = React.useState(initialUser);
+  const [verified, setVerified] = React.useState(true);
   const [openContentUpload, setOpenContentUpload] = React.useState(false);
 
   const switchRoutes = (routes) => {
@@ -72,15 +72,14 @@ const App = () => {
 
     API.post("stripeAPI", "/stripe/api/trainer/get/account", myInit)
       .then((d) => {
-        return d.data.details_submitted;
+        setVerified(d.data.details_submitted);
+        setOpenContentUpload(true);
       })
       .catch(console.log);
-    return false;
   };
 
   const handleOpenContentUpload = () => {
-    isVerified = checkVerification();
-    setOpenContentUpload(true);
+    checkVerification();
   };
 
   const handleCloseContentUpload = () => {
@@ -113,7 +112,7 @@ const App = () => {
         <headerRoutes.videoUpload.component
           user={user.id}
           onClose={handleCloseContentUpload}
-          isVerified={isVerified}
+          isVerified={verified}
         />
       </DialogContent>
     );
