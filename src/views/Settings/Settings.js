@@ -211,7 +211,7 @@ export default function Settings(props) {
       return 0;
     });
     setPaymentMethods(sorted);
-  }, [defaultPaymentMethod]);
+  }, [defaultPaymentMethod, paymentMethods.length]);
 
   const handleOpenCheckout = () => {
     setOpenCheckout(true);
@@ -272,7 +272,7 @@ export default function Settings(props) {
       });
   };
 
-  const getLink = () => {
+  const checkVerification = () => {
     const myInit = {
       headers: {}, // AWS-IAM authorization if using empty headers
       body: {
@@ -290,14 +290,16 @@ export default function Settings(props) {
   };
 
   useEffect(() => {
-    setSnackbarMessage(
-      "Please login to Stripe in the settings to complete account verification."
-    );
-    setOpenSnackbar(true);
+    if (props.user.role === userRoles.TRAINER) {
+      setSnackbarMessage(
+        "Please login to Stripe in the settings to complete account verification."
+      );
+      setOpenSnackbar(true);
+    }
   }, [isVerified]);
 
   useEffect(() => {
-    getLink();
+    checkVerification();
   }, [props]);
 
   return (
@@ -335,7 +337,11 @@ export default function Settings(props) {
         <TableBody>
           <TableRow>
             <TableCell rowSpan={4}>
-              <Typography variant="h3">Membership and Billing</Typography>
+              <Typography variant="h3">
+                {userRole === userRoles.STUDENT
+                  ? "Membership and Billing"
+                  : "Account and Billing"}
+              </Typography>
             </TableCell>
           </TableRow>
           <TableRow>
@@ -369,12 +375,15 @@ export default function Settings(props) {
               <TableCell>
                 <Button
                   variant="contained"
+                  color="primary"
                   fullWidth
                   onClick={() => {
                     isVerified ? login() : onboard();
                   }}
                 >
-                  Login to Stripe
+                  {isVerified
+                    ? "Manage Billing on Stripe"
+                    : "Verify Account on Stripe"}
                 </Button>
               </TableCell>
             </TableRow>
