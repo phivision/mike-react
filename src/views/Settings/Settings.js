@@ -47,7 +47,7 @@ export default function Settings(props) {
   const [defaultPaymentMethod, setDefaultPaymentMethod] = useState("");
   const [trainers, setTrainers] = useState([]);
   const [paymentMethods, setPaymentMethods] = useState([]);
-  const [isVerified, setVerified] = useState(false);
+  const [isVerified, setVerified] = useState(true);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [openCheckout, setOpenCheckout] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
