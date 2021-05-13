@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { API, graphqlOperation } from "aws-amplify";
 import PropTypes from "prop-types";
 import { Dialog, Grid, Snackbar, Typography } from "@material-ui/core";
-import TrainerMetrics from "../../components/TrainerMetrics/TrainerMetrics";
 import ContentCard from "../../components/ContentCard/ContentCard";
 import WorkoutCard from "../../components/WorkoutCard/WorkoutCard";
 import Banner from "assets/img/banner.jpeg";
@@ -253,13 +252,6 @@ export default function LandingPage({ ...props }) {
             </Grid>
             <Grid item variant="body1">
               {profile.Description}
-            </Grid>
-            <Grid item>
-              <TrainerMetrics
-                birthday={profile.Birthday}
-                weight={profile.Weight}
-                height={profile.Height}
-              />
             </Grid>
             <Grid item>
               <Button variant="contained" color="primary" onClick={onClick}>
