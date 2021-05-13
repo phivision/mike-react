@@ -7,7 +7,7 @@ const PrivateRoute = ({ component: Component, user: user, ...rest }) => {
     <Route
       {...rest}
       render={(p) =>
-        user ? (
+        user.id ? (
           <Component {...p} user={user} />
         ) : (
           <Redirect

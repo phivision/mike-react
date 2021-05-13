@@ -11,7 +11,7 @@ import UserFeed from "views/UserFeed/UserFeed.js";
 import LandingPage from "views/LandingPage/LandingPage.js";
 import Home from "views/Home/Home.js";
 import Search from "views/Search/Search.js";
-import VideoUpload from "./views/VideoUpload/VideoUpload";
+import ContentUpload from "./views/ContentUpload/ContentUpload";
 import SignIn from "views/Auth/SignIn.js";
 import SignUp from "views/Auth/SignUp.js";
 import Verify from "views/Auth/Verify.js";
@@ -80,7 +80,7 @@ const headerRoutes = {
     path: "/video",
     name: "Video Uploading",
     icon: VideoLibraryIcon,
-    component: VideoUpload,
+    component: ContentUpload,
     auth: "trainer",
   },
   settings: {

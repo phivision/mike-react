@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 // import auth styles
 import authStyles from "../../assets/jss/material-dashboard-react/views/authStyle";
 
-export default function SignUpForm({ ...props }) {
+export default function SignUpForm({ openError: openError, ...props }) {
   const classes = authStyles();
   const history = useHistory();
 
@@ -36,21 +36,21 @@ export default function SignUpForm({ ...props }) {
         username: state.email,
         password: state.password,
         attributes: {
-          "custom:role": props.props.match.params.role,
+          "custom:role": props.match.params.role,
           "custom:first_name": state.firstName,
           "custom:last_name": state.lastName,
         },
       });
 
-      if (props.props.location.state !== undefined) {
-        if (props.props.location.state.next !== undefined) {
+      if (props.location.state !== undefined) {
+        if (props.location.state.next !== undefined) {
           history.push({
             pathname: "/verify/",
             state: {
               username: state.email,
               password: state.password,
-              role: props.props.match.params.role,
-              next: props.props.location.state.next,
+              role: props.match.params.role,
+              next: props.location.state.next,
             },
           });
         }
@@ -60,12 +60,12 @@ export default function SignUpForm({ ...props }) {
           state: {
             username: state.email,
             password: state.password,
-            role: props.props.match.params.role,
+            role: props.match.params.role,
           },
         });
       }
     } catch (error) {
-      console.log("error signing up:", error);
+      openError(error.message);
     }
   }
   return (
@@ -141,16 +141,15 @@ export default function SignUpForm({ ...props }) {
 }
 
 SignUpForm.propTypes = {
-  props: PropTypes.shape({
-    match: PropTypes.shape({
-      params: PropTypes.shape({
-        role: PropTypes.string,
-      }),
-    }),
-    location: PropTypes.shape({
-      state: PropTypes.shape({
-        next: PropTypes.object,
-      }),
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      role: PropTypes.string,
     }),
   }),
+  location: PropTypes.shape({
+    state: PropTypes.shape({
+      next: PropTypes.object,
+    }),
+  }),
+  openError: PropTypes.func,
 };

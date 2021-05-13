@@ -15,7 +15,7 @@ import { MuiThemeProvider } from "@material-ui/core/styles";
 import Header from "./components/Header/Header";
 import { headerRoutes, routes } from "./routes";
 import Footer from "./components/Footer/Footer";
-import { Container, Dialog } from "@material-ui/core";
+import { Container, Dialog, DialogContent } from "@material-ui/core";
 import PrivateRoute from "./components/Routes/PrivateRoute";
 import PublicRoute from "./components/Routes/PublicRoute";
 
@@ -26,10 +26,12 @@ const stripePromise = loadStripe(
   "pk_test_51IWoNlAXegvVyt5sEGxoPrV9MfyryI7OR5vKuY4bLXUgqWIE2Dv0TmtY5R9BVHpjhg3qssoAF3z5GhtkgHrc8Mc400VDRuU2yX"
 );
 
+const initialUser = { id: null, role: null };
+
 //TODO: Remove excess components
 const App = () => {
-  const [user, setUser] = React.useState();
-  const [openDialog, setOpenDialog] = React.useState(false);
+  const [user, setUser] = React.useState(initialUser);
+  const [openContentUpload, setOpenContentUpload] = React.useState(false);
 
   const switchRoutes = (routes) => {
     return (
@@ -47,6 +49,7 @@ const App = () => {
             <PublicRoute
               path={route.path}
               component={route.component}
+              user={user}
               key={route.name}
               exact={route.exact}
             />
@@ -56,25 +59,12 @@ const App = () => {
     );
   };
 
-  const handleOpenSettings = () => {
-    setOpenDialog(true);
+  const handleOpenContentUpload = () => {
+    setOpenContentUpload(true);
   };
 
-  const handleCloseSettings = () => {
-    setOpenDialog(false);
-  };
-
-  const SettingDialog = () => {
-    const body = (
-      <div>
-        <headerRoutes.settings.component user={user} />
-      </div>
-    );
-    return (
-      <Dialog open={openDialog} onClose={handleCloseSettings}>
-        {body}
-      </Dialog>
-    );
+  const handleCloseContentUpload = () => {
+    setOpenContentUpload(false);
   };
 
   React.useEffect(() => {
@@ -90,7 +80,7 @@ const App = () => {
         });
       }
       if (data.payload.event === "signOut") {
-        setUser(null);
+        setUser(initialUser);
         Amplify.configure({
           aws_appsync_authenticationType: "AWS_IAM",
         });
@@ -98,18 +88,34 @@ const App = () => {
     });
   }, []);
 
+  const ContentUploadDialog = () => {
+    const body = (
+      <DialogContent>
+        <headerRoutes.videoUpload.component
+          user={user.id}
+          onClose={handleCloseContentUpload}
+        />
+      </DialogContent>
+    );
+    return (
+      <Dialog open={openContentUpload} fullWidth maxWidth="md">
+        {body}
+      </Dialog>
+    );
+  };
+
   return (
     <Elements stripe={stripePromise}>
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
           <Container maxWidth={false} disableGutters={true}>
-            <Header user={user} onSettings={handleOpenSettings} />
+            <Header user={user} onContentUpload={handleOpenContentUpload} />
             <div>
               <Switch>
                 {switchRoutes(routes)}
                 <Redirect to="/" />
               </Switch>
-              <SettingDialog />
+              <ContentUploadDialog />
             </div>
             <Footer />
           </Container>
