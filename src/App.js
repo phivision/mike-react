@@ -27,7 +27,7 @@ const stripePromise = loadStripe(
   "pk_test_51IWoNlAXegvVyt5sEGxoPrV9MfyryI7OR5vKuY4bLXUgqWIE2Dv0TmtY5R9BVHpjhg3qssoAF3z5GhtkgHrc8Mc400VDRuU2yX"
 );
 
-const initialUser = { id: null, role: null };
+const initialUser = { id: null, role: "unknown" };
 let isVerified;
 
 //TODO: Remove excess components
