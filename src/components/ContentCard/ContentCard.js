@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
-import { Card, Grid, Typography, CardMedia } from "@material-ui/core";
+import { Card, Grid, Typography } from "@material-ui/core";
 import { FavoriteBorder } from "@material-ui/icons";
 
 import { Storage } from "aws-amplify";
@@ -10,11 +10,21 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import UserAvatar from "../UserAvatar/UserAvatar";
 import Button from "@material-ui/core/Button";
+import ViewerDialog from "../../views/ContentViewer/ViewerDialog";
+import ImageButton from "../CustomButtons/ImageButton";
 
 export default function ContentCard({ ...props }) {
   const [img, setImg] = useState();
   const [liked, setLiked] = useState(false);
-  console.log(props);
+  const [openViewer, setOpenViewer] = React.useState(false);
+
+  const handleOpenViewer = () => {
+    setOpenViewer(true);
+  };
+
+  const handleCloseViewer = () => {
+    setOpenViewer(false);
+  };
 
   useEffect(() => {
     props.favorite ? setLiked(true) : setLiked(false);
@@ -49,10 +59,11 @@ export default function ContentCard({ ...props }) {
         <Grid item container xs>
           <CardActionArea onClick={() => props.clickCallback(props.post.id)}>
             {img && (
-              <CardMedia
-                image={img}
-                style={{ height: "250px", width: "250px", paddingTop: "2%" }}
-                title="Content Thumbnail"
+              <ImageButton
+                url={img}
+                title={props.post.Title}
+                onClick={handleOpenViewer}
+                width="50%"
               />
             )}
           </CardActionArea>
@@ -88,6 +99,11 @@ export default function ContentCard({ ...props }) {
           )}
         </Grid>
       </Grid>
+      <ViewerDialog
+        post={props.post}
+        onClose={handleCloseViewer}
+        open={openViewer}
+      />
     </Card>
   );
 }
@@ -98,6 +114,7 @@ ContentCard.propTypes = {
     Description: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
     Thumbnail: PropTypes.string.isRequired,
+    Title: PropTypes.string,
     owner: PropTypes.string.isRequired,
   }),
   user: PropTypes.shape({

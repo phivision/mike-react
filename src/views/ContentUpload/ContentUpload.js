@@ -19,7 +19,7 @@ import {
 import { getUserContent } from "graphql/queries";
 // resources
 import empty from "assets/img/empty.jpg";
-import ImageButton from "../../components/ContentUpload/ImageButton";
+import ImageInput from "../../components/ContentUpload/ImageInput";
 import useInterval from "../../useInterval";
 import SegmentEditor from "../../components/ContentUpload/SegmentEditor";
 import UploadDialog from "../../components/ContentUpload/UploadDialog";
@@ -387,7 +387,7 @@ export default function ContentUpload(props) {
             </div>
           </GridItem>
           <GridItem xs={6}>
-            <ImageButton
+            <ImageInput
               title={videoStatus}
               width="100%"
               url={thumbURL}

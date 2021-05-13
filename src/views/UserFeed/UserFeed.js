@@ -45,6 +45,7 @@ const deleteUserFavoriteContent = /* GraphQL */ `
           items {
             Content {
               id
+              ContentName
               Title
               Thumbnail
               createdAt
@@ -68,6 +69,7 @@ const createUserFavoriteContent = /* GraphQL */ `
           items {
             Content {
               id
+              ContentName
               Title
               Thumbnail
               createdAt
@@ -90,6 +92,7 @@ const userProfileQuery = `query GetUserProfile ($id: ID!) {
                   Contents {
                     items {
                       id
+                      ContentName
                       Description
                       Title
                       createdAt
@@ -112,6 +115,7 @@ const userProfileQuery = `query GetUserProfile ($id: ID!) {
               items {
                 Content {
                   id
+                  ContentName
                   Title
                   Thumbnail
                   createdAt
@@ -134,6 +138,7 @@ const trainerProfileQuery = `query GetUserProfile ($id: ID!) {
             Contents {
               items {
                 id
+                ContentName
                 Description
                 Title
                 createdAt
@@ -149,6 +154,7 @@ const trainerProfileQuery = `query GetUserProfile ($id: ID!) {
               items {
                 Content {
                   id
+                  ContentName
                   Title
                   Thumbnail
                   createdAt
