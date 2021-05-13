@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { Icon, IconButton } from "@material-ui/core";
+import { Icon } from "@material-ui/core";
 import logo from "../../assets/img/logo.jpg";
 import PropTypes from "prop-types";
 import { userRoles } from "../../variables/userRoles";
@@ -13,6 +13,7 @@ import {
   LogoLink,
   Nav,
   AttriTitle,
+  CustomIcon,
 } from "../StyledComponets/StyledComponets";
 
 const SignUpLink = () => {
@@ -37,13 +38,15 @@ const SignInLink = () => {
 
 const UserIcon = ({ route }) => {
   return (
-    <Nav to={route.path} key={route.name}>
-      {typeof route.icon === "string" ? (
-        <Icon>{route.icon}</Icon>
-      ) : (
-        <route.icon />
-      )}
-    </Nav>
+    <CustomIcon>
+      <Nav to={route.path} key={route.name}>
+        {typeof route.icon === "string" ? (
+          <Icon>{route.icon}</Icon>
+        ) : (
+          <route.icon />
+        )}
+      </Nav>
+    </CustomIcon>
   );
 };
 
@@ -85,13 +88,13 @@ export default function Header(props) {
 
   const SettingButton = () => {
     return (
-      <IconButton onClick={() => history.push("/settings/")}>
+      <CustomIcon onClick={() => history.push("/settings/")}>
         {typeof headerRoutes.settings.icon === "string" ? (
           <Icon>{headerRoutes.settings.icon}</Icon>
         ) : (
           <headerRoutes.settings.icon />
         )}
-      </IconButton>
+      </CustomIcon>
     );
   };
 

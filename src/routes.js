@@ -1,7 +1,9 @@
 // @material-ui/icons
-import Person from "@material-ui/icons/Person";
-import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
-import SettingsIcon from "@material-ui/icons/Settings";
+import {
+  UserIcon,
+  SetIcon,
+  VideoLibrary,
+} from "./components/StyledComponets/StyledComponets";
 // core components/views for Admin layout
 import UserProfile from "views/UserProfile/UserProfile.js";
 import Settings from "views/Settings/Settings";
@@ -38,7 +40,7 @@ const routes = [
   {
     path: "/landingpage/:id",
     name: "Landing Page",
-    icon: Person,
+    icon: UserIcon,
     component: LandingPage,
     exact: true,
   },
@@ -72,21 +74,21 @@ const headerRoutes = {
   userProfile: {
     path: "/user",
     name: "User Profile",
-    icon: Person,
+    icon: UserIcon,
     component: UserProfile,
     auth: "both",
   },
   videoUpload: {
     path: "/video",
     name: "Video Uploading",
-    icon: VideoLibraryIcon,
+    icon: VideoLibrary,
     component: ContentUpload,
     auth: "trainer",
   },
   settings: {
     path: "/settings",
     name: "User Settings",
-    icon: SettingsIcon,
+    icon: SetIcon,
     component: Settings,
     auth: "both",
   },
