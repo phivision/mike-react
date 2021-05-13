@@ -12,7 +12,7 @@ import PropTypes from "prop-types";
 // import auth styles
 import authStyles from "../../assets/jss/material-dashboard-react/views/authStyle";
 
-export default function SignInForm({ ...props }) {
+export default function SignInForm({ openError: openError, ...props }) {
   const classes = authStyles();
   const history = useHistory();
 
@@ -51,16 +51,16 @@ export default function SignInForm({ ...props }) {
           localStorage.setItem("password", state.password);
         }
         localStorage.setItem("remember", state.remember);
-        if (props.props.location.state !== undefined) {
-          if (props.props.location.state.next !== undefined) {
-            history.push(props.props.location.state.next);
+        if (props.location.state !== undefined) {
+          if (props.location.state.next !== undefined) {
+            history.push(props.location.state.next);
           }
         } else {
-          history.push("/admin/user/");
+          history.push("/user/");
         }
       });
     } catch (error) {
-      console.log("error signing up:", error);
+      openError(error.message);
     }
   }
 
@@ -115,14 +115,14 @@ export default function SignInForm({ ...props }) {
       </Button>
       <Grid container>
         <Grid item xs>
-          <Link to="/home/">Forgot password?</Link>
+          <Link to="/">Forgot password?</Link>
         </Grid>
         <Grid item>
-          {props.props.location.state !== undefined ? (
+          {props.location.state !== undefined ? (
             <Link
               to={{
-                pathname: "/home/signup/student",
-                state: { next: props.props.location.state.next },
+                pathname: "/signup/student",
+                state: { next: props.location.state.next },
               }}
             >
               {"Don't have an account? Sign Up"}
@@ -130,7 +130,7 @@ export default function SignInForm({ ...props }) {
           ) : (
             <Link
               to={{
-                pathname: "/home/signup/student",
+                pathname: "/signup/student",
               }}
             >
               {"Don't have an account? Sign Up"}
@@ -143,11 +143,10 @@ export default function SignInForm({ ...props }) {
 }
 
 SignInForm.propTypes = {
-  props: PropTypes.shape({
-    location: PropTypes.shape({
-      state: PropTypes.shape({
-        next: PropTypes.object,
-      }),
+  location: PropTypes.shape({
+    state: PropTypes.shape({
+      next: PropTypes.object,
     }),
   }),
+  openError: PropTypes.func,
 };

@@ -7,6 +7,10 @@ import { Storage } from "aws-amplify";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
+import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import { FavoriteBorder } from "@material-ui/icons";
 
 const SegmentCard = ({ ...props }) => {
   return (
@@ -51,7 +55,9 @@ SegmentCard.propTypes = {
 
 export default function WorkoutCard({ ...props }) {
   const [img, setImg] = useState();
+  const [liked, setLiked] = useState(true);
   const [segments, setSegments] = useState();
+  console.log(props);
 
   useEffect(() => {
     if (props.segments) {
@@ -65,8 +71,8 @@ export default function WorkoutCard({ ...props }) {
 
   return (
     <Card>
-      <CardActionArea onClick={props.clickCallback}>
-        <Grid container direction="column">
+      <Grid container direction="column">
+        <CardActionArea onClick={() => props.clickCallback(props.post.id)}>
           <Grid item container xs>
             {img && (
               <CardMedia
@@ -76,21 +82,44 @@ export default function WorkoutCard({ ...props }) {
               />
             )}
           </Grid>
-          <Grid item container xs>
-            <Grid item xs>
-              <Typography variant="h3">{props.post.Title}</Typography>
-            </Grid>
+        </CardActionArea>
+        <Grid item container xs>
+          <Grid item xs>
+            <Typography variant="h3">{props.post.Title}</Typography>
           </Grid>
-          <Grid item container xs>
-            <List>
-              {segments &&
-                segments.map((s, idx) => {
-                  return <SegmentCard segment={s} key={idx} />;
-                })}
-            </List>
+          {props.post.owner === props.user.id && (
+            <Grid item xs>
+              <Button
+                onClick={() => {
+                  props.editCallback(props.post.id);
+                }}
+              >
+                Edit
+              </Button>
+            </Grid>
+          )}
+          <Grid item xs>
+            <IconButton
+              aria-label="favorite this post"
+              color="primary"
+              onClick={() => {
+                setLiked(!liked);
+                props.favoriteCallback(props.favorite, props.post.id);
+              }}
+            >
+              {liked ? <FavoriteIcon /> : <FavoriteBorder />}
+            </IconButton>
           </Grid>
         </Grid>
-      </CardActionArea>
+        <Grid item container xs>
+          <List>
+            {segments &&
+              segments.map((s, idx) => {
+                return <SegmentCard segment={s} key={idx} />;
+              })}
+          </List>
+        </Grid>
+      </Grid>
     </Card>
   );
 }
@@ -102,13 +131,16 @@ WorkoutCard.propTypes = {
     Description: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
     Thumbnail: PropTypes.string.isRequired,
+    owner: PropTypes.string.isRequired,
   }),
   segments: PropTypes.string,
   user: PropTypes.shape({
     FirstName: PropTypes.string.isRequired,
     LastName: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
   }),
   favorite: PropTypes.object,
   favoriteCallback: PropTypes.func.isRequired,
   clickCallback: PropTypes.func,
+  editCallback: PropTypes.func,
 };

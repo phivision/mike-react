@@ -9,7 +9,7 @@ import { API } from "aws-amplify";
 // import auth styles
 import authStyles from "../../assets/jss/material-dashboard-react/views/authStyle";
 
-export default function VerifyForm({ ...props }) {
+export default function VerifyForm({ openError: openError, ...props }) {
   const classes = authStyles();
   const history = useHistory();
 
@@ -37,11 +37,11 @@ export default function VerifyForm({ ...props }) {
   };
 
   const stripeOnboarding = async (cognitoID) => {
-    if (props.props.location.state.role === "trainer") {
+    if (props.location.state.role === "trainer") {
       const myInit = {
         headers: {}, // AWS-IAM authorization if using empty headers
         body: {
-          email: props.props.location.state.username,
+          email: props.location.state.username,
           id: cognitoID,
         },
         response: true,
@@ -51,7 +51,7 @@ export default function VerifyForm({ ...props }) {
       const myInit = {
         headers: {}, // AWS-IAM authorization if using empty headers
         body: {
-          email: props.props.location.state.username,
+          email: props.location.state.username,
           id: cognitoID,
         },
         response: true,
@@ -71,25 +71,25 @@ export default function VerifyForm({ ...props }) {
       state.verify4 +
       state.verify5;
     try {
-      await Auth.confirmSignUp(props.props.location.state.username, code).then(
+      await Auth.confirmSignUp(props.location.state.username, code).then(
         async () => {
           await Auth.signIn(
-            props.props.location.state.username,
-            props.props.location.state.password
+            props.location.state.username,
+            props.location.state.password
           ).then(async (user) => {
             await stripeOnboarding(user.username).then(() => {
-              if (props.props.location.state !== undefined) {
-                if (props.props.location.state.next !== undefined) {
-                  history.push(props.props.location.state.next);
+              if (props.location.state !== undefined) {
+                if (props.location.state.next !== undefined) {
+                  history.push(props.location.state.next);
                 }
               }
-              history.push("/admin/user/");
+              history.push("/user/");
             });
           });
         }
       );
     } catch (error) {
-      console.log("error confirming sign up", error);
+      openError(error.message);
     }
   }
 
@@ -133,14 +133,13 @@ export default function VerifyForm({ ...props }) {
 }
 
 VerifyForm.propTypes = {
-  props: PropTypes.shape({
-    location: PropTypes.shape({
-      state: PropTypes.shape({
-        username: PropTypes.string.isRequired,
-        password: PropTypes.string.isRequired,
-        role: PropTypes.string.isRequired,
-        next: PropTypes.object,
-      }),
+  location: PropTypes.shape({
+    state: PropTypes.shape({
+      username: PropTypes.string.isRequired,
+      password: PropTypes.string.isRequired,
+      role: PropTypes.string.isRequired,
+      next: PropTypes.object,
     }),
   }),
+  openError: PropTypes.func,
 };

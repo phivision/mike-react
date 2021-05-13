@@ -16,12 +16,15 @@ const theme = createMuiTheme({
       dark: "#3632A8",
       contrastText: "#FFFFFF",
     },
+    background: {
+      default: "#F3F6FB",
+    },
   },
   typography: {
     fontFamily: fonts,
     body1: {
       fontWeight: 500,
-      fontSize: 14,
+      fontSize: 16,
       letterSpacing: "0.014 em",
       color: "#4C5980",
     },
@@ -43,10 +46,17 @@ const theme = createMuiTheme({
     },
     h6: {
       fontWeight: 700,
-      fontSize: 12,
+      fontSize: 14,
       letterSpacing: "0.167 em",
       textTransform: "uppercase",
       color: "#7265E3",
+    },
+  },
+  overrides: {
+    MuiAppBar: {
+      colorPrimary: {
+        backgroundColor: "#FFFFFF",
+      },
     },
   },
 });

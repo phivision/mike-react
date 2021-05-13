@@ -2,8 +2,9 @@ import React, { useEffect } from "react";
 import { API } from "aws-amplify";
 import { searchUserProfiles } from "graphql/queries";
 import PropTypes from "prop-types";
-import { Container } from "@material-ui/core";
 import ProfileCard from "../../components/ProfileCard/ProfileCard.js";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 
 export default function Search({ ...props }) {
   const [trainers, setTrainers] = React.useState([]);
@@ -16,8 +17,8 @@ export default function Search({ ...props }) {
         filter: {
           UserRole: { match: "trainer" },
           or: [
-            { FirstName: { match: props.props.match.params.query } },
-            { LastName: { match: props.props.match.params.query } },
+            { FirstName: { match: props.match.params.query } },
+            { LastName: { match: props.match.params.query } },
           ],
         },
       },
@@ -30,28 +31,30 @@ export default function Search({ ...props }) {
 
   useEffect(() => {
     trainerQuery().then((r) => setTrainers(r));
-  }, [props.props.match.params.query]);
+  }, [props.match.params.query]);
 
   return (
-    <div>
-      <Container
-        style={{ backgroundColor: "white", padding: "20px", maxWidth: "none" }}
-      >
-        {trainers.map((trainer, idx) => {
-          console.log(trainer);
-          return <ProfileCard key={idx} profile={trainer} />;
-        })}
-      </Container>
+    <div style={{ padding: "20px" }}>
+      <Grid container direction="row">
+        <Grid item xs={12} sm={3}>
+          <Typography variant="h1">
+            {"Results for: " + props.match.params.query}
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sm={9}>
+          {trainers.map((trainer, idx) => {
+            return <ProfileCard key={idx} profile={trainer} />;
+          })}
+        </Grid>
+      </Grid>
     </div>
   );
 }
 
 Search.propTypes = {
-  props: PropTypes.shape({
-    match: PropTypes.shape({
-      params: PropTypes.shape({
-        query: PropTypes.string.isRequired,
-      }),
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      query: PropTypes.string.isRequired,
     }),
   }),
 };

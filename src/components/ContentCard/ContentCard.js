@@ -8,11 +8,13 @@ import { Storage } from "aws-amplify";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import CardActionArea from "@material-ui/core/CardActionArea";
-import TrainerAvatar from "../TrainerAvatar/TrainerAvatar";
+import UserAvatar from "../UserAvatar/UserAvatar";
+import Button from "@material-ui/core/Button";
 
 export default function ContentCard({ ...props }) {
   const [img, setImg] = useState();
   const [liked, setLiked] = useState(false);
+  console.log(props);
 
   useEffect(() => {
     props.favorite ? setLiked(true) : setLiked(false);
@@ -45,7 +47,7 @@ export default function ContentCard({ ...props }) {
           </Grid>
         </Grid>
         <Grid item container xs>
-          <CardActionArea onClick={props.clickCallback}>
+          <CardActionArea onClick={() => props.clickCallback(props.post.id)}>
             {img && (
               <CardMedia
                 image={img}
@@ -56,21 +58,34 @@ export default function ContentCard({ ...props }) {
           </CardActionArea>
         </Grid>
         <Grid item container xs>
-          {props.UserImage && (
-            <Grid item xs>
-              <TrainerAvatar UserImage={props.UserImage} />
-            </Grid>
+          {props.showTrainer && (
+            <>
+              <Grid item xs>
+                <UserAvatar UserImage={props.UserImage} />
+              </Grid>
+              <Grid item xs>
+                <Typography variant="body2">
+                  {props.user.FirstName + " " + props.user.LastName}
+                </Typography>
+              </Grid>
+            </>
           )}
-          <Grid item xs>
-            <Typography variant="body2">
-              {props.user.FirstName + " " + props.user.LastName}
-            </Typography>
-          </Grid>
           <Grid item xs>
             <Typography variant="body2">
               {new Date(props.post.createdAt).toDateString()}
             </Typography>
           </Grid>
+          {props.post.owner === props.user.id && (
+            <Grid item xs>
+              <Button
+                onClick={() => {
+                  props.editCallback(props.post.id);
+                }}
+              >
+                Edit
+              </Button>
+            </Grid>
+          )}
         </Grid>
       </Grid>
     </Card>
@@ -83,13 +98,17 @@ ContentCard.propTypes = {
     Description: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
     Thumbnail: PropTypes.string.isRequired,
+    owner: PropTypes.string.isRequired,
   }),
   user: PropTypes.shape({
     FirstName: PropTypes.string.isRequired,
     LastName: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
   }),
   UserImage: PropTypes.string,
   favorite: PropTypes.object,
   favoriteCallback: PropTypes.func.isRequired,
+  editCallback: PropTypes.func,
   clickCallback: PropTypes.func,
+  showTrainer: PropTypes.bool,
 };
