@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Card, CardMedia, Grid, Typography } from "@material-ui/core";
 import { Storage } from "aws-amplify";
 import { useHistory } from "react-router-dom";
-import CardActionArea from "@material-ui/core/CardActionArea";
+import { CardActionArea, Typography } from "@material-ui/core";
 import TrainerMetrics from "../TrainerMetrics/TrainerMetrics";
+import {
+  GridContainer,
+  GridItem,
+  CardStyled,
+  CardIcon,
+} from "../StyledComponets/StyledComponets";
 
 const ProfileCard = ({ ...props }) => {
   const [img, setImg] = useState();
@@ -21,39 +26,34 @@ const ProfileCard = ({ ...props }) => {
   };
 
   return (
-    <Card>
+    <CardStyled>
       <CardActionArea onClick={link}>
-        <Grid container direction="row">
-          <Grid item xs={1}>
-            {img && (
-              <CardMedia
-                image={img}
-                style={{ height: "100px", width: "100px", paddingTop: "2%" }}
-              />
-            )}
-          </Grid>
-          <Grid item container direction="column" xs={5}>
-            <Grid item>
+        <GridContainer direction="row">
+          <GridItem xs={4} sm={2}>
+            <CardIcon src={img} />
+          </GridItem>
+          <GridContainer item direction="column" xs={8} sm={4}>
+            <GridItem>
               <Typography variant="h3">
                 {props.profile.FirstName + " " + props.profile.LastName}
               </Typography>
-            </Grid>
-            <Grid item>
+            </GridItem>
+            <GridItem>
               <Typography variant="body1">
                 {props.profile.Description}
               </Typography>
-            </Grid>
-          </Grid>
-          <Grid item xs={6}>
+            </GridItem>
+          </GridContainer>
+          <GridItem xs={12} sm={6}>
             <TrainerMetrics
               weight={props.profile.Weight}
               height={props.profile.Height}
               birthday={props.profile.Birthday}
             />
-          </Grid>
-        </Grid>
+          </GridItem>
+        </GridContainer>
       </CardActionArea>
-    </Card>
+    </CardStyled>
   );
 };
 

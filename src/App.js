@@ -18,6 +18,7 @@ import Footer from "./components/Footer/Footer";
 import { Container, Dialog, DialogContent } from "@material-ui/core";
 import PrivateRoute from "./components/Routes/PrivateRoute";
 import PublicRoute from "./components/Routes/PublicRoute";
+import CssBaseline from "@material-ui/core/CssBaseline";
 
 // amplify config
 Amplify.configure(awsconfig);
@@ -107,6 +108,7 @@ const App = () => {
   return (
     <Elements stripe={stripePromise}>
       <MuiThemeProvider theme={theme}>
+        <CssBaseline />
         <BrowserRouter>
           <Container maxWidth={false} disableGutters={true}>
             <Header user={user} onContentUpload={handleOpenContentUpload} />

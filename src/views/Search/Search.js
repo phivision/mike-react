@@ -34,14 +34,14 @@ export default function Search({ ...props }) {
   }, [props.match.params.query]);
 
   return (
-    <div>
-      <Grid direction="row">
-        <Grid item xs={3}>
+    <div style={{ padding: "20px" }}>
+      <Grid container direction="row">
+        <Grid item xs={12} sm={3}>
           <Typography variant="h1">
             {"Results for: " + props.match.params.query}
           </Typography>
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={12} sm={9}>
           {trainers.map((trainer, idx) => {
             return <ProfileCard key={idx} profile={trainer} />;
           })}

@@ -13,7 +13,7 @@ import {
 
 const headerStyle = () => ({
   appBar: {
-    backgroundColor: "transparent",
+    backgroundColor: whiteColor,
     boxShadow: "none",
     borderBottom: "0",
     marginBottom: "0",
@@ -31,7 +31,7 @@ const headerStyle = () => ({
   },
   container: {
     ...container,
-    minHeight: "100px",
+    minHeight: "50px",
     backgroundColor: "white",
     marginLeft: "30px",
     marginRight: "30px",

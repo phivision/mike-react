@@ -1,33 +1,25 @@
 import React from "react";
-import { Link, useHistory } from "react-router-dom";
-import { AppBar, Toolbar, Button, Icon, IconButton } from "@material-ui/core";
-import styled from "styled-components";
-import SearchBar from "material-ui-search-bar";
+import { useHistory } from "react-router-dom";
+import { Icon, IconButton } from "@material-ui/core";
 import logo from "../../assets/img/logo.jpg";
 import PropTypes from "prop-types";
 import { userRoles } from "../../variables/userRoles";
 import { headerRoutes } from "routes";
+import {
+  AppHeader,
+  CustomButton,
+  SearchButton,
+  Bars,
+  LogoLink,
+  Nav,
+  AttriTitle,
+} from "../StyledComponets/StyledComponets";
 
-const SearchButton = styled(SearchBar)`
-  &&& {
-    margin-right: 20px;
-    background-color: #eaeef1;
-    box-shadow: none;
-    border-radius: 20px;
-    min-width: 300px;
-    .MuiIconButton-label {
-      color: #5dcbcb;
-    }
-  }
-`;
-
-const SignUpLink = ({ className }) => {
+const SignUpLink = () => {
   return (
-    <Link to="/signup/trainer">
-      <Button variant="contained" className={className}>
-        Coach on Mike
-      </Button>
-    </Link>
+    <Nav to="/signup/trainer">
+      <CustomButton>Coach on Mike</CustomButton>
+    </Nav>
   );
 };
 
@@ -37,21 +29,21 @@ SignUpLink.propTypes = {
 
 const SignInLink = () => {
   return (
-    <Link to="/signin" variant="h3">
-      Log In
-    </Link>
+    <Nav to="/signin" variant="h3">
+      <AttriTitle>Log In</AttriTitle>
+    </Nav>
   );
 };
 
 const UserIcon = ({ route }) => {
   return (
-    <Link to={route.path} key={route.name}>
+    <Nav to={route.path} key={route.name}>
       {typeof route.icon === "string" ? (
         <Icon>{route.icon}</Icon>
       ) : (
         <route.icon />
       )}
-    </Link>
+    </Nav>
   );
 };
 
@@ -77,17 +69,17 @@ export default function Header(props) {
 
   const ContentUploadButton = () => {
     return (
-      <Button onClick={handleOpenContentUpload} variant="contained">
+      <CustomButton onClick={handleOpenContentUpload}>
         Upload Content
-      </Button>
+      </CustomButton>
     );
   };
 
   const Logo = () => {
     return (
-      <Link to="/">
+      <LogoLink to="/">
         <img src={logo} alt="logo" />
-      </Link>
+      </LogoLink>
     );
   };
 
@@ -104,8 +96,8 @@ export default function Header(props) {
   };
 
   return (
-    <AppBar style={{ position: "static" }}>
-      <Toolbar>
+    <AppHeader>
+      <Bars>
         <Logo />
         {userRole === userRoles.STUDENT || userRole === userRoles.UNKNOWN ? (
           <SearchButton
@@ -128,8 +120,8 @@ export default function Header(props) {
             <SignUpLink />
           </>
         ) : null}
-      </Toolbar>
-    </AppBar>
+      </Bars>
+    </AppHeader>
   );
 }
 
