@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import PropTypes from "prop-types";
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  Grid,
-  Typography,
-} from "@material-ui/core";
+import { Button, Grid, Typography } from "@material-ui/core";
 import ContentCard from "../../components/ContentCard/ContentCard";
 import WorkoutCard from "../../components/WorkoutCard/WorkoutCard";
 import Banner from "assets/img/banner.jpeg";
@@ -18,14 +12,13 @@ import EditableTypography from "../../components/EditableTypography/EditableTypo
 import Container from "@material-ui/core/Container";
 import IconButton from "@material-ui/core/IconButton";
 import { userRoles } from "../../variables/userRoles";
-import ContentUpload from "../ContentUpload/ContentUpload";
 
 // import initial profile
 const initialProfileState = {
   id: "",
   Birthday: null,
   Height: null,
-  UserImage: "",
+  UserImage: null,
   LastName: "",
   FirstName: "",
   Weight: null,
@@ -45,6 +38,7 @@ const deleteUserFavoriteContent = /* GraphQL */ `
           items {
             Content {
               id
+              ContentName
               Title
               Thumbnail
               createdAt
@@ -68,6 +62,7 @@ const createUserFavoriteContent = /* GraphQL */ `
           items {
             Content {
               id
+              ContentName
               Title
               Thumbnail
               createdAt
@@ -90,6 +85,7 @@ const userProfileQuery = `query GetUserProfile ($id: ID!) {
                   Contents {
                     items {
                       id
+                      ContentName
                       Description
                       Title
                       createdAt
@@ -112,6 +108,7 @@ const userProfileQuery = `query GetUserProfile ($id: ID!) {
               items {
                 Content {
                   id
+                  ContentName
                   Title
                   Thumbnail
                   createdAt
@@ -134,6 +131,7 @@ const trainerProfileQuery = `query GetUserProfile ($id: ID!) {
             Contents {
               items {
                 id
+                ContentName
                 Description
                 Title
                 createdAt
@@ -149,6 +147,7 @@ const trainerProfileQuery = `query GetUserProfile ($id: ID!) {
               items {
                 Content {
                   id
+                  ContentName
                   Title
                   Thumbnail
                   createdAt
@@ -170,22 +169,10 @@ const trainerProfileQuery = `query GetUserProfile ($id: ID!) {
 export default function UserFeed({ ...props }) {
   const [profile, setProfile] = useState(initialProfileState);
   const [subscriptions, setSubscriptions] = useState([]);
-  const [content, setContent] = useState([]);
+  const [contents, setContents] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [edit, setEdit] = useState(false);
-  const [activeVideo, setActiveVideo] = useState("");
-  const [openContentEdit, setOpenContentEdit] = React.useState(false);
   const history = useHistory();
-
-  const handleOpenContentEdit = () => {
-    setOpenContentEdit(true);
-  };
-
-  const handleCloseContentEdit = () => {
-    setOpenContentEdit(false);
-    // after close the dialog, update the feed
-    trainerQuery();
-  };
 
   const onChange = (e) => {
     switch (e.target.id) {
@@ -244,23 +231,6 @@ export default function UserFeed({ ...props }) {
     }
   };
 
-  const ContentEditDialog = () => {
-    const body = (
-      <DialogContent>
-        <ContentUpload
-          user={props.user.id}
-          video={activeVideo}
-          onClose={handleCloseContentEdit}
-        />
-      </DialogContent>
-    );
-    return (
-      <Dialog open={openContentEdit} fullWidth maxWidth="md">
-        {body}
-      </Dialog>
-    );
-  };
-
   const handleImageChange = async (e) => {
     if (!e.target.files[0]) return;
     const nameArray = e.target.files[0].name.split(".");
@@ -274,7 +244,7 @@ export default function UserFeed({ ...props }) {
     setProfile({ ...profile, UserImage: userImageName });
   };
 
-  async function userQuery() {
+  const userQuery = async () => {
     API.graphql(graphqlOperation(userProfileQuery, { id: props.user.id }))
       .then((d) => {
         const { Subscriptions, Favorites, ...p } = d.data.getUserProfile;
@@ -284,9 +254,9 @@ export default function UserFeed({ ...props }) {
         setSubscriptions(Subscriptions.items);
       })
       .catch(console.log);
-  }
+  };
 
-  const trainerQuery = () => {
+  const trainerQuery = async () => {
     API.graphql(graphqlOperation(trainerProfileQuery, { id: props.user.id }))
       .then((d) => {
         const { Contents, Favorites, ...p } = d.data.getUserProfile;
@@ -311,24 +281,14 @@ export default function UserFeed({ ...props }) {
 
   useEffect(() => {
     console.log("sorting...");
-    setSortedContent(content);
-  }, [content.length]);
+    setSortedContent(contents);
+  }, [contents.length]);
 
-  const setSortedContent = (content) => {
-    const sorted = content.sort((a, b) => {
+  const setSortedContent = (contents) => {
+    const sorted = contents.sort((a, b) => {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
-    setContent(sorted);
-  };
-
-  const editPost = (id) => {
-    setActiveVideo(id);
-    handleOpenContentEdit();
-  };
-
-  //TODO: Add open content callback
-  const openContent = (id) => {
-    console.log(id);
+    setContents(sorted);
   };
 
   return (
@@ -464,7 +424,7 @@ export default function UserFeed({ ...props }) {
           <Grid item>
             <Typography variant="h1">Feed</Typography>
           </Grid>
-          {content.map((c, idx) => {
+          {contents.map((c, idx) => {
             let f = favorites.findIndex((e) => e.Content.id === c.id);
             return (
               <ContentCard
@@ -473,14 +433,12 @@ export default function UserFeed({ ...props }) {
                 user={profile}
                 favorite={favorites[f]}
                 segments={c.Segments}
-                clickCallback={openContent}
-                editCallback={editPost}
+                onCloseEditor={trainerQuery}
                 favoriteCallback={editFavorite}
                 key={idx}
               />
             );
           })}
-          <ContentEditDialog />
         </Grid>
         <Grid item container direction="column" xs={4}>
           <Grid item>
@@ -493,8 +451,6 @@ export default function UserFeed({ ...props }) {
                 user={profile}
                 favorite={fav}
                 segments={fav.Content.Segments}
-                clickCallback={openContent}
-                editCallback={editPost}
                 favoriteCallback={editFavorite}
                 key={idx}
               />

@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ImageButton(image) {
+export default function ImageInput(image) {
   const classes = useStyles();
   return (
     <ButtonBase
@@ -112,13 +112,14 @@ export default function ImageButton(image) {
           accept={image.accept}
           inputRef={image.inputRef}
           onChange={image.onChange}
+          hidden
         />
       </span>
     </ButtonBase>
   );
 }
 
-ImageButton.propTypes = {
+ImageInput.propTypes = {
   title: PropTypes.string,
   width: PropTypes.string,
   url: PropTypes.string.isRequired,

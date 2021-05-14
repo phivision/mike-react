@@ -13,7 +13,7 @@ import UserFeed from "views/UserFeed/UserFeed.js";
 import LandingPage from "views/LandingPage/LandingPage.js";
 import Home from "views/Home/Home.js";
 import Search from "views/Search/Search.js";
-import ContentUpload from "./views/ContentUpload/ContentUpload";
+import ContentUpload from "./components/ContentUpload/ContentUpload";
 import SignIn from "views/Auth/SignIn.js";
 import SignUp from "views/Auth/SignUp.js";
 import Verify from "views/Auth/Verify.js";
