@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import PropTypes from "prop-types";
 import { Button, Grid, Typography } from "@material-ui/core";
-import ContentCard from "../../components/ContentCard/ContentCard";
-import WorkoutCard from "../../components/WorkoutCard/WorkoutCard";
+import ContentCard from "../../components/Card/ContentCard";
+import WorkoutCard from "../../components/Card/WorkoutCard";
 import Banner from "assets/img/banner.jpeg";
 import { updateUserProfile } from "../../graphql/mutations";
 import { useHistory } from "react-router-dom";
@@ -430,7 +430,7 @@ export default function UserFeed({ ...props }) {
               <ContentCard
                 post={c}
                 UserImage={c.Creator.UserImage}
-                user={profile}
+                trainer={profile}
                 favorite={favorites[f]}
                 segments={c.Segments}
                 onCloseEditor={trainerQuery}
@@ -448,7 +448,7 @@ export default function UserFeed({ ...props }) {
             return (
               <WorkoutCard
                 post={fav.Content}
-                user={profile}
+                trainer={profile}
                 favorite={fav}
                 segments={fav.Content.Segments}
                 favoriteCallback={editFavorite}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
-import { Card, Grid, Typography } from "@material-ui/core";
+import { Card, CardMedia, Typography } from "@material-ui/core";
 import { FavoriteBorder } from "@material-ui/icons";
 
 import { API, graphqlOperation, Storage } from "aws-amplify";
@@ -16,6 +16,8 @@ import { deleteVideo } from "../../utilities/VideoTools";
 import empty from "assets/img/empty.jpg";
 import { deleteUserContent } from "../../graphql/mutations";
 import CustomDialog from "../Dialog/CustomDialog";
+import GridContainer from "../Grid/GridContainer";
+import GridItem from "../Grid/GridItem";
 
 export default function ContentCard(props) {
   const [img, setImg] = useState(empty);
@@ -78,14 +80,16 @@ export default function ContentCard(props) {
     }
   }, [props.post.Thumbnail]);
 
+  const headerCol = props.favoriteCallback ? 9 : 12;
+  const footerCol = props.post.owner === props.trainer.id ? 4 : 12;
   return (
     <Card>
-      <Grid container direction="column">
-        <Grid item container xs>
-          <Grid item xs>
-            <Typography variant="h3">{props.post.Description}</Typography>
-          </Grid>
-          <Grid item xs>
+      <GridContainer>
+        <GridItem xs={headerCol}>
+          <Typography variant="h3">{props.post.Description}</Typography>
+        </GridItem>
+        <GridItem xs={3}>
+          {props.favoriteCallback && (
             <IconButton
               aria-label="favorite this post"
               color="primary"
@@ -96,56 +100,53 @@ export default function ContentCard(props) {
             >
               {liked ? <FavoriteIcon /> : <FavoriteBorder />}
             </IconButton>
-          </Grid>
-        </Grid>
-        <Grid item container xs>
-          <ImageButton
-            url={img}
-            title={props.post.Title}
-            onClick={handleOpenViewer}
-            width="50%"
-          />
-        </Grid>
-        <Grid item container xs>
-          {props.showTrainer && (
-            <>
-              <Grid item xs>
-                <UserAvatar UserImage={props.UserImage} />
-              </Grid>
-              <Grid item xs>
-                <Typography variant="body2">
-                  {props.user.FirstName + " " + props.user.LastName}
-                </Typography>
-              </Grid>
-            </>
           )}
-          <Grid item xs>
-            <Typography variant="body2">
-              {new Date(props.post.createdAt).toDateString()}
-            </Typography>
-          </Grid>
-          {props.post.owner === props.user.id && (
-            <Grid item xs>
+        </GridItem>
+        <GridItem xs={12}>
+          {props.post.ContentName ? (
+            <ImageButton url={img} onClick={handleOpenViewer} width="100%" />
+          ) : (
+            <Card>
+              <CardMedia
+                style={{ height: "150px" }}
+                image={img}
+                title={props.post.Title}
+              />
+            </Card>
+          )}
+        </GridItem>
+        {props.showTrainer && (
+          <>
+            <GridItem xs={6}>
+              <UserAvatar UserImage={props.UserImage} />
+            </GridItem>
+            <GridItem xs={6}>
+              <Typography variant="body2">
+                {props.trainer.FirstName + " " + props.trainer.LastName}
+              </Typography>
+            </GridItem>
+          </>
+        )}
+        <GridItem xs={footerCol}>
+          <Typography variant="body2">
+            {new Date(props.post.createdAt).toDateString()}
+          </Typography>
+        </GridItem>
+        {props.post.owner === props.trainer.id && (
+          <>
+            <GridItem xs={4}>
               <Button onClick={handleOpenContentEdit}>Edit</Button>
-            </Grid>
-          )}
-          {props.post.owner === props.user.id && (
-            <Grid item xs>
+            </GridItem>
+            <GridItem xs={4}>
               <Button onClick={handleOpenDeletion}>Delete</Button>
-            </Grid>
-          )}
-        </Grid>
-      </Grid>
+            </GridItem>
+          </>
+        )}
+      </GridContainer>
       <ViewerDialog
         post={props.post}
         onClose={handleCloseViewer}
         open={openViewer}
-      />
-      <UploadDialog
-        user={props.user.id}
-        open={openContentEdit}
-        video={props.post.id}
-        onClose={handleCloseContentEdit}
       />
       <CustomDialog
         open={openDeletionDialog}
@@ -156,6 +157,12 @@ export default function ContentCard(props) {
         onClickYes={handleContentDelete}
         onClickNo={handleCloseDeletion}
       />
+      <UploadDialog
+        user={props.trainer.id}
+        open={openContentEdit}
+        video={props.post.id}
+        onClose={handleCloseContentEdit}
+      />
     </Card>
   );
 }
@@ -165,19 +172,19 @@ ContentCard.propTypes = {
     id: PropTypes.string.isRequired,
     Description: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
-    Thumbnail: PropTypes.string.isRequired,
+    Thumbnail: PropTypes.string,
     ContentName: PropTypes.string.isRequired,
     Title: PropTypes.string,
     owner: PropTypes.string.isRequired,
   }),
-  user: PropTypes.shape({
-    FirstName: PropTypes.string.isRequired,
-    LastName: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
+  trainer: PropTypes.shape({
+    FirstName: PropTypes.string,
+    LastName: PropTypes.string,
+    id: PropTypes.string,
   }),
   UserImage: PropTypes.string,
   favorite: PropTypes.object,
   onCloseEditor: PropTypes.func,
-  favoriteCallback: PropTypes.func.isRequired,
+  favoriteCallback: PropTypes.func,
   showTrainer: PropTypes.bool,
 };
