@@ -100,7 +100,6 @@ export const Nav = styled(Link)`
 
 export const CustomIcon = styled(IconButton).attrs({
   size: "small",
-  color: "action",
 })`
   width: 36px;
   height: 36px;
@@ -112,14 +111,12 @@ export const CustomIcon = styled(IconButton).attrs({
 
 export const SetIcon = styled(SettingsIcon).attrs({
   fontSize: "large",
-  color: "action",
 })`
   font-size: 30px;
 `;
 
 export const UserIcon = styled(Person).attrs({
   fontSize: "large",
-  color: "action",
 })`
   font-size: 30px;
 `;
