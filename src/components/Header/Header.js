@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { Icon } from "@material-ui/core";
 import logo from "../../assets/img/logo.jpg";
 import PropTypes from "prop-types";
@@ -37,9 +37,11 @@ const SignInLink = () => {
 };
 
 const UserIcon = ({ route }) => {
+  const location = useLocation();
+  let color = location.pathname === route.path ? "primary" : "action";
   return (
     <Nav to={route.path} key={route.name}>
-      <CustomIcon>
+      <CustomIcon color={color}>
         {typeof route.icon === "string" ? (
           <Icon>{route.icon}</Icon>
         ) : (
@@ -91,8 +93,10 @@ export default function Header(props) {
   };
 
   const SettingButton = () => {
+    const location = useLocation();
+    let color = location.pathname === "/settings/" ? "primary" : "action";
     return (
-      <CustomIcon onClick={() => history.push("/settings/")}>
+      <CustomIcon color={color} onClick={() => history.push("/settings/")}>
         {typeof headerRoutes.settings.icon === "string" ? (
           <Icon>{headerRoutes.settings.icon}</Icon>
         ) : (
