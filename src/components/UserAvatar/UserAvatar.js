@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Storage } from "aws-amplify";
 import { Avatar } from "@material-ui/core";
 import PropTypes from "prop-types";
-import avatar from "assets/img/faces/marc.jpg";
+import avatar from "assets/img/faces/blank.png";
 
 const UserAvatar = ({ UserImage: UserImage, ...p }) => {
   const [UserURL, setURL] = useState("");
