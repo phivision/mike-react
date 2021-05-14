@@ -11,11 +11,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import { IconButton } from "@material-ui/core";
 // amplify components
 import { API, Storage, graphqlOperation } from "aws-amplify";
-import {
-  createUserContent,
-  deleteUserContent,
-  updateUserContent,
-} from "graphql/mutations";
+import { createUserContent, updateUserContent } from "graphql/mutations";
 import { getUserContent } from "graphql/queries";
 // resources
 import empty from "assets/img/empty.jpg";
@@ -311,25 +307,6 @@ export default function ContentUpload(props) {
               <Button color="primary" onClick={handleVideoUpload}>
                 Upload Content
               </Button>
-              {videoReady ? (
-                <Button
-                  color="primary"
-                  onClick={() => {
-                    deleteVideo(videoForm.ContentName, videoForm.Thumbnail).then(
-                      () => {
-                        // delete content from database
-                        API.graphql(
-                          graphqlOperation(deleteUserContent, {
-                            input: { id: videoForm.id },
-                          })
-                        ).then(props.onClose);
-                      }
-                    );
-                  }}
-                >
-                  Delete Video
-                </Button>
-              ) : null}
             </div>
           </GridItem>
           <GridItem xs={6}>

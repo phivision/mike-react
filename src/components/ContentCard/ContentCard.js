@@ -15,12 +15,14 @@ import UploadDialog from "../../views/ContentUpload/UploadDialog";
 import { deleteVideo } from "../../utilities/VideoTools";
 import empty from "assets/img/empty.jpg";
 import { deleteUserContent } from "../../graphql/mutations";
+import CustomDialog from "../Dialog/CustomDialog";
 
 export default function ContentCard(props) {
   const [img, setImg] = useState(empty);
   const [liked, setLiked] = useState(false);
   const [openViewer, setOpenViewer] = React.useState(false);
   const [openContentEdit, setOpenContentEdit] = React.useState(false);
+  const [openDeletionDialog, setDeletionDialog] = React.useState(false);
 
   const handleOpenContentEdit = () => {
     setOpenContentEdit(true);
@@ -39,6 +41,14 @@ export default function ContentCard(props) {
     setOpenViewer(false);
   };
 
+  const handleOpenDeletion = () => {
+    setDeletionDialog(true);
+  };
+
+  const handleCloseDeletion = () => {
+    setDeletionDialog(false);
+  };
+
   const handleContentDelete = () => {
     deleteVideo(props.post.ContentName, props.post.Thumbnail).then(() => {
       // delete content from database
@@ -50,6 +60,7 @@ export default function ContentCard(props) {
         if (liked) {
           props.favoriteCallback(props.favorite, props.post.id);
         }
+        handleCloseDeletion();
         props.onCloseEditor();
       });
     });
@@ -120,7 +131,7 @@ export default function ContentCard(props) {
           )}
           {props.post.owner === props.user.id && (
             <Grid item xs>
-              <Button onClick={handleContentDelete}>Delete</Button>
+              <Button onClick={handleOpenDeletion}>Delete</Button>
             </Grid>
           )}
         </Grid>
@@ -135,6 +146,15 @@ export default function ContentCard(props) {
         open={openContentEdit}
         video={props.post.id}
         onClose={handleCloseContentEdit}
+      />
+      <CustomDialog
+        open={openDeletionDialog}
+        title="Video Deletion Alert"
+        text="The video will be completely delete and you may not be able to recover it,
+          do you still want to delete it?"
+        onClose={handleCloseDeletion}
+        onClickYes={handleContentDelete}
+        onClickNo={handleCloseDeletion}
       />
     </Card>
   );
