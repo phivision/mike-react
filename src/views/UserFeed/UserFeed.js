@@ -173,8 +173,6 @@ export default function UserFeed({ ...props }) {
   const [favorites, setFavorites] = useState([]);
   const [edit, setEdit] = useState(false);
   const history = useHistory();
-  const query =
-    props.user.role === userRoles.STUDENT ? userQuery : trainerQuery;
 
   const onChange = (e) => {
     switch (e.target.id) {
@@ -246,7 +244,7 @@ export default function UserFeed({ ...props }) {
     setProfile({ ...profile, UserImage: userImageName });
   };
 
-  async function userQuery() {
+  const userQuery = async () => {
     API.graphql(graphqlOperation(userProfileQuery, { id: props.user.id }))
       .then((d) => {
         const { Subscriptions, Favorites, ...p } = d.data.getUserProfile;
@@ -256,9 +254,9 @@ export default function UserFeed({ ...props }) {
         setSubscriptions(Subscriptions.items);
       })
       .catch(console.log);
-  }
+  };
 
-  async function trainerQuery() {
+  const trainerQuery = async () => {
     API.graphql(graphqlOperation(trainerProfileQuery, { id: props.user.id }))
       .then((d) => {
         const { Contents, Favorites, ...p } = d.data.getUserProfile;
@@ -267,7 +265,7 @@ export default function UserFeed({ ...props }) {
         setSortedContent(Contents.items);
       })
       .catch(console.log);
-  }
+  };
 
   useEffect(() => {
     let temp = [];
@@ -278,7 +276,7 @@ export default function UserFeed({ ...props }) {
   }, [subscriptions]);
 
   useEffect(() => {
-    query();
+    props.user.role === userRoles.STUDENT ? userQuery() : trainerQuery();
   }, []);
 
   useEffect(() => {
@@ -435,7 +433,7 @@ export default function UserFeed({ ...props }) {
                 user={profile}
                 favorite={favorites[f]}
                 segments={c.Segments}
-                onCloseEditor={query}
+                onCloseEditor={trainerQuery}
                 favoriteCallback={editFavorite}
                 key={idx}
               />
