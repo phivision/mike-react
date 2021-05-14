@@ -10,16 +10,19 @@ import {
   CardStyled,
   CardIcon,
 } from "../StyledComponets/StyledComponets";
+import avatar from "assets/img/faces/blank.png";
 
 const ProfileCard = ({ ...props }) => {
-  const [img, setImg] = useState();
+  const [img, setImg] = useState(avatar);
   let history = useHistory();
 
   useEffect(() => {
-    Storage.get(props.profile.UserImage).then((d) => {
-      setImg(d);
-    });
-  }, [props]);
+    if (props.profile.UserImage) {
+      Storage.get(props.profile.UserImage).then((d) => {
+        setImg(d);
+      });
+    }
+  }, [props.profile.UserImage]);
 
   const link = () => {
     history.push("/landingpage/" + props.profile.id);
