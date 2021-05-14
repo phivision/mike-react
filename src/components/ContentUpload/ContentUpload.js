@@ -25,11 +25,14 @@ import SegmentEditor from "./SegmentEditor";
 import CustomDialog from "../Dialog/CustomDialog";
 import { Checkbox, FormControlLabel } from "@material-ui/core";
 import Input from "@material-ui/core/Input";
+// local components
+import { checkS3PrefixReady, deleteVideo } from "../../utilities/VideoTools";
 // the video transcoder will generate a number of files in prefix
 const videoTranscodeCount = 12;
 
 const initialVideoForm = {
   id: "",
+  PrevContentName: null,
   ContentName: "",
   Description: "",
   Title: "",
@@ -37,26 +40,6 @@ const initialVideoForm = {
   createdAt: "",
   Thumbnail: "",
   Segments: JSON.stringify([]),
-};
-
-const deleteS3Prefix = async (videoName, prefix) => {
-  await Storage.list(videoName + "/", {
-    customPrefix: {
-      public: prefix,
-    },
-  })
-    .then((files) => {
-      files.map((file) => {
-        Storage.remove(file.key, {
-          customPrefix: {
-            public: prefix,
-          },
-        });
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
 };
 
 // global video file handler
@@ -160,11 +143,16 @@ export default function ContentUpload(props) {
     videoFile = event.target.files[0];
     // combine filename with owner id and remove non alphanumeric value from the string
     const fileName = videoFile.name.split(".");
-    const contentName =
+    const newContentName =
       (fileName[0] + props.user + Date.now()).replace(/[^0-9a-z]/gi, "") +
       "." +
       fileName[1];
-    setVideoForm({ ...videoForm, ContentName: contentName });
+    const prevContentName = videoForm.ContentName;
+    setVideoForm({
+      ...videoForm,
+      PrevContentName: prevContentName,
+      ContentName: newContentName,
+    });
   };
   const handleSegmentJSONChange = (s) => {
     setVideoForm({ ...videoForm, Segments: JSON.stringify(s) });
@@ -209,7 +197,9 @@ export default function ContentUpload(props) {
     if (props.video) {
       if (videoFile && thumbFile) {
         // if new video ready, delete existing video
-        deleteVideo(props.video).then(uploadVideo);
+        deleteVideo(videoForm.PrevContentName, videoForm.Thumbnail).then(
+          uploadVideo
+        );
       }
       // if new video is not ready, update other attributes
       // update database attributes
@@ -272,50 +262,6 @@ export default function ContentUpload(props) {
     }
   }
 
-  const checkS3PrefixReady = async (fileName, prefix) => {
-    const videoName = fileName.split(".")[0];
-    // ready true if video is ready, false if not
-    return await Promise.all([
-      Storage.list(videoName + "/", {
-        customPrefix: {
-          public: prefix,
-        },
-      }),
-      Storage.list(videoName + ".m3u8", {
-        customPrefix: {
-          public: "output/hls/",
-        },
-      }),
-    ]);
-  };
-
-  async function deleteVideo() {
-    await Promise.all([
-      // delete S3 storage output m3u8
-      Storage.remove(videoForm.ContentName + ".m3u8", {
-        customPrefix: {
-          public: "output/hls/",
-        },
-      }),
-      // delete S3 storage output mpd
-      Storage.remove(videoForm.ContentName + ".mpd", {
-        customPrefix: {
-          public: "output/dash/",
-        },
-      }),
-      // delete S3 storage output videos
-      deleteS3Prefix(videoForm.ContentName, "output/hls/"),
-      deleteS3Prefix(videoForm.ContentName, "output/dash/"),
-      // delete S3 storage input video
-      Storage.remove(videoForm.ContentName, {
-        customPrefix: {
-          public: "input/",
-        },
-      }),
-      Storage.remove(videoForm.Thumbnail),
-    ]).catch(console.log);
-  }
-
   const handleVideoFormChange = (event) => {
     setVideoForm({ ...videoForm, [event.target.name]: event.target.value });
   };
@@ -369,14 +315,16 @@ export default function ContentUpload(props) {
                 <Button
                   color="primary"
                   onClick={() => {
-                    deleteVideo(videoForm.id).then(() => {
-                      // delete content from database
-                      API.graphql(
-                        graphqlOperation(deleteUserContent, {
-                          input: { id: videoForm.id },
-                        })
-                      ).then(props.onClose);
-                    });
+                    deleteVideo(videoForm.ContentName, videoForm.Thumbnail).then(
+                      () => {
+                        // delete content from database
+                        API.graphql(
+                          graphqlOperation(deleteUserContent, {
+                            input: { id: videoForm.id },
+                          })
+                        ).then(props.onClose);
+                      }
+                    );
                   }}
                 >
                   Delete Video
