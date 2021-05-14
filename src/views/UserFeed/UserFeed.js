@@ -308,7 +308,7 @@ export default function UserFeed({ ...props }) {
       />
       <StyledContent>
         <Grid item container direction="row">
-          <GridContainer item direction="column" xs={4}>
+          <GridContainer item direction="column" xs={12} sm={4}>
             <Grid
               item
               style={{
@@ -422,7 +422,7 @@ export default function UserFeed({ ...props }) {
               <></>
             )}
           </GridContainer>
-          <GridContainer item direction="column" xs={4}>
+          <GridContainer item direction="column" xs={12} sm={4}>
             <Grid item>
               <Typography variant="h1">Feed</Typography>
             </Grid>
@@ -442,7 +442,7 @@ export default function UserFeed({ ...props }) {
               );
             })}
           </GridContainer>
-          <GridContainer item direction="column" xs={4}>
+          <GridContainer item direction="column" xs={12} sm={4}>
             <Grid item>
               <Typography variant="h1">Favorite Workouts</Typography>
             </Grid>
