@@ -12,9 +12,10 @@ import Button from "@material-ui/core/Button";
 import ViewerDialog from "../../views/ContentViewer/ViewerDialog";
 import ImageButton from "../CustomButtons/ImageButton";
 import UploadDialog from "../../views/ContentUpload/UploadDialog";
+import empty from "assets/img/empty.jpg";
 
-export default function ContentCard({ ...props }) {
-  const [img, setImg] = useState();
+export default function ContentCard(props) {
+  const [img, setImg] = useState(empty);
   const [liked, setLiked] = useState(false);
   const [openViewer, setOpenViewer] = React.useState(false);
   const [openContentEdit, setOpenContentEdit] = React.useState(false);
@@ -25,6 +26,7 @@ export default function ContentCard({ ...props }) {
 
   const handleCloseContentEdit = () => {
     setOpenContentEdit(false);
+    props.onCloseEditor();
   };
 
   const handleOpenViewer = () => {
@@ -40,10 +42,18 @@ export default function ContentCard({ ...props }) {
   }, [props.favorite]);
 
   useEffect(() => {
-    Storage.get(props.post.Thumbnail).then((url) => {
-      setImg(url);
-    });
+    if (props.post.Thumbnail) {
+      Storage.get(props.post.Thumbnail).then((url) => {
+        setImg(url);
+      });
+    }
   }, [props.post.Thumbnail]);
+
+  useEffect(() => {
+    if (props.UserImage) {
+      Storage.get();
+    }
+  });
 
   return (
     <Card>
@@ -129,6 +139,7 @@ ContentCard.propTypes = {
   }),
   UserImage: PropTypes.string,
   favorite: PropTypes.object,
+  onCloseEditor: PropTypes.func,
   favoriteCallback: PropTypes.func.isRequired,
   showTrainer: PropTypes.bool,
 };

@@ -15,6 +15,8 @@ import ViewerDialog from "../../views/ContentViewer/ViewerDialog";
 import ImageButton from "../CustomButtons/ImageButton";
 import UploadDialog from "../../views/ContentUpload/UploadDialog";
 
+import empty from "assets/img/empty.jpg";
+
 const SegmentCard = ({ ...props }) => {
   return (
     <>
@@ -56,8 +58,8 @@ SegmentCard.propTypes = {
   }),
 };
 
-export default function WorkoutCard({ ...props }) {
-  const [img, setImg] = useState();
+export default function WorkoutCard(props) {
+  const [img, setImg] = useState(empty);
   const [liked, setLiked] = useState(true);
   const [segments, setSegments] = useState([]);
   const [openViewer, setOpenViewer] = React.useState(false);
@@ -69,6 +71,7 @@ export default function WorkoutCard({ ...props }) {
 
   const handleCloseContentEdit = () => {
     setOpenContentEdit(false);
+    props.onCloseEditor();
   };
 
   const handleOpenViewer = () => {
@@ -79,16 +82,16 @@ export default function WorkoutCard({ ...props }) {
     setOpenViewer(false);
   };
 
-  console.log(props);
-
   useEffect(() => {
     if (props.segments) {
       const segs = JSON.parse(props.segments);
       setSegments(segs);
     }
-    Storage.get(props.post.Thumbnail).then((url) => {
-      setImg(url);
-    });
+    if (props.post.Thumbnail) {
+      Storage.get(props.post.Thumbnail).then((url) => {
+        setImg(url);
+      });
+    }
   }, [props.post.Thumbnail, props.segments]);
 
   return (
@@ -161,6 +164,6 @@ WorkoutCard.propTypes = {
     id: PropTypes.string.isRequired,
   }),
   favorite: PropTypes.object,
+  onCloseEditor: PropTypes.func,
   favoriteCallback: PropTypes.func.isRequired,
-  editCallback: PropTypes.func,
 };

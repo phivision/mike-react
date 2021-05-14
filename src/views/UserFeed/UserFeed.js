@@ -18,7 +18,7 @@ const initialProfileState = {
   id: "",
   Birthday: null,
   Height: null,
-  UserImage: "",
+  UserImage: null,
   LastName: "",
   FirstName: "",
   Weight: null,
@@ -169,10 +169,12 @@ const trainerProfileQuery = `query GetUserProfile ($id: ID!) {
 export default function UserFeed({ ...props }) {
   const [profile, setProfile] = useState(initialProfileState);
   const [subscriptions, setSubscriptions] = useState([]);
-  const [content, setContent] = useState([]);
+  const [contents, setContents] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [edit, setEdit] = useState(false);
   const history = useHistory();
+  const query =
+    props.user.role === userRoles.STUDENT ? userQuery : trainerQuery;
 
   const onChange = (e) => {
     switch (e.target.id) {
@@ -256,7 +258,7 @@ export default function UserFeed({ ...props }) {
       .catch(console.log);
   }
 
-  const trainerQuery = () => {
+  async function trainerQuery() {
     API.graphql(graphqlOperation(trainerProfileQuery, { id: props.user.id }))
       .then((d) => {
         const { Contents, Favorites, ...p } = d.data.getUserProfile;
@@ -265,7 +267,7 @@ export default function UserFeed({ ...props }) {
         setSortedContent(Contents.items);
       })
       .catch(console.log);
-  };
+  }
 
   useEffect(() => {
     let temp = [];
@@ -276,19 +278,19 @@ export default function UserFeed({ ...props }) {
   }, [subscriptions]);
 
   useEffect(() => {
-    props.user.role === userRoles.STUDENT ? userQuery() : trainerQuery();
+    query();
   }, []);
 
   useEffect(() => {
     console.log("sorting...");
-    setSortedContent(content);
-  }, [content.length]);
+    setSortedContent(contents);
+  }, [contents.length]);
 
-  const setSortedContent = (content) => {
-    const sorted = content.sort((a, b) => {
+  const setSortedContent = (contents) => {
+    const sorted = contents.sort((a, b) => {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
-    setContent(sorted);
+    setContents(sorted);
   };
 
   return (
@@ -424,7 +426,7 @@ export default function UserFeed({ ...props }) {
           <Grid item>
             <Typography variant="h1">Feed</Typography>
           </Grid>
-          {content.map((c, idx) => {
+          {contents.map((c, idx) => {
             let f = favorites.findIndex((e) => e.Content.id === c.id);
             return (
               <ContentCard
@@ -433,6 +435,7 @@ export default function UserFeed({ ...props }) {
                 user={profile}
                 favorite={favorites[f]}
                 segments={c.Segments}
+                onCloseEditor={query}
                 favoriteCallback={editFavorite}
                 key={idx}
               />
