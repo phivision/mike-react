@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
-import { Card, Grid, Typography, ListItem } from "@material-ui/core";
+import { Grid, Typography, ListItem } from "@material-ui/core";
 
 import { Storage } from "aws-amplify";
 import Divider from "@material-ui/core/Divider";
@@ -14,6 +14,11 @@ import { FavoriteBorder } from "@material-ui/icons";
 import ViewerDialog from "../../views/ContentViewer/ViewerDialog";
 import ImageButton from "../CustomButtons/ImageButton";
 import UploadDialog from "../../views/ContentUpload/UploadDialog";
+import {
+  // GridItem,
+  GridContainer,
+  CardStyled,
+} from "../../components/StyledComponets/StyledComponets";
 
 import empty from "assets/img/empty.jpg";
 
@@ -21,7 +26,7 @@ const SegmentCard = ({ ...props }) => {
   return (
     <>
       <ListItem>
-        <Grid container>
+        <GridContainer>
           <Grid item>
             <Typography variant="h3">{props.segment.Name}</Typography>
             <Typography variant="body2">{props.segment.Timestamp}</Typography>
@@ -41,7 +46,7 @@ const SegmentCard = ({ ...props }) => {
               </Typography>
             )}
           </Grid>
-        </Grid>
+        </GridContainer>
       </ListItem>
       <Divider />
     </>
@@ -95,15 +100,10 @@ export default function WorkoutCard(props) {
   }, [props.post.Thumbnail, props.segments]);
 
   return (
-    <Card>
-      <Grid container direction="column">
-        <Grid item container xs>
-          {img && (
-            <ImageButton url={img} width="50%" onClick={handleOpenViewer} />
-          )}
-        </Grid>
-        <Grid item container xs>
-          <Grid item xs>
+    <CardStyled>
+      <GridContainer direction="row">
+        <Grid item container xs={4} direction="column">
+          <Grid item>
             <Typography variant="h3">{props.post.Title}</Typography>
           </Grid>
           {props.post.owner === props.user.id && (
@@ -132,7 +132,12 @@ export default function WorkoutCard(props) {
               })}
           </List>
         </Grid>
-      </Grid>
+        <GridContainer item xs={8}>
+          {img && (
+            <ImageButton url={img} width="100%" onClick={handleOpenViewer} />
+          )}
+        </GridContainer>
+      </GridContainer>
       <ViewerDialog
         open={openViewer}
         onClose={handleCloseViewer}
@@ -144,7 +149,7 @@ export default function WorkoutCard(props) {
         video={props.post.id}
         onClose={handleCloseContentEdit}
       />
-    </Card>
+    </CardStyled>
   );
 }
 

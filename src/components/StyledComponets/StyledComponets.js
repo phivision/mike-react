@@ -9,7 +9,10 @@ import {
   IconButton,
 } from "@material-ui/core";
 import SearchBar from "material-ui-search-bar";
-import { primaryColor } from "assets/jss/material-dashboard-react.js";
+import {
+  primaryColor,
+  contentColor,
+} from "assets/jss/material-dashboard-react.js";
 import { Link } from "react-router-dom";
 import Person from "@material-ui/icons/Person";
 import SettingsIcon from "@material-ui/icons/Settings";
@@ -129,4 +132,10 @@ export const VideoLibrary = styled(VideoLibraryIcon).attrs({
   color: "action",
 })`
   font-size: 30px;
+`;
+
+export const StyledContent = styled.div`
+  border-radius: 30px 30px 0 0;
+  margin-top: -20px;
+  background-color: ${contentColor};
 `;
