@@ -61,13 +61,15 @@ const PaymentMethod = ({ ...props }) => {
           {props.isDefault ? "Default" : "Make Default"}
         </Button>
       </Grid>
-      <Grid item>
-        <IconButton
-          onClick={() => props.deleteCallback(props.PaymentMethod.id)}
-        >
-          <DeleteOutlineIcon />
-        </IconButton>
-      </Grid>
+      {props.isDefault ? null : (
+        <Grid item>
+          <IconButton
+            onClick={() => props.deleteCallback(props.PaymentMethod.id)}
+          >
+            <DeleteOutlineIcon />
+          </IconButton>
+        </Grid>
+      )}
     </Grid>
   );
 };
