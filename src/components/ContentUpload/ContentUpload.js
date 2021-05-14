@@ -6,9 +6,6 @@ import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Button from "components/CustomButtons/Button.js";
 import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import CloseIcon from "@material-ui/icons/Close";
-import { IconButton } from "@material-ui/core";
 // amplify components
 import { API, Storage, graphqlOperation } from "aws-amplify";
 import { createUserContent, updateUserContent } from "graphql/mutations";
@@ -267,84 +264,71 @@ export default function ContentUpload(props) {
   };
 
   return (
-    <>
-      {props.isVerified ? (
-        <GridContainer>
-          <GridItem xs={3}>
-            <div>
-              <TextField
-                id="video-title"
-                label="videoTitle"
-                name="Title"
-                value={videoForm.Title || ""}
-                onChange={handleVideoFormChange}
+    <GridContainer>
+      <GridItem xs={3}>
+        <div>
+          <TextField
+            id="video-title"
+            label="videoTitle"
+            name="Title"
+            value={videoForm.Title || ""}
+            onChange={handleVideoFormChange}
+          />
+          <TextField
+            id="video-description"
+            label="videoDescription"
+            name="Description"
+            value={videoForm.Description || ""}
+            onChange={handleVideoFormChange}
+          />
+          <Input
+            type="file"
+            name="Thumbnail"
+            accept="image/*"
+            inputRef={thumbFileRef}
+            onChange={handleThumbnailChange}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={videoForm.IsDemo}
+                onChange={handleVideoDemoChange}
+                name="IsDemo"
+                color="primary"
               />
-              <TextField
-                id="video-description"
-                label="videoDescription"
-                name="Description"
-                value={videoForm.Description || ""}
-                onChange={handleVideoFormChange}
-              />
-              <Input
-                type="file"
-                name="Thumbnail"
-                accept="image/*"
-                inputRef={thumbFileRef}
-                onChange={handleThumbnailChange}
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={videoForm.IsDemo}
-                    onChange={handleVideoDemoChange}
-                    name="IsDemo"
-                    color="primary"
-                  />
-                }
-                label="Demo Video?"
-              />
-              <Button color="primary" onClick={handleVideoUpload}>
-                Upload Content
-              </Button>
-            </div>
-          </GridItem>
-          <GridItem xs={6}>
-            <ImageInput
-              title={videoStatus}
-              width="100%"
-              url={thumbURL}
-              accept="video/*"
-              inputRef={videoFileRef}
-              onChange={handleVideoFileChange}
-            />
-            <CustomDialog
-              open={openDuplicationDialog}
-              title="Video Duplication Alert"
-              text="The video has already been uploaded, do you still want to upload it?"
-              onClose={handleCloseDuplicationDialog}
-              onClickYes={handleVideoUpdate}
-              onClickNo={handleCloseDuplicationDialog}
-            />
-          </GridItem>
-          <GridItem xs={3}>
-            <SegmentEditor
-              segments={videoForm.Segments}
-              onChange={handleSegmentJSONChange}
-            />
-          </GridItem>
-        </GridContainer>
-      ) : (
-        <>
-          <Typography variant="h3">
-            Please verify your account in the settings before uploading.
-          </Typography>
-          <IconButton onClick={handleCloseContentUpload}>
-            <CloseIcon />
-          </IconButton>
-        </>
-      )}
-    </>
+            }
+            label="Demo Video?"
+          />
+          <Button color="primary" onClick={handleVideoUpload}>
+            Upload Content
+          </Button>
+        </div>
+      </GridItem>
+      <GridItem xs={6}>
+        <ImageInput
+          title={videoStatus}
+          width="100%"
+          url={thumbURL}
+          accept="video/*"
+          inputRef={videoFileRef}
+          onChange={handleVideoFileChange}
+        />
+        <CustomDialog
+          open={openDuplicationDialog}
+          title="Video Duplication Alert"
+          text="The video has already been uploaded, do you still want to upload it?"
+          onClose={handleCloseDuplicationDialog}
+          onClickYes={handleVideoUpdate}
+          onClickNo={handleCloseDuplicationDialog}
+        />
+      </GridItem>
+      <GridItem xs={3}>
+        <SegmentEditor
+          segments={videoForm.Segments}
+          onChange={handleSegmentJSONChange}
+        />
+      </GridItem>
+    </GridContainer>
   );
 }
 
@@ -352,5 +336,4 @@ ContentUpload.propTypes = {
   user: PropTypes.string,
   video: PropTypes.string,
   onClose: PropTypes.func,
-  isVerified: PropTypes.bool,
 };
