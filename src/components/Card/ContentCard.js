@@ -173,7 +173,7 @@ ContentCard.propTypes = {
     Description: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
     Thumbnail: PropTypes.string,
-    ContentName: PropTypes.string.isRequired,
+    ContentName: PropTypes.string,
     Title: PropTypes.string,
     owner: PropTypes.string.isRequired,
   }),
