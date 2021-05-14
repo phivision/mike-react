@@ -6,7 +6,6 @@ import { Grid, Typography, ListItem } from "@material-ui/core";
 import { Storage } from "aws-amplify";
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
-import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { FavoriteBorder } from "@material-ui/icons";
@@ -70,9 +69,9 @@ export default function WorkoutCard(props) {
   const [openViewer, setOpenViewer] = React.useState(false);
   const [openContentEdit, setOpenContentEdit] = React.useState(false);
 
-  const handleOpenContentEdit = () => {
-    setOpenContentEdit(true);
-  };
+  // const handleOpenContentEdit = () => {
+  //   setOpenContentEdit(true);
+  // };
 
   const handleCloseContentEdit = () => {
     setOpenContentEdit(false);
@@ -103,14 +102,14 @@ export default function WorkoutCard(props) {
     <CardStyled>
       <GridContainer direction="row">
         <Grid item container xs={4} direction="column">
-          <Grid item>
+          <Grid item xs={9}>
             <Typography variant="h3">{props.post.Title}</Typography>
           </Grid>
-          {props.post.owner === props.user.id && (
+          {/* {props.post.owner === props.user.id && (
             <Grid item xs>
               <Button onClick={handleOpenContentEdit}>Edit</Button>
             </Grid>
-          )}
+          )} */}
           <Grid item xs>
             <IconButton
               aria-label="favorite this post"
