@@ -264,6 +264,7 @@ export default function LandingPage({ ...props }) {
       >
         <Checkout
           errorCallback={checkoutError}
+          user={props.user}
           paymentMethodCallback={createSubscription}
           buttonTitle="Subscribe"
         />
