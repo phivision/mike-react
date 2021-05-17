@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Storage } from "aws-amplify";
 import PropTypes from "prop-types";
 import avatar from "assets/img/faces/blank.png";
-import CardIcon from "../../components/StyledComponets/StyledComponets";
+import { CardIcon } from "../../components/StyledComponets/StyledComponets";
 
 const UserAvatar = ({ UserImage: UserImage, ...p }) => {
   const [UserURL, setURL] = useState("");

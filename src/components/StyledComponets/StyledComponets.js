@@ -28,7 +28,7 @@ export const GridItem = styled(Grid).attrs({
   item: true,
 })`
   padding: 5px;
-  display: table-cell;
+  display: block;
 `;
 
 export const CardStyled = styled(Card)`
@@ -81,7 +81,7 @@ export const CustomButton = styled(Button).attrs({
   variant: "contained",
   color: "primary",
 })`
-  border-radius: 20px;
+  border-radius: 10px;
   font-weight: 700;
 `;
 
@@ -135,4 +135,12 @@ export const StyledContent = styled.div`
   border-radius: 30px 30px 0 0;
   margin-top: -20px;
   background-color: ${contentColor};
+`;
+
+export const ProfileBox = styled.div`
+  width: 60%;
+  margin: 0 auto;
+  position: relative;
+  top: -5%;
+  padding: 10px;
 `;

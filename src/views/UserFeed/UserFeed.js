@@ -12,10 +12,11 @@ import EditableTypography from "../../components/EditableTypography/EditableTypo
 import IconButton from "@material-ui/core/IconButton";
 import { userRoles } from "../../variables/userRoles";
 import {
-  // GridItem,
+  GridItem,
   GridContainer,
   StyledContent,
   CustomButton,
+  ProfileBox,
 } from "../../components/StyledComponets/StyledComponets";
 
 // import initial profile
@@ -309,95 +310,90 @@ export default function UserFeed({ ...props }) {
       <StyledContent>
         <Grid item container direction="row">
           <GridContainer item direction="column" xs={12} sm={4}>
-            <Grid
-              item
-              style={{
-                position: "relative",
-                top: "-5%",
-                left: "30%",
-              }}
-            >
-              {edit ? (
-                <div>
-                  <input
-                    accept="image/*"
-                    id="profile-upload"
-                    type="file"
-                    onChange={handleImageChange}
-                    style={{ display: "none" }}
-                  />
-                  <label htmlFor="profile-upload">
-                    <IconButton component="span">
-                      <UserAvatar UserImage={profile.UserImage} />
-                    </IconButton>
-                  </label>
-                </div>
-              ) : (
-                <UserAvatar UserImage={profile.UserImage} />
-              )}
-            </Grid>
-            <Grid item>
-              <EditableTypography
-                variant="h3"
-                label="First Name"
-                text={profile.FirstName}
-                edit={edit}
-                onChange={onChange}
-                id="firstName"
-                style={{ display: "inline" }}
-              />
-              <EditableTypography
-                variant="h3"
-                text={" "}
-                style={{ display: "inline" }}
-              />
-              <EditableTypography
-                variant="h3"
-                label="Last Name"
-                text={profile.LastName}
-                edit={edit}
-                onChange={onChange}
-                id="lastName"
-                style={{ display: "inline" }}
-              />
-            </Grid>
-            <Grid item variant="body1">
-              <EditableTypography
-                variant="body1"
-                edit={edit}
-                label="Description"
-                fullWidth={true}
-                onChange={onChange}
-                id="description"
-                text={profile.Description}
-              />
-            </Grid>
-            <Grid item>
-              {edit ? (
-                <Container>
-                  <Button
+            <ProfileBox>
+              <GridItem>
+                {edit ? (
+                  <div>
+                    <input
+                      accept="image/*"
+                      id="profile-upload"
+                      type="file"
+                      onChange={handleImageChange}
+                      style={{ display: "none" }}
+                    />
+                    <label htmlFor="profile-upload">
+                      <IconButton component="span">
+                        <UserAvatar UserImage={profile.UserImage} />
+                      </IconButton>
+                    </label>
+                  </div>
+                ) : (
+                  <UserAvatar UserImage={profile.UserImage} />
+                )}
+              </GridItem>
+              <GridItem>
+                <EditableTypography
+                  variant="h3"
+                  label="First Name"
+                  text={profile.FirstName}
+                  edit={edit}
+                  onChange={onChange}
+                  id="firstName"
+                  style={{ display: "inline" }}
+                />
+                <EditableTypography
+                  variant="h3"
+                  text={" "}
+                  style={{ display: "inline" }}
+                />
+                <EditableTypography
+                  variant="h3"
+                  label="Last Name"
+                  text={profile.LastName}
+                  edit={edit}
+                  onChange={onChange}
+                  id="lastName"
+                  style={{ display: "inline" }}
+                />
+              </GridItem>
+              <GridItem variant="body1" xs={12}>
+                <EditableTypography
+                  variant="body1"
+                  edit={edit}
+                  label="Description"
+                  fullWidth={true}
+                  onChange={onChange}
+                  id="description"
+                  text={profile.Description}
+                />
+              </GridItem>
+              <GridItem xs={12}>
+                {edit ? (
+                  <GridContainer>
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      fullWidth={true}
+                      onClick={() => onClickEditProfile("submit-changes")}
+                    >
+                      Submit Changes
+                    </Button>
+                    <Button variant="text" onClick={onClickEditProfile}>
+                      Discard Changes
+                    </Button>
+                  </GridContainer>
+                ) : (
+                  <CustomButton
                     color="primary"
                     variant="contained"
+                    onClick={onClickEditProfile}
                     fullWidth={true}
-                    onClick={() => onClickEditProfile("submit-changes")}
                   >
-                    Submit Changes
-                  </Button>
-                  <Button variant="text" onClick={onClickEditProfile}>
-                    Discard Changes
-                  </Button>
-                </Container>
-              ) : (
-                <CustomButton
-                  color="primary"
-                  variant="contained"
-                  onClick={onClickEditProfile}
-                  fullWidth={true}
-                >
-                  Edit
-                </CustomButton>
-              )}
-            </Grid>
+                    Edit
+                  </CustomButton>
+                )}
+              </GridItem>
+            </ProfileBox>
             {props.user.role === userRoles.STUDENT ? (
               <>
                 <Grid item>
@@ -432,6 +428,7 @@ export default function UserFeed({ ...props }) {
                 <ContentCard
                   post={c}
                   UserImage={c.Creator.UserImage}
+                  trainer={props.user}
                   user={profile}
                   favorite={favorites[f]}
                   segments={c.Segments}
