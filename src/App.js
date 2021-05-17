@@ -35,6 +35,9 @@ const App = () => {
   const [user, setUser] = React.useState(initialUser);
   const [verified, setVerified] = React.useState(true);
   const [openContentUpload, setOpenContentUpload] = React.useState(false);
+  Amplify.configure({
+    aws_appsync_authenticationType: "AWS_IAM",
+  });
 
   const switchRoutes = (routes) => {
     return (

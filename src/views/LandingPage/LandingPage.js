@@ -2,13 +2,9 @@ import React, { useState, useEffect } from "react";
 import { API, graphqlOperation } from "aws-amplify";
 import PropTypes from "prop-types";
 import { Dialog, Grid, Snackbar, Typography } from "@material-ui/core";
-import ContentCard from "../../components/ContentCard/ContentCard";
-import WorkoutCard from "../../components/WorkoutCard/WorkoutCard";
+import ContentCard from "../../components/Card/ContentCard";
+import WorkoutCard from "../../components/Card/WorkoutCard";
 import Banner from "assets/img/banner.jpeg";
-import {
-  createUserFavoriteContent,
-  deleteUserFavoriteContent,
-} from "../../graphql/mutations";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
 import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
@@ -41,34 +37,6 @@ export default function LandingPage({ ...props }) {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const history = useHistory();
-
-  const editFavorite = (id, contentId) => {
-    if (id) {
-      API.graphql(
-        graphqlOperation(deleteUserFavoriteContent, {
-          input: { id: id.id },
-        })
-      )
-        .then(() => {
-          const i = favorites.findIndex((e) => e.Content.id === contentId);
-          favorites.splice(i, 1);
-        })
-        .catch(console.log);
-    } else {
-      API.graphql(
-        graphqlOperation(createUserFavoriteContent, {
-          input: {
-            userFavoriteContentUserId: profile.id,
-            userFavoriteContentContentId: contentId,
-          },
-        })
-      )
-        .then((d) => {
-          favorites.push(d.data.createUserFavoriteContent);
-        })
-        .catch(console.log);
-    }
-  };
 
   async function userQuery() {
     const query = /* GraphQL */ `
@@ -196,11 +164,6 @@ export default function LandingPage({ ...props }) {
     setOpenCheckout(false);
   };
 
-  //TODO: Add open content callback
-  const openContent = (id) => {
-    console.log(id);
-  };
-
   useEffect(() => {
     getPrice(props.match.params.id);
     userQuery();
@@ -269,11 +232,8 @@ export default function LandingPage({ ...props }) {
                 <ContentCard
                   post={c}
                   UserImage={c.Creator.UserImage}
-                  user={profile}
+                  trainer={props.user}
                   favorite={favorites[f]}
-                  segments={c.Segments}
-                  clickCallback={openContent}
-                  favoriteCallback={editFavorite}
                   key={idx}
                 />
               );
@@ -287,11 +247,8 @@ export default function LandingPage({ ...props }) {
               return (
                 <WorkoutCard
                   post={fav.Content}
-                  user={profile}
+                  trainer={props.user}
                   favorite={fav}
-                  segments={fav.Content.Segments}
-                  clickCallback={openContent}
-                  favoriteCallback={editFavorite}
                   key={idx}
                 />
               );
@@ -307,6 +264,7 @@ export default function LandingPage({ ...props }) {
       >
         <Checkout
           errorCallback={checkoutError}
+          user={props.user}
           paymentMethodCallback={createSubscription}
           buttonTitle="Subscribe"
         />

@@ -1,11 +1,6 @@
 // @material-ui/icons
-import {
-  UserIcon,
-  SetIcon,
-  VideoLibrary,
-} from "./components/StyledComponets/StyledComponets";
+import { UserIcon } from "./components/StyledComponets/StyledComponets";
 // core components/views for Admin layout
-import UserProfile from "views/UserProfile/UserProfile.js";
 import Settings from "views/Settings/Settings";
 import UserFeed from "views/UserFeed/UserFeed.js";
 
@@ -13,7 +8,6 @@ import UserFeed from "views/UserFeed/UserFeed.js";
 import LandingPage from "views/LandingPage/LandingPage.js";
 import Home from "views/Home/Home.js";
 import Search from "views/Search/Search.js";
-import ContentUpload from "./components/ContentUpload/ContentUpload";
 import SignIn from "views/Auth/SignIn.js";
 import SignUp from "views/Auth/SignUp.js";
 import Verify from "views/Auth/Verify.js";
@@ -70,28 +64,4 @@ const routes = [
   },
 ];
 
-const headerRoutes = {
-  userProfile: {
-    path: "/user",
-    name: "User Profile",
-    icon: UserIcon,
-    component: UserProfile,
-    auth: "both",
-  },
-  videoUpload: {
-    path: "/video",
-    name: "Video Uploading",
-    icon: VideoLibrary,
-    component: ContentUpload,
-    auth: "trainer",
-  },
-  settings: {
-    path: "/settings",
-    name: "User Settings",
-    icon: SetIcon,
-    component: Settings,
-    auth: "both",
-  },
-};
-
-export { routes, headerRoutes };
+export { routes };

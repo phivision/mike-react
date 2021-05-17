@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { API } from "aws-amplify";
 import { searchUserProfiles } from "graphql/queries";
 import PropTypes from "prop-types";
-import ProfileCard from "../../components/ProfileCard/ProfileCard.js";
+import ProfileCard from "../../components/Card/ProfileCard.js";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
