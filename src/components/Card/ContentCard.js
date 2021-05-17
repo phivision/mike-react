@@ -140,7 +140,7 @@ export default function ContentCard(props) {
           )}
         </GridItem>
         <GridItem xs={12}></GridItem>
-        {!props.showTrainer && (
+        {props.showTrainer && (
           <>
             <GridItem xs={6}>
               <UserAvatar UserImage={props.UserImage} />
