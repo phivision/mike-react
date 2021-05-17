@@ -194,7 +194,8 @@ export default function LandingPage({ ...props }) {
           item
           style={{
             backgroundImage: `url(` + Banner + `)`,
-            height: "500px",
+            height: "100px",
+            marginBottom: "20px",
           }}
         />
         <Grid item container direction="row">
@@ -222,7 +223,7 @@ export default function LandingPage({ ...props }) {
               </Button>
             </Grid>
           </Grid>
-          <Grid item container xs={4}>
+          <Grid item container direction="column" xs={4}>
             <Grid item>
               <Typography variant="h1">Feed</Typography>
             </Grid>
