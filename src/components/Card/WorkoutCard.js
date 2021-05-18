@@ -1,24 +1,32 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-
-import { Card, CardMedia, Typography } from "@material-ui/core";
-
+import { Grid, Typography } from "@material-ui/core";
 import { Storage } from "aws-amplify";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { FavoriteBorder } from "@material-ui/icons";
-
 import ViewerDialog from "../../views/ContentViewer/ViewerDialog";
 import ImageButton from "../CustomButtons/ImageButton";
+import UploadDialog from "../../views/ContentUpload/UploadDialog";
+import {
+  GridContainer,
+  CardStyled,
+} from "../../components/StyledComponets/StyledComponets";
 
 import empty from "assets/img/empty.jpg";
-import GridContainer from "../Grid/GridContainer";
-import GridItem from "../Grid/GridItem";
 
 export default function WorkoutCard(props) {
   const [img, setImg] = useState(empty);
   const [liked, setLiked] = useState(true);
+  const [segments, setSegments] = useState([]);
   const [openViewer, setOpenViewer] = React.useState(false);
+  const [openContentEdit, setOpenContentEdit] = React.useState(false);
+  var times = 0;
+
+  const handleCloseContentEdit = () => {
+    setOpenContentEdit(false);
+    props.onCloseEditor();
+  };
 
   const handleOpenViewer = () => {
     setOpenViewer(true);
@@ -29,34 +37,31 @@ export default function WorkoutCard(props) {
   };
 
   useEffect(() => {
+    if (props.segments) {
+      const segs = JSON.parse(props.segments);
+      setSegments(segs);
+    }
     if (props.post.Thumbnail) {
       Storage.get(props.post.Thumbnail).then((url) => {
         setImg(url);
       });
     }
-  }, [props.post.Thumbnail]);
+  }, [props.post.Thumbnail, props.segments]);
+
+  //Calculate the total time of the segments
+  for (var i = 0; i < segments.length; i++) {
+    times += parseInt(segments[i].Timestamp);
+  }
 
   return (
-    <Card>
-      <GridContainer>
-        <GridItem xs={12}>
-          <Typography variant="h3">{props.post.Title}</Typography>
-        </GridItem>
-        <GridItem xs={12}>
-          {props.post.ContentName ? (
-            <ImageButton url={img} onClick={handleOpenViewer} width="100%" />
-          ) : (
-            <Card>
-              <CardMedia
-                style={{ height: "150px" }}
-                image={img}
-                title={props.post.Title}
-              />
-            </Card>
-          )}
-        </GridItem>
-        {props.favoriteCallback && (
-          <GridItem xs={12}>
+    <CardStyled>
+      <GridContainer direction="row">
+        <Grid item container xs={4} direction="column">
+          <Grid item xs>
+            <Typography variant="h3">{props.post.Title}</Typography>
+            <Typography variant="body2">{times} mins</Typography>
+          </Grid>
+          <Grid item>
             <IconButton
               aria-label="favorite this post"
               color="primary"
@@ -67,15 +72,31 @@ export default function WorkoutCard(props) {
             >
               {liked ? <FavoriteIcon /> : <FavoriteBorder />}
             </IconButton>
-          </GridItem>
-        )}
+          </Grid>
+        </Grid>
+        <GridContainer item xs={8}>
+          {img && (
+            <ImageButton
+              url={img}
+              width="100%"
+              height="150px"
+              onClick={handleOpenViewer}
+            />
+          )}
+        </GridContainer>
       </GridContainer>
       <ViewerDialog
         open={openViewer}
         onClose={handleCloseViewer}
         post={props.post}
       />
-    </Card>
+      <UploadDialog
+        user={props.user.id}
+        open={openContentEdit}
+        video={props.post.id}
+        onClose={handleCloseContentEdit}
+      />
+    </CardStyled>
   );
 }
 
@@ -85,16 +106,16 @@ WorkoutCard.propTypes = {
     id: PropTypes.string.isRequired,
     Description: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
-    Thumbnail: PropTypes.string,
-    ContentName: PropTypes.string,
+    Thumbnail: PropTypes.string.isRequired,
     owner: PropTypes.string.isRequired,
   }),
-  trainer: PropTypes.shape({
-    FirstName: PropTypes.string,
-    LastName: PropTypes.string,
-    id: PropTypes.string,
+  segments: PropTypes.string,
+  user: PropTypes.shape({
+    FirstName: PropTypes.string.isRequired,
+    LastName: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
   }),
   favorite: PropTypes.object,
   onCloseEditor: PropTypes.func,
-  favoriteCallback: PropTypes.func,
+  favoriteCallback: PropTypes.func.isRequired,
 };

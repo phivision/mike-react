@@ -80,6 +80,7 @@ export default function ImageButton(image) {
       focusVisibleClassName={classes.focusVisible}
       style={{
         width: image.width,
+        height: image.height,
       }}
     >
       <span
