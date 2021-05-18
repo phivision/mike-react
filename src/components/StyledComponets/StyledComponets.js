@@ -7,6 +7,7 @@ import {
   AppBar,
   Toolbar,
   IconButton,
+  TextField,
 } from "@material-ui/core";
 import SearchBar from "material-ui-search-bar";
 import {
@@ -82,7 +83,8 @@ export const CustomButton = styled(Button).attrs({
   color: "primary",
 })`
   border-radius: 10px;
-  font-weight: 700;
+  font-weight: 600;
+  margin: 5px;
 `;
 
 export const AppHeader = styled(AppBar)`
@@ -143,4 +145,23 @@ export const ProfileBox = styled.div`
   position: relative;
   top: -5%;
   padding: 10px;
+`;
+
+export const UserFeedBanner = styled(Grid).attrs({
+  item: true,
+})`
+  height: 100px;
+  background-image: url(${(props) => props.URL});
+`;
+
+export const InputField = styled(TextField).attrs({
+  multiline: true,
+  variant: "outlined",
+})`
+  margin: 10px;
+`;
+
+export const TextStyle = styled(Typography)`
+  display: inline-block;
+  margin: 2px;
 `;

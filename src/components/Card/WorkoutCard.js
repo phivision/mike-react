@@ -1,66 +1,19 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-
-import { Grid, Typography, ListItem } from "@material-ui/core";
-
+import { Grid, Typography } from "@material-ui/core";
 import { Storage } from "aws-amplify";
-import Divider from "@material-ui/core/Divider";
-import List from "@material-ui/core/List";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { FavoriteBorder } from "@material-ui/icons";
-
 import ViewerDialog from "../../views/ContentViewer/ViewerDialog";
 import ImageButton from "../CustomButtons/ImageButton";
 import UploadDialog from "../../views/ContentUpload/UploadDialog";
 import {
-  // GridItem,
   GridContainer,
   CardStyled,
 } from "../../components/StyledComponets/StyledComponets";
 
 import empty from "assets/img/empty.jpg";
-
-const SegmentCard = ({ ...props }) => {
-  return (
-    <>
-      <ListItem>
-        <GridContainer>
-          <Grid item>
-            <Typography variant="h3">{props.segment.Name}</Typography>
-            <Typography variant="body2">{props.segment.Timestamp}</Typography>
-          </Grid>
-          <Grid item>
-            {props.segment.Sets && props.segment.Reps && (
-              <Typography variant="body2">
-                {props.segment.Sets +
-                  " Sets of " +
-                  props.segment.Reps +
-                  " reps"}
-              </Typography>
-            )}
-            {props.segment.RPE && (
-              <Typography variant="body2">
-                {"Rate of Perceived Exhaustion: " + props.segment.RPE}
-              </Typography>
-            )}
-          </Grid>
-        </GridContainer>
-      </ListItem>
-      <Divider />
-    </>
-  );
-};
-
-SegmentCard.propTypes = {
-  segment: PropTypes.shape({
-    Name: PropTypes.string.isRequired,
-    Timestamp: PropTypes.string.isRequired,
-    Sets: PropTypes.string.isRequired,
-    Reps: PropTypes.string.isRequired,
-    RPE: PropTypes.string.isRequired,
-  }),
-};
 
 export default function WorkoutCard(props) {
   const [img, setImg] = useState(empty);
@@ -68,10 +21,7 @@ export default function WorkoutCard(props) {
   const [segments, setSegments] = useState([]);
   const [openViewer, setOpenViewer] = React.useState(false);
   const [openContentEdit, setOpenContentEdit] = React.useState(false);
-
-  // const handleOpenContentEdit = () => {
-  //   setOpenContentEdit(true);
-  // };
+  var times = 0;
 
   const handleCloseContentEdit = () => {
     setOpenContentEdit(false);
@@ -98,19 +48,20 @@ export default function WorkoutCard(props) {
     }
   }, [props.post.Thumbnail, props.segments]);
 
+  //Calculate the total time of the segments
+  for (var i = 0; i < segments.length; i++) {
+    times += parseInt(segments[i].Timestamp);
+  }
+
   return (
     <CardStyled>
       <GridContainer direction="row">
         <Grid item container xs={4} direction="column">
-          <Grid item xs={9}>
-            <Typography variant="h3">{props.post.Title}</Typography>
-          </Grid>
-          {/* {props.post.owner === props.user.id && (
-            <Grid item xs>
-              <Button onClick={handleOpenContentEdit}>Edit</Button>
-            </Grid>
-          )} */}
           <Grid item xs>
+            <Typography variant="h3">{props.post.Title}</Typography>
+            <Typography variant="body2">{times} mins</Typography>
+          </Grid>
+          <Grid item>
             <IconButton
               aria-label="favorite this post"
               color="primary"
@@ -123,17 +74,14 @@ export default function WorkoutCard(props) {
             </IconButton>
           </Grid>
         </Grid>
-        <Grid item container xs>
-          <List>
-            {segments &&
-              segments.map((s, idx) => {
-                return <SegmentCard segment={s} key={idx} />;
-              })}
-          </List>
-        </Grid>
         <GridContainer item xs={8}>
           {img && (
-            <ImageButton url={img} width="100%" onClick={handleOpenViewer} />
+            <ImageButton
+              url={img}
+              width="100%"
+              height="150px"
+              onClick={handleOpenViewer}
+            />
           )}
         </GridContainer>
       </GridContainer>

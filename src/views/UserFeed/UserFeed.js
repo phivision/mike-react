@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import PropTypes from "prop-types";
-import { Button, Grid, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import ContentCard from "../../components/Card/ContentCard";
 import WorkoutCard from "../../components/Card/WorkoutCard";
 import Banner from "assets/img/banner.jpeg";
@@ -17,6 +17,7 @@ import {
   StyledContent,
   CustomButton,
   ProfileBox,
+  UserFeedBanner,
 } from "../../components/StyledComponets/StyledComponets";
 
 // import initial profile
@@ -300,15 +301,9 @@ export default function UserFeed({ ...props }) {
 
   return (
     <Grid container direction="column">
-      <Grid
-        item
-        style={{
-          backgroundImage: `url(` + Banner + `)`,
-          height: "100px",
-        }}
-      />
+      <UserFeedBanner URL={Banner} />
       <StyledContent>
-        <Grid item container direction="row">
+        <GridContainer item direction="row">
           <GridContainer item direction="column" xs={12} sm={4}>
             <ProfileBox>
               <GridItem>
@@ -331,7 +326,7 @@ export default function UserFeed({ ...props }) {
                   <UserAvatar UserImage={profile.UserImage} />
                 )}
               </GridItem>
-              <GridItem>
+              <GridContainer item direction="row">
                 <EditableTypography
                   variant="h3"
                   label="First Name"
@@ -339,12 +334,6 @@ export default function UserFeed({ ...props }) {
                   edit={edit}
                   onChange={onChange}
                   id="firstName"
-                  style={{ display: "inline" }}
-                />
-                <EditableTypography
-                  variant="h3"
-                  text={" "}
-                  style={{ display: "inline" }}
                 />
                 <EditableTypography
                   variant="h3"
@@ -353,9 +342,8 @@ export default function UserFeed({ ...props }) {
                   edit={edit}
                   onChange={onChange}
                   id="lastName"
-                  style={{ display: "inline" }}
                 />
-              </GridItem>
+              </GridContainer>
               <GridItem variant="body1" xs={12}>
                 <EditableTypography
                   variant="body1"
@@ -369,19 +357,17 @@ export default function UserFeed({ ...props }) {
               </GridItem>
               <GridItem xs={12}>
                 {edit ? (
-                  <GridContainer>
-                    <Button
-                      color="primary"
-                      variant="contained"
+                  <GridItem>
+                    <CustomButton
                       fullWidth={true}
                       onClick={() => onClickEditProfile("submit-changes")}
                     >
                       Submit Changes
-                    </Button>
-                    <Button variant="text" onClick={onClickEditProfile}>
+                    </CustomButton>
+                    <CustomButton fullWidth={true} onClick={onClickEditProfile}>
                       Discard Changes
-                    </Button>
-                  </GridContainer>
+                    </CustomButton>
+                  </GridItem>
                 ) : (
                   <CustomButton
                     color="primary"
@@ -396,32 +382,32 @@ export default function UserFeed({ ...props }) {
             </ProfileBox>
             {props.user.role === userRoles.STUDENT ? (
               <>
-                <Grid item>
+                <GridItem>
                   <Typography variant="h3">My Trainers</Typography>
-                </Grid>
-                <Grid item container direction="row">
+                </GridItem>
+                <GridItem container direction="row">
                   {subscriptions.map((sub, idx) => {
                     return (
-                      <Grid item key={idx}>
+                      <GridItem key={idx}>
                         <UserAvatar
                           UserImage={sub.Trainer.UserImage}
                           onClick={() =>
                             history.push(`/landingpage/${sub.Trainer.id}`)
                           }
                         />
-                      </Grid>
+                      </GridItem>
                     );
                   })}
-                </Grid>
+                </GridItem>
               </>
             ) : (
               <></>
             )}
           </GridContainer>
           <GridContainer item direction="column" xs={12} sm={4}>
-            <Grid item>
+            <GridItem>
               <Typography variant="h1">Feed</Typography>
-            </Grid>
+            </GridItem>
             {contents.map((c, idx) => {
               let f = favorites.findIndex((e) => e.Content.id === c.id);
               return (
@@ -440,9 +426,9 @@ export default function UserFeed({ ...props }) {
             })}
           </GridContainer>
           <GridContainer item direction="column" xs={12} sm={4}>
-            <Grid item>
+            <GridItem>
               <Typography variant="h1">Favorite Workouts</Typography>
-            </Grid>
+            </GridItem>
             {favorites.map((fav, idx) => {
               return (
                 <WorkoutCard
@@ -456,7 +442,7 @@ export default function UserFeed({ ...props }) {
               );
             })}
           </GridContainer>
-        </Grid>
+        </GridContainer>
       </StyledContent>
     </Grid>
   );
