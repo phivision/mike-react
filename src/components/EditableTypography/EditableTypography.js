@@ -11,13 +11,15 @@ const EditableTypography = ({
   onChange: onChange,
   variant: variant,
   label: label,
+  showLabel: showLabel,
   ...p
 }) => {
+  showLabel ? false : showLabel;
   return edit ? (
     <InputField value={text} onChange={onChange} label={label} {...p} />
   ) : (
     <TextStyle variant={variant} {...p}>
-      {text}
+      {showLabel ? `${label}: ${text}` : text}
     </TextStyle>
   );
 };
@@ -28,6 +30,7 @@ EditableTypography.propTypes = {
   onChange: PropTypes.func,
   label: PropTypes.string,
   variant: PropTypes.string,
+  showLabel: PropTypes.bool,
 };
 
 export default EditableTypography;

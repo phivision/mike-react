@@ -35,6 +35,7 @@ export const GridItem = styled(Grid).attrs({
 export const CardStyled = styled(Card)`
   border-radius: 20px;
   margin: 10px 0;
+  box-shadow: 0 5px 20px 5px #eff1fa;
 `;
 
 export const CardIcon = styled.img`
@@ -43,6 +44,14 @@ export const CardIcon = styled.img`
   border-radius: 30px;
   display: block;
   margin: auto;
+`;
+
+export const BlackTitle = styled(Typography).attrs({
+  variant: "h6",
+})`
+  display: inline-block;
+  font-weight: 800;
+  color: black !important;
 `;
 
 export const AttriTitle = styled(Typography).attrs({
@@ -156,7 +165,6 @@ export const UserFeedBanner = styled(Grid).attrs({
 
 export const InputField = styled(TextField).attrs({
   multiline: true,
-  variant: "outlined",
 })`
   margin: 10px;
 `;

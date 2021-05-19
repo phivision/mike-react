@@ -1,5 +1,5 @@
-import { ButtonBase, makeStyles, Typography } from "@material-ui/core";
-import Input from "@material-ui/core/Input";
+import { ButtonBase, makeStyles } from "@material-ui/core";
+import { Input, Button, InputLabel } from "@material-ui/core";
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -9,10 +9,12 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
     minWidth: 300,
     width: "100%",
+    margin: "10px",
   },
   image: {
     position: "relative",
     height: 200,
+    margin: "10px 0",
     [theme.breakpoints.down("xs")]: {
       width: "100% !important", // Overrides inline-style
       height: 100,
@@ -50,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
     bottom: 0,
     backgroundSize: "cover",
     backgroundPosition: "center 40%",
+    borderRadius: "10px",
   },
   imageBackdrop: {
     position: "absolute",
@@ -57,23 +60,7 @@ const useStyles = makeStyles((theme) => ({
     right: 0,
     top: 0,
     bottom: 0,
-    backgroundColor: theme.palette.common.black,
     opacity: 0.4,
-    transition: theme.transitions.create("opacity"),
-  },
-  imageTitle: {
-    position: "relative",
-    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px ${
-      theme.spacing(1) + 6
-    }px`,
-  },
-  imageMarked: {
-    height: 3,
-    width: 18,
-    backgroundColor: theme.palette.common.white,
-    position: "absolute",
-    bottom: -2,
-    left: "calc(50% - 9px)",
     transition: theme.transitions.create("opacity"),
   },
 }));
@@ -88,6 +75,7 @@ export default function ImageInput(image) {
       focusVisibleClassName={classes.focusVisible}
       style={{
         width: image.width,
+        height: image.height,
       }}
     >
       <span
@@ -98,22 +86,19 @@ export default function ImageInput(image) {
       />
       <span className={classes.imageBackdrop} />
       <span className={classes.imageButton}>
-        <Typography
-          component="span"
-          variant="subtitle1"
-          color="inherit"
-          className={classes.imageTitle}
-        >
-          {image.title}
-          <span className={classes.imageMarked} />
-        </Typography>
         <Input
           type="file"
+          id="upload-file"
           accept={image.accept}
           inputRef={image.inputRef}
           onChange={image.onChange}
-          hidden
+          style={{ display: "none" }}
         />
+        <InputLabel htmlFor="upload-file">
+          <Button variant="outlined" component="span">
+            Upload
+          </Button>
+        </InputLabel>
       </span>
     </ButtonBase>
   );
