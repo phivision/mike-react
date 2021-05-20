@@ -101,6 +101,9 @@ const userProfileQuery = `query GetUserProfile ($id: ID!) {
                       owner
                       Creator {
                         UserImage
+                        FirstName
+                        LastName
+                        id
                       }
                     }
                   }
@@ -146,6 +149,9 @@ const trainerProfileQuery = `query GetUserProfile ($id: ID!) {
                 Segments
                 Creator{
                   UserImage
+                  FirstName
+                  LastName
+                  id
                 }
                 owner
               }
@@ -413,8 +419,7 @@ export default function UserFeed({ ...props }) {
               return (
                 <ContentCard
                   post={c}
-                  UserImage={c.Creator.UserImage}
-                  trainer={props.user}
+                  trainer={c.Creator}
                   user={profile}
                   favorite={favorites[f]}
                   segments={c.Segments}
@@ -433,7 +438,7 @@ export default function UserFeed({ ...props }) {
               return (
                 <WorkoutCard
                   post={fav.Content}
-                  user={profile}
+                  trainer={profile}
                   favorite={fav}
                   segments={fav.Content.Segments}
                   favoriteCallback={editFavorite}

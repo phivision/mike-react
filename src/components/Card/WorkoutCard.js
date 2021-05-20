@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Grid, Typography } from "@material-ui/core";
+import { Card, CardMedia, Grid, Typography } from "@material-ui/core";
 import { Storage } from "aws-amplify";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -13,7 +13,12 @@ import {
   CardStyled,
 } from "../../components/StyledComponets/StyledComponets";
 
+import styles from "assets/jss/material-dashboard-react/components/cardContentStyle.js";
+
 import empty from "assets/img/empty.jpg";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles(styles);
 
 export default function WorkoutCard(props) {
   const [img, setImg] = useState(empty);
@@ -22,6 +27,7 @@ export default function WorkoutCard(props) {
   const [openViewer, setOpenViewer] = React.useState(false);
   const [openContentEdit, setOpenContentEdit] = React.useState(false);
   var times = 0;
+  const classes = useStyles();
 
   const handleCloseContentEdit = () => {
     setOpenContentEdit(false);
@@ -61,27 +67,37 @@ export default function WorkoutCard(props) {
             <Typography variant="h3">{props.post.Title}</Typography>
             <Typography variant="body2">{times} mins</Typography>
           </Grid>
-          <Grid item>
-            <IconButton
-              aria-label="favorite this post"
-              color="primary"
-              onClick={() => {
-                setLiked(!liked);
-                props.favoriteCallback(props.favorite, props.post.id);
-              }}
-            >
-              {liked ? <FavoriteIcon /> : <FavoriteBorder />}
-            </IconButton>
-          </Grid>
+          {props.favoriteCallback && (
+            <Grid item>
+              <IconButton
+                aria-label="favorite this post"
+                color="primary"
+                onClick={() => {
+                  setLiked(!liked);
+                  props.favoriteCallback(props.favorite, props.post.id);
+                }}
+              >
+                {liked ? <FavoriteIcon /> : <FavoriteBorder />}
+              </IconButton>
+            </Grid>
+          )}
         </Grid>
         <GridContainer item xs={8}>
-          {img && (
+          {props.post.ContentName ? (
             <ImageButton
               url={img}
               width="100%"
               height="150px"
               onClick={handleOpenViewer}
             />
+          ) : (
+            <Card className={classes.cardImage}>
+              <CardMedia
+                style={{ height: "150px", width: "150px" }}
+                image={img}
+                title={props.post.Title}
+              />
+            </Card>
           )}
         </GridContainer>
       </GridContainer>
@@ -90,12 +106,14 @@ export default function WorkoutCard(props) {
         onClose={handleCloseViewer}
         post={props.post}
       />
-      <UploadDialog
-        user={props.user.id}
-        open={openContentEdit}
-        video={props.post.id}
-        onClose={handleCloseContentEdit}
-      />
+      {props.trainer && (
+        <UploadDialog
+          user={props.trainer.id}
+          open={openContentEdit}
+          video={props.post.id}
+          onClose={handleCloseContentEdit}
+        />
+      )}
     </CardStyled>
   );
 }
@@ -108,14 +126,15 @@ WorkoutCard.propTypes = {
     createdAt: PropTypes.string.isRequired,
     Thumbnail: PropTypes.string.isRequired,
     owner: PropTypes.string.isRequired,
+    ContentName: PropTypes.string,
   }),
   segments: PropTypes.string,
-  user: PropTypes.shape({
+  trainer: PropTypes.shape({
     FirstName: PropTypes.string.isRequired,
     LastName: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
   }),
   favorite: PropTypes.object,
   onCloseEditor: PropTypes.func,
-  favoriteCallback: PropTypes.func.isRequired,
+  favoriteCallback: PropTypes.func,
 };

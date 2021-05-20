@@ -73,9 +73,6 @@ export default function LandingPage({ ...props }) {
               createdAt
               Thumbnail
               Segments
-              Creator {
-                UserImage
-              }
               owner
             }
             nextToken
@@ -232,8 +229,8 @@ export default function LandingPage({ ...props }) {
               return (
                 <ContentCard
                   post={c}
-                  UserImage={c.Creator.UserImage}
-                  trainer={props.user}
+                  trainer={profile}
+                  user={props.user}
                   favorite={favorites[f]}
                   key={idx}
                 />
