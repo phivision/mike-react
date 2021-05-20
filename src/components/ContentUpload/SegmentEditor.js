@@ -21,7 +21,7 @@ export default function SegmentEditor(props) {
 
   const handleSegmentChange = (e) => {
     let s = [...segments];
-    s[e.target.dataset.id][e.target.className] = e.target.value;
+    s[e.target.dataset.id][e.target.name] = e.target.value;
     setSegments(s);
     if (props.onChange) {
       props.onChange(s);
@@ -48,8 +48,6 @@ export default function SegmentEditor(props) {
     setSegments(JSON.parse(props.segments));
   }, [props.segments]);
 
-  console.log("edit", edit);
-
   return (
     <div>
       <form onChange={handleSegmentChange}>
@@ -58,48 +56,58 @@ export default function SegmentEditor(props) {
           return (
             <GridContainer key={idx} direction="column">
               <EditableTypography
-                id={"Name" + value.Name + idx}
+                id={"Section-Name" + idx}
                 text={value.Name}
+                name="Name"
                 label="Name"
                 variant="subtitle2"
                 edit={edit}
+                data-id={idx}
                 // edit={edit.name}
                 // onClick={() => setEdit({ ...edit, name: true })}
               />
               <EditableTypography
-                id={"Timestamp" + value.Name + idx}
+                id={"Section-Timestamp" + idx}
                 text={segments[idx].Timestamp}
+                name="Timestamp"
                 label="Timestamp"
                 variant="body2"
                 edit={edit}
                 showLabel={true}
+                data-id={idx}
                 // onClick={() => setEdit({ ...edit, times: true })}
               />
               <EditableTypography
-                id={"sets" + value.Name + idx}
+                id={"Section-sets" + idx}
                 text={value.Sets}
+                name="Sets"
                 label="Sets"
                 variant="body2"
                 edit={edit}
                 showLabel={true}
+                data-id={idx}
                 // onClick={() => setEdit({ ...edit, sets: true })}
               />
               <EditableTypography
-                id={"reps" + value.Name + idx}
+                id={"Section-reps" + idx}
                 text={value.Reps}
+                name="Reps"
                 label="Reps"
                 variant="body2"
                 edit={edit}
                 showLabel={true}
+                data-id={idx}
                 // onClick={() => setEdit({ ...edit, reps: true })}
               />
               <EditableTypography
-                id={"rpe" + value.Name + idx}
+                id={"Section-rpe" + idx}
                 text={value.RPE}
+                name="RPE"
                 label="RPE"
                 variant="body2"
                 edit={edit}
                 showLabel={true}
+                data-id={idx}
                 // onClick={() => setEdit({ ...edit, rpe: true })}
               />
             </GridContainer>

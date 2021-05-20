@@ -156,6 +156,7 @@ export default function ContentUpload(props) {
 
   const handleVideoUpload = () => {
     // check video duplication
+    console.log("videoForm", videoForm);
     if (props.video || videoForm.id) {
       setOpenDuplicationDialog(true);
     } else {
@@ -276,7 +277,7 @@ export default function ContentUpload(props) {
           variant="h3"
           text={videoForm.Title || ""}
           onChange={handleVideoFormChange}
-          onClick={() => setEdit(!edit)}
+          onClick={() => setEdit(true)}
           edit={edit}
         />
         <EditableTypography
@@ -287,15 +288,8 @@ export default function ContentUpload(props) {
           text={videoForm.Description || ""}
           onChange={handleVideoFormChange}
           edit={edit}
-          onClick={() => setEdit(!edit)}
+          onClick={() => setEdit(true)}
         />
-        {/* <Input
-          type="file"
-          name="Thumbnail"
-          accept="image/*"
-          inputRef={thumbFileRef}
-          onChange={handleThumbnailChange}
-        /> */}
         <CardStyled>
           <ImageInput
             title="Thumbnail"
@@ -324,6 +318,7 @@ export default function ContentUpload(props) {
         <CardStyled>
           <ImageInput
             title={videoStatus}
+            url=""
             width="100%"
             accept="video/*"
             inputRef={videoFileRef}

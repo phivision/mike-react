@@ -1,7 +1,10 @@
 import { ButtonBase, makeStyles } from "@material-ui/core";
-import { Input, Button, InputLabel } from "@material-ui/core";
 import React from "react";
 import PropTypes from "prop-types";
+import {
+  InputButton,
+  BlackTitle,
+} from "components/StyledComponets/StyledComponets";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,6 +66,21 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0.4,
     transition: theme.transitions.create("opacity"),
   },
+  imageTitle: {
+    position: "relative",
+    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px ${
+      theme.spacing(1) + 6
+    }px`,
+  },
+  imageMarked: {
+    height: 3,
+    width: 18,
+    backgroundColor: theme.palette.common.white,
+    position: "absolute",
+    bottom: -2,
+    left: "calc(50% - 9px)",
+    transition: theme.transitions.create("opacity"),
+  },
 }));
 
 export default function ImageInput(image) {
@@ -86,19 +104,28 @@ export default function ImageInput(image) {
       />
       <span className={classes.imageBackdrop} />
       <span className={classes.imageButton}>
-        <Input
+        <InputButton
           type="file"
-          id="upload-file"
+          id={"upload-file" + image.title}
           accept={image.accept}
           inputRef={image.inputRef}
           onChange={image.onChange}
-          style={{ display: "none" }}
+          // style={{ display: "none" }}
         />
-        <InputLabel htmlFor="upload-file">
+        {/* <InputLabel htmlFor={"upload-file" + image.title}>
           <Button variant="outlined" component="span">
             Upload
           </Button>
-        </InputLabel>
+        </InputLabel> */}
+        <BlackTitle
+          component="span"
+          variant="subtitle1"
+          color="inherit"
+          className={classes.imageTitle}
+        >
+          {image.title}
+          <span className={classes.imageMarked} />
+        </BlackTitle>
       </span>
     </ButtonBase>
   );

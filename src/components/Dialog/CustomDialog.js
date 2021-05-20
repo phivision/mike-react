@@ -24,6 +24,7 @@ export default function CustomDialog({
       open={open}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      scroll="body"
     >
       <GridContainer>
         <GridItem xs={9}>

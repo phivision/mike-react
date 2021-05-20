@@ -8,6 +8,7 @@ import {
   Toolbar,
   IconButton,
   TextField,
+  Input,
 } from "@material-ui/core";
 import SearchBar from "material-ui-search-bar";
 import {
@@ -172,4 +173,10 @@ export const InputField = styled(TextField).attrs({
 export const TextStyle = styled(Typography)`
   display: inline-block;
   margin: 2px;
+`;
+
+export const InputButton = styled(Input).attrs({
+  disableUnderline: true,
+})`
+  margin: 5px;
 `;
