@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import PropTypes from "prop-types";
-import { Button, Grid, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import ContentCard from "../../components/Card/ContentCard";
 import WorkoutCard from "../../components/Card/WorkoutCard";
 import Banner from "assets/img/banner.jpeg";
@@ -9,9 +9,16 @@ import { updateUserProfile } from "../../graphql/mutations";
 import { useHistory } from "react-router-dom";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
 import EditableTypography from "../../components/EditableTypography/EditableTypography";
-import Container from "@material-ui/core/Container";
 import IconButton from "@material-ui/core/IconButton";
 import { userRoles } from "../../variables/userRoles";
+import {
+  GridItem,
+  GridContainer,
+  StyledContent,
+  CustomButton,
+  ProfileBox,
+  UserFeedBanner,
+} from "../../components/StyledComponets/StyledComponets";
 
 // import initial profile
 const initialProfileState = {
@@ -94,6 +101,9 @@ const userProfileQuery = `query GetUserProfile ($id: ID!) {
                       owner
                       Creator {
                         UserImage
+                        FirstName
+                        LastName
+                        id
                       }
                     }
                   }
@@ -139,6 +149,9 @@ const trainerProfileQuery = `query GetUserProfile ($id: ID!) {
                 Segments
                 Creator{
                   UserImage
+                  FirstName
+                  LastName
+                  id
                 }
                 owner
               }
@@ -290,174 +303,152 @@ export default function UserFeed({ ...props }) {
     });
     setContents(sorted);
   };
+  console.log("userfeed", favorites, profile, props);
 
   return (
     <Grid container direction="column">
-      <Grid
-        item
-        style={{
-          backgroundImage: `url(` + Banner + `)`,
-          height: "500px",
-        }}
-      />
-      <Grid item container direction="row">
-        <Grid item container direction="column" xs={4}>
-          <Grid item>
-            {edit ? (
-              <div>
-                <input
-                  accept="image/*"
-                  id="profile-upload"
-                  type="file"
-                  onChange={handleImageChange}
-                  style={{ display: "none" }}
-                />
-                <label htmlFor="profile-upload">
-                  <IconButton component="span">
-                    <UserAvatar
-                      style={{
-                        width: "200px",
-                        height: "200px",
-                      }}
-                      UserImage={profile.UserImage}
+      <UserFeedBanner URL={Banner} />
+      <StyledContent>
+        <GridContainer item direction="row">
+          <GridContainer item direction="column" xs={12} sm={4}>
+            <ProfileBox>
+              <GridItem>
+                {edit ? (
+                  <div>
+                    <input
+                      accept="image/*"
+                      id="profile-upload"
+                      type="file"
+                      onChange={handleImageChange}
+                      style={{ display: "none" }}
                     />
-                  </IconButton>
-                </label>
-              </div>
-            ) : (
-              <UserAvatar
-                style={{
-                  width: "200px",
-                  height: "200px",
-                }}
-                UserImage={profile.UserImage}
-              />
-            )}
-          </Grid>
-          <Grid item>
-            <EditableTypography
-              variant="h3"
-              label="First Name"
-              text={profile.FirstName}
-              edit={edit}
-              onChange={onChange}
-              id="firstName"
-              style={{ display: "inline" }}
-            />
-            <EditableTypography
-              variant="h3"
-              text={" "}
-              style={{ display: "inline" }}
-            />
-            <EditableTypography
-              variant="h3"
-              label="Last Name"
-              text={profile.LastName}
-              edit={edit}
-              onChange={onChange}
-              id="lastName"
-              style={{ display: "inline" }}
-            />
-          </Grid>
-          <Grid item variant="body1">
-            <EditableTypography
-              variant="body1"
-              edit={edit}
-              label="Description"
-              fullWidth={true}
-              onChange={onChange}
-              id="description"
-              text={profile.Description}
-            />
-          </Grid>
-          <Grid item>
-            {edit ? (
-              <Container>
-                <Button
-                  color="primary"
-                  variant="contained"
+                    <label htmlFor="profile-upload">
+                      <IconButton component="span">
+                        <UserAvatar UserImage={profile.UserImage} />
+                      </IconButton>
+                    </label>
+                  </div>
+                ) : (
+                  <UserAvatar UserImage={profile.UserImage} />
+                )}
+              </GridItem>
+              <GridContainer item direction="row">
+                <EditableTypography
+                  variant="h3"
+                  label="First Name"
+                  text={profile.FirstName}
+                  edit={edit}
+                  onChange={onChange}
+                  id="firstName"
+                />
+                <EditableTypography
+                  variant="h3"
+                  label="Last Name"
+                  text={profile.LastName}
+                  edit={edit}
+                  onChange={onChange}
+                  id="lastName"
+                />
+              </GridContainer>
+              <GridItem variant="body1" xs={12}>
+                <EditableTypography
+                  variant="body1"
+                  edit={edit}
+                  label="Description"
                   fullWidth={true}
-                  onClick={() => onClickEditProfile("submit-changes")}
-                >
-                  Submit Changes
-                </Button>
-                <Button variant="text" onClick={onClickEditProfile}>
-                  Discard Changes
-                </Button>
-              </Container>
+                  onChange={onChange}
+                  id="description"
+                  text={profile.Description}
+                />
+              </GridItem>
+              <GridItem xs={12}>
+                {edit ? (
+                  <GridItem>
+                    <CustomButton
+                      fullWidth={true}
+                      onClick={() => onClickEditProfile("submit-changes")}
+                    >
+                      Submit Changes
+                    </CustomButton>
+                    <CustomButton fullWidth={true} onClick={onClickEditProfile}>
+                      Discard Changes
+                    </CustomButton>
+                  </GridItem>
+                ) : (
+                  <CustomButton
+                    color="primary"
+                    variant="contained"
+                    onClick={onClickEditProfile}
+                    fullWidth={true}
+                  >
+                    Edit
+                  </CustomButton>
+                )}
+              </GridItem>
+            </ProfileBox>
+            {props.user.role === userRoles.STUDENT ? (
+              <>
+                <GridItem>
+                  <Typography variant="h3">My Trainers</Typography>
+                </GridItem>
+                <GridItem container direction="row">
+                  {subscriptions.map((sub, idx) => {
+                    return (
+                      <GridItem key={idx}>
+                        <UserAvatar
+                          UserImage={sub.Trainer.UserImage}
+                          onClick={() =>
+                            history.push(`/landingpage/${sub.Trainer.id}`)
+                          }
+                        />
+                      </GridItem>
+                    );
+                  })}
+                </GridItem>
+              </>
             ) : (
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={onClickEditProfile}
-                fullWidth={true}
-              >
-                Edit
-              </Button>
+              <></>
             )}
-          </Grid>
-          {props.user.role === userRoles.STUDENT ? (
-            <>
-              <Grid item>
-                <Typography variant="h3">My Trainers</Typography>
-              </Grid>
-              <Grid item container direction="row">
-                {subscriptions.map((sub, idx) => {
-                  return (
-                    <Grid item key={idx}>
-                      <UserAvatar
-                        UserImage={sub.Trainer.UserImage}
-                        onClick={() =>
-                          history.push(`/landingpage/${sub.Trainer.id}`)
-                        }
-                      />
-                    </Grid>
-                  );
-                })}
-              </Grid>
-            </>
-          ) : (
-            <></>
-          )}
-        </Grid>
-        <Grid item container direction="column" xs={4}>
-          <Grid item>
-            <Typography variant="h1">Feed</Typography>
-          </Grid>
-          {contents.map((c, idx) => {
-            let f = favorites.findIndex((e) => e.Content.id === c.id);
-            return (
-              <ContentCard
-                post={c}
-                UserImage={c.Creator.UserImage}
-                trainer={profile}
-                favorite={favorites[f]}
-                segments={c.Segments}
-                onCloseEditor={trainerQuery}
-                favoriteCallback={editFavorite}
-                key={idx}
-              />
-            );
-          })}
-        </Grid>
-        <Grid item container direction="column" xs={4}>
-          <Grid item>
-            <Typography variant="h1">Favorite Workouts</Typography>
-          </Grid>
-          {favorites.map((fav, idx) => {
-            return (
-              <WorkoutCard
-                post={fav.Content}
-                trainer={profile}
-                favorite={fav}
-                segments={fav.Content.Segments}
-                favoriteCallback={editFavorite}
-                key={idx}
-              />
-            );
-          })}
-        </Grid>
-      </Grid>
+          </GridContainer>
+          <GridContainer item direction="column" xs={12} sm={4}>
+            <GridItem>
+              <Typography variant="h1">Feed</Typography>
+            </GridItem>
+            {contents.map((c, idx) => {
+              let f = favorites.findIndex((e) => e.Content.id === c.id);
+              return (
+                <ContentCard
+                  post={c}
+                  trainer={c.Creator}
+                  user={profile}
+                  favorite={favorites[f]}
+                  segments={c.Segments}
+                  onCloseEditor={trainerQuery}
+                  favoriteCallback={editFavorite}
+                  key={idx}
+                />
+              );
+            })}
+          </GridContainer>
+          <GridContainer item direction="column" xs={12} sm={4}>
+            <GridItem>
+              <Typography variant="h1">Favorite Workouts</Typography>
+            </GridItem>
+            {favorites.map((fav, idx) => {
+              return (
+                <WorkoutCard
+                  post={fav.Content}
+                  trainer={profile}
+                  favorite={fav}
+                  segments={fav.Content.Segments}
+                  favoriteCallback={editFavorite}
+                  key={idx}
+                />
+              );
+            })}
+          </GridContainer>
+        </GridContainer>
+      </StyledContent>
     </Grid>
   );
 }

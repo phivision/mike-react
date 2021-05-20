@@ -7,9 +7,13 @@ import {
   AppBar,
   Toolbar,
   IconButton,
+  TextField,
 } from "@material-ui/core";
 import SearchBar from "material-ui-search-bar";
-import { primaryColor } from "assets/jss/material-dashboard-react.js";
+import {
+  primaryColor,
+  contentColor,
+} from "assets/jss/material-dashboard-react.js";
 import { Link } from "react-router-dom";
 import Person from "@material-ui/icons/Person";
 import SettingsIcon from "@material-ui/icons/Settings";
@@ -25,7 +29,7 @@ export const GridItem = styled(Grid).attrs({
   item: true,
 })`
   padding: 5px;
-  display: table-cell;
+  display: block;
 `;
 
 export const CardStyled = styled(Card)`
@@ -78,8 +82,9 @@ export const CustomButton = styled(Button).attrs({
   variant: "contained",
   color: "primary",
 })`
-  border-radius: 20px;
-  font-weight: 700;
+  border-radius: 10px;
+  font-weight: 600;
+  margin: 5px;
 `;
 
 export const AppHeader = styled(AppBar)`
@@ -126,4 +131,37 @@ export const VideoLibrary = styled(VideoLibraryIcon).attrs({
   color: "action",
 })`
   font-size: 30px;
+`;
+
+export const StyledContent = styled.div`
+  border-radius: 30px 30px 0 0;
+  margin-top: -20px;
+  background-color: ${contentColor};
+`;
+
+export const ProfileBox = styled.div`
+  width: 60%;
+  margin: 0 auto;
+  position: relative;
+  top: -5%;
+  padding: 10px;
+`;
+
+export const UserFeedBanner = styled(Grid).attrs({
+  item: true,
+})`
+  height: 100px;
+  background-image: url(${(props) => props.URL});
+`;
+
+export const InputField = styled(TextField).attrs({
+  multiline: true,
+  variant: "outlined",
+})`
+  margin: 10px;
+`;
+
+export const TextStyle = styled(Typography)`
+  display: inline-block;
+  margin: 2px;
 `;

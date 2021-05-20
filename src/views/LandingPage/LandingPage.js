@@ -73,9 +73,6 @@ export default function LandingPage({ ...props }) {
               createdAt
               Thumbnail
               Segments
-              Creator {
-                UserImage
-              }
               owner
             }
             nextToken
@@ -194,7 +191,8 @@ export default function LandingPage({ ...props }) {
           item
           style={{
             backgroundImage: `url(` + Banner + `)`,
-            height: "500px",
+            height: "100px",
+            marginBottom: "20px",
           }}
         />
         <Grid item container direction="row">
@@ -222,7 +220,7 @@ export default function LandingPage({ ...props }) {
               </Button>
             </Grid>
           </Grid>
-          <Grid item container xs={4}>
+          <Grid item container direction="column" xs={4}>
             <Grid item>
               <Typography variant="h1">Feed</Typography>
             </Grid>
@@ -231,8 +229,8 @@ export default function LandingPage({ ...props }) {
               return (
                 <ContentCard
                   post={c}
-                  UserImage={c.Creator.UserImage}
-                  trainer={props.user}
+                  trainer={profile}
+                  user={props.user}
                   favorite={favorites[f]}
                   key={idx}
                 />
