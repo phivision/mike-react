@@ -84,7 +84,7 @@ export default function ContentCard(props) {
   }, [props.post.Thumbnail]);
 
   const headerCol = props.favoriteCallback ? 10 : 12;
-  const footerCol = props.post.owner === props.trainer.id ? 4 : 12;
+  const footerCol = props.trainer.id === props.user.id ? 4 : 12;
 
   const classes = useStyles();
   return (
@@ -118,7 +118,7 @@ export default function ContentCard(props) {
               {liked ? <FavoriteIcon /> : <FavoriteBorder />}
             </IconButton>
           )}
-          {props.post.owner === props.trainer.id && (
+          {props.onCloseEditor && props.trainer.id === props.user.id && (
             <>
               <IconButton
                 aria-label="delete this post"
@@ -139,17 +139,16 @@ export default function ContentCard(props) {
             </>
           )}
         </GridItem>
-        <GridItem xs={12}></GridItem>
         {props.showTrainer && (
           <>
             <GridItem xs={6}>
-              <UserAvatar UserImage={props.UserImage} />
+              <UserAvatar UserImage={props.trainer.UserImage} />
             </GridItem>
-            {/* <GridItem xs={6}>
+            <GridItem xs={6}>
               <Typography variant="body2">
                 {props.trainer.FirstName + " " + props.trainer.LastName}
               </Typography>
-            </GridItem> */}
+            </GridItem>
           </>
         )}
         <GridItem xs={footerCol}>
@@ -196,8 +195,9 @@ ContentCard.propTypes = {
     FirstName: PropTypes.string,
     LastName: PropTypes.string,
     id: PropTypes.string,
+    UserImage: PropTypes.string,
   }),
-  UserImage: PropTypes.string,
+  user: PropTypes.shape({ id: PropTypes.string }),
   favorite: PropTypes.object,
   onCloseEditor: PropTypes.func,
   favoriteCallback: PropTypes.func,
