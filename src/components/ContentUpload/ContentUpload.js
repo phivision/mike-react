@@ -269,7 +269,7 @@ export default function ContentUpload(props) {
 
   return (
     <GridContainer>
-      <GridContainer item xs={3} direction="column">
+      <GridContainer item xs={12} sm={3} direction="column">
         <EditableTypography
           id="video-title"
           label="videoTitle"
@@ -314,7 +314,7 @@ export default function ContentUpload(props) {
         />
         <CustomButton onClick={handleVideoUpload}>Upload Content</CustomButton>
       </GridContainer>
-      <GridItem xs={6}>
+      <GridItem xs={12} sm={6}>
         <CardStyled>
           <ImageInput
             title={videoStatus}
@@ -334,7 +334,7 @@ export default function ContentUpload(props) {
           onClickNo={handleCloseDuplicationDialog}
         />
       </GridItem>
-      <GridItem xs={3}>
+      <GridItem xs={12} sm={3}>
         <SegmentEditor
           segments={videoForm.Segments}
           onChange={handleSegmentJSONChange}

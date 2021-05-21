@@ -13,14 +13,14 @@ export default function ContentViewer({ post }) {
   const segments = post.Segments ? post.Segments : JSON.stringify([]);
   return (
     <GridContainer>
-      <GridItem xs={5}>
+      <GridItem xs={12} sm={5}>
         <ContentInfo
           title={post.Title}
           desc={post.Description}
           segments={segments}
         />
       </GridItem>
-      <GridItem xs={7}>
+      <GridItem xs={12} sm={7}>
         <CardStyled>
           <MemoVideoPlayer video={post.ContentName} />
         </CardStyled>
