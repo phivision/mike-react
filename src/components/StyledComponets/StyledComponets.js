@@ -45,7 +45,7 @@ export const CardStyled = styled(Card)`
   border-radius: 20px;
   margin: 10px 0;
   box-shadow: 0 5px 20px 5px #eff1fa;
-  max-width: 500px;
+  max-width: 70%;
 `;
 
 export const CardIcon = styled.img`
