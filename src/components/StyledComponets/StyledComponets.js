@@ -22,6 +22,7 @@ import Person from "@material-ui/icons/Person";
 import SettingsIcon from "@material-ui/icons/Settings";
 import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
 import UserAvatar from "../UserAvatar/UserAvatar";
+import TableContainer from "@material-ui/core/TableContainer";
 
 export const ContainBox = styled(Container).attrs({
   disableGutters: true,
@@ -245,4 +246,13 @@ export const CardContentAvatar = styled(UserAvatar)`
   margin: 10px 0 -40px -40px;
   width: 30%;
   border-radius: 10px;
+`;
+
+export const SettingTableContainer = styled(TableContainer)`
+  margin: 0 auto;
+  margin-top: 60px;
+  width: 80%;
+  background-color: #f4f6fa;
+  border: none;
+  margin-bottom: 30px;
 `;
