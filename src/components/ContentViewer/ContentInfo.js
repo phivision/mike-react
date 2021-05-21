@@ -1,29 +1,35 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
-import GridContainer from "../Grid/GridContainer";
-import GridItem from "../Grid/GridItem";
+import {
+  GridContainer,
+  GridItem,
+  DividerLine,
+  BlackTitle,
+  ContainBox,
+  Attribute,
+} from "components/StyledComponets/StyledComponets";
 
 const Segment = ({ segment }) => {
   return (
     <GridContainer>
-      <GridItem item xs={4}>
-        <Typography variant="h6">{segment.Name}</Typography>
+      <GridItem xs={3}>
+        <BlackTitle>{segment.Name}</BlackTitle>
       </GridItem>
-      <GridItem item xs={8}>
-        <Typography variant="h6">
+      <GridContainer item xs={9} justify="flex-end">
+        <Typography variant="body2">
           {segment.Sets} sets of {segment.Reps} reps
         </Typography>
+      </GridContainer>
+      <GridItem item xs={3}>
+        <Typography variant="body2">{segment.Timestamp} min</Typography>
       </GridItem>
-      <GridItem item xs={4}>
-        <Typography variant="h6">{segment.Timestamp} min</Typography>
-      </GridItem>
-      <GridItem item xs={8}>
-        <Typography variant="h6">
+      <GridContainer item xs={9} justify="flex-end">
+        <Typography variant="body2" align="right">
           Rate of Perceived Exhaustion: {segment.RPE}
         </Typography>
-      </GridItem>
+      </GridContainer>
+      <DividerLine />
     </GridContainer>
   );
 };
@@ -41,14 +47,18 @@ Segment.propTypes = {
 export default function ContentInfo({ title, desc, segments }) {
   const segment_list = JSON.parse(segments);
   return (
-    <Container maxWidth="sm">
-      <Typography variant="h1">{title}</Typography>
-      <Typography>{desc}</Typography>
-      <Typography variant="h3">Sections</Typography>
-      {segment_list.map((segment, key) => {
-        return <Segment segment={segment} key={key} />;
-      })}
-    </Container>
+    <ContainBox maxWidth="sm">
+      <GridItem>
+        <Attribute>{title}</Attribute>
+        <Typography variant="body1">{desc}</Typography>
+      </GridItem>
+      <GridItem>
+        <BlackTitle>Sections</BlackTitle>
+        {segment_list.map((segment, key) => {
+          return <Segment segment={segment} key={key} />;
+        })}
+      </GridItem>
+    </ContainBox>
   );
 }
 

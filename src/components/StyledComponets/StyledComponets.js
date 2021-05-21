@@ -9,6 +9,8 @@ import {
   IconButton,
   TextField,
   Input,
+  Divider,
+  Container,
 } from "@material-ui/core";
 import SearchBar from "material-ui-search-bar";
 import {
@@ -19,6 +21,12 @@ import { Link } from "react-router-dom";
 import Person from "@material-ui/icons/Person";
 import SettingsIcon from "@material-ui/icons/Settings";
 import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
+
+export const ContainBox = styled(Container).attrs({
+  disableGutters: true,
+})`
+  padding: 10px;
+`;
 
 export const GridContainer = styled(Grid).attrs({
   container: true,
@@ -51,8 +59,9 @@ export const BlackTitle = styled(Typography).attrs({
   variant: "h6",
 })`
   display: inline-block;
-  font-weight: 800;
+  font-weight: 700;
   color: black !important;
+  margin: 5px 0;
 `;
 
 export const AttriTitle = styled(Typography).attrs({
@@ -67,6 +76,7 @@ export const Attribute = styled(Typography).attrs({
 })`
   display: inline-block;
   font-weight: 700;
+  margin: 5px 0;
 `;
 
 export const Unit = styled(Typography).attrs({
@@ -179,4 +189,10 @@ export const InputButton = styled(Input).attrs({
   disableUnderline: true,
 })`
   margin: 5px;
+`;
+
+export const DividerLine = styled(Divider).attrs({
+  variant: "fullWidth",
+})`
+  width: 100%;
 `;

@@ -1,26 +1,29 @@
 import React from "react";
 import PropTypes from "prop-types";
-// @material-ui/core components
-// core components
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
 // customize components
 import ContentInfo from "./ContentInfo";
 import { MemoVideoPlayer } from "./VideoPlayer";
+import {
+  GridContainer,
+  GridItem,
+  CardStyled,
+} from "components/StyledComponets/StyledComponets";
 
 export default function ContentViewer({ post }) {
   const segments = post.Segments ? post.Segments : JSON.stringify([]);
   return (
     <GridContainer>
-      <GridItem xs={4}>
+      <GridItem xs={5}>
         <ContentInfo
           title={post.Title}
           desc={post.Description}
           segments={segments}
         />
       </GridItem>
-      <GridItem xs={8}>
-        <MemoVideoPlayer video={post.ContentName} />
+      <GridItem xs={7}>
+        <CardStyled>
+          <MemoVideoPlayer video={post.ContentName} />
+        </CardStyled>
       </GridItem>
     </GridContainer>
   );
