@@ -297,7 +297,6 @@ export default function UserFeed({ ...props }) {
     });
     setContents(sorted);
   };
-  console.log("userfeed", favorites, profile, props);
 
   return (
     <Grid container direction="column">

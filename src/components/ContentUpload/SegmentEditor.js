@@ -10,18 +10,22 @@ import IconButton from "@material-ui/core/IconButton";
 
 export default function SegmentEditor(props) {
   const [segments, setSegments] = React.useState(JSON.parse(props.segments));
-  const [edit, setEdit] = useState(false);
-  // const [edit, setEdit] = useState({
-  //   name: false,
-  //   times: false,
-  //   sets: false,
-  //   reps: false,
-  //   rpe: false,
-  // });
+  const [editSection, setEditSection] = useState([]);
+  useEffect(() => {
+    if (editSection.length < segments.length) {
+      for (var i = 0; i < segments.length; i++) {
+        setEditSection(() => {
+          editSection.push(false);
+          return [...editSection];
+        });
+      }
+    }
+  }, [editSection.length < segments.length]);
 
   const handleSegmentChange = (e) => {
     let s = [...segments];
-    s[e.target.dataset.id][e.target.name] = e.target.value;
+    var dataId = e.target.id.split("-", 1);
+    s[dataId][e.target.name] = e.target.value;
     setSegments(s);
     if (props.onChange) {
       props.onChange(s);
@@ -33,15 +37,10 @@ export default function SegmentEditor(props) {
       ...segments,
       { Name: "", Timestamp: "", Sets: "", Reps: "", RPE: "" },
     ]);
-    setEdit(!edit);
-    // setEdit({
-    //   ...edit,
-    //   name: true,
-    //   times: true,
-    //   sets: true,
-    //   reps: true,
-    //   rpe: true,
-    // });
+    setEditSection(() => {
+      editSection.push(true);
+      return [...editSection];
+    });
   };
 
   useEffect(() => {
@@ -54,67 +53,65 @@ export default function SegmentEditor(props) {
         <BlackTitle>Sections</BlackTitle>
         {segments.map((value, idx) => {
           return (
-            <GridContainer key={idx} direction="column">
+            <GridContainer
+              key={idx}
+              direction="column"
+              onClick={() =>
+                setEditSection(() => {
+                  editSection[idx] = true;
+                  return [...editSection];
+                })
+              }
+            >
               <EditableTypography
-                id={"Section-Name" + idx}
+                id={idx + "-SectionName"}
                 text={value.Name}
                 name="Name"
                 label="Name"
                 variant="subtitle2"
-                edit={edit}
-                data-id={idx}
-                // edit={edit.name}
-                // onClick={() => setEdit({ ...edit, name: true })}
+                edit={editSection[idx]}
               />
               <EditableTypography
-                id={"Section-Timestamp" + idx}
+                id={idx + "-SectionTimestamp"}
                 text={segments[idx].Timestamp}
                 name="Timestamp"
                 label="Timestamp"
                 variant="body2"
-                edit={edit}
+                edit={editSection[idx]}
                 showLabel={true}
-                data-id={idx}
-                // onClick={() => setEdit({ ...edit, times: true })}
               />
               <EditableTypography
-                id={"Section-sets" + idx}
+                id={idx + "-SectionSets"}
                 text={value.Sets}
                 name="Sets"
                 label="Sets"
                 variant="body2"
-                edit={edit}
+                edit={editSection[idx]}
                 showLabel={true}
-                data-id={idx}
-                // onClick={() => setEdit({ ...edit, sets: true })}
               />
               <EditableTypography
-                id={"Section-reps" + idx}
+                id={idx + "-SectionReps"}
                 text={value.Reps}
                 name="Reps"
                 label="Reps"
                 variant="body2"
-                edit={edit}
+                edit={editSection[idx]}
                 showLabel={true}
-                data-id={idx}
-                // onClick={() => setEdit({ ...edit, reps: true })}
               />
               <EditableTypography
-                id={"Section-rpe" + idx}
+                id={idx + "-SectionRpe"}
                 text={value.RPE}
                 name="RPE"
                 label="RPE"
                 variant="body2"
-                edit={edit}
+                edit={editSection[idx]}
                 showLabel={true}
-                data-id={idx}
-                // onClick={() => setEdit({ ...edit, rpe: true })}
               />
             </GridContainer>
           );
         })}
       </form>
-      <IconButton onClick={addSegment}>
+      <IconButton onClick={() => addSegment()}>
         <AddCircleIcon fontSize="large" color="primary" />
       </IconButton>
     </div>

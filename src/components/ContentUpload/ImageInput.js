@@ -3,7 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {
   InputButton,
-  BlackTitle,
+  // BlackTitle,
 } from "components/StyledComponets/StyledComponets";
 
 const useStyles = makeStyles((theme) => ({
@@ -117,7 +117,7 @@ export default function ImageInput(image) {
             Upload
           </Button>
         </InputLabel> */}
-        <BlackTitle
+        {/* <BlackTitle
           component="span"
           variant="subtitle1"
           color="inherit"
@@ -125,7 +125,7 @@ export default function ImageInput(image) {
         >
           {image.title}
           <span className={classes.imageMarked} />
-        </BlackTitle>
+        </BlackTitle> */}
       </span>
     </ButtonBase>
   );

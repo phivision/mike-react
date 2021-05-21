@@ -16,7 +16,13 @@ const EditableTypography = ({
 }) => {
   showLabel ? false : showLabel;
   return edit ? (
-    <InputField value={text} onChange={onChange} label={label} {...p} />
+    <InputField
+      value={text}
+      onChange={onChange}
+      label={label}
+      id={"Input" + text}
+      {...p}
+    />
   ) : (
     <TextStyle variant={variant} {...p}>
       {showLabel ? `${label}: ${text}` : text}

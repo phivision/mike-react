@@ -156,7 +156,6 @@ export default function ContentUpload(props) {
 
   const handleVideoUpload = () => {
     // check video duplication
-    console.log("videoForm", videoForm);
     if (props.video || videoForm.id) {
       setOpenDuplicationDialog(true);
     } else {
@@ -234,6 +233,7 @@ export default function ContentUpload(props) {
           console.log(result);
           // response with uploading results
           setVideoStatus(`Success uploading file: ${videoFile.name}!`);
+          alert(`Success uploading file: ${videoFile.name}!`);
           // waiting for video ready
           setVideoReady(false);
           // reset file input
