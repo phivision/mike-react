@@ -39,7 +39,7 @@ const SignInLink = () => {
 
 const UserButton = () => {
   const location = useLocation();
-  let color = location.pathname === "/user" ? "primary" : "action";
+  let color = location.pathname === "/user" ? "primary" : "secondary";
   return (
     <Nav to={"/user"} key={"User Profile"}>
       <CustomIcon color={color}>
@@ -91,7 +91,7 @@ export default function Header(props) {
 
   const SettingButton = () => {
     const location = useLocation();
-    let color = location.pathname === "/settings/" ? "primary" : "action";
+    let color = location.pathname === "/settings/" ? "primary" : "secondary";
     return (
       <CustomIcon color={color} onClick={() => history.push("/settings/")}>
         {typeof SetIcon === "string" ? <Icon>{SetIcon}</Icon> : <SetIcon />}

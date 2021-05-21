@@ -45,6 +45,7 @@ export const CardStyled = styled(Card)`
   border-radius: 20px;
   margin: 10px 0;
   box-shadow: 0 5px 20px 5px #eff1fa;
+  max-width: 500px;
 `;
 
 export const CardIcon = styled.img`
@@ -171,7 +172,7 @@ export const UserFeedBanner = styled(Grid).attrs({
   item: true,
 })`
   height: 100px;
-  background-image: url(${(props) => props.URL});
+  background-image: url(${(props) => props["aria-multiselectable"]});
 `;
 
 export const InputField = styled(TextField).attrs({
