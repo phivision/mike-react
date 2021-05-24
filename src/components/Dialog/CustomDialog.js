@@ -6,8 +6,12 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "../CustomButtons/Button";
 import React from "react";
 import PropTypes from "prop-types";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import GridContainer from "../Grid/GridContainer";
+import GridItem from "../Grid/GridItem";
 
-export default function UploadDialog({
+export default function CustomDialog({
   open,
   title,
   text,
@@ -18,11 +22,22 @@ export default function UploadDialog({
   return (
     <Dialog
       open={open}
-      onClose={onClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      scroll="body"
     >
-      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+      <GridContainer>
+        <GridItem xs={9}>
+          <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+        </GridItem>
+        <GridItem xs={3}>
+          <DialogActions>
+            <IconButton onClick={onClose} color="primary">
+              <CloseIcon />
+            </IconButton>
+          </DialogActions>
+        </GridItem>
+      </GridContainer>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
           {text}
@@ -40,7 +55,7 @@ export default function UploadDialog({
   );
 }
 
-UploadDialog.propTypes = {
+CustomDialog.propTypes = {
   open: PropTypes.bool,
   title: PropTypes.string,
   text: PropTypes.string,

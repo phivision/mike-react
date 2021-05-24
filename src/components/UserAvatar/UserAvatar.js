@@ -1,18 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { Storage } from "aws-amplify";
-import { Avatar } from "@material-ui/core";
 import PropTypes from "prop-types";
+import avatar from "assets/img/faces/blank.png";
+import { CardIcon } from "../../components/StyledComponets/StyledComponets";
 
 const UserAvatar = ({ UserImage: UserImage, ...p }) => {
   const [UserURL, setURL] = useState("");
 
   useEffect(() => {
-    Storage.get(UserImage).then((d) => {
-      setURL(d);
-    });
+    if (UserImage) {
+      Storage.get(UserImage).then((d) => {
+        setURL(d);
+      });
+    } else {
+      setURL(avatar);
+    }
   }, [UserImage]);
 
-  return <Avatar {...p} alt="Profile Picture" src={UserURL} />;
+  return (
+    <div style={{ maxWidth: "150px" }}>
+      <CardIcon {...p} alt="Profile Picture" src={UserURL} />
+    </div>
+  );
 };
 
 UserAvatar.propTypes = {

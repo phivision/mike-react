@@ -1,34 +1,33 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 // @material-ui/core components
 // core components
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import Button from "components/CustomButtons/Button.js";
-import TextField from "@material-ui/core/TextField";
-import CloseIcon from "@material-ui/icons/Close";
-import { IconButton } from "@material-ui/core";
+import EditableTypography from "../../components/EditableTypography/EditableTypography";
+import {
+  GridContainer,
+  GridItem,
+  CustomButton,
+  CardStyled,
+} from "components/StyledComponets/StyledComponets";
 // amplify components
 import { API, Storage, graphqlOperation } from "aws-amplify";
-import {
-  createUserContent,
-  deleteUserContent,
-  updateUserContent,
-} from "graphql/mutations";
+import { createUserContent, updateUserContent } from "graphql/mutations";
 import { getUserContent } from "graphql/queries";
 // resources
 import empty from "assets/img/empty.jpg";
-import ImageButton from "../../components/ContentUpload/ImageButton";
+import ImageInput from "./ImageInput";
 import useInterval from "../../useInterval";
-import SegmentEditor from "../../components/ContentUpload/SegmentEditor";
-import UploadDialog from "../../components/ContentUpload/UploadDialog";
+import SegmentEditor from "./SegmentEditor";
+import CustomDialog from "../Dialog/CustomDialog";
 import { Checkbox, FormControlLabel } from "@material-ui/core";
-import Input from "@material-ui/core/Input";
+// local components
+import { checkS3PrefixReady, deleteVideo } from "../../utilities/VideoTools";
 // the video transcoder will generate a number of files in prefix
 const videoTranscodeCount = 12;
 
 const initialVideoForm = {
   id: "",
+  PrevContentName: null,
   ContentName: "",
   Description: "",
   Title: "",
@@ -36,26 +35,6 @@ const initialVideoForm = {
   createdAt: "",
   Thumbnail: "",
   Segments: JSON.stringify([]),
-};
-
-const deleteS3Prefix = async (videoName, prefix) => {
-  await Storage.list(videoName + "/", {
-    customPrefix: {
-      public: prefix,
-    },
-  })
-    .then((files) => {
-      files.map((file) => {
-        Storage.remove(file.key, {
-          customPrefix: {
-            public: prefix,
-          },
-        });
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
 };
 
 // global video file handler
@@ -72,11 +51,11 @@ export default function ContentUpload(props) {
   const [openDuplicationDialog, setOpenDuplicationDialog] = React.useState(
     false
   );
-  const [openCloseDialog, setOpenCloseDialog] = React.useState(false);
+  const [edit, setEdit] = useState(false);
   const videoFileRef = React.useRef();
   const thumbFileRef = React.useRef();
-  const handleCloseContentUpload = props.onClose;
   const thumbReader = new FileReader();
+
   // setup local image reader
   thumbReader.addEventListener("load", (e) => {
     setThumbURL(e.target.result);
@@ -160,11 +139,16 @@ export default function ContentUpload(props) {
     videoFile = event.target.files[0];
     // combine filename with owner id and remove non alphanumeric value from the string
     const fileName = videoFile.name.split(".");
-    const contentName =
+    const newContentName =
       (fileName[0] + props.user + Date.now()).replace(/[^0-9a-z]/gi, "") +
       "." +
       fileName[1];
-    setVideoForm({ ...videoForm, ContentName: contentName });
+    const prevContentName = videoForm.ContentName;
+    setVideoForm({
+      ...videoForm,
+      PrevContentName: prevContentName,
+      ContentName: newContentName,
+    });
   };
   const handleSegmentJSONChange = (s) => {
     setVideoForm({ ...videoForm, Segments: JSON.stringify(s) });
@@ -209,7 +193,9 @@ export default function ContentUpload(props) {
     if (props.video) {
       if (videoFile && thumbFile) {
         // if new video ready, delete existing video
-        deleteVideo(props.video).then(uploadVideo);
+        deleteVideo(videoForm.PrevContentName, videoForm.Thumbnail).then(
+          uploadVideo
+        );
       }
       // if new video is not ready, update other attributes
       // update database attributes
@@ -247,6 +233,7 @@ export default function ContentUpload(props) {
           console.log(result);
           // response with uploading results
           setVideoStatus(`Success uploading file: ${videoFile.name}!`);
+          alert(`Success uploading file: ${videoFile.name}!`);
           // waiting for video ready
           setVideoReady(false);
           // reset file input
@@ -272,50 +259,6 @@ export default function ContentUpload(props) {
     }
   }
 
-  const checkS3PrefixReady = async (fileName, prefix) => {
-    const videoName = fileName.split(".")[0];
-    // ready true if video is ready, false if not
-    return await Promise.all([
-      Storage.list(videoName + "/", {
-        customPrefix: {
-          public: prefix,
-        },
-      }),
-      Storage.list(videoName + ".m3u8", {
-        customPrefix: {
-          public: "output/hls/",
-        },
-      }),
-    ]);
-  };
-
-  async function deleteVideo() {
-    await Promise.all([
-      // delete S3 storage output m3u8
-      Storage.remove(videoForm.ContentName + ".m3u8", {
-        customPrefix: {
-          public: "output/hls/",
-        },
-      }),
-      // delete S3 storage output mpd
-      Storage.remove(videoForm.ContentName + ".mpd", {
-        customPrefix: {
-          public: "output/dash/",
-        },
-      }),
-      // delete S3 storage output videos
-      deleteS3Prefix(videoForm.ContentName, "output/hls/"),
-      deleteS3Prefix(videoForm.ContentName, "output/dash/"),
-      // delete S3 storage input video
-      Storage.remove(videoForm.ContentName, {
-        customPrefix: {
-          public: "input/",
-        },
-      }),
-      Storage.remove(videoForm.Thumbnail),
-    ]).catch(console.log);
-  }
-
   const handleVideoFormChange = (event) => {
     setVideoForm({ ...videoForm, [event.target.name]: event.target.value });
   };
@@ -326,72 +269,63 @@ export default function ContentUpload(props) {
 
   return (
     <GridContainer>
-      <GridItem xs={3}>
-        <div>
-          <TextField
-            id="video-title"
-            label="videoTitle"
-            name="Title"
-            value={videoForm.Title || ""}
-            onChange={handleVideoFormChange}
-          />
-          <TextField
-            id="video-description"
-            label="videoDescription"
-            name="Description"
-            value={videoForm.Description || ""}
-            onChange={handleVideoFormChange}
-          />
-          <Input
-            type="file"
-            name="Thumbnail"
+      <GridContainer item xs={12} sm={3} direction="column">
+        <EditableTypography
+          id="video-title"
+          label="videoTitle"
+          name="Title"
+          variant="h3"
+          text={videoForm.Title || ""}
+          onChange={handleVideoFormChange}
+          onClick={() => setEdit(true)}
+          edit={edit}
+        />
+        <EditableTypography
+          id="video-description"
+          label="videoDescription"
+          name="Description"
+          variant="body1"
+          text={videoForm.Description || ""}
+          onChange={handleVideoFormChange}
+          edit={edit}
+          onClick={() => setEdit(true)}
+        />
+        <CardStyled>
+          <ImageInput
+            title="Thumbnail"
+            width="100%"
+            height="120px"
+            url={thumbURL}
             accept="image/*"
             inputRef={thumbFileRef}
             onChange={handleThumbnailChange}
           />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={videoForm.IsDemo}
-                onChange={handleVideoDemoChange}
-                name="IsDemo"
-                color="primary"
-              />
-            }
-            label="Demo Video?"
-          />
-          <Button color="primary" onClick={handleVideoUpload}>
-            Upload Content
-          </Button>
-          {videoReady ? (
-            <Button
+        </CardStyled>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={videoForm.IsDemo}
+              onChange={handleVideoDemoChange}
+              name="IsDemo"
               color="primary"
-              onClick={() => {
-                deleteVideo(videoForm.id).then(() => {
-                  // delete content from database
-                  API.graphql(
-                    graphqlOperation(deleteUserContent, {
-                      input: { id: videoForm.id },
-                    })
-                  ).then(props.onClose);
-                });
-              }}
-            >
-              Delete Video
-            </Button>
-          ) : null}
-        </div>
-      </GridItem>
-      <GridItem xs={6}>
-        <ImageButton
-          title={videoStatus}
-          width="100%"
-          url={thumbURL}
-          accept="video/*"
-          inputRef={videoFileRef}
-          onChange={handleVideoFileChange}
+            />
+          }
+          label="Demo Video?"
         />
-        <UploadDialog
+        <CustomButton onClick={handleVideoUpload}>Upload Content</CustomButton>
+      </GridContainer>
+      <GridItem xs={12} sm={6}>
+        <CardStyled>
+          <ImageInput
+            title={videoStatus}
+            url=""
+            width="100%"
+            accept="video/*"
+            inputRef={videoFileRef}
+            onChange={handleVideoFileChange}
+          />
+        </CardStyled>
+        <CustomDialog
           open={openDuplicationDialog}
           title="Video Duplication Alert"
           text="The video has already been uploaded, do you still want to upload it?"
@@ -400,25 +334,7 @@ export default function ContentUpload(props) {
           onClickNo={handleCloseDuplicationDialog}
         />
       </GridItem>
-      <GridItem xs={3}>
-        <div align="right">
-          <IconButton
-            onClick={() => {
-              setOpenCloseDialog(true);
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-          <UploadDialog
-            open={openCloseDialog}
-            title="Close Content Uploading"
-            text="If the video is not uploaded, unsaved data may be lost, do you want to discard it?"
-            onClickYes={handleCloseContentUpload}
-            onClickNo={() => {
-              setOpenCloseDialog(false);
-            }}
-          />
-        </div>
+      <GridItem xs={12} sm={3}>
         <SegmentEditor
           segments={videoForm.Segments}
           onChange={handleSegmentJSONChange}

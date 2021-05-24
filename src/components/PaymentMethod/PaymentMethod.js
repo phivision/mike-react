@@ -52,22 +52,26 @@ const PaymentMethod = ({ ...props }) => {
             (props.PaymentMethod.card.exp_year % 100)}
         </Typography>
       </Grid>
-      <Grid item>
-        <Button
-          variant="outlined"
-          disabled={props.isDefault}
-          onClick={() => props.defaultCallback(props.PaymentMethod.id)}
-        >
-          {props.isDefault ? "Default" : "Make Default"}
-        </Button>
-      </Grid>
-      <Grid item>
-        <IconButton
-          onClick={() => props.deleteCallback(props.PaymentMethod.id)}
-        >
-          <DeleteOutlineIcon />
-        </IconButton>
-      </Grid>
+      {props.defaultCallback && (
+        <Grid item>
+          <Button
+            variant="outlined"
+            disabled={props.isDefault}
+            onClick={() => props.defaultCallback(props.PaymentMethod.id)}
+          >
+            {props.isDefault ? "Default" : "Make Default"}
+          </Button>
+        </Grid>
+      )}
+      {props.isDefault || !props.deleteCallback ? null : (
+        <Grid item>
+          <IconButton
+            onClick={() => props.deleteCallback(props.PaymentMethod.id)}
+          >
+            <DeleteOutlineIcon />
+          </IconButton>
+        </Grid>
+      )}
     </Grid>
   );
 };

@@ -1,7 +1,9 @@
 import React from "react";
-import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
-import { TextField } from "@material-ui/core";
+import {
+  InputField,
+  TextStyle,
+} from "../../components/StyledComponets/StyledComponets";
 
 const EditableTypography = ({
   text: text,
@@ -9,21 +11,22 @@ const EditableTypography = ({
   onChange: onChange,
   variant: variant,
   label: label,
+  showLabel: showLabel,
   ...p
 }) => {
+  showLabel ? false : showLabel;
   return edit ? (
-    <TextField
-      multiline
+    <InputField
       value={text}
       onChange={onChange}
       label={label}
-      variant="outlined"
+      id={"Input" + text}
       {...p}
     />
   ) : (
-    <Typography variant={variant} {...p}>
-      {text}
-    </Typography>
+    <TextStyle variant={variant} {...p}>
+      {showLabel ? `${label}: ${text}` : text}
+    </TextStyle>
   );
 };
 
@@ -33,6 +36,7 @@ EditableTypography.propTypes = {
   onChange: PropTypes.func,
   label: PropTypes.string,
   variant: PropTypes.string,
+  showLabel: PropTypes.bool,
 };
 
 export default EditableTypography;

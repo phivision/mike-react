@@ -3,23 +3,25 @@ import PropTypes from "prop-types";
 import { Storage } from "aws-amplify";
 import { useHistory } from "react-router-dom";
 import { CardActionArea, Typography } from "@material-ui/core";
-import TrainerMetrics from "../TrainerMetrics/TrainerMetrics";
 import {
   GridContainer,
   GridItem,
   CardStyled,
   CardIcon,
 } from "../StyledComponets/StyledComponets";
+import avatar from "assets/img/faces/blank.png";
 
 const ProfileCard = ({ ...props }) => {
-  const [img, setImg] = useState();
+  const [img, setImg] = useState(avatar);
   let history = useHistory();
 
   useEffect(() => {
-    Storage.get(props.profile.UserImage).then((d) => {
-      setImg(d);
-    });
-  }, [props]);
+    if (props.profile.UserImage) {
+      Storage.get(props.profile.UserImage).then((d) => {
+        setImg(d);
+      });
+    }
+  }, [props.profile.UserImage]);
 
   const link = () => {
     history.push("/landingpage/" + props.profile.id);
@@ -38,18 +40,13 @@ const ProfileCard = ({ ...props }) => {
                 {props.profile.FirstName + " " + props.profile.LastName}
               </Typography>
             </GridItem>
+          </GridContainer>
+          <GridItem xs={12} sm={6}>
             <GridItem>
               <Typography variant="body1">
                 {props.profile.Description}
               </Typography>
             </GridItem>
-          </GridContainer>
-          <GridItem xs={12} sm={6}>
-            <TrainerMetrics
-              weight={props.profile.Weight}
-              height={props.profile.Height}
-              birthday={props.profile.Birthday}
-            />
           </GridItem>
         </GridContainer>
       </CardActionArea>

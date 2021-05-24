@@ -12,8 +12,8 @@ export default function Footer() {
   const classes = useStyles();
   // TODO: adding & fixing links to company blog and contact us
   return (
-    <footer>
-      <Grid container>
+    <footer className={classes.footer}>
+      <Grid container alignItems="center">
         <Grid item xs>
           <Typography variant="body1" color="textSecondary" align="left">
             {"Copyright © " +

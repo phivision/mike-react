@@ -1,10 +1,9 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
-import { Icon, IconButton } from "@material-ui/core";
+import { useHistory, useLocation } from "react-router-dom";
+import { Icon } from "@material-ui/core";
 import logo from "../../assets/img/logo.jpg";
 import PropTypes from "prop-types";
 import { userRoles } from "../../variables/userRoles";
-import { headerRoutes } from "routes";
 import {
   AppHeader,
   CustomButton,
@@ -13,6 +12,9 @@ import {
   LogoLink,
   Nav,
   AttriTitle,
+  CustomIcon,
+  SetIcon,
+  UserIcon,
 } from "../StyledComponets/StyledComponets";
 
 const SignUpLink = () => {
@@ -35,19 +37,19 @@ const SignInLink = () => {
   );
 };
 
-const UserIcon = ({ route }) => {
+const UserButton = () => {
+  const location = useLocation();
+  let color = location.pathname === "/user" ? "primary" : "secondary";
   return (
-    <Nav to={route.path} key={route.name}>
-      {typeof route.icon === "string" ? (
-        <Icon>{route.icon}</Icon>
-      ) : (
-        <route.icon />
-      )}
+    <Nav to={"/user"} key={"User Profile"}>
+      <CustomIcon color={color}>
+        {typeof UserIcon === "string" ? <Icon>{UserIcon}</Icon> : <UserIcon />}
+      </CustomIcon>
     </Nav>
   );
 };
 
-UserIcon.propTypes = {
+UserButton.propTypes = {
   route: PropTypes.shape({
     path: PropTypes.string.isRequired,
     icon: PropTypes.object.isRequired,
@@ -76,22 +78,24 @@ export default function Header(props) {
   };
 
   const Logo = () => {
-    return (
+    return props.user.role === userRoles.UNKNOWN ? (
       <LogoLink to="/">
+        <img src={logo} alt="logo" />
+      </LogoLink>
+    ) : (
+      <LogoLink to="/user">
         <img src={logo} alt="logo" />
       </LogoLink>
     );
   };
 
   const SettingButton = () => {
+    const location = useLocation();
+    let color = location.pathname === "/settings/" ? "primary" : "secondary";
     return (
-      <IconButton onClick={() => history.push("/settings/")}>
-        {typeof headerRoutes.settings.icon === "string" ? (
-          <Icon>{headerRoutes.settings.icon}</Icon>
-        ) : (
-          <headerRoutes.settings.icon />
-        )}
-      </IconButton>
+      <CustomIcon color={color} onClick={() => history.push("/settings/")}>
+        {typeof SetIcon === "string" ? <Icon>{SetIcon}</Icon> : <SetIcon />}
+      </CustomIcon>
     );
   };
 
@@ -110,7 +114,7 @@ export default function Header(props) {
         {userRole === userRoles.TRAINER ? <ContentUploadButton /> : null}
         {userRole === userRoles.STUDENT || userRole === userRoles.TRAINER ? (
           <>
-            <UserIcon route={headerRoutes.userProfile} />
+            <UserButton />
             <SettingButton />
           </>
         ) : null}

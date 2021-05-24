@@ -20,6 +20,7 @@ import PaymentMethod from "../../components/PaymentMethod/PaymentMethod";
 import IconButton from "@material-ui/core/IconButton";
 import Checkout from "../../components/Checkout/Checkout";
 import CloseIcon from "@material-ui/icons/Close";
+import TrainerPrice from "../../components/Settings/TrainerPrice";
 
 const getUserSettings = /* GraphQL */ `
   query GetUserProfile($id: ID!) {
@@ -46,11 +47,12 @@ export default function Settings(props) {
   const [defaultPaymentMethod, setDefaultPaymentMethod] = useState("");
   const [trainers, setTrainers] = useState([]);
   const [paymentMethods, setPaymentMethods] = useState([]);
-  const [isVerified, setVerified] = useState(false);
+  const [isVerified, setVerified] = useState(true);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [openCheckout, setOpenCheckout] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [prices, setPrices] = useState([]);
 
   const handleOpenPassword = () => {
     setOpenDialog(true);
@@ -101,13 +103,6 @@ export default function Settings(props) {
         });
     }
   };
-
-  useEffect(() => {
-    if (props.user.role === userRoles.STUDENT) {
-      fetchDefaultPaymentMethod();
-      fetchPaymentMethod();
-    }
-  }, [props]);
 
   const deletePaymentMethod = (id) => {
     const myInit = {
@@ -192,27 +187,6 @@ export default function Settings(props) {
       .catch(console.log);
   };
 
-  useEffect(() => {
-    fetchSettings().then((subs) => {
-      if (userRole === userRoles.STUDENT) {
-        setTrainers(subs);
-      }
-    });
-  }, [props.user.id]);
-
-  useEffect(() => {
-    const sorted = [...paymentMethods].sort((a, b) => {
-      if (a.id === defaultPaymentMethod) {
-        return -1;
-      }
-      if (b.id === defaultPaymentMethod) {
-        return 1;
-      }
-      return 0;
-    });
-    setPaymentMethods(sorted);
-  }, [defaultPaymentMethod]);
-
   const handleOpenCheckout = () => {
     setOpenCheckout(true);
   };
@@ -272,7 +246,7 @@ export default function Settings(props) {
       });
   };
 
-  const getLink = () => {
+  const checkVerification = () => {
     const myInit = {
       headers: {}, // AWS-IAM authorization if using empty headers
       body: {
@@ -283,22 +257,84 @@ export default function Settings(props) {
 
     API.post("stripeAPI", "/stripe/api/trainer/get/account", myInit)
       .then((d) => {
-        console.log(d);
         setVerified(d.data.details_submitted);
       })
       .catch(console.log);
   };
 
+  const getPrices = () => {
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        id: props.user.id,
+      },
+      response: true,
+    };
+
+    API.post("stripeAPI", "/stripe/api/trainer/get/price", myInit)
+      .then((res) => {
+        setPrices(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const changePrice = (p) => {
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        id: props.user.id,
+        newPrice: p,
+      },
+      response: true,
+    };
+
+    API.post("stripeAPI", "/stripe/api/trainer/update/price", myInit)
+      .then(() => {
+        setSnackbarMessage("Price Updated Successfully");
+        setOpenSnackbar(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
-    setSnackbarMessage(
-      "Please login to Stripe in the settings to complete account verification."
-    );
-    setOpenSnackbar(true);
+    if (props.user.role === userRoles.TRAINER && !isVerified) {
+      setSnackbarMessage(
+        "Please login to Stripe in the settings to complete account verification."
+      );
+      setOpenSnackbar(true);
+    }
   }, [isVerified]);
 
   useEffect(() => {
-    getLink();
-  }, [props]);
+    const sorted = [...paymentMethods].sort((a, b) => {
+      if (a.id === defaultPaymentMethod) {
+        return -1;
+      }
+      if (b.id === defaultPaymentMethod) {
+        return 1;
+      }
+      return 0;
+    });
+    setPaymentMethods(sorted);
+  }, [defaultPaymentMethod, paymentMethods.length]);
+
+  useEffect(() => {
+    checkVerification();
+    getPrices();
+    fetchSettings().then((subs) => {
+      if (userRole === userRoles.STUDENT) {
+        setTrainers(subs);
+      }
+    });
+    if (props.user.role === userRoles.STUDENT) {
+      fetchDefaultPaymentMethod();
+      fetchPaymentMethod();
+    }
+  }, [props.user.id]);
 
   return (
     <TableContainer component={Paper}>
@@ -326,8 +362,10 @@ export default function Settings(props) {
             <TableCell align="left" rowSpan={3}>
               <Typography variant="h1">Account</Typography>
             </TableCell>
-            <TableCell align="left" colSpan={2}>
+            <TableCell align="left">
               <Typography variant="body1">{email}</Typography>
+            </TableCell>
+            <TableCell align="right">
               <Button onClick={signOut}>Sign out</Button>
             </TableCell>
           </TableRow>
@@ -335,7 +373,11 @@ export default function Settings(props) {
         <TableBody>
           <TableRow>
             <TableCell rowSpan={4}>
-              <Typography variant="h3">Membership and Billing</Typography>
+              <Typography variant="h3">
+                {userRole === userRoles.STUDENT
+                  ? "Membership and Billing"
+                  : "Account and Billing"}
+              </Typography>
             </TableCell>
           </TableRow>
           <TableRow>
@@ -369,12 +411,15 @@ export default function Settings(props) {
               <TableCell>
                 <Button
                   variant="contained"
+                  color="primary"
                   fullWidth
                   onClick={() => {
                     isVerified ? login() : onboard();
                   }}
                 >
-                  Login to Stripe
+                  {isVerified
+                    ? "Manage Billing on Stripe"
+                    : "Verify Account on Stripe"}
                 </Button>
               </TableCell>
             </TableRow>
@@ -382,7 +427,20 @@ export default function Settings(props) {
         </TableBody>
         {userRole === userRoles.STUDENT ? (
           <ActiveSubscriptions trainers={trainers} user={props.user.id} />
-        ) : null}
+        ) : (
+          <TableRow>
+            <TableCell align="left">
+              <Typography variant="h3">Pricing Tiers</Typography>
+            </TableCell>
+            {prices.map((p, idx) => (
+              <TrainerPrice
+                key={idx}
+                price={p.unit_amount}
+                changePrice={changePrice}
+              />
+            ))}
+          </TableRow>
+        )}
       </Table>
       <PasswordDialog />
       <Dialog
