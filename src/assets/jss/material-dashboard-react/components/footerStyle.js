@@ -31,10 +31,13 @@ const footerStyle = {
   },
   footer: {
     backgroundColor: whiteColor,
-    margin: "0 30px",
-    bottom: "0",
     borderTop: "1px solid " + grayColor[11],
     padding: "15px 0",
+    width: "100%",
+    height: "100%",
+    marginTop: "auto",
+    textAlign: "center",
+    flex: "0 0 auto",
     ...defaultFont,
   },
   a: {

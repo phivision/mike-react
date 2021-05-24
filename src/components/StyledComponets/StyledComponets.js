@@ -197,3 +197,12 @@ export const DividerLine = styled(Divider).attrs({
 })`
   width: 100%;
 `;
+
+export const FlexContain = styled(Container).attrs({
+  maxWidth: false,
+  disableGutters: true,
+})`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;
