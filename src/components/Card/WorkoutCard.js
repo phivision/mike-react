@@ -124,7 +124,7 @@ WorkoutCard.propTypes = {
     id: PropTypes.string.isRequired,
     Description: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
-    Thumbnail: PropTypes.string.isRequired,
+    Thumbnail: PropTypes.string,
     owner: PropTypes.string.isRequired,
     ContentName: PropTypes.string,
   }),

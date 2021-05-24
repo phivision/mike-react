@@ -303,11 +303,10 @@ export default function UserFeed({ ...props }) {
     });
     setContents(sorted);
   };
-  console.log("userfeed", favorites, profile, props);
 
   return (
     <Grid container direction="column">
-      <UserFeedBanner URL={Banner} />
+      <UserFeedBanner url={Banner} />
       <StyledContent>
         <GridContainer item direction="row">
           <GridContainer item direction="column" xs={12} sm={4}>
@@ -355,7 +354,6 @@ export default function UserFeed({ ...props }) {
                   variant="body1"
                   edit={edit}
                   label="Description"
-                  fullWidth={true}
                   onChange={onChange}
                   id="description"
                   text={profile.Description}
@@ -365,12 +363,12 @@ export default function UserFeed({ ...props }) {
                 {edit ? (
                   <GridItem>
                     <CustomButton
-                      fullWidth={true}
+                      fullWidth
                       onClick={() => onClickEditProfile("submit-changes")}
                     >
                       Submit Changes
                     </CustomButton>
-                    <CustomButton fullWidth={true} onClick={onClickEditProfile}>
+                    <CustomButton fullWidth onClick={onClickEditProfile}>
                       Discard Changes
                     </CustomButton>
                   </GridItem>
@@ -379,7 +377,7 @@ export default function UserFeed({ ...props }) {
                     color="primary"
                     variant="contained"
                     onClick={onClickEditProfile}
-                    fullWidth={true}
+                    fullWidth
                   >
                     Edit
                   </CustomButton>

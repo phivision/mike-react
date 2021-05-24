@@ -5,21 +5,18 @@ import awsconfig from "./aws-exports";
 import { Hub } from "aws-amplify";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-
 import { BrowserRouter, Switch, Redirect } from "react-router-dom";
-
 import "assets/css/material-dashboard-react.css?v=1.9.0";
-
 import theme from "./theme.js";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import Header from "./components/Header/Header";
 import { routes } from "./routes";
 import Footer from "./components/Footer/Footer";
-import { Container } from "@material-ui/core";
 import PrivateRoute from "./components/Routes/PrivateRoute";
 import PublicRoute from "./components/Routes/PublicRoute";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import UploadDialog from "./views/ContentUpload/UploadDialog";
+import { FlexContain } from "components/StyledComponets/StyledComponets";
 
 // amplify config
 Amplify.configure(awsconfig);
@@ -115,7 +112,7 @@ const App = () => {
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
         <BrowserRouter>
-          <Container maxWidth={false} disableGutters={true}>
+          <FlexContain>
             <Header user={user} onContentUpload={handleOpenContentUpload} />
             <div>
               <Switch>
@@ -130,7 +127,7 @@ const App = () => {
               />
             </div>
             <Footer />
-          </Container>
+          </FlexContain>
         </BrowserRouter>
       </MuiThemeProvider>
     </Elements>

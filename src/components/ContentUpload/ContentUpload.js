@@ -1,11 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 // @material-ui/core components
 // core components
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import Button from "components/CustomButtons/Button.js";
-import TextField from "@material-ui/core/TextField";
+import EditableTypography from "../../components/EditableTypography/EditableTypography";
+import {
+  GridContainer,
+  GridItem,
+  CustomButton,
+  CardStyled,
+} from "components/StyledComponets/StyledComponets";
 // amplify components
 import { API, Storage, graphqlOperation } from "aws-amplify";
 import { createUserContent, updateUserContent } from "graphql/mutations";
@@ -17,7 +20,6 @@ import useInterval from "../../useInterval";
 import SegmentEditor from "./SegmentEditor";
 import CustomDialog from "../Dialog/CustomDialog";
 import { Checkbox, FormControlLabel } from "@material-ui/core";
-import Input from "@material-ui/core/Input";
 // local components
 import { checkS3PrefixReady, deleteVideo } from "../../utilities/VideoTools";
 // the video transcoder will generate a number of files in prefix
@@ -49,6 +51,7 @@ export default function ContentUpload(props) {
   const [openDuplicationDialog, setOpenDuplicationDialog] = React.useState(
     false
   );
+  const [edit, setEdit] = useState(false);
   const videoFileRef = React.useRef();
   const thumbFileRef = React.useRef();
   const thumbReader = new FileReader();
@@ -230,6 +233,7 @@ export default function ContentUpload(props) {
           console.log(result);
           // response with uploading results
           setVideoStatus(`Success uploading file: ${videoFile.name}!`);
+          alert(`Success uploading file: ${videoFile.name}!`);
           // waiting for video ready
           setVideoReady(false);
           // reset file input
@@ -265,54 +269,62 @@ export default function ContentUpload(props) {
 
   return (
     <GridContainer>
-      <GridItem xs={3}>
-        <div>
-          <TextField
-            id="video-title"
-            label="videoTitle"
-            name="Title"
-            value={videoForm.Title || ""}
-            onChange={handleVideoFormChange}
-          />
-          <TextField
-            id="video-description"
-            label="videoDescription"
-            name="Description"
-            value={videoForm.Description || ""}
-            onChange={handleVideoFormChange}
-          />
-          <Input
-            type="file"
-            name="Thumbnail"
+      <GridContainer item xs={12} sm={3} direction="column">
+        <EditableTypography
+          id="video-title"
+          label="videoTitle"
+          name="Title"
+          variant="h3"
+          text={videoForm.Title || ""}
+          onChange={handleVideoFormChange}
+          onClick={() => setEdit(true)}
+          edit={edit}
+        />
+        <EditableTypography
+          id="video-description"
+          label="videoDescription"
+          name="Description"
+          variant="body1"
+          text={videoForm.Description || ""}
+          onChange={handleVideoFormChange}
+          edit={edit}
+          onClick={() => setEdit(true)}
+        />
+        <CardStyled>
+          <ImageInput
+            title="Thumbnail"
+            width="100%"
+            height="120px"
+            url={thumbURL}
             accept="image/*"
             inputRef={thumbFileRef}
             onChange={handleThumbnailChange}
           />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={videoForm.IsDemo}
-                onChange={handleVideoDemoChange}
-                name="IsDemo"
-                color="primary"
-              />
-            }
-            label="Demo Video?"
-          />
-          <Button color="primary" onClick={handleVideoUpload}>
-            Upload Content
-          </Button>
-        </div>
-      </GridItem>
-      <GridItem xs={6}>
-        <ImageInput
-          title={videoStatus}
-          width="100%"
-          url={thumbURL}
-          accept="video/*"
-          inputRef={videoFileRef}
-          onChange={handleVideoFileChange}
+        </CardStyled>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={videoForm.IsDemo}
+              onChange={handleVideoDemoChange}
+              name="IsDemo"
+              color="primary"
+            />
+          }
+          label="Demo Video?"
         />
+        <CustomButton onClick={handleVideoUpload}>Upload Content</CustomButton>
+      </GridContainer>
+      <GridItem xs={12} sm={6}>
+        <CardStyled>
+          <ImageInput
+            title={videoStatus}
+            url=""
+            width="100%"
+            accept="video/*"
+            inputRef={videoFileRef}
+            onChange={handleVideoFileChange}
+          />
+        </CardStyled>
         <CustomDialog
           open={openDuplicationDialog}
           title="Video Duplication Alert"
@@ -322,7 +334,7 @@ export default function ContentUpload(props) {
           onClickNo={handleCloseDuplicationDialog}
         />
       </GridItem>
-      <GridItem xs={3}>
+      <GridItem xs={12} sm={3}>
         <SegmentEditor
           segments={videoForm.Segments}
           onChange={handleSegmentJSONChange}

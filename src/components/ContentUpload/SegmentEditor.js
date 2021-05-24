@@ -1,13 +1,32 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import Button from "../CustomButtons/Button";
+import {
+  BlackTitle,
+  GridContainer,
+  IconStyle,
+} from "components/StyledComponets/StyledComponets";
+import EditableTypography from "../../components/EditableTypography/EditableTypography";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import { DeleteOutline, Edit } from "@material-ui/icons";
 
 export default function SegmentEditor(props) {
   const [segments, setSegments] = React.useState(JSON.parse(props.segments));
+  const [editSection, setEditSection] = useState([]);
+  useEffect(() => {
+    if (editSection.length < segments.length) {
+      for (var i = 0; i < segments.length; i++) {
+        setEditSection(() => {
+          editSection.push(false);
+          return [...editSection];
+        });
+      }
+    }
+  }, [editSection.length < segments.length]);
 
   const handleSegmentChange = (e) => {
     let s = [...segments];
-    s[e.target.dataset.id][e.target.className] = e.target.value;
+    var dataId = e.target.id.split("-", 1);
+    s[dataId][e.target.name] = e.target.value;
     setSegments(s);
     if (props.onChange) {
       props.onChange(s);
@@ -19,6 +38,10 @@ export default function SegmentEditor(props) {
       ...segments,
       { Name: "", Timestamp: "", Sets: "", Reps: "", RPE: "" },
     ]);
+    setEditSection(() => {
+      editSection.push(true);
+      return [...editSection];
+    });
   };
 
   useEffect(() => {
@@ -28,50 +51,88 @@ export default function SegmentEditor(props) {
   return (
     <div>
       <form onChange={handleSegmentChange}>
+        <BlackTitle>Sections</BlackTitle>
         {segments.map((value, idx) => {
           return (
-            <div key={idx}>
-              <label>{"Movement " + (idx + 1)}</label>
-              <input
-                type="text"
-                data-id={idx}
-                id={"name" + idx}
-                value={segments[idx].Name}
-                className="Name"
+            <GridContainer key={idx} direction="column">
+              <div style={{ display: "flex" }}>
+                <EditableTypography
+                  id={idx + "-SectionName"}
+                  text={value.Name}
+                  name="Name"
+                  label="Name"
+                  variant="subtitle2"
+                  edit={editSection[idx]}
+                  style={{ flex: 1 }}
+                />
+                <IconStyle
+                  onClick={() =>
+                    setEditSection(() => {
+                      editSection[idx] = !editSection[idx];
+                      return [...editSection];
+                    })
+                  }
+                >
+                  <Edit color="primary" />
+                </IconStyle>
+                <IconStyle
+                  onClick={() => {
+                    setEditSection(() => {
+                      editSection.splice(idx, 1);
+                      return [...editSection];
+                    });
+                    setSegments(() => {
+                      segments.splice(idx, 1);
+                      return [...segments];
+                    });
+                  }}
+                >
+                  <DeleteOutline color="primary" />
+                </IconStyle>
+              </div>
+              <EditableTypography
+                id={idx + "-SectionTimestamp"}
+                text={segments[idx].Timestamp}
+                name="Timestamp"
+                label="Timestamp"
+                variant="body2"
+                edit={editSection[idx]}
+                showLabel={true}
               />
-              <input
-                type="text"
-                data-id={idx}
-                id={"timestamp" + idx}
-                value={segments[idx].Timestamp}
-                className="Timestamp"
+              <EditableTypography
+                id={idx + "-SectionSets"}
+                text={value.Sets}
+                name="Sets"
+                label="Sets"
+                variant="body2"
+                edit={editSection[idx]}
+                showLabel={true}
               />
-              <input
-                type="text"
-                data-id={idx}
-                id={"sets" + idx}
-                value={segments[idx].Sets}
-                className="Sets"
+              <EditableTypography
+                id={idx + "-SectionReps"}
+                text={value.Reps}
+                name="Reps"
+                label="Reps"
+                variant="body2"
+                edit={editSection[idx]}
+                showLabel={true}
               />
-              <input
-                type="text"
-                data-id={idx}
-                id={"reps" + idx}
-                value={segments[idx].Reps}
-                className="Reps"
+              <EditableTypography
+                id={idx + "-SectionRpe"}
+                text={value.RPE}
+                name="RPE"
+                label="RPE"
+                variant="body2"
+                edit={editSection[idx]}
+                showLabel={true}
               />
-              <input
-                type="text"
-                data-id={idx}
-                id={"rpe" + idx}
-                value={segments[idx].RPE}
-                className="RPE"
-              />
-            </div>
+            </GridContainer>
           );
         })}
       </form>
-      <Button onClick={addSegment}>Add a segment</Button>
+      <IconStyle onClick={() => addSegment()}>
+        <AddCircleIcon fontSize="large" color="primary" />
+      </IconStyle>
     </div>
   );
 }

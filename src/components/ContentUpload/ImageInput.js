@@ -1,7 +1,10 @@
-import { ButtonBase, makeStyles, Typography } from "@material-ui/core";
-import Input from "@material-ui/core/Input";
+import { ButtonBase, makeStyles } from "@material-ui/core";
 import React from "react";
 import PropTypes from "prop-types";
+import {
+  InputButton,
+  // BlackTitle,
+} from "components/StyledComponets/StyledComponets";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -9,10 +12,12 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
     minWidth: 300,
     width: "100%",
+    margin: "10px",
   },
   image: {
     position: "relative",
     height: 200,
+    margin: "10px 0",
     [theme.breakpoints.down("xs")]: {
       width: "100% !important", // Overrides inline-style
       height: 100,
@@ -50,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
     bottom: 0,
     backgroundSize: "cover",
     backgroundPosition: "center 40%",
+    borderRadius: "10px",
   },
   imageBackdrop: {
     position: "absolute",
@@ -57,7 +63,6 @@ const useStyles = makeStyles((theme) => ({
     right: 0,
     top: 0,
     bottom: 0,
-    backgroundColor: theme.palette.common.black,
     opacity: 0.4,
     transition: theme.transitions.create("opacity"),
   },
@@ -88,6 +93,7 @@ export default function ImageInput(image) {
       focusVisibleClassName={classes.focusVisible}
       style={{
         width: image.width,
+        height: image.height,
       }}
     >
       <span
@@ -98,7 +104,20 @@ export default function ImageInput(image) {
       />
       <span className={classes.imageBackdrop} />
       <span className={classes.imageButton}>
-        <Typography
+        <InputButton
+          type="file"
+          id={"upload-file" + image.title}
+          accept={image.accept}
+          inputRef={image.inputRef}
+          onChange={image.onChange}
+          // style={{ display: "none" }}
+        />
+        {/* <InputLabel htmlFor={"upload-file" + image.title}>
+          <Button variant="outlined" component="span">
+            Upload
+          </Button>
+        </InputLabel> */}
+        {/* <BlackTitle
           component="span"
           variant="subtitle1"
           color="inherit"
@@ -106,14 +125,7 @@ export default function ImageInput(image) {
         >
           {image.title}
           <span className={classes.imageMarked} />
-        </Typography>
-        <Input
-          type="file"
-          accept={image.accept}
-          inputRef={image.inputRef}
-          onChange={image.onChange}
-          hidden
-        />
+        </BlackTitle> */}
       </span>
     </ButtonBase>
   );

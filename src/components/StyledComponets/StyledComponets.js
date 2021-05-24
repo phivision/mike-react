@@ -8,6 +8,9 @@ import {
   Toolbar,
   IconButton,
   TextField,
+  Input,
+  Divider,
+  Container,
 } from "@material-ui/core";
 import SearchBar from "material-ui-search-bar";
 import {
@@ -18,6 +21,12 @@ import { Link } from "react-router-dom";
 import Person from "@material-ui/icons/Person";
 import SettingsIcon from "@material-ui/icons/Settings";
 import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
+
+export const ContainBox = styled(Container).attrs({
+  disableGutters: true,
+})`
+  padding: 10px;
+`;
 
 export const GridContainer = styled(Grid).attrs({
   container: true,
@@ -35,6 +44,8 @@ export const GridItem = styled(Grid).attrs({
 export const CardStyled = styled(Card)`
   border-radius: 20px;
   margin: 10px 0;
+  box-shadow: 0 5px 20px 5px #eff1fa;
+  max-width: 70%;
 `;
 
 export const CardIcon = styled.img`
@@ -43,6 +54,15 @@ export const CardIcon = styled.img`
   border-radius: 30px;
   display: block;
   margin: auto;
+`;
+
+export const BlackTitle = styled(Typography).attrs({
+  variant: "h6",
+})`
+  display: inline-block;
+  font-weight: 700;
+  color: black !important;
+  margin: 5px 0;
 `;
 
 export const AttriTitle = styled(Typography).attrs({
@@ -57,6 +77,7 @@ export const Attribute = styled(Typography).attrs({
 })`
   display: inline-block;
   font-weight: 700;
+  margin: 5px 0;
 `;
 
 export const Unit = styled(Typography).attrs({
@@ -107,8 +128,19 @@ export const CustomIcon = styled(IconButton).attrs({
   size: "small",
 })`
   width: 36px;
-  height: 36px;
+  height: fit-content;
   margin: 5px;
+  padding: 0;
+  .MuiIconButton-label {
+    display: inline-block;
+  }
+`;
+
+export const IconStyle = styled(IconButton).attrs({
+  size: "small",
+})`
+  padding: 0;
+  height: fit-content;
   .MuiIconButton-label {
     display: inline-block;
   }
@@ -151,12 +183,11 @@ export const UserFeedBanner = styled(Grid).attrs({
   item: true,
 })`
   height: 100px;
-  background-image: url(${(props) => props.URL});
+  background-image: url(${(props) => props["aria-multiselectable"]});
 `;
 
 export const InputField = styled(TextField).attrs({
   multiline: true,
-  variant: "outlined",
 })`
   margin: 10px;
 `;
@@ -164,4 +195,25 @@ export const InputField = styled(TextField).attrs({
 export const TextStyle = styled(Typography)`
   display: inline-block;
   margin: 2px;
+`;
+
+export const InputButton = styled(Input).attrs({
+  disableUnderline: true,
+})`
+  margin: 5px;
+`;
+
+export const DividerLine = styled(Divider).attrs({
+  variant: "fullWidth",
+})`
+  width: 100%;
+`;
+
+export const FlexContain = styled(Container).attrs({
+  maxWidth: false,
+  disableGutters: true,
+})`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 `;
