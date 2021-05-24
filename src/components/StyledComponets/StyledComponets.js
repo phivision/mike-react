@@ -128,8 +128,19 @@ export const CustomIcon = styled(IconButton).attrs({
   size: "small",
 })`
   width: 36px;
-  height: 36px;
+  height: fit-content;
   margin: 5px;
+  padding: 0;
+  .MuiIconButton-label {
+    display: inline-block;
+  }
+`;
+
+export const IconStyle = styled(IconButton).attrs({
+  size: "small",
+})`
+  padding: 0;
+  height: fit-content;
   .MuiIconButton-label {
     display: inline-block;
   }

@@ -3,10 +3,11 @@ import PropTypes from "prop-types";
 import {
   BlackTitle,
   GridContainer,
-} from "../../components/StyledComponets/StyledComponets";
+  IconStyle,
+} from "components/StyledComponets/StyledComponets";
 import EditableTypography from "../../components/EditableTypography/EditableTypography";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import IconButton from "@material-ui/core/IconButton";
+import { DeleteOutline, Edit } from "@material-ui/icons";
 
 export default function SegmentEditor(props) {
   const [segments, setSegments] = React.useState(JSON.parse(props.segments));
@@ -53,24 +54,42 @@ export default function SegmentEditor(props) {
         <BlackTitle>Sections</BlackTitle>
         {segments.map((value, idx) => {
           return (
-            <GridContainer
-              key={idx}
-              direction="column"
-              onClick={() =>
-                setEditSection(() => {
-                  editSection[idx] = true;
-                  return [...editSection];
-                })
-              }
-            >
-              <EditableTypography
-                id={idx + "-SectionName"}
-                text={value.Name}
-                name="Name"
-                label="Name"
-                variant="subtitle2"
-                edit={editSection[idx]}
-              />
+            <GridContainer key={idx} direction="column">
+              <div style={{ display: "flex" }}>
+                <EditableTypography
+                  id={idx + "-SectionName"}
+                  text={value.Name}
+                  name="Name"
+                  label="Name"
+                  variant="subtitle2"
+                  edit={editSection[idx]}
+                  style={{ flex: 1 }}
+                />
+                <IconStyle
+                  onClick={() =>
+                    setEditSection(() => {
+                      editSection[idx] = !editSection[idx];
+                      return [...editSection];
+                    })
+                  }
+                >
+                  <Edit color="primary" />
+                </IconStyle>
+                <IconStyle
+                  onClick={() => {
+                    setEditSection(() => {
+                      editSection.splice(idx, 1);
+                      return [...editSection];
+                    });
+                    setSegments(() => {
+                      segments.splice(idx, 1);
+                      return [...segments];
+                    });
+                  }}
+                >
+                  <DeleteOutline color="primary" />
+                </IconStyle>
+              </div>
               <EditableTypography
                 id={idx + "-SectionTimestamp"}
                 text={segments[idx].Timestamp}
@@ -111,9 +130,9 @@ export default function SegmentEditor(props) {
           );
         })}
       </form>
-      <IconButton onClick={() => addSegment()}>
+      <IconStyle onClick={() => addSegment()}>
         <AddCircleIcon fontSize="large" color="primary" />
-      </IconButton>
+      </IconStyle>
     </div>
   );
 }
