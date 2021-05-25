@@ -32,7 +32,7 @@ const initialUser = { id: null, role: "unknown" };
 //TODO: Remove excess components
 const App = () => {
   const [user, setUser] = React.useState(initialUser);
-  const [verified, setVerified] = React.useState(true);
+  const [verified, setVerified] = React.useState(false);
   const [openContentUpload, setOpenContentUpload] = React.useState(false);
 
   const switchRoutes = (routes) => {

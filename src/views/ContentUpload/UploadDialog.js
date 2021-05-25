@@ -1,6 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Dialog, DialogActions, DialogContent } from "@material-ui/core";
+import {
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+} from "@material-ui/core";
 import ContentUpload from "../../components/ContentUpload/ContentUpload";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
@@ -26,6 +31,14 @@ export default function UploadDialog(props) {
       />
     </DialogContent>
   );
+
+  const notice = (
+    <DialogContent>
+      <Typography variant="h3">
+        {"Please onboard your stripe account before uploading new videos!"}
+      </Typography>
+    </DialogContent>
+  );
   return (
     <Dialog open={props.open} fullWidth maxWidth="md">
       <DialogActions>
@@ -46,14 +59,12 @@ export default function UploadDialog(props) {
             />
           </>
         ) : (
-          <IconButton onClick={handleCloseDialog} color="primary">
+          <IconButton onClick={props.onClose} color="primary">
             <CloseIcon />
           </IconButton>
         )}
       </DialogActions>
-      {props.isVerified
-        ? body
-        : "Please onboard your stripe account before uploading new videos!"}
+      {props.isVerified ? body : notice}
     </Dialog>
   );
 }
