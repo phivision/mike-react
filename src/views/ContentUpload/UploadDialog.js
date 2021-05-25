@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   Typography,
@@ -13,6 +13,8 @@ import CustomDialog from "../../components/Dialog/CustomDialog";
 
 export default function UploadDialog(props) {
   const [openDialog, setOpenDialog] = React.useState(false);
+  // state to control the upload notification dialog
+  const [uploaded, setUploaded] = React.useState(false);
 
   const handleOpenDialog = () => {
     setOpenDialog(true);
@@ -22,12 +24,18 @@ export default function UploadDialog(props) {
     setOpenDialog(false);
   };
 
+  useEffect(() => {
+    // set the upload state as false every time open a new upload dialog
+    setUploaded(false);
+  }, [props.video]);
+
   const body = (
     <DialogContent>
       <ContentUpload
         user={props.user}
         video={props.video}
         onClose={props.onClose}
+        onUpload={setUploaded}
       />
     </DialogContent>
   );
@@ -39,10 +47,11 @@ export default function UploadDialog(props) {
       </Typography>
     </DialogContent>
   );
+
   return (
     <Dialog open={props.open} fullWidth maxWidth="md">
       <DialogActions>
-        {props.isVerified ? (
+        {props.isVerified && !uploaded ? (
           <>
             <IconButton onClick={handleOpenDialog} color="primary">
               <CloseIcon />

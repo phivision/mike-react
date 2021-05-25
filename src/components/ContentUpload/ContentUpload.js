@@ -252,6 +252,10 @@ export default function ContentUpload(props) {
           thumbFileRef.current.value = "";
           // set count down timer for transcoding
           setCount(120);
+          // notify upload dialog the content is uploaded
+          if (props.onUpload) {
+            props.onUpload(true);
+          }
         })
         .catch((error) => {
           const msg = "Error uploading file: " + error.message;
@@ -367,5 +371,6 @@ export default function ContentUpload(props) {
 ContentUpload.propTypes = {
   user: PropTypes.string,
   video: PropTypes.string,
-  onClose: PropTypes.func,
+  onClose: PropTypes.func.isRequired,
+  onUpload: PropTypes.func,
 };
