@@ -27,50 +27,15 @@ export const createUserProfile = /* GraphQL */ `
       updatedAt
       owner
       Subscriptions {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       Users {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       Favorites {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       Contents {
-        items {
-          id
-          CreatorID
-          ContentName
-          Description
-          Title
-          Level
-          Length
-          IsDemo
-          ViewCount
-          Thumbnail
-          Preview
-          Segments
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
     }
@@ -102,50 +67,15 @@ export const updateUserProfile = /* GraphQL */ `
       updatedAt
       owner
       Subscriptions {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       Users {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       Favorites {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       Contents {
-        items {
-          id
-          CreatorID
-          ContentName
-          Description
-          Title
-          Level
-          Length
-          IsDemo
-          ViewCount
-          Thumbnail
-          Preview
-          Segments
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
     }
@@ -177,50 +107,15 @@ export const deleteUserProfile = /* GraphQL */ `
       updatedAt
       owner
       Subscriptions {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       Users {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       Favorites {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       Contents {
-        items {
-          id
-          CreatorID
-          ContentName
-          Description
-          Title
-          Level
-          Length
-          IsDemo
-          ViewCount
-          Thumbnail
-          Preview
-          Segments
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
     }
@@ -233,6 +128,8 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
   ) {
     createUserSubscriptionTrainer(input: $input, condition: $condition) {
       id
+      StripeID
+      ExpireDate
       createdAt
       updatedAt
       Trainer {
@@ -255,18 +152,6 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Subscriptions {
-          nextToken
-        }
-        Users {
-          nextToken
-        }
-        Favorites {
-          nextToken
-        }
-        Contents {
-          nextToken
-        }
       }
       User {
         id
@@ -288,18 +173,6 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Subscriptions {
-          nextToken
-        }
-        Users {
-          nextToken
-        }
-        Favorites {
-          nextToken
-        }
-        Contents {
-          nextToken
-        }
       }
       owner
     }
@@ -312,6 +185,8 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
   ) {
     updateUserSubscriptionTrainer(input: $input, condition: $condition) {
       id
+      StripeID
+      ExpireDate
       createdAt
       updatedAt
       Trainer {
@@ -334,18 +209,6 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Subscriptions {
-          nextToken
-        }
-        Users {
-          nextToken
-        }
-        Favorites {
-          nextToken
-        }
-        Contents {
-          nextToken
-        }
       }
       User {
         id
@@ -367,18 +230,6 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Subscriptions {
-          nextToken
-        }
-        Users {
-          nextToken
-        }
-        Favorites {
-          nextToken
-        }
-        Contents {
-          nextToken
-        }
       }
       owner
     }
@@ -391,6 +242,8 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
   ) {
     deleteUserSubscriptionTrainer(input: $input, condition: $condition) {
       id
+      StripeID
+      ExpireDate
       createdAt
       updatedAt
       Trainer {
@@ -413,18 +266,6 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Subscriptions {
-          nextToken
-        }
-        Users {
-          nextToken
-        }
-        Favorites {
-          nextToken
-        }
-        Contents {
-          nextToken
-        }
       }
       User {
         id
@@ -446,18 +287,6 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Subscriptions {
-          nextToken
-        }
-        Users {
-          nextToken
-        }
-        Favorites {
-          nextToken
-        }
-        Contents {
-          nextToken
-        }
       }
       owner
     }
@@ -492,18 +321,6 @@ export const createUserFavoriteContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Subscriptions {
-          nextToken
-        }
-        Users {
-          nextToken
-        }
-        Favorites {
-          nextToken
-        }
-        Contents {
-          nextToken
-        }
       }
       owner
       Content {
@@ -517,34 +334,9 @@ export const createUserFavoriteContent = /* GraphQL */ `
         IsDemo
         ViewCount
         Thumbnail
-        Preview
         Segments
         createdAt
         updatedAt
-        Creator {
-          id
-          Birthday
-          Email
-          Gender
-          Height
-          RegDate
-          StripeID
-          UserImage
-          BgImage
-          BgTitle
-          LastName
-          FirstName
-          UserRole
-          Weight
-          Description
-          Biography
-          createdAt
-          updatedAt
-          owner
-        }
-        FavoriteUser {
-          nextToken
-        }
         owner
       }
     }
@@ -579,18 +371,6 @@ export const updateUserFavoriteContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Subscriptions {
-          nextToken
-        }
-        Users {
-          nextToken
-        }
-        Favorites {
-          nextToken
-        }
-        Contents {
-          nextToken
-        }
       }
       owner
       Content {
@@ -604,34 +384,9 @@ export const updateUserFavoriteContent = /* GraphQL */ `
         IsDemo
         ViewCount
         Thumbnail
-        Preview
         Segments
         createdAt
         updatedAt
-        Creator {
-          id
-          Birthday
-          Email
-          Gender
-          Height
-          RegDate
-          StripeID
-          UserImage
-          BgImage
-          BgTitle
-          LastName
-          FirstName
-          UserRole
-          Weight
-          Description
-          Biography
-          createdAt
-          updatedAt
-          owner
-        }
-        FavoriteUser {
-          nextToken
-        }
         owner
       }
     }
@@ -666,18 +421,6 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Subscriptions {
-          nextToken
-        }
-        Users {
-          nextToken
-        }
-        Favorites {
-          nextToken
-        }
-        Contents {
-          nextToken
-        }
       }
       owner
       Content {
@@ -691,34 +434,9 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
         IsDemo
         ViewCount
         Thumbnail
-        Preview
         Segments
         createdAt
         updatedAt
-        Creator {
-          id
-          Birthday
-          Email
-          Gender
-          Height
-          RegDate
-          StripeID
-          UserImage
-          BgImage
-          BgTitle
-          LastName
-          FirstName
-          UserRole
-          Weight
-          Description
-          Biography
-          createdAt
-          updatedAt
-          owner
-        }
-        FavoriteUser {
-          nextToken
-        }
         owner
       }
     }
@@ -740,7 +458,6 @@ export const createUserContent = /* GraphQL */ `
       IsDemo
       ViewCount
       Thumbnail
-      Preview
       Segments
       createdAt
       updatedAt
@@ -764,26 +481,8 @@ export const createUserContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Subscriptions {
-          nextToken
-        }
-        Users {
-          nextToken
-        }
-        Favorites {
-          nextToken
-        }
-        Contents {
-          nextToken
-        }
       }
       FavoriteUser {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       owner
@@ -806,7 +505,6 @@ export const updateUserContent = /* GraphQL */ `
       IsDemo
       ViewCount
       Thumbnail
-      Preview
       Segments
       createdAt
       updatedAt
@@ -830,26 +528,8 @@ export const updateUserContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Subscriptions {
-          nextToken
-        }
-        Users {
-          nextToken
-        }
-        Favorites {
-          nextToken
-        }
-        Contents {
-          nextToken
-        }
       }
       FavoriteUser {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       owner
@@ -872,7 +552,6 @@ export const deleteUserContent = /* GraphQL */ `
       IsDemo
       ViewCount
       Thumbnail
-      Preview
       Segments
       createdAt
       updatedAt
@@ -896,26 +575,8 @@ export const deleteUserContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Subscriptions {
-          nextToken
-        }
-        Users {
-          nextToken
-        }
-        Favorites {
-          nextToken
-        }
-        Contents {
-          nextToken
-        }
       }
       FavoriteUser {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       owner

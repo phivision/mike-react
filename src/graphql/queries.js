@@ -1,6 +1,43 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getUserProfile = /* GraphQL */ `
+  query GetUserProfile($id: ID!) {
+    getUserProfile(id: $id) {
+      id
+      Birthday
+      Email
+      Gender
+      Height
+      RegDate
+      StripeID
+      UserImage
+      BgImage
+      BgTitle
+      LastName
+      FirstName
+      UserRole
+      Weight
+      Description
+      Biography
+      createdAt
+      updatedAt
+      owner
+      Subscriptions {
+        nextToken
+      }
+      Users {
+        nextToken
+      }
+      Favorites {
+        nextToken
+      }
+      Contents {
+        nextToken
+      }
+    }
+  }
+`;
 export const listUserProfiles = /* GraphQL */ `
   query ListUserProfiles(
     $filter: ModelUserProfileFilterInput
@@ -28,92 +65,8 @@ export const listUserProfiles = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Subscriptions {
-          nextToken
-        }
-        Users {
-          nextToken
-        }
-        Favorites {
-          nextToken
-        }
-        Contents {
-          nextToken
-        }
       }
       nextToken
-    }
-  }
-`;
-export const getUserProfile = /* GraphQL */ `
-  query GetUserProfile($id: ID!) {
-    getUserProfile(id: $id) {
-      id
-      Birthday
-      Email
-      Gender
-      Height
-      RegDate
-      StripeID
-      UserImage
-      BgImage
-      BgTitle
-      LastName
-      FirstName
-      UserRole
-      Weight
-      Description
-      Biography
-      createdAt
-      updatedAt
-      owner
-      Subscriptions {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      Users {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      Favorites {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      Contents {
-        items {
-          id
-          CreatorID
-          ContentName
-          Description
-          Title
-          Level
-          Length
-          IsDemo
-          ViewCount
-          Thumbnail
-          Preview
-          Segments
-          createdAt
-          updatedAt
-          owner
-        }
-        nextToken
-      }
     }
   }
 `;
@@ -152,18 +105,6 @@ export const profilesByStripeID = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Subscriptions {
-          nextToken
-        }
-        Users {
-          nextToken
-        }
-        Favorites {
-          nextToken
-        }
-        Contents {
-          nextToken
-        }
       }
       nextToken
     }
@@ -204,70 +145,83 @@ export const searchUserProfiles = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Subscriptions {
-          nextToken
-        }
-        Users {
-          nextToken
-        }
-        Favorites {
-          nextToken
-        }
-        Contents {
-          nextToken
-        }
       }
       nextToken
       total
     }
   }
 `;
-export const listUserContents = /* GraphQL */ `
-  query ListUserContents(
-    $filter: ModelUserContentFilterInput
+export const getUserSubscriptionTrainer = /* GraphQL */ `
+  query GetUserSubscriptionTrainer($id: ID!) {
+    getUserSubscriptionTrainer(id: $id) {
+      id
+      StripeID
+      ExpireDate
+      createdAt
+      updatedAt
+      Trainer {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        Description
+        Biography
+        createdAt
+        updatedAt
+        owner
+      }
+      User {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        Description
+        Biography
+        createdAt
+        updatedAt
+        owner
+      }
+      owner
+    }
+  }
+`;
+export const listUserSubscriptionTrainers = /* GraphQL */ `
+  query ListUserSubscriptionTrainers(
+    $filter: ModelUserSubscriptionTrainerFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listUserContents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listUserSubscriptionTrainers(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
-        CreatorID
-        ContentName
-        Description
-        Title
-        Level
-        Length
-        IsDemo
-        ViewCount
-        Thumbnail
-        Preview
-        Segments
+        StripeID
+        ExpireDate
         createdAt
         updatedAt
-        Creator {
-          id
-          Birthday
-          Email
-          Gender
-          Height
-          RegDate
-          StripeID
-          UserImage
-          BgImage
-          BgTitle
-          LastName
-          FirstName
-          UserRole
-          Weight
-          Description
-          Biography
-          createdAt
-          updatedAt
-          owner
-        }
-        FavoriteUser {
-          nextToken
-        }
         owner
       }
       nextToken
@@ -287,7 +241,6 @@ export const getUserContent = /* GraphQL */ `
       IsDemo
       ViewCount
       Thumbnail
-      Preview
       Segments
       createdAt
       updatedAt
@@ -311,29 +264,38 @@ export const getUserContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Subscriptions {
-          nextToken
-        }
-        Users {
-          nextToken
-        }
-        Favorites {
-          nextToken
-        }
-        Contents {
-          nextToken
-        }
       }
       FavoriteUser {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       owner
+    }
+  }
+`;
+export const listUserContents = /* GraphQL */ `
+  query ListUserContents(
+    $filter: ModelUserContentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUserContents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        CreatorID
+        ContentName
+        Description
+        Title
+        Level
+        Length
+        IsDemo
+        ViewCount
+        Thumbnail
+        Segments
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
     }
   }
 `;

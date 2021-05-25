@@ -173,6 +173,7 @@ export default function ContentCard(props) {
         open={openContentEdit}
         video={props.post.id}
         onClose={handleCloseContentEdit}
+        isVerified={true}
       />
     </CardContent>
   );
