@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
-import { Card, CardMedia, Typography } from "@material-ui/core";
+import { CardMedia, Typography } from "@material-ui/core";
 import { FavoriteBorder, DeleteOutline, Edit } from "@material-ui/icons";
 
 import { API, graphqlOperation, Storage } from "aws-amplify";
-import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import UserAvatar from "../UserAvatar/UserAvatar";
 import ViewerDialog from "../../views/ContentViewer/ViewerDialog";
 import ImageButton from "../CustomButtons/ImageButton";
 import UploadDialog from "../../views/ContentUpload/UploadDialog";
@@ -15,12 +13,15 @@ import { deleteVideo } from "../../utilities/VideoTools";
 import empty from "assets/img/empty.jpg";
 import { deleteUserContent } from "../../graphql/mutations";
 import CustomDialog from "../Dialog/CustomDialog";
-import GridContainer from "../Grid/GridContainer";
-import GridItem from "../Grid/GridItem";
-import { makeStyles } from "@material-ui/core/styles";
-import styles from "assets/jss/material-dashboard-react/components/cardContentStyle.js";
-
-const useStyles = makeStyles(styles);
+import GridContainer from "../Grid/GridContainer.js";
+import GridItem from "../Grid/GridItem.js";
+import {
+  CardContent,
+  CardContentIcon,
+  CardContentImage,
+  CardContentDate,
+  CardContentAvatar,
+} from "../StyledComponets/StyledComponets";
 
 export default function ContentCard(props) {
   const [img, setImg] = useState(empty);
@@ -86,29 +87,27 @@ export default function ContentCard(props) {
   const headerCol = props.favoriteCallback ? 10 : 12;
   const footerCol = props.trainer.id === props.user.id ? 4 : 12;
 
-  const classes = useStyles();
   return (
-    <Card className={classes.cardBody}>
+    <CardContent>
       <GridContainer>
         <GridItem xs={headerCol}>
           <Typography variant="h3">{props.post.Description}</Typography>
           {props.post.ContentName ? (
             <ImageButton url={img} onClick={handleOpenViewer} width="100%" />
           ) : (
-            <Card className={classes.cardImage}>
+            <CardContentImage>
               <CardMedia
                 style={{ height: "150px" }}
                 image={img}
                 title={props.post.Title}
               />
-            </Card>
+            </CardContentImage>
           )}
         </GridItem>
         <GridItem xs={2}>
           {props.favoriteCallback && (
-            <IconButton
+            <CardContentIcon
               aria-label="favorite this post"
-              className={classes.cardIcon}
               color="primary"
               onClick={() => {
                 setLiked(!liked);
@@ -116,45 +115,43 @@ export default function ContentCard(props) {
               }}
             >
               {liked ? <FavoriteIcon /> : <FavoriteBorder />}
-            </IconButton>
+            </CardContentIcon>
           )}
           {props.onCloseEditor && props.trainer.id === props.user.id && (
             <>
-              <IconButton
+              <CardContentIcon
                 aria-label="delete this post"
-                className={classes.cardIcon}
                 color="primary"
                 onClick={handleOpenDeletion}
               >
                 <DeleteOutline />
-              </IconButton>
-              <IconButton
+              </CardContentIcon>
+              <CardContentIcon
                 aria-label="edit this post"
-                className={classes.cardIcon}
                 color="primary"
                 onClick={handleOpenContentEdit}
               >
                 <Edit />
-              </IconButton>
+              </CardContentIcon>
             </>
           )}
         </GridItem>
         {props.showTrainer && (
           <>
-            <GridItem xs={6}>
-              <UserAvatar UserImage={props.trainer.UserImage} />
+            <GridItem xs={8}>
+              <CardContentAvatar UserImage={props.trainer.UserImage} />
             </GridItem>
-            <GridItem xs={6}>
+            {/* <GridItem xs={6}>
               <Typography variant="body2">
                 {props.trainer.FirstName + " " + props.trainer.LastName}
               </Typography>
-            </GridItem>
+            </GridItem> */}
           </>
         )}
         <GridItem xs={footerCol}>
-          <Typography variant="body2" className={classes.cardDate}>
+          <CardContentDate>
             {new Date(props.post.createdAt).toLocaleDateString()}
-          </Typography>
+          </CardContentDate>
         </GridItem>
       </GridContainer>
       <ViewerDialog
@@ -176,8 +173,9 @@ export default function ContentCard(props) {
         open={openContentEdit}
         video={props.post.id}
         onClose={handleCloseContentEdit}
+        isVerified={true}
       />
-    </Card>
+    </CardContent>
   );
 }
 

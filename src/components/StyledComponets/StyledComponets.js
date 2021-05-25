@@ -21,6 +21,8 @@ import { Link } from "react-router-dom";
 import Person from "@material-ui/icons/Person";
 import SettingsIcon from "@material-ui/icons/Settings";
 import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
+import UserAvatar from "../UserAvatar/UserAvatar";
+import TableContainer from "@material-ui/core/TableContainer";
 
 export const ContainBox = styled(Container).attrs({
   disableGutters: true,
@@ -216,4 +218,41 @@ export const FlexContain = styled(Container).attrs({
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+`;
+
+export const CardContent = styled(Card)`
+  padding: 20px;
+  margin: 20px;
+  border-radius: 20px;
+`;
+
+export const CardContentIcon = styled(IconButton)`
+  padding: 5px;
+  margin-left: 5px;
+`;
+
+export const CardContentImage = styled(Card)`
+  margin: 10px 0;
+  border-radius: 15px;
+`;
+
+export const CardContentDate = styled(Typography).attrs({
+  variant: "body2",
+})`
+  text-align: right;
+`;
+
+export const CardContentAvatar = styled(UserAvatar)`
+  margin: 10px 0 -40px -40px;
+  width: 30%;
+  border-radius: 10px;
+`;
+
+export const SettingTableContainer = styled(TableContainer)`
+  margin: 0 auto;
+  margin-top: 60px;
+  width: 80%;
+  background-color: #f4f6fa;
+  border: none;
+  margin-bottom: 30px;
 `;

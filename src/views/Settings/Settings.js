@@ -5,10 +5,8 @@ import ChangePassword from "../../components/Settings/ChangePassword";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
 import AddIcon from "@material-ui/icons/Add";
 // local variables
 import { userRoles } from "variables/userRoles";
@@ -21,6 +19,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Checkout from "../../components/Checkout/Checkout";
 import CloseIcon from "@material-ui/icons/Close";
 import TrainerPrice from "../../components/Settings/TrainerPrice";
+import { SettingTableContainer } from "../../components/StyledComponets/StyledComponets";
 
 const getUserSettings = /* GraphQL */ `
   query GetUserProfile($id: ID!) {
@@ -337,7 +336,7 @@ export default function Settings(props) {
   }, [props.user.id]);
 
   return (
-    <TableContainer component={Paper}>
+    <SettingTableContainer>
       <Snackbar
         open={openSnackbar}
         autoHideDuration={6000}
@@ -455,7 +454,7 @@ export default function Settings(props) {
           buttonTitle="Add"
         />
       </Dialog>
-    </TableContainer>
+    </SettingTableContainer>
   );
 }
 

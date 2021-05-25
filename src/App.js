@@ -20,7 +20,9 @@ import { FlexContain } from "components/StyledComponets/StyledComponets";
 
 // amplify config
 Amplify.configure(awsconfig);
-
+Amplify.configure({
+  aws_appsync_authenticationType: "AWS_IAM",
+});
 const stripePromise = loadStripe(
   "pk_test_51IWoNlAXegvVyt5sEGxoPrV9MfyryI7OR5vKuY4bLXUgqWIE2Dv0TmtY5R9BVHpjhg3qssoAF3z5GhtkgHrc8Mc400VDRuU2yX"
 );
@@ -30,11 +32,8 @@ const initialUser = { id: null, role: "unknown" };
 //TODO: Remove excess components
 const App = () => {
   const [user, setUser] = React.useState(initialUser);
-  const [verified, setVerified] = React.useState(true);
+  const [verified, setVerified] = React.useState(false);
   const [openContentUpload, setOpenContentUpload] = React.useState(false);
-  Amplify.configure({
-    aws_appsync_authenticationType: "AWS_IAM",
-  });
 
   const switchRoutes = (routes) => {
     return (
