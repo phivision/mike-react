@@ -8,8 +8,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import GridContainer from "../Grid/GridContainer";
-import GridItem from "../Grid/GridItem";
 
 export default function CustomDialog({
   open,
@@ -26,18 +24,12 @@ export default function CustomDialog({
       aria-describedby="alert-dialog-description"
       scroll="body"
     >
-      <GridContainer>
-        <GridItem xs={9}>
-          <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
-        </GridItem>
-        <GridItem xs={3}>
-          <DialogActions>
-            <IconButton onClick={onClose} color="primary">
-              <CloseIcon />
-            </IconButton>
-          </DialogActions>
-        </GridItem>
-      </GridContainer>
+      <DialogActions>
+        <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+        <IconButton onClick={onClose} color="primary">
+          <CloseIcon />
+        </IconButton>
+      </DialogActions>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
           {text}
