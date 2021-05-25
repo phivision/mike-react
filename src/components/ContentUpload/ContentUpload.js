@@ -199,6 +199,8 @@ export default function ContentUpload(props) {
         deleteVideo(videoForm.PrevContentName, videoForm.Thumbnail).then(
           uploadVideo
         );
+      } else {
+        missingFileMessage();
       }
       // if new video is not ready, update other attributes
       // update database attributes
@@ -218,10 +220,23 @@ export default function ContentUpload(props) {
     }
   };
 
+  const missingFileMessage = () => {
+    let msg = "";
+    if (videoFile === undefined) {
+      msg += "The new video is not selected! ";
+    }
+    if (thumbFile === undefined) {
+      msg += "The thumbnail is not selected! ";
+    }
+    setVideoStatus(msg);
+  };
+
   async function uploadVideo() {
     if (videoFile !== undefined && thumbFile !== undefined) {
       // prepare progress bar
       setUploadProgress(1);
+      // notify uploader
+      setVideoStatus(`Uploading file: ${videoFile.name}!`);
       // upload video on S3
       await Promise.all([
         Storage.put(videoForm.Thumbnail, thumbFile, {
@@ -263,14 +278,7 @@ export default function ContentUpload(props) {
           setVideoStatus(msg);
         });
     } else {
-      let msg = "";
-      if (videoFile === undefined) {
-        msg += "The new video is not selected! ";
-      }
-      if (thumbFile === undefined) {
-        msg += "The thumbnail is not selected! ";
-      }
-      setVideoStatus(msg);
+      missingFileMessage();
     }
   }
 
