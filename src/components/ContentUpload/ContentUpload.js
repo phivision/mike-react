@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 // @material-ui/core components
+import { Typography, Checkbox, FormControlLabel } from "@material-ui/core";
 // core components
 import EditableTypography from "../../components/EditableTypography/EditableTypography";
 import {
@@ -19,9 +20,9 @@ import ImageInput from "./ImageInput";
 import useInterval from "../../useInterval";
 import SegmentEditor from "./SegmentEditor";
 import CustomDialog from "../Dialog/CustomDialog";
-import { Checkbox, FormControlLabel } from "@material-ui/core";
 // local components
 import { checkS3PrefixReady, deleteVideo } from "../../utilities/VideoTools";
+import LinearProgressWithLabel from "./LinearProgressWithLabel";
 // the video transcoder will generate a number of files in prefix
 const videoTranscodeCount = 12;
 
@@ -46,6 +47,7 @@ export default function ContentUpload(props) {
   const [thumbURL, setThumbURL] = React.useState("");
   const [videoReady, setVideoReady] = React.useState(false);
   const [videoStatus, setVideoStatus] = React.useState("New Video");
+  const [uploadProgress, setUploadProgress] = React.useState(0);
   // uploading count down internal
   const [count, setCount] = React.useState(0);
   const [openDuplicationDialog, setOpenDuplicationDialog] = React.useState(
@@ -161,6 +163,7 @@ export default function ContentUpload(props) {
     } else {
       uploadVideo()
         .then(async () => {
+          console.log(await API.Auth.currentAuthenticatedUser());
           const result = await API.graphql(
             graphqlOperation(createUserContent, {
               input: {
@@ -216,13 +219,20 @@ export default function ContentUpload(props) {
   };
 
   async function uploadVideo() {
-    if (videoFile && thumbFile) {
+    if (videoFile !== undefined && thumbFile !== undefined) {
+      // prepare progress bar
+      setUploadProgress(1);
       // upload video on S3
       await Promise.all([
         Storage.put(videoForm.Thumbnail, thumbFile, {
           contentType: "image/*",
         }),
         Storage.put(videoForm.ContentName, videoFile, {
+          progressCallback(progress) {
+            const currentProgress = (progress.loaded / progress.total) * 100;
+            setUploadProgress(currentProgress);
+            console.log(currentProgress + "%");
+          },
           contentType: "video/*",
           customPrefix: {
             public: "input/",
@@ -233,7 +243,8 @@ export default function ContentUpload(props) {
           console.log(result);
           // response with uploading results
           setVideoStatus(`Success uploading file: ${videoFile.name}!`);
-          alert(`Success uploading file: ${videoFile.name}!`);
+          // reset progress bar
+          setUploadProgress(0);
           // waiting for video ready
           setVideoReady(false);
           // reset file input
@@ -249,10 +260,10 @@ export default function ContentUpload(props) {
         });
     } else {
       let msg = "";
-      if (!videoFile) {
+      if (videoFile === undefined) {
         msg += "The new video is not selected! ";
       }
-      if (!thumbFile) {
+      if (thumbFile === undefined) {
         msg += "The thumbnail is not selected! ";
       }
       setVideoStatus(msg);
@@ -267,15 +278,24 @@ export default function ContentUpload(props) {
     setVideoForm({ ...videoForm, [event.target.name]: event.target.checked });
   };
 
+  const statusCol = uploadProgress > 0 ? 3 : 12;
   return (
     <GridContainer>
+      <GridItem xs={12} sm={statusCol}>
+        <Typography variant="h3">{videoStatus}</Typography>
+      </GridItem>
+      {uploadProgress > 0 ? (
+        <GridItem xs={12} sm={12 - statusCol}>
+          <LinearProgressWithLabel value={uploadProgress} />
+        </GridItem>
+      ) : null}
       <GridContainer item xs={12} sm={3} direction="column">
         <EditableTypography
           id="video-title"
           label="videoTitle"
           name="Title"
           variant="h3"
-          text={videoForm.Title || ""}
+          text={videoForm.Title || "Title"}
           onChange={handleVideoFormChange}
           onClick={() => setEdit(true)}
           edit={edit}
@@ -285,7 +305,7 @@ export default function ContentUpload(props) {
           label="videoDescription"
           name="Description"
           variant="body1"
-          text={videoForm.Description || ""}
+          text={videoForm.Description || "Description"}
           onChange={handleVideoFormChange}
           edit={edit}
           onClick={() => setEdit(true)}

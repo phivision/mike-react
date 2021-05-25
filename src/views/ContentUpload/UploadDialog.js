@@ -29,21 +29,31 @@ export default function UploadDialog(props) {
   return (
     <Dialog open={props.open} fullWidth maxWidth="md">
       <DialogActions>
-        <IconButton onClick={handleOpenDialog} color="primary">
-          <CloseIcon />
-        </IconButton>
-        <CustomDialog
-          open={openDialog}
-          title="Close Content Uploading"
-          text="If the video is not uploaded, unsaved data may be lost, do you want to discard it?"
-          onClickYes={() => {
-            handleCloseDialog();
-            props.onClose();
-          }}
-          onClickNo={handleCloseDialog}
-        />
+        {props.isVerified ? (
+          <>
+            <IconButton onClick={handleOpenDialog} color="primary">
+              <CloseIcon />
+            </IconButton>
+            <CustomDialog
+              open={openDialog}
+              title="Close Content Uploading"
+              text="If the video is not uploaded, unsaved data may be lost, do you want to discard it?"
+              onClickYes={() => {
+                handleCloseDialog();
+                props.onClose();
+              }}
+              onClickNo={handleCloseDialog}
+            />
+          </>
+        ) : (
+          <IconButton onClick={handleCloseDialog} color="primary">
+            <CloseIcon />
+          </IconButton>
+        )}
       </DialogActions>
-      {body}
+      {props.isVerified
+        ? body
+        : "Please onboard your stripe account before uploading new videos!"}
     </Dialog>
   );
 }
