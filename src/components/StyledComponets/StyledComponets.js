@@ -20,9 +20,10 @@ import {
 import { Link } from "react-router-dom";
 import Person from "@material-ui/icons/Person";
 import SettingsIcon from "@material-ui/icons/Settings";
-import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
 import UserAvatar from "../UserAvatar/UserAvatar";
 import TableContainer from "@material-ui/core/TableContainer";
+import MoreIcon from "@material-ui/icons/MoreVert";
+import { MobileVersion, uptoMobileWidth } from "variables/mediaQueries";
 
 export const ContainBox = styled(Container).attrs({
   disableGutters: true,
@@ -90,11 +91,11 @@ export const Unit = styled(Typography).attrs({
 
 export const SearchButton = styled(SearchBar)`
   &&& {
-    margin-right: 20px;
+    margin: 10px;
     background-color: #eaeef1;
     box-shadow: none;
-    border-radius: 20px;
-    min-width: 300px;
+    border-radius: 10px;
+    min-width: 80px;
     .MuiIconButton-label {
       color: ${primaryColor[0]};
     }
@@ -108,6 +109,9 @@ export const CustomButton = styled(Button).attrs({
   border-radius: 10px;
   font-weight: 600;
   margin: 5px;
+  @media only screen and ${uptoMobileWidth} {
+    font-size: 11px;
+  }
 `;
 
 export const AppHeader = styled(AppBar)`
@@ -116,6 +120,10 @@ export const AppHeader = styled(AppBar)`
 
 export const Bars = styled(Toolbar)`
   flexwrap: wrap;
+  @media only screen and ${MobileVersion} {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
 `;
 
 export const LogoLink = styled(Link)`
@@ -135,6 +143,10 @@ export const CustomIcon = styled(IconButton).attrs({
   padding: 0;
   .MuiIconButton-label {
     display: inline-block;
+  }
+  @media only screen and ${MobileVersion} {
+    width: 25px;
+    margin: 1px;
   }
 `;
 
@@ -160,9 +172,8 @@ export const UserIcon = styled(Person).attrs({
   font-size: 30px;
 `;
 
-export const VideoLibrary = styled(VideoLibraryIcon).attrs({
+export const IconMore = styled(MoreIcon).attrs({
   fontSize: "large",
-  color: "action",
 })`
   font-size: 30px;
 `;
@@ -255,4 +266,11 @@ export const SettingTableContainer = styled(TableContainer)`
   background-color: #f4f6fa;
   border: none;
   margin-bottom: 30px;
+`;
+
+export const LogoImage = styled.img`
+  width: auto;
+  @media only screen and ${uptoMobileWidth} {
+    width: 80px;
+  }
 `;

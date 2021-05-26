@@ -15,7 +15,26 @@ import {
   CustomIcon,
   SetIcon,
   UserIcon,
+  IconMore,
+  LogoImage,
 } from "../StyledComponets/StyledComponets";
+import { Menu, MenuItem } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  sectionDesktop: {
+    display: "none",
+    [theme.breakpoints.up("sm")]: {
+      display: "flex",
+    },
+  },
+  sectionMobile: {
+    display: "flex",
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
+    },
+  },
+}));
 
 const SignUpLink = () => {
   return (
@@ -68,6 +87,17 @@ export default function Header(props) {
 
   let history = useHistory();
   const [query, setQuery] = React.useState("");
+  const [mobileMore, setMobileMore] = React.useState(null);
+  const isMobileMenuOpen = Boolean(mobileMore);
+  const classes = useStyles();
+
+  const handleMobileMenuClose = () => {
+    setMobileMore(null);
+  };
+
+  const handleMobileMenuOpen = (event) => {
+    setMobileMore(event.currentTarget);
+  };
 
   const ContentUploadButton = () => {
     return (
@@ -80,11 +110,11 @@ export default function Header(props) {
   const Logo = () => {
     return props.user.role === userRoles.UNKNOWN ? (
       <LogoLink to="/">
-        <img src={logo} alt="logo" />
+        <LogoImage src={logo} alt="logo" />
       </LogoLink>
     ) : (
       <LogoLink to="/user">
-        <img src={logo} alt="logo" />
+        <LogoImage src={logo} alt="logo" />
       </LogoLink>
     );
   };
@@ -99,18 +129,9 @@ export default function Header(props) {
     );
   };
 
-  return (
-    <AppHeader>
-      <Bars>
-        <Logo />
-        {userRole === userRoles.STUDENT || userRole === userRoles.UNKNOWN ? (
-          <SearchButton
-            value={query}
-            placeholder={"Find a trainer"}
-            onChange={(q) => setQuery(q)}
-            onRequestSearch={() => history.push("/search/" + query)}
-          />
-        ) : null}
+  const ShowButtonSets = () => {
+    return (
+      <div>
         {userRole === userRoles.TRAINER ? <ContentUploadButton /> : null}
         {userRole === userRoles.STUDENT || userRole === userRoles.TRAINER ? (
           <>
@@ -124,6 +145,52 @@ export default function Header(props) {
             <SignUpLink />
           </>
         ) : null}
+      </div>
+    );
+  };
+
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMore}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      id="mobile-menu"
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      <MenuItem>
+        <ShowButtonSets />
+      </MenuItem>
+    </Menu>
+  );
+
+  return (
+    <AppHeader>
+      <Bars>
+        <Logo />
+        {userRole === userRoles.STUDENT || userRole === userRoles.UNKNOWN ? (
+          <SearchButton
+            value={query}
+            placeholder={"Find a trainer"}
+            onChange={(q) => setQuery(q)}
+            onRequestSearch={() => history.push("/search/" + query)}
+          />
+        ) : null}
+        <div className={classes.sectionDesktop}>
+          <ShowButtonSets />
+        </div>
+        <CustomIcon
+          aria-label="show more"
+          aria-controls="mobile-menu"
+          aria-haspopup="true"
+          onClick={handleMobileMenuOpen}
+          className={classes.sectionMobile}
+          color="primary"
+        >
+          <IconMore />
+        </CustomIcon>
+        {renderMobileMenu}
       </Bars>
     </AppHeader>
   );
