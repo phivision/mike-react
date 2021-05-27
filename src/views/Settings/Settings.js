@@ -329,11 +329,14 @@ export default function Settings(props) {
         setTrainers(subs);
       }
     });
+  }, [props.user.id, setPrices, setVerified, setTrainers]);
+
+  useEffect(() => {
     if (props.user.role === userRoles.STUDENT) {
       fetchDefaultPaymentMethod();
       fetchPaymentMethod();
     }
-  }, [props.user.id]);
+  }, [props.user.id, setDefaultPaymentMethod, setPaymentMethods]);
 
   return (
     <SettingTableContainer>
