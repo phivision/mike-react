@@ -24,6 +24,7 @@ import UserAvatar from "../UserAvatar/UserAvatar";
 import TableContainer from "@material-ui/core/TableContainer";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import { MobileVersion, uptoMobileWidth } from "variables/mediaQueries";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 export const ContainBox = styled(Container).attrs({
   disableGutters: true,
@@ -133,7 +134,8 @@ export const LogoLink = styled(Link)`
 `;
 
 export const Nav = styled(Link)`
-  margin: 10px;
+  margin: 0;
+  color: none;
 `;
 
 export const CustomIcon = styled(IconButton).attrs({
@@ -148,7 +150,7 @@ export const CustomIcon = styled(IconButton).attrs({
   }
   @media only screen and ${MobileVersion} {
     width: 25px;
-    margin: 1px;
+    margin: 10px;
   }
 `;
 
@@ -175,6 +177,12 @@ export const UserIcon = styled(Person).attrs({
 `;
 
 export const IconMore = styled(MoreIcon).attrs({
+  fontSize: "large",
+})`
+  font-size: 30px;
+`;
+
+export const UploadIcon = styled(CloudUploadIcon).attrs({
   fontSize: "large",
 })`
   font-size: 30px;
