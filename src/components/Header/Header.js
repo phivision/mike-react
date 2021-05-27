@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   sectionDesktop: {
     display: "none",
     [theme.breakpoints.up("sm")]: {
-      display: "flex",
+      display: "block",
     },
   },
   sectionMobile: {
@@ -90,6 +90,17 @@ export default function Header(props) {
   const [mobileMore, setMobileMore] = React.useState(null);
   const isMobileMenuOpen = Boolean(mobileMore);
   const classes = useStyles();
+  const iconList = {
+    UNKNOWN: {
+      role: "UNKNOWN",
+      icons: ["SignInLink", "SignUpLink"],
+    },
+    STUDENT: {
+      role: "STUDENT",
+      icons: ["UserButton", "SettingButton"],
+    },
+  };
+  console.log("iconList", iconList.STUDENT.icons);
 
   const handleMobileMenuClose = () => {
     setMobileMore(null);
@@ -159,6 +170,15 @@ export default function Header(props) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
+      {/* {iconList.STUDENT.icons.map((iconname, idx) => {
+        console.log("iconname", iconname);
+        return (
+          <MenuItem key={idx}>
+            <p>{iconname}</p>
+            <iconname />
+          </MenuItem>
+        );
+      })} */}
       <MenuItem>
         <ShowButtonSets />
       </MenuItem>

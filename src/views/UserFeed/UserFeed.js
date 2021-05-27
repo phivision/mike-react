@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import PropTypes from "prop-types";
-import { Grid, Typography } from "@material-ui/core";
+import { Typography, Container } from "@material-ui/core";
 import ContentCard from "../../components/Card/ContentCard";
 import WorkoutCard from "../../components/Card/WorkoutCard";
 import Banner from "assets/img/banner.jpeg";
@@ -14,7 +14,6 @@ import { userRoles } from "../../variables/userRoles";
 import {
   GridItem,
   GridContainer,
-  StyledContent,
   CustomButton,
   ProfileBox,
   UserFeedBanner,
@@ -305,13 +304,17 @@ export default function UserFeed({ ...props }) {
   };
 
   return (
-    <Grid container direction="column">
+    <>
       <UserFeedBanner url={Banner} />
-      <StyledContent>
-        <GridContainer item direction="row">
+      <Container maxWidth="xl">
+        <GridContainer
+          direction="row"
+          justify="space-evenly"
+          alignItems="flex-start"
+        >
           <GridContainer item direction="column" xs={12} sm={4}>
             <ProfileBox>
-              <GridItem>
+              <GridContainer>
                 {edit ? (
                   <div>
                     <input
@@ -330,7 +333,7 @@ export default function UserFeed({ ...props }) {
                 ) : (
                   <UserAvatar UserImage={profile.UserImage} />
                 )}
-              </GridItem>
+              </GridContainer>
               <GridContainer item direction="row">
                 <EditableTypography
                   variant="h3"
@@ -377,7 +380,7 @@ export default function UserFeed({ ...props }) {
                     color="primary"
                     variant="contained"
                     onClick={onClickEditProfile}
-                    fullWidth
+                    size="large"
                   >
                     Edit
                   </CustomButton>
@@ -446,8 +449,8 @@ export default function UserFeed({ ...props }) {
             })}
           </GridContainer>
         </GridContainer>
-      </StyledContent>
-    </Grid>
+      </Container>
+    </>
   );
 }
 

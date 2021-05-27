@@ -46,9 +46,10 @@ export const GridItem = styled(Grid).attrs({
 
 export const CardStyled = styled(Card)`
   border-radius: 20px;
-  margin: 10px 0;
+  margin: 20px;
+  padding: 20px;
   box-shadow: 0 5px 20px 5px #eff1fa;
-  max-width: 70%;
+  max-width: 80%;
 `;
 
 export const CardIcon = styled.img`
@@ -109,6 +110,7 @@ export const CustomButton = styled(Button).attrs({
   border-radius: 10px;
   font-weight: 600;
   margin: 5px;
+  min-width: 120px;
   @media only screen and ${uptoMobileWidth} {
     font-size: 11px;
   }
@@ -185,18 +187,18 @@ export const StyledContent = styled.div`
 `;
 
 export const ProfileBox = styled.div`
-  width: 60%;
+  width: 100%;
+  padding: 0 20px;
   margin: 0 auto;
   position: relative;
   top: -5%;
-  padding: 10px;
 `;
 
 export const UserFeedBanner = styled(Grid).attrs({
   item: true,
 })`
   height: 100px;
-  background-image: url(${(props) => props["aria-multiselectable"]});
+  background-image: url(${(props) => props.url});
 `;
 
 export const InputField = styled(TextField).attrs({
