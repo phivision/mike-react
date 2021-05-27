@@ -51,17 +51,6 @@ export default function Header(props) {
   const [mobileMore, setMobileMore] = React.useState(null);
   const isMobileMenuOpen = Boolean(mobileMore);
   const classes = useStyles();
-  const iconList = {
-    UNKNOWN: {
-      role: "UNKNOWN",
-      icons: ["SignInLink", "SignUpLink"],
-    },
-    STUDENT: {
-      role: "STUDENT",
-      icons: ["UserButton", "SettingButton"],
-    },
-  };
-  console.log("iconList", iconList.STUDENT.icons);
 
   const handleMobileMenuClose = () => {
     setMobileMore(null);
