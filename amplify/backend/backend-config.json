@@ -57,7 +57,7 @@
     }
   },
   "storage": {
-    "mike_react2126db09": {
+    "mikereactb9eaf435": {
       "service": "S3",
       "serviceType": "imported",
       "providerPlugin": "awscloudformation",
