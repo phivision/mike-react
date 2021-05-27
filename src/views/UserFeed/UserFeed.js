@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import PropTypes from "prop-types";
 import { Typography, Container } from "@material-ui/core";
@@ -50,6 +50,8 @@ export default function UserFeed({ ...props }) {
   const [favorites, setFavorites] = useState([]);
   const [edit, setEdit] = useState(false);
   const history = useHistory();
+  const contentRef = useRef([]);
+  contentRef.current = contents;
 
   const onChange = (e) => {
     switch (e.target.id) {
@@ -128,35 +130,45 @@ export default function UserFeed({ ...props }) {
   };
 
   const pushNewContent = (d) => {
-    setContents(contents.concat(d.value.data.onContentByCreatorID));
+    setContents([d.value.data.onContentByCreatorID].concat(contentRef.current));
   };
 
   const userQuery = async () => {
     API.graphql(graphqlOperation(userProfileQuery, { id: props.user.id }))
       .then((d) => {
-        const { Subscriptions, Favorites, ...p } = d.data.getUserProfile;
+        const {
+          Subscriptions: SubsData,
+          Favorites,
+          ...p
+        } = d.data.getUserProfile;
         console.log(d.data.getUserProfile);
         setProfile(p);
         setFavorites(Favorites.items);
         let temp_contents = [];
-        let temp_subs = [];
-        Subscriptions.items.map((sub) => {
+        SubsData.items.map((sub) => {
           temp_contents = [...temp_contents, ...sub.Trainer.Contents.items];
-          const subscription = API.graphql({
-            query: onContentByCreatorID,
-            variables: {
-              CreatorID: sub.Trainer.id,
-            },
-          }).subscribe({
-            next: pushNewContent,
-          });
-          temp_subs.push(subscription);
         });
         setSortedContent(temp_contents);
-        setSubscriptions(temp_subs);
+        return SubsData;
       })
       .catch(console.log);
-    return unsubscribeAll();
+    return [];
+  };
+
+  const userSub = (subs) => {
+    let temp_subs = [];
+    subs.items.map((sub) => {
+      const subscription = API.graphql({
+        query: onContentByCreatorID,
+        variables: {
+          CreatorID: sub.Trainer.id,
+        },
+      }).subscribe({
+        next: pushNewContent,
+      });
+      temp_subs.push(subscription);
+    });
+    setSubscriptions(temp_subs);
   };
 
   const trainerQuery = async () => {
@@ -165,32 +177,35 @@ export default function UserFeed({ ...props }) {
         const { Contents, Favorites, ...p } = d.data.getUserProfile;
         setProfile(p);
         setFavorites(Favorites.items);
-        const subscription = API.graphql({
-          query: onContentByCreatorID,
-          variables: {
-            CreatorID: props.user.id,
-          },
-        }).subscribe({
-          next: pushNewContent,
-        });
         setSortedContent(Contents.items);
-        setSubscriptions([subscription]);
       })
       .catch(console.log);
-    return unsubscribeAll();
+  };
+
+  const trainerSub = () => {
+    const subscription = API.graphql({
+      query: onContentByCreatorID,
+      variables: {
+        CreatorID: props.user.id,
+      },
+    }).subscribe({
+      next: pushNewContent,
+    });
+    setSubscriptions([subscription]);
   };
 
   useEffect(() => {
-    props.user.role === userRoles.STUDENT ? userQuery() : trainerQuery();
+    props.user.role === userRoles.STUDENT
+      ? userQuery().then((subs) => {
+          userSub(subs);
+        })
+      : trainerQuery().then(trainerSub);
+    return unsubscribeAll();
   }, [props.user.id]);
 
-  useEffect(() => {
-    console.log("sorting...");
-    setSortedContent(contents);
-  }, [contents.length]);
-
-  const setSortedContent = (contents) => {
-    const sorted = contents.sort((a, b) => {
+  const setSortedContent = (unsorted) => {
+    const sorted = [].concat(unsorted);
+    sorted.sort((a, b) => {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
     setContents(sorted);
