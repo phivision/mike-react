@@ -79,6 +79,7 @@ type UserContent @model(subscriptions: null)
   Level: Int
   Length: Float
   IsDemo: Boolean
+  TranscodeReady: Boolean
   ViewCount: Int
   Thumbnail: String
   Preview: String
@@ -88,4 +89,8 @@ type UserContent @model(subscriptions: null)
   A list of users who like this content
   """
   FavoriteUser: [UserFavoriteContent] @connection(name: "byFavoriteUser")
+}
+
+type Subscription {
+  onContentByCreatorID(CreatorID: ID!): UserContent @aws_subscribe(mutations: ["createUserContent"])
 }

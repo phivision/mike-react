@@ -332,8 +332,10 @@ export const createUserFavoriteContent = /* GraphQL */ `
         Level
         Length
         IsDemo
+        TranscodeReady
         ViewCount
         Thumbnail
+        Preview
         Segments
         createdAt
         updatedAt
@@ -382,8 +384,10 @@ export const updateUserFavoriteContent = /* GraphQL */ `
         Level
         Length
         IsDemo
+        TranscodeReady
         ViewCount
         Thumbnail
+        Preview
         Segments
         createdAt
         updatedAt
@@ -432,8 +436,10 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
         Level
         Length
         IsDemo
+        TranscodeReady
         ViewCount
         Thumbnail
+        Preview
         Segments
         createdAt
         updatedAt
@@ -456,8 +462,10 @@ export const createUserContent = /* GraphQL */ `
       Level
       Length
       IsDemo
+      TranscodeReady
       ViewCount
       Thumbnail
+      Preview
       Segments
       createdAt
       updatedAt
@@ -503,8 +511,10 @@ export const updateUserContent = /* GraphQL */ `
       Level
       Length
       IsDemo
+      TranscodeReady
       ViewCount
       Thumbnail
+      Preview
       Segments
       createdAt
       updatedAt
@@ -550,8 +560,10 @@ export const deleteUserContent = /* GraphQL */ `
       Level
       Length
       IsDemo
+      TranscodeReady
       ViewCount
       Thumbnail
+      Preview
       Segments
       createdAt
       updatedAt

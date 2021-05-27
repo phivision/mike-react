@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import PropTypes from "prop-types";
 import { Typography, Container } from "@material-ui/core";
@@ -18,6 +18,13 @@ import {
   ProfileBox,
   UserFeedBanner,
 } from "../../components/StyledComponets/StyledComponets";
+import {
+  deleteUserFavoriteContent,
+  createUserFavoriteContent,
+  userProfileQuery,
+  trainerProfileQuery,
+} from "../../graphql/UserFeed";
+import { onContentByCreatorID } from "../../graphql/subscriptions";
 
 // import initial profile
 const initialProfileState = {
@@ -32,152 +39,6 @@ const initialProfileState = {
 };
 let tempProfile;
 
-//TODO: Add payment functionality
-//TODO: Add cards for payment tiers
-//TODO: Add images + description, nicely formatted
-
-const deleteUserFavoriteContent = /* GraphQL */ `
-  mutation DeleteUserFavoriteContent($input: DeleteUserFavoriteContentInput!) {
-    deleteUserFavoriteContent(input: $input) {
-      User {
-        Favorites {
-          items {
-            Content {
-              id
-              ContentName
-              Title
-              Thumbnail
-              createdAt
-              Description
-              Segments
-              owner
-            }
-            id
-          }
-        }
-      }
-    }
-  }
-`;
-
-const createUserFavoriteContent = /* GraphQL */ `
-  mutation CreateUserFavoriteContent($input: CreateUserFavoriteContentInput!) {
-    createUserFavoriteContent(input: $input) {
-      User {
-        Favorites {
-          items {
-            Content {
-              id
-              ContentName
-              Title
-              Thumbnail
-              createdAt
-              Description
-              Segments
-              owner
-            }
-            id
-          }
-        }
-      }
-    }
-  }
-`;
-const userProfileQuery = `query GetUserProfile ($id: ID!) {
-          getUserProfile(id: $id) {
-            Subscriptions {
-              items {
-                Trainer {
-                  Contents {
-                    items {
-                      id
-                      ContentName
-                      Description
-                      Title
-                      createdAt
-                      Thumbnail
-                      Segments
-                      owner
-                      Creator {
-                        UserImage
-                        FirstName
-                        LastName
-                        id
-                      }
-                    }
-                  }
-                  FirstName
-                  LastName
-                  id
-                  UserImage
-                }
-              }
-            }
-            Favorites {
-              items {
-                Content {
-                  id
-                  ContentName
-                  Title
-                  Thumbnail
-                  createdAt
-                  Description
-                  Segments
-                }
-                id
-              }
-            }
-            id
-            LastName
-            FirstName
-            UserImage
-            Description
-          }
-        }`;
-
-const trainerProfileQuery = `query GetUserProfile ($id: ID!) {
-          getUserProfile(id: $id) {
-            Contents {
-              items {
-                id
-                ContentName
-                Description
-                Title
-                createdAt
-                Thumbnail
-                Segments
-                Creator{
-                  UserImage
-                  FirstName
-                  LastName
-                  id
-                }
-                owner
-              }
-            }
-            Favorites {
-              items {
-                Content {
-                  id
-                  ContentName
-                  Title
-                  Thumbnail
-                  createdAt
-                  Description
-                  Segments
-                  owner
-                }
-                id
-              }
-            }
-            id
-            LastName
-            FirstName
-            UserImage
-            Description
-          }
-        }`;
-
 export default function UserFeed({ ...props }) {
   const [profile, setProfile] = useState(initialProfileState);
   const [subscriptions, setSubscriptions] = useState([]);
@@ -185,6 +46,8 @@ export default function UserFeed({ ...props }) {
   const [favorites, setFavorites] = useState([]);
   const [edit, setEdit] = useState(false);
   const history = useHistory();
+  const contentRef = useRef([]);
+  contentRef.current = contents;
 
   const onChange = (e) => {
     switch (e.target.id) {
@@ -256,16 +119,52 @@ export default function UserFeed({ ...props }) {
     setProfile({ ...profile, UserImage: userImageName });
   };
 
+  const unsubscribeAll = () => {
+    subscriptions.map((sub) => {
+      sub.unsubscribe();
+    });
+  };
+
+  const pushNewContent = (d) => {
+    setContents([d.value.data.onContentByCreatorID].concat(contentRef.current));
+  };
+
   const userQuery = async () => {
     API.graphql(graphqlOperation(userProfileQuery, { id: props.user.id }))
       .then((d) => {
-        const { Subscriptions, Favorites, ...p } = d.data.getUserProfile;
+        const {
+          Subscriptions: SubsData,
+          Favorites,
+          ...p
+        } = d.data.getUserProfile;
         console.log(d.data.getUserProfile);
         setProfile(p);
         setFavorites(Favorites.items);
-        setSubscriptions(Subscriptions.items);
+        let temp_contents = [];
+        SubsData.items.map((sub) => {
+          temp_contents = [...temp_contents, ...sub.Trainer.Contents.items];
+        });
+        setSortedContent(temp_contents);
+        return SubsData;
       })
       .catch(console.log);
+    return [];
+  };
+
+  const userSub = (subs) => {
+    let temp_subs = [];
+    subs.items.map((sub) => {
+      const subscription = API.graphql({
+        query: onContentByCreatorID,
+        variables: {
+          CreatorID: sub.Trainer.id,
+        },
+      }).subscribe({
+        next: pushNewContent,
+      });
+      temp_subs.push(subscription);
+    });
+    setSubscriptions(temp_subs);
   };
 
   const trainerQuery = async () => {
@@ -279,25 +178,30 @@ export default function UserFeed({ ...props }) {
       .catch(console.log);
   };
 
-  useEffect(() => {
-    let temp = [];
-    subscriptions.map((sub) => {
-      temp = [...temp, ...sub.Trainer.Contents.items];
+  const trainerSub = () => {
+    const subscription = API.graphql({
+      query: onContentByCreatorID,
+      variables: {
+        CreatorID: props.user.id,
+      },
+    }).subscribe({
+      next: pushNewContent,
     });
-    setSortedContent(temp);
-  }, [subscriptions]);
+    setSubscriptions([subscription]);
+  };
 
   useEffect(() => {
-    props.user.role === userRoles.STUDENT ? userQuery() : trainerQuery();
-  }, []);
+    props.user.role === userRoles.STUDENT
+      ? userQuery().then((subs) => {
+          userSub(subs);
+        })
+      : trainerQuery().then(trainerSub);
+    return unsubscribeAll();
+  }, [props.user.id]);
 
-  useEffect(() => {
-    console.log("sorting...");
-    setSortedContent(contents);
-  }, [contents.length]);
-
-  const setSortedContent = (contents) => {
-    const sorted = contents.sort((a, b) => {
+  const setSortedContent = (unsorted) => {
+    const sorted = [].concat(unsorted);
+    sorted.sort((a, b) => {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
     setContents(sorted);
