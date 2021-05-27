@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { API, graphqlOperation } from "aws-amplify";
 import PropTypes from "prop-types";
-import { Dialog, Grid, Snackbar, Typography } from "@material-ui/core";
+import { Dialog, Snackbar, Typography, Container } from "@material-ui/core";
 import ContentCard from "../../components/Card/ContentCard";
 import WorkoutCard from "../../components/Card/WorkoutCard";
 import Banner from "assets/img/banner.jpeg";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
-import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import Checkout from "../../components/Checkout/Checkout";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import {
+  GridItem,
+  GridContainer,
+  CustomButton,
+  ProfileBox,
+  UserFeedBanner,
+} from "../../components/StyledComponets/StyledComponets";
 
 // import initial profile
 const initialProfileState = {
@@ -168,62 +174,59 @@ export default function LandingPage({ ...props }) {
 
   return (
     <>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        message={snackbarMessage}
-        action={
-          <React.Fragment>
-            <IconButton
-              size="small"
-              aria-label="close"
-              color="inherit"
-              onClick={handleSnackbarClose}
-            >
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </React.Fragment>
-        }
-      />
-      <Grid container direction="column">
-        <Grid
-          item
-          style={{
-            backgroundImage: `url(` + Banner + `)`,
-            height: "100px",
-            marginBottom: "20px",
-          }}
+      <UserFeedBanner url={Banner} />
+      <Container maxWidth="xl">
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+          message={snackbarMessage}
+          action={
+            <React.Fragment>
+              <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={handleSnackbarClose}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </React.Fragment>
+          }
         />
-        <Grid item container direction="row">
-          <Grid item container direction="column" xs={4}>
-            <Grid item>
-              <UserAvatar
-                style={{
-                  width: "200px",
-                  height: "200px",
-                }}
-                UserImage={profile.UserImage}
-              />
-            </Grid>
-            <Grid item>
-              <Typography variant="h3">
-                {profile.FirstName + " " + profile.LastName}
-              </Typography>
-            </Grid>
-            <Grid item variant="body1">
-              {profile.Description}
-            </Grid>
-            <Grid item>
-              <Button variant="contained" color="primary" onClick={onClick}>
-                {"Join for $" + price + " per month"}
-              </Button>
-            </Grid>
-          </Grid>
-          <Grid item container direction="column" xs={4}>
-            <Grid item>
+        <GridContainer
+          direction="row"
+          justify="space-evenly"
+          alignItems="flex-start"
+        >
+          <GridContainer item direction="column" xs={12} sm={4}>
+            <ProfileBox>
+              <GridItem>
+                <UserAvatar
+                  // style={{
+                  //   width: "200px",
+                  //   height: "200px",
+                  // }}
+                  UserImage={profile.UserImage}
+                />
+              </GridItem>
+              <GridItem>
+                <Typography variant="h3">
+                  {profile.FirstName + " " + profile.LastName}
+                </Typography>
+              </GridItem>
+              <GridItem variant="body1">{profile.Description}</GridItem>
+              <GridItem>
+                <CustomButton onClick={onClick}>
+                  {"Join for $" + price + " per month"}
+                </CustomButton>
+              </GridItem>
+            </ProfileBox>
+          </GridContainer>
+          <GridContainer item direction="column" xs={12} sm={4}>
+            <GridItem>
               <Typography variant="h1">Feed</Typography>
-            </Grid>
+            </GridItem>
             {content.map((c, idx) => {
               let f = favorites.findIndex((e) => e.Content.id === content.id);
               return (
@@ -236,37 +239,38 @@ export default function LandingPage({ ...props }) {
                 />
               );
             })}
-          </Grid>
-          <Grid item container xs={4}>
-            <Grid item>
+          </GridContainer>
+          <GridContainer item direction="column" xs={12} sm={4}>
+            <GridItem>
               <Typography variant="h1">Favorite Workouts</Typography>
-            </Grid>
+            </GridItem>
             {favorites.map((fav, idx) => {
               return (
                 <WorkoutCard
                   post={fav.Content}
-                  trainer={props.user}
+                  trainer={profile}
                   favorite={fav}
+                  segments={fav.Content.Segments}
                   key={idx}
                 />
               );
             })}
-          </Grid>
-        </Grid>
-      </Grid>
-      <Dialog
-        onClose={handleCloseCheckout}
-        fullWidth
-        aria-labelledby="checkout-dialog"
-        open={openCheckout}
-      >
-        <Checkout
-          errorCallback={checkoutError}
-          user={props.user}
-          paymentMethodCallback={createSubscription}
-          buttonTitle="Subscribe"
-        />
-      </Dialog>
+          </GridContainer>
+        </GridContainer>
+        <Dialog
+          onClose={handleCloseCheckout}
+          fullWidth
+          aria-labelledby="checkout-dialog"
+          open={openCheckout}
+        >
+          <Checkout
+            errorCallback={checkoutError}
+            user={props.user}
+            paymentMethodCallback={createSubscription}
+            buttonTitle="Subscribe"
+          />
+        </Dialog>
+      </Container>
     </>
   );
 }

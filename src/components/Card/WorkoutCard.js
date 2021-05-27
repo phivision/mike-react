@@ -59,7 +59,7 @@ export default function WorkoutCard(props) {
   return (
     <CardStyled>
       <GridContainer direction="row">
-        <Grid item container xs={4} direction="column">
+        <Grid item container xs={12} sm={4} direction="column">
           <Grid item xs>
             <Typography variant="h3">{props.post.Title}</Typography>
             <Typography variant="body2">{times} mins</Typography>
@@ -79,7 +79,7 @@ export default function WorkoutCard(props) {
             </Grid>
           )}
         </Grid>
-        <GridContainer item xs={8}>
+        <GridContainer item xs={12} sm={8}>
           {props.post.ContentName ? (
             <ImageButton
               url={img}
@@ -90,7 +90,7 @@ export default function WorkoutCard(props) {
           ) : (
             <Card className={classes.cardImage}>
               <CardMedia
-                style={{ height: "150px", width: "150px" }}
+                style={{ height: "150px", width: "250px" }}
                 image={img}
                 title={props.post.Title}
               />

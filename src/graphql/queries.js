@@ -239,8 +239,10 @@ export const getUserContent = /* GraphQL */ `
       Level
       Length
       IsDemo
+      TranscodeReady
       ViewCount
       Thumbnail
+      Preview
       Segments
       createdAt
       updatedAt
@@ -288,8 +290,10 @@ export const listUserContents = /* GraphQL */ `
         Level
         Length
         IsDemo
+        TranscodeReady
         ViewCount
         Thumbnail
+        Preview
         Segments
         createdAt
         updatedAt
