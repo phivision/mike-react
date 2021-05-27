@@ -39,10 +39,6 @@ const initialProfileState = {
 };
 let tempProfile;
 
-//TODO: Add payment functionality
-//TODO: Add cards for payment tiers
-//TODO: Add images + description, nicely formatted
-
 export default function UserFeed({ ...props }) {
   const [profile, setProfile] = useState(initialProfileState);
   const [subscriptions, setSubscriptions] = useState([]);
