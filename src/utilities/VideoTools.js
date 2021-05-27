@@ -53,7 +53,7 @@ async function deleteVideo(videoName, thumbName) {
     }),
     // delete S3 storage output videos
     deleteS3Prefix(videoName, "output/hls/"),
-    deleteS3Prefix(videoName, "output/dash/"),
+    // deleteS3Prefix(videoName, "output/dash/"),
     // delete S3 storage input video
     Storage.remove(videoName, {
       customPrefix: {

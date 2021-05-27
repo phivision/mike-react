@@ -4,7 +4,7 @@ import React from "react";
 
 // load YAML file for video endpoints info
 // TODO: try to use aws SDK to pull the info from aws server
-const videoEndpoint = "https://dtl1jse5ko1yc.cloudfront.net/output/hls/";
+const videoEndpoint = "https://d1n1lk96owjcvm.cloudfront.net/output/hls/";
 
 const VideoPlayer = (props) => {
   const videoName = props.video.split(".")[0];
