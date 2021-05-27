@@ -86,8 +86,8 @@
         }
       },
       "storage": {
-        "mike_react2126db09": {
-          "bucketName": "mikevod-301286101195-us-east-1",
+        "mikereactb9eaf435": {
+          "bucketName": "mike-vod-dev",
           "region": "us-east-1"
         }
       }
