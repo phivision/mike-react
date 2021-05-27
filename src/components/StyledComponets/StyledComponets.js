@@ -20,9 +20,11 @@ import {
 import { Link } from "react-router-dom";
 import Person from "@material-ui/icons/Person";
 import SettingsIcon from "@material-ui/icons/Settings";
-import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
 import UserAvatar from "../UserAvatar/UserAvatar";
 import TableContainer from "@material-ui/core/TableContainer";
+import MoreIcon from "@material-ui/icons/MoreVert";
+import { MobileVersion, uptoMobileWidth } from "variables/mediaQueries";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 export const ContainBox = styled(Container).attrs({
   disableGutters: true,
@@ -45,9 +47,10 @@ export const GridItem = styled(Grid).attrs({
 
 export const CardStyled = styled(Card)`
   border-radius: 20px;
-  margin: 10px 0;
+  margin: 20px;
+  padding: 20px;
   box-shadow: 0 5px 20px 5px #eff1fa;
-  max-width: 70%;
+  max-width: 80%;
 `;
 
 export const CardIcon = styled.img`
@@ -90,11 +93,11 @@ export const Unit = styled(Typography).attrs({
 
 export const SearchButton = styled(SearchBar)`
   &&& {
-    margin-right: 20px;
+    margin: 10px;
     background-color: #eaeef1;
     box-shadow: none;
-    border-radius: 20px;
-    min-width: 300px;
+    border-radius: 10px;
+    min-width: 80px;
     .MuiIconButton-label {
       color: ${primaryColor[0]};
     }
@@ -108,6 +111,10 @@ export const CustomButton = styled(Button).attrs({
   border-radius: 10px;
   font-weight: 600;
   margin: 5px;
+  min-width: 120px;
+  @media only screen and ${uptoMobileWidth} {
+    font-size: 11px;
+  }
 `;
 
 export const AppHeader = styled(AppBar)`
@@ -116,6 +123,10 @@ export const AppHeader = styled(AppBar)`
 
 export const Bars = styled(Toolbar)`
   flexwrap: wrap;
+  @media only screen and ${MobileVersion} {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
 `;
 
 export const LogoLink = styled(Link)`
@@ -123,7 +134,8 @@ export const LogoLink = styled(Link)`
 `;
 
 export const Nav = styled(Link)`
-  margin: 10px;
+  margin: 0;
+  color: none;
 `;
 
 export const CustomIcon = styled(IconButton).attrs({
@@ -135,6 +147,10 @@ export const CustomIcon = styled(IconButton).attrs({
   padding: 0;
   .MuiIconButton-label {
     display: inline-block;
+  }
+  @media only screen and ${MobileVersion} {
+    width: 25px;
+    margin: 10px;
   }
 `;
 
@@ -160,9 +176,14 @@ export const UserIcon = styled(Person).attrs({
   font-size: 30px;
 `;
 
-export const VideoLibrary = styled(VideoLibraryIcon).attrs({
+export const IconMore = styled(MoreIcon).attrs({
   fontSize: "large",
-  color: "action",
+})`
+  font-size: 30px;
+`;
+
+export const UploadIcon = styled(CloudUploadIcon).attrs({
+  fontSize: "large",
 })`
   font-size: 30px;
 `;
@@ -174,18 +195,18 @@ export const StyledContent = styled.div`
 `;
 
 export const ProfileBox = styled.div`
-  width: 60%;
+  width: 100%;
+  padding: 0 20px;
   margin: 0 auto;
   position: relative;
   top: -5%;
-  padding: 10px;
 `;
 
 export const UserFeedBanner = styled(Grid).attrs({
   item: true,
 })`
   height: 100px;
-  background-image: url(${(props) => props["aria-multiselectable"]});
+  background-image: url(${(props) => props.url});
 `;
 
 export const InputField = styled(TextField).attrs({
@@ -255,4 +276,11 @@ export const SettingTableContainer = styled(TableContainer)`
   background-color: #f4f6fa;
   border: none;
   margin-bottom: 30px;
+`;
+
+export const LogoImage = styled.img`
+  width: auto;
+  @media only screen and ${uptoMobileWidth} {
+    width: 80px;
+  }
 `;
