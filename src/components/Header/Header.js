@@ -38,12 +38,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Header(props) {
-  let userRole;
-  if (props.user && props.user.id) {
-    userRole = props.user.role;
-  } else {
-    userRole = userRoles.UNKNOWN;
-  }
+  const [userRole, setUserRole] = React.useState(userRoles.UNKNOWN);
+
+  React.useEffect(() => {
+    setUserRole(props.user.role);
+  }, [props.user]);
+
   const handleOpenContentUpload = props.onContentUpload;
 
   let history = useHistory();
@@ -118,7 +118,7 @@ export default function Header(props) {
   };
 
   const Logo = () => {
-    return props.user.role === userRoles.UNKNOWN ? (
+    return userRole === userRoles.UNKNOWN ? (
       <LogoLink to="/">
         <LogoImage src={logo} alt="logo" />
       </LogoLink>

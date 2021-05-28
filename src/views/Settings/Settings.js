@@ -20,6 +20,7 @@ import Checkout from "../../components/Checkout/Checkout";
 import CloseIcon from "@material-ui/icons/Close";
 import TrainerPrice from "../../components/Settings/TrainerPrice";
 import { SettingTableContainer } from "../../components/StyledComponets/StyledComponets";
+import { useHistory } from "react-router-dom";
 
 const getUserSettings = /* GraphQL */ `
   query GetUserProfile($id: ID!) {
@@ -47,11 +48,13 @@ export default function Settings(props) {
   const [trainers, setTrainers] = useState([]);
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [isVerified, setVerified] = useState(true);
-  const [openDialog, setOpenDialog] = React.useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const [openCheckout, setOpenCheckout] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [prices, setPrices] = useState([]);
+
+  const history = useHistory();
 
   const handleOpenPassword = () => {
     setOpenDialog(true);
@@ -192,7 +195,10 @@ export default function Settings(props) {
 
   const signOut = () => {
     Auth.signOut()
-      .then(() => console.log("Successfully signed out."))
+      .then(() => {
+        console.log("Successfully signed out.");
+        history.push("/");
+      })
       .catch(console.log);
   };
 
@@ -329,11 +335,14 @@ export default function Settings(props) {
         setTrainers(subs);
       }
     });
+  }, [props.user.id, setPrices, setVerified, setTrainers]);
+
+  useEffect(() => {
     if (props.user.role === userRoles.STUDENT) {
       fetchDefaultPaymentMethod();
       fetchPaymentMethod();
     }
-  }, [props.user.id]);
+  }, [props.user.id, setDefaultPaymentMethod, setPaymentMethods]);
 
   return (
     <SettingTableContainer>
