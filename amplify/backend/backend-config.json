@@ -57,7 +57,7 @@
     }
   },
   "storage": {
-    "mikereactb9eaf435": {
+    "mikereact48af3338": {
       "service": "S3",
       "serviceType": "imported",
       "providerPlugin": "awscloudformation",
