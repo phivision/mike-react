@@ -11,6 +11,7 @@ import {
   Input,
   Divider,
   Container,
+  DialogContent,
 } from "@material-ui/core";
 import SearchBar from "material-ui-search-bar";
 import {
@@ -283,4 +284,15 @@ export const LogoImage = styled.img`
   @media only screen and ${uptoMobileWidth} {
     width: 80px;
   }
+`;
+
+export const DialogBody = styled(DialogContent)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+`;
+
+export const TextLink = styled.a`
+  cursor: pointer;
 `;

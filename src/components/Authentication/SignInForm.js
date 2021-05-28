@@ -5,12 +5,19 @@ import {
   Button,
   Grid,
   Checkbox,
+  Dialog,
 } from "@material-ui/core";
 import { Auth } from "aws-amplify";
 import { Link, useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 // import auth styles
 import authStyles from "../../assets/jss/material-dashboard-react/views/authStyle";
+import {
+  TextStyle,
+  CustomButton,
+  DialogBody,
+  TextLink,
+} from "../StyledComponets/StyledComponets";
 
 export default function SignInForm({ openError: openError, ...props }) {
   const classes = authStyles();
@@ -29,6 +36,16 @@ export default function SignInForm({ openError: openError, ...props }) {
           remember: false,
         }
   );
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleModalOpen = () => {
+    setOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setOpen(false);
+  };
 
   const handleChange = (e) => {
     const value =
@@ -115,7 +132,37 @@ export default function SignInForm({ openError: openError, ...props }) {
       </Button>
       <Grid container>
         <Grid item xs>
-          <Link to="/">Forgot password?</Link>
+          <TextLink onClick={handleModalOpen}>Forgot password?</TextLink>
+          <Dialog
+            open={open}
+            onClose={handleModalClose}
+            aria-labelledby="form-dialog-title"
+          >
+            <DialogBody>
+              <TextStyle id="form-dialog-title" variant="subtitle1">
+                Reset Password
+              </TextStyle>
+              <TextStyle variant="body1">
+                Please enter the email account to reset your password:
+              </TextStyle>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="email-reset-password"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                value={state.email}
+                onChange={(e) => handleChange(e)}
+              />
+              <CustomButton onClick={handleModalClose} fullWidth>
+                Send Email
+              </CustomButton>
+            </DialogBody>
+          </Dialog>
         </Grid>
         <Grid item>
           {props.location.state !== undefined ? (
