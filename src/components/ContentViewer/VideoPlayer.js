@@ -1,10 +1,10 @@
 import ReactHlsPlayer from "react-hls-player";
 import PropTypes from "prop-types";
 import React from "react";
+import { getVideoEndpoint } from "../../utilities/VideoTools";
 
 // load YAML file for video endpoints info
-// TODO: try to use aws SDK to pull the info from aws server
-const videoEndpoint = "https://d1n1lk96owjcvm.cloudfront.net/output/hls/";
+const videoEndpoint = getVideoEndpoint();
 
 const VideoPlayer = (props) => {
   const videoName = props.video.split(".")[0];
