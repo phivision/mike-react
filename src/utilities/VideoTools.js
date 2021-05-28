@@ -1,4 +1,18 @@
 import { Storage } from "aws-amplify";
+import aws_config from "../aws-exports";
+import video_endpoint from "video_endpoints.json";
+
+const REGEX = /.*-(\w+)/;
+const video_bucket_name = aws_config.aws_user_files_s3_bucket.match(REGEX);
+const env = video_bucket_name[video_bucket_name.length - 1];
+
+const getVideoEndpoint = () => {
+  if (env === "dev" || env === "prod") {
+    return video_endpoint[env];
+  } else {
+    throw "Cannot load valid endpoint info!";
+  }
+};
 
 const checkS3PrefixReady = async (fileName, prefix) => {
   const videoName = fileName.split(".")[0];
@@ -64,4 +78,4 @@ async function deleteVideo(videoName, thumbName) {
   ]).catch(console.log);
 }
 
-export { checkS3PrefixReady, deleteVideo };
+export { checkS3PrefixReady, deleteVideo, getVideoEndpoint };
