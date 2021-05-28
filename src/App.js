@@ -86,7 +86,7 @@ const App = () => {
       if (res.isValid()) {
         setUser({
           id: res.idToken.payload["cognito:username"],
-          username: res.idToken.payload["custom:role"],
+          role: res.idToken.payload["custom:role"],
         });
       }
     });
