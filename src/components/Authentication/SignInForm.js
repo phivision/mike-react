@@ -17,6 +17,7 @@ import {
   CustomButton,
   DialogBody,
   TextLink,
+  DividerLine,
 } from "../StyledComponets/StyledComponets";
 
 export default function SignInForm({ openError: openError, ...props }) {
@@ -38,6 +39,8 @@ export default function SignInForm({ openError: openError, ...props }) {
   );
 
   const [open, setOpen] = React.useState(false);
+  const [showVerify, setShowVerify] = React.useState(false);
+  const [verifyCode, setVerifyCode] = React.useState("");
 
   const handleModalOpen = () => {
     setOpen(true);
@@ -54,6 +57,14 @@ export default function SignInForm({ openError: openError, ...props }) {
       ...state,
       [e.target.name]: value,
     });
+  };
+
+  const handleShowVerify = () => {
+    setShowVerify(true);
+  };
+
+  const handleVerifyCode = (e) => {
+    setVerifyCode(e.target.value);
   };
 
   async function handleSubmit(e) {
@@ -80,6 +91,20 @@ export default function SignInForm({ openError: openError, ...props }) {
       openError(error.message);
     }
   }
+
+  const handleForgotPassword = (username) => {
+    // Send confirmation code to user's email
+    Auth.forgotPassword(username)
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
+  };
+
+  const handleForgotPasswordSubmit = (username, code, new_password) => {
+    // Collect confirmation code and new password, then
+    Auth.forgotPasswordSubmit(username, code, new_password)
+      .then((data) => console.log("Successful update password", data))
+      .catch((err) => console.log(err));
+  };
 
   return (
     <form className={classes.form} onSubmit={(e) => handleSubmit(e)} noValidate>
@@ -158,9 +183,67 @@ export default function SignInForm({ openError: openError, ...props }) {
                 value={state.email}
                 onChange={(e) => handleChange(e)}
               />
-              <CustomButton onClick={handleModalClose} fullWidth>
+              <CustomButton
+                onClick={() => {
+                  handleForgotPassword(state.email);
+                  handleShowVerify();
+                }}
+                fullWidth
+              >
                 Send Email
               </CustomButton>
+              {showVerify ? (
+                <div>
+                  <DividerLine />
+                  <TextField
+                    name="verification-code"
+                    label="verification code"
+                    variant="outlined"
+                    required
+                    id="reset-password-verify-code"
+                    fullWidth
+                    autoFocus
+                    placeholder="Input code"
+                    margin="normal"
+                    value={verifyCode}
+                    onChange={(e) => handleVerifyCode(e)}
+                  />
+                  <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    name="password"
+                    label="New Password"
+                    type="password"
+                    id="change-new-password"
+                    placeholder="Input new password"
+                    inputProps={{
+                      autocomplete: "new-password",
+                      form: {
+                        autocomplete: "off",
+                      },
+                    }}
+                    onChange={(e) => handleChange(e)}
+                    fullWidth
+                  />
+                  <CustomButton
+                    onClick={() => {
+                      handleForgotPasswordSubmit(
+                        state.email,
+                        verifyCode,
+                        state.password
+                      );
+                      handleShowVerify();
+                      handleModalClose;
+                    }}
+                    fullWidth
+                  >
+                    Verify
+                  </CustomButton>
+                </div>
+              ) : (
+                ""
+              )}
             </DialogBody>
           </Dialog>
         </Grid>

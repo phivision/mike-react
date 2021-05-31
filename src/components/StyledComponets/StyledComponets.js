@@ -231,6 +231,7 @@ export const DividerLine = styled(Divider).attrs({
   variant: "fullWidth",
 })`
   width: 100%;
+  margin: 0 5px;
 `;
 
 export const FlexContain = styled(Container).attrs({
