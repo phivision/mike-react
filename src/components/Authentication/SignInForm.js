@@ -12,13 +12,8 @@ import { Link, useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 // import auth styles
 import authStyles from "../../assets/jss/material-dashboard-react/views/authStyle";
-import {
-  TextStyle,
-  CustomButton,
-  DialogBody,
-  TextLink,
-  DividerLine,
-} from "../StyledComponets/StyledComponets";
+import { TextLink } from "../StyledComponets/StyledComponets";
+import ForgotPassword from "./ForgotPassword ";
 
 export default function SignInForm({ openError: openError, ...props }) {
   const classes = authStyles();
@@ -39,8 +34,6 @@ export default function SignInForm({ openError: openError, ...props }) {
   );
 
   const [open, setOpen] = React.useState(false);
-  const [showVerify, setShowVerify] = React.useState(false);
-  const [verifyCode, setVerifyCode] = React.useState("");
 
   const handleModalOpen = () => {
     setOpen(true);
@@ -57,14 +50,6 @@ export default function SignInForm({ openError: openError, ...props }) {
       ...state,
       [e.target.name]: value,
     });
-  };
-
-  const handleShowVerify = () => {
-    setShowVerify(true);
-  };
-
-  const handleVerifyCode = (e) => {
-    setVerifyCode(e.target.value);
   };
 
   async function handleSubmit(e) {
@@ -91,20 +76,6 @@ export default function SignInForm({ openError: openError, ...props }) {
       openError(error.message);
     }
   }
-
-  const handleForgotPassword = (username) => {
-    // Send confirmation code to user's email
-    Auth.forgotPassword(username)
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
-  };
-
-  const handleForgotPasswordSubmit = (username, code, new_password) => {
-    // Collect confirmation code and new password, then
-    Auth.forgotPasswordSubmit(username, code, new_password)
-      .then((data) => console.log("Successful update password", data))
-      .catch((err) => console.log(err));
-  };
 
   return (
     <form className={classes.form} onSubmit={(e) => handleSubmit(e)} noValidate>
@@ -163,88 +134,11 @@ export default function SignInForm({ openError: openError, ...props }) {
             onClose={handleModalClose}
             aria-labelledby="form-dialog-title"
           >
-            <DialogBody>
-              <TextStyle id="form-dialog-title" variant="subtitle1">
-                Reset Password
-              </TextStyle>
-              <TextStyle variant="body1">
-                Please enter the email account to reset your password:
-              </TextStyle>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="email-reset-password"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                value={state.email}
-                onChange={(e) => handleChange(e)}
-              />
-              <CustomButton
-                onClick={() => {
-                  handleForgotPassword(state.email);
-                  handleShowVerify();
-                }}
-                fullWidth
-              >
-                Send Email
-              </CustomButton>
-              {showVerify ? (
-                <div>
-                  <DividerLine />
-                  <TextField
-                    name="verification-code"
-                    label="verification code"
-                    variant="outlined"
-                    required
-                    id="reset-password-verify-code"
-                    fullWidth
-                    autoFocus
-                    placeholder="Input code"
-                    margin="normal"
-                    value={verifyCode}
-                    onChange={(e) => handleVerifyCode(e)}
-                  />
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    name="password"
-                    label="New Password"
-                    type="password"
-                    id="change-new-password"
-                    placeholder="Input new password"
-                    inputProps={{
-                      autocomplete: "new-password",
-                      form: {
-                        autocomplete: "off",
-                      },
-                    }}
-                    onChange={(e) => handleChange(e)}
-                    fullWidth
-                  />
-                  <CustomButton
-                    onClick={() => {
-                      handleForgotPasswordSubmit(
-                        state.email,
-                        verifyCode,
-                        state.password
-                      );
-                      handleShowVerify();
-                      handleModalClose;
-                    }}
-                    fullWidth
-                  >
-                    Verify
-                  </CustomButton>
-                </div>
-              ) : (
-                ""
-              )}
-            </DialogBody>
+            <ForgotPassword
+              state={state}
+              handleChange={handleChange}
+              handleModalClose={handleModalClose}
+            />
           </Dialog>
         </Grid>
         <Grid item>
