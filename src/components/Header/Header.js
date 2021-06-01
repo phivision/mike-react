@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { Icon, Typography } from "@material-ui/core";
-import logo from "../../assets/img/logo.jpg";
+import logo from "../../assets/img/logo.png";
 import PropTypes from "prop-types";
 import { userRoles } from "../../variables/userRoles";
 import {
