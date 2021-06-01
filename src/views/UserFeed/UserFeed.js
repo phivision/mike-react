@@ -154,6 +154,7 @@ export default function UserFeed({ ...props }) {
 
   const userSub = (subs) => {
     let temp_subs = [];
+    console.log(subs);
     subs.items.map((sub) => {
       const subscription = API.graphql({
         query: onContentByCreatorID,
