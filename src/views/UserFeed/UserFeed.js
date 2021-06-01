@@ -25,13 +25,14 @@ import {
   trainerProfileQuery,
 } from "../../graphql/UserFeed";
 import { onContentByCreatorID } from "../../graphql/subscriptions";
+import avatar from "assets/img/faces/marc.jpg";
 
 // import initial profile
 const initialProfileState = {
   id: "",
   Birthday: null,
   Height: null,
-  UserImage: null,
+  UserImage: avatar,
   LastName: "",
   FirstName: "",
   Weight: null,
@@ -148,7 +149,7 @@ export default function UserFeed({ ...props }) {
         return SubsData;
       })
       .catch(console.log);
-    return [];
+    return { items: [] };
   };
 
   const userSub = (subs) => {
