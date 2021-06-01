@@ -82,11 +82,13 @@ const App = () => {
 
   React.useEffect(() => {
     Auth.currentSession().then((res) => {
-      console.log(res);
       if (res.isValid()) {
         setUser({
           id: res.idToken.payload["cognito:username"],
           role: res.idToken.payload["custom:role"],
+        });
+        Amplify.configure({
+          aws_appsync_authenticationType: "AMAZON_COGNITO_USER_POOLS",
         });
       }
     });
