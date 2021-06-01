@@ -50,7 +50,7 @@ export default function UserFeed({ ...props }) {
   const history = useHistory();
   const contentRef = useRef([]);
   contentRef.current = contents;
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
 
   const onChange = (e) => {

@@ -17,6 +17,7 @@ import {
   ProfileBox,
   UserFeedBanner,
 } from "../../components/StyledComponets/StyledComponets";
+import DataPagination from "components/DataPagination/DataPagination";
 
 // import initial profile
 const initialProfileState = {
@@ -43,6 +44,8 @@ export default function LandingPage({ ...props }) {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const history = useHistory();
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(3);
 
   async function userQuery() {
     const query = /* GraphQL */ `
@@ -202,13 +205,7 @@ export default function LandingPage({ ...props }) {
           <GridContainer item direction="column" xs={12} sm={4}>
             <ProfileBox>
               <GridItem>
-                <UserAvatar
-                  // style={{
-                  //   width: "200px",
-                  //   height: "200px",
-                  // }}
-                  UserImage={profile.UserImage}
-                />
+                <UserAvatar UserImage={profile.UserImage} />
               </GridItem>
               <GridItem>
                 <Typography variant="h3">
@@ -244,17 +241,32 @@ export default function LandingPage({ ...props }) {
             <GridItem>
               <Typography variant="h1">Favorite Workouts</Typography>
             </GridItem>
-            {favorites.map((fav, idx) => {
-              return (
-                <WorkoutCard
-                  post={fav.Content}
-                  trainer={profile}
-                  favorite={fav}
-                  segments={fav.Content.Segments}
-                  key={idx}
-                />
-              );
-            })}
+            <GridItem>
+              {(rowsPerPage > 0
+                ? favorites.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
+                : favorites
+              ).map((fav, idx) => {
+                return (
+                  <WorkoutCard
+                    post={fav.Content}
+                    trainer={profile}
+                    favorite={fav}
+                    segments={fav.Content.Segments}
+                    key={idx}
+                  />
+                );
+              })}
+              <DataPagination
+                length={favorites.length}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                setPage={setPage}
+                setRowsPerPage={setRowsPerPage}
+              />
+            </GridItem>
           </GridContainer>
         </GridContainer>
         <Dialog
