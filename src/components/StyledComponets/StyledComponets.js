@@ -280,6 +280,7 @@ export const SettingTableContainer = styled(TableContainer)`
 
 export const LogoImage = styled.img`
   width: auto;
+  max-width: 200px;
   @media only screen and ${uptoMobileWidth} {
     width: 80px;
   }
