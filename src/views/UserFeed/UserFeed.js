@@ -25,6 +25,7 @@ import {
   trainerProfileQuery,
 } from "../../graphql/UserFeed";
 import { onContentByCreatorID } from "../../graphql/subscriptions";
+import DataPagination from "components/DataPagination/DataPagination";
 import avatar from "assets/img/faces/marc.jpg";
 
 // import initial profile
@@ -49,6 +50,8 @@ export default function UserFeed({ ...props }) {
   const history = useHistory();
   const contentRef = useRef([]);
   contentRef.current = contents;
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(3);
 
   const onChange = (e) => {
     switch (e.target.id) {
@@ -154,7 +157,6 @@ export default function UserFeed({ ...props }) {
 
   const userSub = (subs) => {
     let temp_subs = [];
-    console.log(subs);
     subs.items.map((sub) => {
       const subscription = API.graphql({
         query: onContentByCreatorID,
@@ -341,18 +343,33 @@ export default function UserFeed({ ...props }) {
             <GridItem>
               <Typography variant="h1">Favorite Workouts</Typography>
             </GridItem>
-            {favorites.map((fav, idx) => {
-              return (
-                <WorkoutCard
-                  post={fav.Content}
-                  trainer={profile}
-                  favorite={fav}
-                  segments={fav.Content.Segments}
-                  favoriteCallback={editFavorite}
-                  key={idx}
-                />
-              );
-            })}
+            <GridItem>
+              {(rowsPerPage > 0
+                ? favorites.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
+                : favorites
+              ).map((fav, idx) => {
+                return (
+                  <WorkoutCard
+                    post={fav.Content}
+                    trainer={profile}
+                    favorite={fav}
+                    segments={fav.Content.Segments}
+                    favoriteCallback={editFavorite}
+                    key={idx}
+                  />
+                );
+              })}
+              <DataPagination
+                length={favorites.length}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                setPage={setPage}
+                setRowsPerPage={setRowsPerPage}
+              />
+            </GridItem>
           </GridContainer>
         </GridContainer>
       </Container>
