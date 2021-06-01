@@ -22,6 +22,14 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
   }
 `;
 
+export const removeDeletedFavoriteContent = /* GraphQL */ `
+  mutation DeleteUserFavoriteContent($input: DeleteUserFavoriteContentInput!) {
+    deleteUserFavoriteContent(input: $input) {
+      id
+    }
+  }
+`;
+
 export const createUserFavoriteContent = /* GraphQL */ `
   mutation CreateUserFavoriteContent($input: CreateUserFavoriteContentInput!) {
     createUserFavoriteContent(input: $input) {
@@ -94,6 +102,35 @@ export const userProfileQuery = `query GetUserProfile ($id: ID!) {
             FirstName
             UserImage
             Description
+          }
+        }`;
+
+export const userFavoriteQuery = `query GetUserProfile ($id: ID!) {
+          getUserProfile(id: $id) {
+            Favorites {
+              items {
+                Content {
+                  id
+                  ContentName
+                  Title
+                  Thumbnail
+                  createdAt
+                  Description
+                  Segments
+                }
+                id
+              }
+            }
+          }
+        }`;
+
+export const userFavoriteIdQuery = `query GetUserProfile ($id: ID!) {
+          getUserProfile(id: $id) {
+            Favorites {
+              items {
+                id
+              }
+            }
           }
         }`;
 

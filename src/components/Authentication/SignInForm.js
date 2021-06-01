@@ -5,12 +5,15 @@ import {
   Button,
   Grid,
   Checkbox,
+  Dialog,
 } from "@material-ui/core";
 import { Auth } from "aws-amplify";
 import { Link, useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 // import auth styles
 import authStyles from "../../assets/jss/material-dashboard-react/views/authStyle";
+import { TextLink } from "../StyledComponets/StyledComponets";
+import ForgotPassword from "./ForgotPassword ";
 
 export default function SignInForm({ openError: openError, ...props }) {
   const classes = authStyles();
@@ -29,6 +32,16 @@ export default function SignInForm({ openError: openError, ...props }) {
           remember: false,
         }
   );
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleModalOpen = () => {
+    setOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setOpen(false);
+  };
 
   const handleChange = (e) => {
     const value =
@@ -115,7 +128,18 @@ export default function SignInForm({ openError: openError, ...props }) {
       </Button>
       <Grid container>
         <Grid item xs>
-          <Link to="/">Forgot password?</Link>
+          <TextLink onClick={handleModalOpen}>Forgot password?</TextLink>
+          <Dialog
+            open={open}
+            onClose={handleModalClose}
+            aria-labelledby="form-dialog-title"
+          >
+            <ForgotPassword
+              state={state}
+              handleChange={handleChange}
+              handleModalClose={handleModalClose}
+            />
+          </Dialog>
         </Grid>
         <Grid item>
           {props.location.state !== undefined ? (

@@ -20,19 +20,22 @@ import {
 } from "../../components/StyledComponets/StyledComponets";
 import {
   deleteUserFavoriteContent,
+  removeDeletedFavoriteContent,
   createUserFavoriteContent,
   userProfileQuery,
+  userFavoriteQuery,
+  userFavoriteIdQuery,
   trainerProfileQuery,
 } from "../../graphql/UserFeed";
 import { onContentByCreatorID } from "../../graphql/subscriptions";
-import avatar from "assets/img/faces/marc.jpg";
+import DataPagination from "components/DataPagination/DataPagination";
 
 // import initial profile
 const initialProfileState = {
   id: "",
   Birthday: null,
   Height: null,
-  UserImage: avatar,
+  UserImage: null,
   LastName: "",
   FirstName: "",
   Weight: null,
@@ -49,6 +52,8 @@ export default function UserFeed({ ...props }) {
   const history = useHistory();
   const contentRef = useRef([]);
   contentRef.current = contents;
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(3);
 
   const onChange = (e) => {
     switch (e.target.id) {
@@ -133,14 +138,9 @@ export default function UserFeed({ ...props }) {
   const userQuery = async () => {
     API.graphql(graphqlOperation(userProfileQuery, { id: props.user.id }))
       .then((d) => {
-        const {
-          Subscriptions: SubsData,
-          Favorites,
-          ...p
-        } = d.data.getUserProfile;
+        const { Subscriptions: SubsData, ...p } = d.data.getUserProfile;
         console.log(d.data.getUserProfile);
         setProfile(p);
-        setFavorites(Favorites.items);
         let temp_contents = [];
         SubsData.items.map((sub) => {
           temp_contents = [...temp_contents, ...sub.Trainer.Contents.items];
@@ -152,9 +152,43 @@ export default function UserFeed({ ...props }) {
     return { items: [] };
   };
 
+  const userFavorite = async () => {
+    API.graphql(graphqlOperation(userFavoriteQuery, { id: props.user.id }))
+      .then((d) => {
+        setFavorites(d.data.getUserProfile.Favorites.items);
+      })
+      .catch((d) => {
+        let error_indexes = [];
+        d.errors.map((error) => {
+          if (error.path[3]) {
+            error_indexes.push(error.path[3]);
+          }
+        });
+        // get favorite id
+        API.graphql(
+          graphqlOperation(userFavoriteIdQuery, { id: props.user.id })
+        ).then((d) => {
+          // remove favorite relationship for deleted items
+          d.data.getUserProfile.Favorites.items.map((data, idx) => {
+            if (error_indexes.includes(idx)) {
+              API.graphql(
+                graphqlOperation(removeDeletedFavoriteContent, {
+                  input: { id: data.id },
+                })
+              ).catch(console.log);
+            }
+          });
+        });
+        // reset the favorites
+        const fixed_favorites = d.data.getUserProfile.Favorites.items.filter(
+          (item) => !!item
+        );
+        setFavorites(fixed_favorites);
+      });
+  };
+
   const userSub = (subs) => {
     let temp_subs = [];
-    console.log(subs);
     subs.items.map((sub) => {
       const subscription = API.graphql({
         query: onContentByCreatorID,
@@ -172,9 +206,8 @@ export default function UserFeed({ ...props }) {
   const trainerQuery = async () => {
     API.graphql(graphqlOperation(trainerProfileQuery, { id: props.user.id }))
       .then((d) => {
-        const { Contents, Favorites, ...p } = d.data.getUserProfile;
+        const { Contents, ...p } = d.data.getUserProfile;
         setProfile(p);
-        setFavorites(Favorites.items);
         setSortedContent(Contents.items);
       })
       .catch(console.log);
@@ -193,12 +226,20 @@ export default function UserFeed({ ...props }) {
   };
 
   useEffect(() => {
-    props.user.role === userRoles.STUDENT
-      ? userQuery().then((subs) => {
-          userSub(subs);
-        })
-      : trainerQuery().then(trainerSub);
-    return unsubscribeAll();
+    if (props.user.role !== userRoles.UNKNOWN) {
+      props.user.role === userRoles.STUDENT
+        ? userQuery().then((subs) => {
+            userSub(subs);
+          })
+        : trainerQuery().then(trainerSub);
+      return unsubscribeAll();
+    }
+  }, [props.user.id]);
+
+  useEffect(() => {
+    if (props.user.role !== userRoles.UNKNOWN) {
+      userFavorite();
+    }
   }, [props.user.id]);
 
   const setSortedContent = (unsorted) => {
@@ -341,18 +382,33 @@ export default function UserFeed({ ...props }) {
             <GridItem>
               <Typography variant="h1">Favorite Workouts</Typography>
             </GridItem>
-            {favorites.map((fav, idx) => {
-              return (
-                <WorkoutCard
-                  post={fav.Content}
-                  trainer={profile}
-                  favorite={fav}
-                  segments={fav.Content.Segments}
-                  favoriteCallback={editFavorite}
-                  key={idx}
-                />
-              );
-            })}
+            <GridItem>
+              {(rowsPerPage > 0
+                ? favorites.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
+                : favorites
+              ).map((fav, idx) => {
+                return (
+                  <WorkoutCard
+                    post={fav.Content}
+                    trainer={profile}
+                    favorite={fav}
+                    segments={fav.Content.Segments}
+                    favoriteCallback={editFavorite}
+                    key={idx}
+                  />
+                );
+              })}
+              <DataPagination
+                length={favorites.length}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                setPage={setPage}
+                setRowsPerPage={setRowsPerPage}
+              />
+            </GridItem>
           </GridContainer>
         </GridContainer>
       </Container>
