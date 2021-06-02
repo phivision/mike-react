@@ -1,5 +1,5 @@
-var AWS = require('aws-sdk');
-var mediaconvert = new AWS.MediaConvert({ apiVersion: '2017-08-29' });
+var AWS = require("aws-sdk");
+var mediaconvert = new AWS.MediaConvert({ apiVersion: "2017-08-29" });
 
 const MEDIACONVERT_ROLE = process.env.JOB_ROLE;
 const PACKAGE_TYPE = process.env.PACKAGE_TYPE;
@@ -8,9 +8,9 @@ let OUTPUT_PREFIX = fixForPrefix(process.env.OUTPUT_PREFIX);
 
 //helper function to address scenarios where user does not enter the
 //trailing '/' in 'input' and 'output' prefix
-function fixForPrefix(foldername){
-  if(!foldername.endsWith("/")){
-    foldername = foldername+"/";
+function fixForPrefix(foldername) {
+  if (!foldername.endsWith("/")) {
+    foldername = foldername + "/";
   }
   return foldername;
 }
@@ -27,18 +27,17 @@ exports.handler = async (event, context, callback) => {
     await setMediaConvertEndpoint(mediaconvert);
     await setMediaConvertQueue(job);
     INITIALISED = true;
-  }
-  else{
+  } else {
     await setMediaConvertQueue(job);
   }
-  await submitJob(job,callback);
+  await submitJob(job, callback);
   // .catch(err => console.log("Error :%j", err));
 };
 
 //set the Default Queue Arn
-async function setMediaConvertQueue(job){
+async function setMediaConvertQueue(job) {
   var params = {
-    Name: 'Default' /* required */
+    Name: "Default" /* required */,
   };
 
   let queue = await mediaconvert.getQueue(params).promise();
@@ -46,15 +45,14 @@ async function setMediaConvertQueue(job){
 }
 
 //set the AWS Account specific mediaconvert endpoint
-async function setMediaConvertEndpoint(mediaconvert){
+async function setMediaConvertEndpoint(mediaconvert) {
+  // Create empty request parameters
+  var params = {
+    MaxResults: 0,
+  };
 
-    // Create empty request parameters
-    var params = {
-      MaxResults: 0,
-    };
-
-    let endpoint = await mediaconvert.describeEndpoints(params).promise();
-    mediaconvert.endpoint = endpoint.Endpoints[0].Url;
+  let endpoint = await mediaconvert.describeEndpoints(params).promise();
+  mediaconvert.endpoint = endpoint.Endpoints[0].Url;
 }
 
 //create the job with input and output configurations for HLS and DASH
@@ -67,41 +65,42 @@ function createJob(event) {
   // console.log("Package type 1:%s", packageTypes[1]);
 
   var params = {
-    "Queue": "",
-    "Role": MEDIACONVERT_ROLE,
-    "Settings": {
-      "OutputGroups": [],
-      "AdAvailOffset": 0,
-      "Inputs": [{
-        "AudioSelectors": {
-          "Audio Selector 1": {
-            "Offset": 0,
-            "DefaultSelection": "NOT_DEFAULT",
-            "ProgramSelection": 1,
-            "SelectorType": "TRACK",
-            "Tracks": [
-              1
-            ]
-          }
+    Queue: "",
+    Role: MEDIACONVERT_ROLE,
+    UserMetadata: { S3Bucket: bucket, S3Key: key },
+    Settings: {
+      OutputGroups: [],
+      AdAvailOffset: 0,
+      Inputs: [
+        {
+          AudioSelectors: {
+            "Audio Selector 1": {
+              Offset: 0,
+              DefaultSelection: "NOT_DEFAULT",
+              ProgramSelection: 1,
+              SelectorType: "TRACK",
+              Tracks: [1],
+            },
+          },
+          VideoSelector: {
+            ColorSpace: "FOLLOW",
+          },
+          FilterEnable: "AUTO",
+          PsiControl: "USE_PSI",
+          FilterStrength: 0,
+          DeblockFilter: "DISABLED",
+          DenoiseFilter: "DISABLED",
+          TimecodeSource: "EMBEDDED",
+          FileInput: "s3://" + bucket + "/" + key,
         },
-        "VideoSelector": {
-          "ColorSpace": "FOLLOW"
-        },
-        "FilterEnable": "AUTO",
-        "PsiControl": "USE_PSI",
-        "FilterStrength": 0,
-        "DeblockFilter": "DISABLED",
-        "DenoiseFilter": "DISABLED",
-        "TimecodeSource": "EMBEDDED",
-        "FileInput": "s3://" + bucket + "/" + key
-      }],
-      "TimecodeConfig": {
-        "Source": "EMBEDDED"
-      }
-    }
+      ],
+      TimecodeConfig: {
+        Source: "EMBEDDED",
+      },
+    },
   };
 
-  packageTypes.forEach(function(packageType, index, array) {
+  packageTypes.forEach(function (packageType, index, array) {
     console.log("Type,index :", packageType, index, array);
     let type = packageType.split(":");
     if (type[0] == "hls") {
@@ -110,10 +109,10 @@ function createJob(event) {
       output.Outputs = [];
       let profiles = type[1].split(",");
 
-      profiles.forEach(function(profile, ind) {
+      profiles.forEach(function (profile, ind) {
         let preset = {};
         preset.Preset = profile;
-        preset.NameModifier = "/"+profile; //"/preset-" + ind;
+        preset.NameModifier = "/" + profile; //"/preset-" + ind;
         output.Outputs.push(preset);
       });
 
@@ -121,7 +120,14 @@ function createJob(event) {
       outputGroupSettings.Type = "HLS_GROUP_SETTINGS";
       var hlsSettings = {};
       hlsSettings.ManifestDurationFormat = "INTEGER";
-      hlsSettings.Destination = "s3://" + bucket + "/" + OUTPUT_PREFIX + type[0] + "/" + getContentPrefix(key);
+      hlsSettings.Destination =
+        "s3://" +
+        bucket +
+        "/" +
+        OUTPUT_PREFIX +
+        type[0] +
+        "/" +
+        getContentPrefix(key);
       hlsSettings.SegmentLength = 4;
       hlsSettings.TimedMetadataId3Period = 10;
       hlsSettings.CaptionLanguageSetting = "OMIT";
@@ -139,31 +145,37 @@ function createJob(event) {
       outputGroupSettings.HlsGroupSettings = hlsSettings;
       output.OutputGroupSettings = outputGroupSettings;
       params.Settings.OutputGroups.push(output);
-    }
-    else if (type[0] = "dash") {
+    } else if ((type[0] = "dash")) {
       var output = {};
       output.Name = "DASH ISO";
       output.Outputs = [];
       let profiles = type[1].split(",");
 
-      profiles.forEach(function(profile, ind) {
+      profiles.forEach(function (profile, ind) {
         let preset = {};
         preset.Preset = profile;
-        preset.NameModifier = "/"+profile; //"/preset-" + ind;
+        preset.NameModifier = "/" + profile; //"/preset-" + ind;
         output.Outputs.push(preset);
       });
-       output.Outputs.push({
-            "Preset": "System-Ott_Dash_Mp4_Aac_He_96Kbps",
-            "NameModifier": "/preset-0_Ott_Dash_Mp4_Aac_He_96Kbps"
-        });
+      output.Outputs.push({
+        Preset: "System-Ott_Dash_Mp4_Aac_He_96Kbps",
+        NameModifier: "/preset-0_Ott_Dash_Mp4_Aac_He_96Kbps",
+      });
 
       var outputGroupSettings = {};
       outputGroupSettings.Type = "DASH_ISO_GROUP_SETTINGS";
       var dashSettings = {};
       dashSettings.SegmentLength = 4;
-      dashSettings.Destination = "s3://" + bucket + "/" + OUTPUT_PREFIX + type[0] + "/" + getContentPrefix(key);
+      dashSettings.Destination =
+        "s3://" +
+        bucket +
+        "/" +
+        OUTPUT_PREFIX +
+        type[0] +
+        "/" +
+        getContentPrefix(key);
       dashSettings.FragmentLength = 2;
-      dashSettings.SegmentControl = "SEGMENTED_FILES";//"SINGLE_FILE"
+      dashSettings.SegmentControl = "SEGMENTED_FILES"; //"SINGLE_FILE"
       dashSettings.HbbtvCompliance = "NONE";
       outputGroupSettings.DashIsoGroupSettings = dashSettings;
       output.OutputGroupSettings = outputGroupSettings;
@@ -176,18 +188,19 @@ function createJob(event) {
 
 //Submit the job to the MediaConvert service
 async function submitJob(job, callback) {
-
   console.log("Job to be submitted :%j", job);
 
-  await mediaconvert.createJob(job).promise()
+  await mediaconvert
+    .createJob(job)
+    .promise()
     .then(
-      function(data) {
+      function (data) {
         console.log("Job created! ", data);
-        callback(null, 'Done');
+        callback(null, "Done");
       },
-      function(err) {
+      function (err) {
         console.log("Error", err);
-        callback(err, 'Failed');
+        callback(err, "Failed");
       }
     );
 }
@@ -195,7 +208,7 @@ async function submitJob(job, callback) {
 //cleanup the input filename removing all non-alphanumeric characters
 //to arrive at the output folder name where trancoded assets will be stored in S3
 function getContentPrefix(key) {
-  console.log("In getContentPrefix with key :%s",key);
+  console.log("In getContentPrefix with key :%s", key);
   key = key.replace(INPUT_PREFIX, "");
   key = key.substring(0, key.lastIndexOf(".")) + "/";
   key = key.replace(/[^a-zA-Z0-9]/g, "");
