@@ -46,10 +46,12 @@ export default function LandingPage({ ...props }) {
   const history = useHistory();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
+  const [nextToken, setNextToken] = useState("");
+  const limit = 3;
 
   async function userQuery() {
     const query = /* GraphQL */ `
-      query GetUserProfile($id: ID!) {
+      query GetUserProfile($id: ID!, $limit: Int, $nextToken: String) {
         getUserProfile(id: $id) {
           id
           Birthday
@@ -74,7 +76,7 @@ export default function LandingPage({ ...props }) {
             }
             nextToken
           }
-          Contents {
+          Contents(limit: $limit, sortDirection: DESC, nextToken: $nextToken) {
             items {
               id
               Description
@@ -89,12 +91,24 @@ export default function LandingPage({ ...props }) {
         }
       }
     `;
-    API.graphql(graphqlOperation(query, { id: props.match.params.id }))
+    API.graphql(
+      graphqlOperation(
+        query,
+        {
+          id: props.match.params.id,
+          limit: limit,
+        },
+        {
+          nextToken: nextToken,
+        }
+      )
+    )
       .then((d) => {
         const { Contents, Favorites, ...p } = d.data.getUserProfile;
         setProfile(p);
         setFavorites(Favorites.items);
         setContent(Contents.items);
+        setNextToken(Contents.nextToken);
       })
       .catch((e) => console.log(e));
   }
@@ -173,7 +187,7 @@ export default function LandingPage({ ...props }) {
   useEffect(() => {
     getPrice(props.match.params.id);
     userQuery();
-  }, [props.match.params.id]);
+  }, [props.match.params.id, limit, nextToken]);
 
   return (
     <>
@@ -291,6 +305,8 @@ LandingPage.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
+      limit: PropTypes.number,
+      nextToken: PropTypes.string,
     }),
   }),
   user: PropTypes.shape({ id: PropTypes.string }),
