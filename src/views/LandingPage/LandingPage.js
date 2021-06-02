@@ -128,15 +128,17 @@ export default function LandingPage({ ...props }) {
       response: true,
     };
 
-    API.post("stripeAPI", "/stripe/api/user/create/subscription", myInit).then(
-      (res) => {
+    API.post("stripeAPI", "/stripe/api/user/create/subscription", myInit)
+      .then((res) => {
         if (res.error) {
           checkoutError(res.error);
         } else {
           checkoutSuccess();
         }
-      }
-    );
+      })
+      .catch((e) => {
+        checkoutError(e);
+      });
   };
 
   const handleSnackbarClose = () => {

@@ -41,6 +41,10 @@ export default function Checkout({ ...props }) {
 
       API.post("stripeAPI", "/stripe/api/user/get/customer", myInit)
         .then((d) => {
+          console.log(
+            "Default Payment Method: " +
+              d.data.invoice_settings.default_payment_method
+          );
           setDefaultPaymentMethod(
             d.data.invoice_settings.default_payment_method
           );
@@ -73,14 +77,9 @@ export default function Checkout({ ...props }) {
     fetchDefaultPaymentMethod();
   }, []);
 
-  useEffect(() => {
-    console.log(paymentMethods[0]);
-    console.log(defaultPaymentMethod);
-  }, [paymentMethods, defaultPaymentMethod]);
-
   return (
     <>
-      {paymentMethods ? (
+      {defaultPaymentMethod ? (
         <>
           <Typography variant="h3">Checkout</Typography>
           <Typography variant="body1">
