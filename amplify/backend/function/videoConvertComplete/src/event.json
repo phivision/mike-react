@@ -1,0 +1,23 @@
+{
+  "version": 0,
+  "id": "9a4cc3d7-88bd-dda9-7385-88e6e3221751",
+  "detail-type": "MediaConvert Job State Change",
+  "source": "aws.mediaconvert",
+  "account": "301286101195",
+  "time": "2021-06-02T17:28:32Z",
+  "region": "us-east-1",
+  "resources": [
+    "arn:aws:mediaconvert:us-east-1:301286101195:jobs/1622654903399-t0odlz"
+  ],
+  "detail": {
+    "timestamp": 1622654912489,
+    "accountId": "301286101195",
+    "queue": "arn:aws:mediaconvert:us-east-1:301286101195:queues/Default",
+    "jobId": "1622654903399-t0odlz",
+    "status": "COMPLETE",
+    "userMetadata": {
+      "S3Bucket": "mike-vod-dev",
+      "S3Key": "input/IMG421664134edeee2e4283a30beb56eb1f56951622654895805.MOV"
+    }
+  }
+}
