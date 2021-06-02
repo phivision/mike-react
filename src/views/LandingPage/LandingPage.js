@@ -16,6 +16,8 @@ import {
   CustomButton,
   ProfileBox,
   UserFeedBanner,
+  TextLink,
+  GridTitleFlex,
 } from "../../components/StyledComponets/StyledComponets";
 import DataPagination from "components/DataPagination/DataPagination";
 
@@ -76,7 +78,7 @@ export default function LandingPage({ ...props }) {
             }
             nextToken
           }
-          Contents(limit: $limit, sortDirection: DESC, nextToken: $nextToken) {
+          Contents(limit: $limit, nextToken: $nextToken, sortDirection: DESC) {
             items {
               id
               Description
@@ -235,9 +237,15 @@ export default function LandingPage({ ...props }) {
             </ProfileBox>
           </GridContainer>
           <GridContainer item direction="column" xs={12} sm={4}>
-            <GridItem>
+            <GridTitleFlex>
               <Typography variant="h1">Feed</Typography>
-            </GridItem>
+              <TextLink
+                size="20px"
+                onClick={() => setNextToken(content.nextToken)}
+              >
+                More
+              </TextLink>
+            </GridTitleFlex>
             {content.map((c, idx) => {
               let f = favorites.findIndex((e) => e.Content.id === content.id);
               return (
