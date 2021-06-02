@@ -22,15 +22,15 @@
         },
         "stripeWebhook": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/stripeWebhook-6e616f7a48654a507375-build.zip"
+          "s3Key": "amplify-builds/stripeWebhook-764d4b786a6e6f6d6848-build.zip"
         },
         "cognitoPostConfirm": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/cognitoPostConfirm-6f325a4f544453526e77-build.zip"
+          "s3Key": "amplify-builds/cognitoPostConfirm-4130695a6c696a45662b-build.zip"
         },
         "videoConvertComplete": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/videoConvertComplete-494265706e48386c386d-build.zip"
+          "s3Key": "amplify-builds/videoConvertComplete-41696270656c62486b39-build.zip"
         }
       },
       "storage": {
