@@ -49,6 +49,7 @@ export default function UserFeed({ ...props }) {
   const [contents, setContents] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [edit, setEdit] = useState(false);
+  const [trainers, setTrainers] = useState([]);
   const history = useHistory();
   const contentRef = useRef([]);
   contentRef.current = contents;
@@ -136,20 +137,21 @@ export default function UserFeed({ ...props }) {
   };
 
   const userQuery = async () => {
-    API.graphql(graphqlOperation(userProfileQuery, { id: props.user.id }))
-      .then((d) => {
-        const { Subscriptions: SubsData, ...p } = d.data.getUserProfile;
-        console.log(d.data.getUserProfile);
-        setProfile(p);
-        let temp_contents = [];
-        SubsData.items.map((sub) => {
-          temp_contents = [...temp_contents, ...sub.Trainer.Contents.items];
-        });
-        setSortedContent(temp_contents);
-        return SubsData;
-      })
-      .catch(console.log);
-    return { items: [] };
+    const d = await API.graphql(
+      graphqlOperation(userProfileQuery, { id: props.user.id })
+    ).catch(console.log);
+    const { Subscriptions: SubsData, ...p } = d.data.getUserProfile;
+    setProfile(p);
+    let temp_contents = [];
+    let temp_trainers = [];
+    SubsData.items.map((sub) => {
+      const { Contents: contentItems, ...trainerProfile } = sub.Trainer;
+      temp_contents = [...temp_contents, ...contentItems.items];
+      temp_trainers = [...temp_trainers, trainerProfile];
+    });
+    setSortedContent(temp_contents);
+    setTrainers(temp_trainers);
+    return SubsData;
   };
 
   const userFavorite = async () => {
@@ -340,13 +342,13 @@ export default function UserFeed({ ...props }) {
                   <Typography variant="h3">My Trainers</Typography>
                 </GridItem>
                 <GridItem container direction="row">
-                  {subscriptions.map((sub, idx) => {
+                  {trainers.map((trainer, idx) => {
                     return (
                       <GridItem key={idx}>
                         <UserAvatar
-                          UserImage={sub.Trainer.UserImage}
+                          UserImage={trainer.UserImage}
                           onClick={() =>
-                            history.push(`/landingpage/${sub.Trainer.id}`)
+                            history.push(`/landingpage/${trainer.id}`)
                           }
                         />
                       </GridItem>
