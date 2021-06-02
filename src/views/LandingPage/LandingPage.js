@@ -46,6 +46,7 @@ export default function LandingPage({ ...props }) {
   const history = useHistory();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
+  const [subscribed, setSubscribed] = useState(false);
 
   async function userQuery() {
     const query = /* GraphQL */ `
@@ -172,10 +173,42 @@ export default function LandingPage({ ...props }) {
     setOpenCheckout(false);
   };
 
+  const checkSubscription = (userID, trainerID) => {
+    const query = /* GraphQL */ `
+      query GetUserProfile($id: ID!) {
+        getUserProfile(id: $id) {
+          Subscriptions {
+            items {
+              Trainer {
+                id
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    API.graphql(graphqlOperation(query, { id: userID }))
+      .then((d) => {
+        d.data.getUserProfile.Subscriptions.items.forEach((sub) => {
+          if (sub.Trainer.id === trainerID) {
+            setSubscribed(true);
+          }
+        });
+      })
+      .catch(console.log);
+  };
+
   useEffect(() => {
     getPrice(props.match.params.id);
     userQuery();
   }, [props.match.params.id]);
+
+  useEffect(() => {
+    if (props.user.id) {
+      checkSubscription(props.user.id, props.match.params.id);
+    }
+  }, [props.user.id]);
 
   return (
     <>
@@ -216,9 +249,15 @@ export default function LandingPage({ ...props }) {
               </GridItem>
               <GridItem variant="body1">{profile.Description}</GridItem>
               <GridItem>
-                <CustomButton onClick={onClick}>
-                  {"Join for $" + price + " per month"}
-                </CustomButton>
+                {subscribed ? (
+                  <CustomButton variant="outlined">
+                    Already Subscribed
+                  </CustomButton>
+                ) : (
+                  <CustomButton onClick={onClick}>
+                    {"Subscribe for $" + price + " per month"}
+                  </CustomButton>
+                )}
               </GridItem>
             </ProfileBox>
           </GridContainer>

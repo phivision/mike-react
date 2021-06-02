@@ -347,7 +347,7 @@ app.post("/stripe/api/user/create/subscription", function (req, res) {
       customer: customerID,
       items: [{ price: priceID }],
       expand: ["latest_invoice.payment_intent"],
-      application_fee_percent: 10,
+      application_fee_percent: 20,
       transfer_data: {
         destination: trainerID,
       },
