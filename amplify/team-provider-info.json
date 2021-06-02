@@ -125,6 +125,10 @@
         "cognitoPostConfirm": {
           "deploymentBucketName": "amplify-mikereact-feature-115326-deployment",
           "s3Key": "amplify-builds/cognitoPostConfirm-4130695a6c696a45662b-build.zip"
+        },
+        "videoConvertComplete": {
+          "deploymentBucketName": "amplify-mikereact-feature-115326-deployment",
+          "s3Key": "amplify-builds/videoConvertComplete-49786556494554504a2b-build.zip"
         }
       },
       "storage": {
