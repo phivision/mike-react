@@ -64,6 +64,7 @@ type UserContent @model(subscriptions: null)
   { allow: private, operations: [read]},
   { allow: public, provider: iam, operations: [read]}])
 @key(name: "byContent", fields: ["CreatorID", "ContentName"])
+@key(name: "byName", fields: ["ContentName"], queryField: "contentByName")
 {
   id: ID!
   """
