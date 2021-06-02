@@ -109,10 +109,11 @@ const updateTranscodeStatus = async (event) => {
                 variables: { input: { id: contentID, TranscodeReady: true } },
               })
               .then((d) => {
-                console.log(d.data.updateContentTranscodeStatus);
+                // console.log(d.data.updateContentTranscodeStatus);
                 return "Updated video transcode status!";
               })
               .catch((e) => {
+                console.log(e);
                 return e.message;
               });
           });
@@ -121,6 +122,7 @@ const updateTranscodeStatus = async (event) => {
         }
       })
       .catch((e) => {
+        console.log(e);
         return e.message;
       });
   } else {
