@@ -49,7 +49,9 @@ export default function LandingPage({ ...props }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
   const [nextToken, setNextToken] = useState("");
-  const limit = 3;
+  const [contentAll, setContentAll] = useState([]);
+  const [contentMore, setContentMore] = useState([]);
+  var limit = 2;
 
   async function userQuery() {
     const query = /* GraphQL */ `
@@ -101,7 +103,7 @@ export default function LandingPage({ ...props }) {
           limit: limit,
         },
         {
-          nextToken: nextToken,
+          nextToken,
         }
       )
     )
@@ -110,7 +112,7 @@ export default function LandingPage({ ...props }) {
         setProfile(p);
         setFavorites(Favorites.items);
         setContent(Contents.items);
-        setNextToken(Contents.nextToken);
+        setContentAll(Contents);
       })
       .catch((e) => console.log(e));
   }
@@ -188,8 +190,34 @@ export default function LandingPage({ ...props }) {
 
   useEffect(() => {
     getPrice(props.match.params.id);
+  }, [props.match.params.id]);
+
+  useEffect(() => {
     userQuery();
-  }, [props.match.params.id, limit, nextToken]);
+  }, [props.match.params.id, nextToken]);
+
+  const handleContentMore = () => {
+    var newArr = [];
+    var arrId = [];
+    var temp = contentMore;
+    temp.push.apply(temp, content);
+    for (var item of temp) {
+      if (arrId.indexOf(item["id"]) == -1) {
+        arrId.push(item["id"]);
+        newArr.push(item);
+      }
+    }
+    console.log("newArr", newArr);
+    setContentMore(newArr);
+  };
+
+  if (contentMore.length < 1 && content.length > 0) {
+    setContentMore(content);
+  }
+
+  console.log("contentAll", contentAll);
+  console.log("content", content);
+  console.log("contentMore", contentMore);
 
   return (
     <>
@@ -241,7 +269,10 @@ export default function LandingPage({ ...props }) {
               <Typography variant="h1">Feed</Typography>
               <TextLink
                 size="20px"
-                onClick={() => setNextToken(content.nextToken)}
+                onClick={() => {
+                  setNextToken("");
+                  handleContentMore();
+                }}
               >
                 More
               </TextLink>
