@@ -1,7 +1,6 @@
 import React from "react";
 import "./App.css";
-import Amplify, { API } from "aws-amplify";
-import awsconfig from "./aws-exports";
+import Amplify, { API, Auth } from "aws-amplify";
 import { Hub } from "aws-amplify";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -18,11 +17,6 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import UploadDialog from "./views/ContentUpload/UploadDialog";
 import { FlexContain } from "components/StyledComponets/StyledComponets";
 
-// amplify config
-Amplify.configure(awsconfig);
-Amplify.configure({
-  aws_appsync_authenticationType: "AWS_IAM",
-});
 const stripePromise = loadStripe(
   "pk_test_51IWoNlAXegvVyt5sEGxoPrV9MfyryI7OR5vKuY4bLXUgqWIE2Dv0TmtY5R9BVHpjhg3qssoAF3z5GhtkgHrc8Mc400VDRuU2yX"
 );
@@ -85,6 +79,20 @@ const App = () => {
   const handleCloseContentUpload = () => {
     setOpenContentUpload(false);
   };
+
+  React.useEffect(() => {
+    Auth.currentSession().then((res) => {
+      if (res.isValid()) {
+        setUser({
+          id: res.idToken.payload["cognito:username"],
+          role: res.idToken.payload["custom:role"],
+        });
+        Amplify.configure({
+          aws_appsync_authenticationType: "AMAZON_COGNITO_USER_POOLS",
+        });
+      }
+    });
+  }, []);
 
   React.useEffect(() => {
     Hub.listen("auth", (data) => {

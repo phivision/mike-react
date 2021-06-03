@@ -11,6 +11,7 @@ import {
   Input,
   Divider,
   Container,
+  DialogContent,
 } from "@material-ui/core";
 import SearchBar from "material-ui-search-bar";
 import {
@@ -104,10 +105,11 @@ export const SearchButton = styled(SearchBar)`
   }
 `;
 
+//Variant should be noted per instance, NOT in styled components
 export const CustomButton = styled(Button).attrs({
-  variant: "contained",
   color: "primary",
 })`
+  text-transform: none;
   border-radius: 10px;
   font-weight: 600;
   margin: 5px;
@@ -230,6 +232,7 @@ export const DividerLine = styled(Divider).attrs({
   variant: "fullWidth",
 })`
   width: 100%;
+  margin: 0 5px;
 `;
 
 export const FlexContain = styled(Container).attrs({
@@ -280,7 +283,19 @@ export const SettingTableContainer = styled(TableContainer)`
 
 export const LogoImage = styled.img`
   width: auto;
+  max-width: 200px;
   @media only screen and ${uptoMobileWidth} {
     width: 80px;
   }
+`;
+
+export const DialogBody = styled(DialogContent)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+`;
+
+export const TextLink = styled.a`
+  cursor: pointer;
 `;

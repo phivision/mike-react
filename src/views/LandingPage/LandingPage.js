@@ -17,6 +17,7 @@ import {
   ProfileBox,
   UserFeedBanner,
 } from "../../components/StyledComponets/StyledComponets";
+import DataPagination from "components/DataPagination/DataPagination";
 
 // import initial profile
 const initialProfileState = {
@@ -43,6 +44,9 @@ export default function LandingPage({ ...props }) {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const history = useHistory();
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(3);
+  const [subscribed, setSubscribed] = useState(false);
 
   async function userQuery() {
     const query = /* GraphQL */ `
@@ -125,15 +129,17 @@ export default function LandingPage({ ...props }) {
       response: true,
     };
 
-    API.post("stripeAPI", "/stripe/api/user/create/subscription", myInit).then(
-      (res) => {
+    API.post("stripeAPI", "/stripe/api/user/create/subscription", myInit)
+      .then((res) => {
         if (res.error) {
           checkoutError(res.error);
         } else {
           checkoutSuccess();
         }
-      }
-    );
+      })
+      .catch((e) => {
+        checkoutError(e);
+      });
   };
 
   const handleSnackbarClose = () => {
@@ -167,10 +173,42 @@ export default function LandingPage({ ...props }) {
     setOpenCheckout(false);
   };
 
+  const checkSubscription = (userID, trainerID) => {
+    const query = /* GraphQL */ `
+      query GetUserProfile($id: ID!) {
+        getUserProfile(id: $id) {
+          Subscriptions {
+            items {
+              Trainer {
+                id
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    API.graphql(graphqlOperation(query, { id: userID }))
+      .then((d) => {
+        d.data.getUserProfile.Subscriptions.items.forEach((sub) => {
+          if (sub.Trainer.id === trainerID) {
+            setSubscribed(true);
+          }
+        });
+      })
+      .catch(console.log);
+  };
+
   useEffect(() => {
     getPrice(props.match.params.id);
     userQuery();
   }, [props.match.params.id]);
+
+  useEffect(() => {
+    if (props.user.id) {
+      checkSubscription(props.user.id, props.match.params.id);
+    }
+  }, [props.user.id]);
 
   return (
     <>
@@ -202,13 +240,7 @@ export default function LandingPage({ ...props }) {
           <GridContainer item direction="column" xs={12} sm={4}>
             <ProfileBox>
               <GridItem>
-                <UserAvatar
-                  // style={{
-                  //   width: "200px",
-                  //   height: "200px",
-                  // }}
-                  UserImage={profile.UserImage}
-                />
+                <UserAvatar UserImage={profile.UserImage} />
               </GridItem>
               <GridItem>
                 <Typography variant="h3">
@@ -217,9 +249,15 @@ export default function LandingPage({ ...props }) {
               </GridItem>
               <GridItem variant="body1">{profile.Description}</GridItem>
               <GridItem>
-                <CustomButton onClick={onClick}>
-                  {"Join for $" + price + " per month"}
-                </CustomButton>
+                {subscribed ? (
+                  <CustomButton variant="outlined">
+                    Already Subscribed
+                  </CustomButton>
+                ) : (
+                  <CustomButton onClick={onClick}>
+                    {"Subscribe for $" + price + " per month"}
+                  </CustomButton>
+                )}
               </GridItem>
             </ProfileBox>
           </GridContainer>
@@ -244,17 +282,32 @@ export default function LandingPage({ ...props }) {
             <GridItem>
               <Typography variant="h1">Favorite Workouts</Typography>
             </GridItem>
-            {favorites.map((fav, idx) => {
-              return (
-                <WorkoutCard
-                  post={fav.Content}
-                  trainer={profile}
-                  favorite={fav}
-                  segments={fav.Content.Segments}
-                  key={idx}
-                />
-              );
-            })}
+            <GridItem>
+              {(rowsPerPage > 0
+                ? favorites.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
+                : favorites
+              ).map((fav, idx) => {
+                return (
+                  <WorkoutCard
+                    post={fav.Content}
+                    trainer={profile}
+                    favorite={fav}
+                    segments={fav.Content.Segments}
+                    key={idx}
+                  />
+                );
+              })}
+              <DataPagination
+                length={favorites.length}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                setPage={setPage}
+                setRowsPerPage={setRowsPerPage}
+              />
+            </GridItem>
           </GridContainer>
         </GridContainer>
         <Dialog

@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { Icon, Typography } from "@material-ui/core";
-import logo from "../../assets/img/logo.jpg";
+import logo from "../../assets/img/logo.png";
 import PropTypes from "prop-types";
 import { userRoles } from "../../variables/userRoles";
 import {
@@ -38,12 +38,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Header(props) {
-  let userRole;
-  if (props.user && props.user.id) {
-    userRole = props.user.role;
-  } else {
-    userRole = userRoles.UNKNOWN;
-  }
+  const [userRole, setUserRole] = React.useState(userRoles.UNKNOWN);
+
+  React.useEffect(() => {
+    setUserRole(props.user.role);
+  }, [props.user]);
+
   const handleOpenContentUpload = props.onContentUpload;
 
   let history = useHistory();
@@ -118,7 +118,7 @@ export default function Header(props) {
   };
 
   const Logo = () => {
-    return props.user.role === userRoles.UNKNOWN ? (
+    return userRole === userRoles.UNKNOWN ? (
       <LogoLink to="/">
         <LogoImage src={logo} alt="logo" />
       </LogoLink>

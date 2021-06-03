@@ -303,3 +303,40 @@ export const listUserContents = /* GraphQL */ `
     }
   }
 `;
+export const contentByName = /* GraphQL */ `
+  query ContentByName(
+    $ContentName: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserContentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    contentByName(
+      ContentName: $ContentName
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        CreatorID
+        ContentName
+        Description
+        Title
+        Level
+        Length
+        IsDemo
+        TranscodeReady
+        ViewCount
+        Thumbnail
+        Preview
+        Segments
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
