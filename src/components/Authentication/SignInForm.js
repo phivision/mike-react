@@ -12,8 +12,8 @@ import { Link, useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 // import auth styles
 import authStyles from "../../assets/jss/material-dashboard-react/views/authStyle";
-import { TextLink } from "../StyledComponets/StyledComponets";
-import ForgotPassword from "./ForgotPassword ";
+import { TextLink } from "../StyledComponents/StyledComponents";
+import ForgotPassword from "./ForgotPassword";
 
 export default function SignInForm({ openError: openError, ...props }) {
   const classes = authStyles();

@@ -41,12 +41,12 @@ TrainerCard.propTypes = {
 };
 
 export default function ActiveSubscriptions(props) {
-  const deleteSubscription = async (e) => {
+  const deleteSubscription = async (stripeID, subscriptionID) => {
     const myInit = {
       headers: {},
       body: {
-        id: props.user,
-        subscriptionID: e.currentTarget.value,
+        stripeID: stripeID,
+        subscriptionID: subscriptionID,
       },
       response: true,
     };
@@ -79,9 +79,19 @@ export default function ActiveSubscriptions(props) {
             />
           </TableCell>
           <TableCell align="right">
-            <Button value={trainerData.StripeID} onClick={deleteSubscription}>
-              Cancel Subscription
-            </Button>
+            {trainerData.CancelAtPeriodEnd ? (
+              <Button variant="outlined" disabled>
+                Canceled
+              </Button>
+            ) : (
+              <Button
+                onClick={() =>
+                  deleteSubscription(trainerData.StripeID, trainerData.id)
+                }
+              >
+                Cancel Subscription
+              </Button>
+            )}
           </TableCell>
         </TableRow>
       ))}
@@ -90,7 +100,6 @@ export default function ActiveSubscriptions(props) {
 }
 
 ActiveSubscriptions.propTypes = {
-  user: PropTypes.string.isRequired,
   trainers: PropTypes.arrayOf(
     PropTypes.shape({
       Trainer: PropTypes.shape({
@@ -100,6 +109,8 @@ ActiveSubscriptions.propTypes = {
       }),
       ExpireDate: PropTypes.string,
       StripeID: PropTypes.string,
+      id: PropTypes.string,
+      CancelAtPeriodEnd: PropTypes.bool,
     })
   ),
 };

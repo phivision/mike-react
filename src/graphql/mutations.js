@@ -130,6 +130,7 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
       id
       StripeID
       ExpireDate
+      CancelAtPeriodEnd
       createdAt
       updatedAt
       Trainer {
@@ -187,6 +188,7 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
       id
       StripeID
       ExpireDate
+      CancelAtPeriodEnd
       createdAt
       updatedAt
       Trainer {
@@ -244,6 +246,7 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
       id
       StripeID
       ExpireDate
+      CancelAtPeriodEnd
       createdAt
       updatedAt
       Trainer {

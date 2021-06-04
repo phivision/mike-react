@@ -4,7 +4,7 @@ import {
   BlackTitle,
   GridContainer,
   IconStyle,
-} from "components/StyledComponets/StyledComponets";
+} from "components/StyledComponents/StyledComponents";
 import EditableTypography from "../../components/EditableTypography/EditableTypography";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { DeleteOutline, Edit } from "@material-ui/icons";

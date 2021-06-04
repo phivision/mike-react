@@ -377,28 +377,47 @@ app.post("/stripe/api/user/create/subscription", function (req, res) {
 });
 
 app.post("/stripe/api/user/delete/subscription", function (req, res) {
-  const queryStripeID = async (id) => {
+  const updatePeriodEnd = async (id) => {
     const params = {
-      TableName: process.env.TABLE_NAME,
-      Key: { id: id },
+      TableName: process.env.SUB_TABLE_NAME,
+      Key: {
+        id: id,
+      },
+      UpdateExpression: "set #s = :d",
+      ExpressionAttributeNames: {
+        "#s": "CancelAtPeriodEnd",
+      },
+      ExpressionAttributeValues: {
+        ":d": true,
+      },
+      ReturnValues: "ALL_NEW",
     };
 
-    return await docClient.get(params).promise();
+    return await docClient.update(params).promise();
   };
 
-  const unsubscribe = async (subscriptionID) =>
-    await stripe.subscriptions.update(subscriptionID, {
+  const unsubscribe = async (stripeSubscriptionID) => {
+    await stripe.subscriptions.update(stripeSubscriptionID, {
       cancel_at_period_end: true,
     });
+  };
 
-  queryStripeID(req.body.id).then(() => {
-    unsubscribe(req.body.subscriptionID)
-      .then((p) => res.json(p))
-      .catch((e) => {
-        console.log(e);
-        res.status(500).send();
-      });
-  });
+  unsubscribe(req.body.stripeID)
+    .then(() =>
+      updatePeriodEnd(req.body.subscriptionID)
+        .then((p) => {
+          console.log(p);
+          res.json(p);
+        })
+        .catch((e) => {
+          console.log(e);
+          res.status(500).send();
+        })
+    )
+    .catch((e) => {
+      console.log(e);
+      res.status(500).send();
+    });
 });
 
 app.post("/stripe/api/user/get/payment", function (req, res) {

@@ -32,7 +32,6 @@ export default function Home() {
       variables: { filter: { UserRole: { contains: "trainer" } } },
       authMode: "AWS_IAM",
     });
-    console.log(trainerList);
     if (trainerList.data.listUserProfiles.items != null) {
       return trainerList.data.listUserProfiles.items;
     }

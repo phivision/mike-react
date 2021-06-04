@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Button, Dialog, Snackbar, Typography } from "@material-ui/core";
+import { Dialog, Snackbar, Typography } from "@material-ui/core";
 import ChangePassword from "../../components/Settings/ChangePassword";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -19,7 +19,10 @@ import IconButton from "@material-ui/core/IconButton";
 import Checkout from "../../components/Checkout/Checkout";
 import CloseIcon from "@material-ui/icons/Close";
 import TrainerPrice from "../../components/Settings/TrainerPrice";
-import { SettingTableContainer } from "../../components/StyledComponets/StyledComponets";
+import {
+  CustomButton,
+  SettingTableContainer,
+} from "../../components/StyledComponents/StyledComponents";
 import { useHistory } from "react-router-dom";
 
 const getUserSettings = /* GraphQL */ `
@@ -36,6 +39,8 @@ const getUserSettings = /* GraphQL */ `
           }
           ExpireDate
           StripeID
+          id
+          CancelAtPeriodEnd
         }
       }
     }
@@ -76,13 +81,16 @@ export default function Settings(props) {
     );
   };
 
-  async function fetchSettings() {
-    const userSettingData = await API.graphql(
-      graphqlOperation(getUserSettings, { id: props.user.id })
-    );
-    setEmail(userSettingData.data.getUserProfile.Email);
-    return userSettingData.data.getUserProfile.Subscriptions.items;
-  }
+  const fetchSettings = () => {
+    API.graphql(graphqlOperation(getUserSettings, { id: props.user.id }))
+      .then((userSettingData) => {
+        setEmail(userSettingData.data.getUserProfile.Email);
+        if (userRole === userRoles.STUDENT) {
+          setTrainers(userSettingData.data.getUserProfile.Subscriptions.items);
+        }
+      })
+      .catch(console.log);
+  };
 
   const fetchDefaultPaymentMethod = () => {
     if (props.user.role === userRoles.STUDENT) {
@@ -328,13 +336,13 @@ export default function Settings(props) {
   }, [defaultPaymentMethod, paymentMethods.length]);
 
   useEffect(() => {
-    checkVerification();
-    getPrices();
-    fetchSettings().then((subs) => {
-      if (userRole === userRoles.STUDENT) {
-        setTrainers(subs);
+    if (props.user.id) {
+      if (userRole === userRoles.TRAINER) {
+        checkVerification();
+        getPrices();
       }
-    });
+      fetchSettings();
+    }
   }, [props.user.id, setPrices, setVerified, setTrainers]);
 
   useEffect(() => {
@@ -374,7 +382,7 @@ export default function Settings(props) {
               <Typography variant="body1">{email}</Typography>
             </TableCell>
             <TableCell align="right">
-              <Button onClick={signOut}>Sign out</Button>
+              <CustomButton onClick={signOut}>Sign out</CustomButton>
             </TableCell>
           </TableRow>
         </TableHead>
@@ -391,7 +399,9 @@ export default function Settings(props) {
           <TableRow>
             <TableCell align="left">Password: ********</TableCell>
             <TableCell align="right">
-              <Button onClick={handleOpenPassword}>Change password</Button>
+              <CustomButton onClick={handleOpenPassword}>
+                Change password
+              </CustomButton>
             </TableCell>
           </TableRow>
           {userRole === userRoles.STUDENT ? (
@@ -417,7 +427,7 @@ export default function Settings(props) {
           ) : (
             <TableRow>
               <TableCell>
-                <Button
+                <CustomButton
                   variant="contained"
                   color="primary"
                   fullWidth
@@ -428,13 +438,13 @@ export default function Settings(props) {
                   {isVerified
                     ? "Manage Billing on Stripe"
                     : "Verify Account on Stripe"}
-                </Button>
+                </CustomButton>
               </TableCell>
             </TableRow>
           )}
         </TableBody>
         {userRole === userRoles.STUDENT ? (
-          <ActiveSubscriptions trainers={trainers} user={props.user.id} />
+          <ActiveSubscriptions trainers={trainers} />
         ) : (
           <TableRow>
             <TableCell align="left">

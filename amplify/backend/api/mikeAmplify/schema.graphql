@@ -46,6 +46,7 @@ type UserSubscriptionTrainer @model(subscriptions: null)
   id: ID!
   StripeID: String!
   ExpireDate: AWSDate!
+  CancelAtPeriodEnd: Boolean!
   Trainer: UserProfile! @connection(name: "bySubscriptedTrainer")
   User: UserProfile! @connection(name: "byUserSubscription")
 }
