@@ -14,10 +14,7 @@ import {
   DialogContent,
 } from "@material-ui/core";
 import SearchBar from "material-ui-search-bar";
-import {
-  primaryColor,
-  contentColor,
-} from "assets/jss/material-dashboard-react.js";
+import { primaryColor } from "assets/jss/material-dashboard-react.js";
 import { Link } from "react-router-dom";
 import Person from "@material-ui/icons/Person";
 import SettingsIcon from "@material-ui/icons/Settings";
@@ -124,7 +121,6 @@ export const AppHeader = styled(AppBar)`
 `;
 
 export const Bars = styled(Toolbar)`
-  flexwrap: wrap;
   @media only screen and ${MobileVersion} {
     padding-left: 8px;
     padding-right: 8px;
@@ -137,7 +133,6 @@ export const LogoLink = styled(Link)`
 
 export const Nav = styled(Link)`
   margin: 0;
-  color: none;
 `;
 
 export const CustomIcon = styled(IconButton).attrs({
@@ -190,11 +185,11 @@ export const UploadIcon = styled(CloudUploadIcon).attrs({
   font-size: 30px;
 `;
 
-export const StyledContent = styled.div`
-  border-radius: 30px 30px 0 0;
-  margin-top: -20px;
-  background-color: ${contentColor};
-`;
+// export const StyledContent = styled.div`
+//   border-radius: 30px 30px 0 0;
+//   margin-top: -20px;
+//   background-color: ${contentColor};
+// `;
 
 export const ProfileBox = styled.div`
   width: 100%;
