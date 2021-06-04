@@ -20,6 +20,10 @@ import {
   GridTitleFlex,
 } from "../../components/StyledComponets/StyledComponets";
 import DataPagination from "components/DataPagination/DataPagination";
+import {
+  profilePaginatingQuery,
+  profileLimitQuery,
+} from "../../graphql/UserFeed";
 
 // import initial profile
 const initialProfileState = {
@@ -53,69 +57,40 @@ export default function LandingPage({ ...props }) {
   const [contentMore, setContentMore] = useState([]);
   var limit = 2;
 
-  async function userQuery() {
-    const query = /* GraphQL */ `
-      query GetUserProfile($id: ID!, $limit: Int, $nextToken: String) {
-        getUserProfile(id: $id) {
-          id
-          Birthday
-          Height
-          UserImage
-          LastName
-          FirstName
-          Weight
-          Description
-          Favorites {
-            items {
-              id
-              Content {
-                id
-                Title
-                Thumbnail
-                createdAt
-                Description
-                Segments
-                owner
-              }
-            }
-            nextToken
-          }
-          Contents(limit: $limit, nextToken: $nextToken, sortDirection: DESC) {
-            items {
-              id
-              Description
-              Title
-              createdAt
-              Thumbnail
-              Segments
-              owner
-            }
-            nextToken
-          }
-        }
-      }
-    `;
+  const userQuery = async () => {
     API.graphql(
-      graphqlOperation(
-        query,
-        {
-          id: props.match.params.id,
-          limit: limit,
-        },
-        {
-          nextToken,
-        }
-      )
+      graphqlOperation(profileLimitQuery, {
+        id: props.match.params.id,
+        limit: limit,
+      })
     )
       .then((d) => {
         const { Contents, Favorites, ...p } = d.data.getUserProfile;
+        console.log(d.data.getUserProfile);
         setProfile(p);
         setFavorites(Favorites.items);
         setContent(Contents.items);
         setContentAll(Contents);
       })
       .catch((e) => console.log(e));
-  }
+  };
+
+  const ContentNextTokenQuery = async () => {
+    API.graphql({
+      query: profilePaginatingQuery,
+      variables: {
+        id: props.match.params.id,
+        limit: limit,
+        nextToken,
+      },
+    })
+      .then((d) => {
+        // const { Contents, ...p } = d.data.getUserProfile;
+        setContent(d.data.profileWithNextTokenQuery.Contents.items);
+        setContentAll(d.data.profileWithNextTokenQuery.Contents);
+      })
+      .catch((e) => console.log(e));
+  };
 
   const getPrice = async (id) => {
     const myInit = {
@@ -190,10 +165,11 @@ export default function LandingPage({ ...props }) {
 
   useEffect(() => {
     getPrice(props.match.params.id);
+    userQuery();
   }, [props.match.params.id]);
 
   useEffect(() => {
-    userQuery();
+    ContentNextTokenQuery();
   }, [props.match.params.id, nextToken]);
 
   const handleContentMore = () => {
