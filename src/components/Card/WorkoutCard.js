@@ -8,7 +8,10 @@ import { FavoriteBorder } from "@material-ui/icons";
 import ViewerDialog from "../../views/ContentViewer/ViewerDialog";
 import ImageButton from "../CustomButtons/ImageButton";
 import UploadDialog from "../../views/ContentUpload/UploadDialog";
-import { GridContainer, CardStyled } from "../StyledComponets/StyledComponets";
+import {
+  GridContainer,
+  CardStyled,
+} from "../StyledComponents/StyledComponents";
 
 import styles from "assets/jss/material-dashboard-react/components/cardContentStyle.js";
 

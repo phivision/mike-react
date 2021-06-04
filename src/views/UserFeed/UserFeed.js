@@ -17,7 +17,7 @@ import {
   CustomButton,
   ProfileBox,
   UserFeedBanner,
-} from "../../components/StyledComponets/StyledComponets";
+} from "../../components/StyledComponents/StyledComponents";
 import {
   deleteUserFavoriteContent,
   removeDeletedFavoriteContent,
@@ -315,6 +315,7 @@ export default function UserFeed({ ...props }) {
                 {edit ? (
                   <GridItem>
                     <CustomButton
+                      variant="contained"
                       fullWidth
                       onClick={() => onClickEditProfile("submit-changes")}
                     >

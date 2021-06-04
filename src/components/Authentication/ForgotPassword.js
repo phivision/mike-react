@@ -7,7 +7,7 @@ import {
   CustomButton,
   DialogBody,
   DividerLine,
-} from "../StyledComponets/StyledComponets";
+} from "../StyledComponents/StyledComponents";
 
 export default function ForgotPassword(props) {
   const [showVerify, setShowVerify] = React.useState(false);

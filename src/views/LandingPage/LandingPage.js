@@ -16,7 +16,7 @@ import {
   CustomButton,
   ProfileBox,
   UserFeedBanner,
-} from "../../components/StyledComponets/StyledComponets";
+} from "../../components/StyledComponents/StyledComponents";
 import DataPagination from "components/DataPagination/DataPagination";
 
 // import initial profile
@@ -250,11 +250,11 @@ export default function LandingPage({ ...props }) {
               <GridItem variant="body1">{profile.Description}</GridItem>
               <GridItem>
                 {subscribed ? (
-                  <CustomButton variant="outlined">
+                  <CustomButton variant="outlined" disabled>
                     Already Subscribed
                   </CustomButton>
                 ) : (
-                  <CustomButton onClick={onClick}>
+                  <CustomButton variant="contained" onClick={onClick}>
                     {"Subscribe for $" + price + " per month"}
                   </CustomButton>
                 )}

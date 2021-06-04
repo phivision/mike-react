@@ -1,5 +1,5 @@
 // @material-ui/icons
-import { UserIcon } from "./components/StyledComponets/StyledComponets";
+import { UserIcon } from "./components/StyledComponents/StyledComponents";
 // core components/views for Admin layout
 import Settings from "views/Settings/Settings";
 import UserFeed from "views/UserFeed/UserFeed.js";

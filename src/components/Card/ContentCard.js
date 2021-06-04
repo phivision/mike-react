@@ -21,7 +21,7 @@ import {
   CardContentImage,
   CardContentDate,
   CardContentAvatar,
-} from "../StyledComponets/StyledComponets";
+} from "../StyledComponents/StyledComponents";
 
 export default function ContentCard(props) {
   const [img, setImg] = useState(empty);

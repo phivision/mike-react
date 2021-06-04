@@ -18,7 +18,7 @@ import {
   IconMore,
   LogoImage,
   UploadIcon,
-} from "../StyledComponets/StyledComponets";
+} from "../StyledComponents/StyledComponents";
 import { Menu, MenuItem } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -71,7 +71,7 @@ export default function Header(props) {
           </MenuItem>
         ) : (
           <Nav to="/signup/trainer">
-            <CustomButton>Coach on Mike</CustomButton>
+            <CustomButton variant="contained">Coach on Mike</CustomButton>
           </Nav>
         )}
       </>
@@ -109,7 +109,7 @@ export default function Header(props) {
             </Typography>
           </MenuItem>
         ) : (
-          <CustomButton onClick={handleOpenContentUpload}>
+          <CustomButton variant="contained" onClick={handleOpenContentUpload}>
             Upload Content
           </CustomButton>
         )}
@@ -189,7 +189,7 @@ export default function Header(props) {
 
   const ShowButtonSets = () => {
     return (
-      <div>
+      <>
         {userRole === userRoles.TRAINER ? <ContentUploadButton /> : null}
         {userRole === userRoles.STUDENT || userRole === userRoles.TRAINER ? (
           <>
@@ -203,7 +203,7 @@ export default function Header(props) {
             <SignUpLink />
           </>
         ) : null}
-      </div>
+      </>
     );
   };
 

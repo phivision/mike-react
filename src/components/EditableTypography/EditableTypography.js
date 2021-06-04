@@ -1,9 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  InputField,
-  TextStyle,
-} from "../../components/StyledComponets/StyledComponets";
+import { InputField, TextStyle } from "../StyledComponents/StyledComponents";
 
 const EditableTypography = ({
   text: text,

@@ -8,7 +8,7 @@ import {
   GridItem,
   CardStyled,
   CardIcon,
-} from "../StyledComponets/StyledComponets";
+} from "../StyledComponents/StyledComponents";
 import avatar from "assets/img/faces/blank.png";
 
 const ProfileCard = ({ ...props }) => {
