@@ -2,9 +2,9 @@ import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import { Auth } from "aws-amplify";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
-import { CustomButton } from "../StyledComponents/StyledComponents";
+import { CustomButton, TextLink } from "../StyledComponents/StyledComponents";
 // import auth styles
 
 export default function SignUpForm({ openError: openError, ...props }) {
@@ -125,7 +125,7 @@ export default function SignUpForm({ openError: openError, ...props }) {
       </CustomButton>
       <Grid container justify="flex-end">
         <Grid item>
-          <Link to="/signin">Already have an account? Sign in</Link>
+          <TextLink to="/signin">Already have an account? Sign in</TextLink>
         </Grid>
       </Grid>
     </form>

@@ -28,8 +28,8 @@ export default function SignIn({ ...props }) {
 
   return (
     <>
-      <CustomContainer maxWidth="xs">
-        <TextStyle variant="h1" align="center">
+      <CustomContainer maxWidth="sm">
+        <TextStyle variant="h2" align="center">
           Sign in
         </TextStyle>
         <SignInForm openError={handleOpen} {...props} />

@@ -1,9 +1,9 @@
 import React from "react";
 import { TextField, FormControlLabel, Grid, Checkbox } from "@material-ui/core";
 import { Auth } from "aws-amplify";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
-import { CustomButton } from "../StyledComponents/StyledComponents";
+import { CustomButton, TextLink } from "../StyledComponents/StyledComponents";
 // import auth styles
 
 export default function SignInForm({ openError: openError, ...props }) {
@@ -58,34 +58,43 @@ export default function SignInForm({ openError: openError, ...props }) {
 
   const signUpLink = () => {
     return props.location.state !== undefined ? (
-      <Link
+      <TextLink
         to={{
           pathname: "/signup/student",
           state: { next: props.location.state.next },
         }}
       >
         {"Don't have an account? Sign Up"}
-      </Link>
+      </TextLink>
     ) : (
-      <Link
+      <TextLink
         to={{
           pathname: "/signup/student",
         }}
       >
         {"Don't have an account? Sign Up"}
-      </Link>
+      </TextLink>
     );
   };
 
   const resetPasswordLink = () => {
-    return (
-      <Link
+    return props.location.state !== undefined ? (
+      <TextLink
+        to={{
+          pathname: "/reset",
+          state: { next: props.location.state.next },
+        }}
+      >
+        Forgot password?
+      </TextLink>
+    ) : (
+      <TextLink
         to={{
           pathname: "/reset",
         }}
       >
         Forgot password?
-      </Link>
+      </TextLink>
     );
   };
 

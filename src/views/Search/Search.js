@@ -37,7 +37,7 @@ export default function Search({ ...props }) {
     <div style={{ padding: "20px" }}>
       <Grid container direction="row">
         <Grid item xs={12} sm={3}>
-          <Typography variant="h1">
+          <Typography variant="h2">
             {"Results for: " + props.match.params.query}
           </Typography>
         </Grid>
