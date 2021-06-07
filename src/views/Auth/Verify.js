@@ -26,7 +26,7 @@ export default function Verify({ ...props }) {
   return (
     <>
       <CustomContainer maxWidth="xs">
-        <TextStyle variant="h1">Verify your email</TextStyle>
+        <TextStyle variant="h2">Verify your email</TextStyle>
         <VerifyForm openError={handleOpen} {...props} />
       </CustomContainer>
       <Snackbar

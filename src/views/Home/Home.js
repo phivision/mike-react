@@ -38,13 +38,13 @@ export default function Home() {
             paddingLeft: "72px",
           }}
         >
-          <TextStyle variant="h2" color="primary">
+          <TextStyle variant="h1" color="primary">
             Monetize your audience + expertise
           </TextStyle>
         </CustomContainer>
       </CustomBanner>
       <CustomContainer>
-        <TextStyle variant="h1" color="primary">
+        <TextStyle variant="h2" color="primary">
           {"What's Motion?"}
         </TextStyle>
         <TextStyle variant="h3" color="secondary">
@@ -54,7 +54,7 @@ export default function Home() {
         </TextStyle>
       </CustomContainer>
       <CustomContainer>
-        <TextStyle variant="h1" color="primary">
+        <TextStyle variant="h2" color="primary">
           Reach more people and spend less time teaching.
         </TextStyle>
         <TextStyle variant="h3" color="secondary">
@@ -64,7 +64,7 @@ export default function Home() {
         </TextStyle>
       </CustomContainer>
       <CustomContainer>
-        <TextStyle variant="h1" color="primary">
+        <TextStyle variant="h2" color="primary">
           Develop a recurring monthly income stream.
         </TextStyle>
         <TextStyle variant="h3" color="secondary">
@@ -74,7 +74,7 @@ export default function Home() {
         </TextStyle>
       </CustomContainer>
       <CustomContainer>
-        <TextStyle variant="h1" color="primary">
+        <TextStyle variant="h2" color="primary">
           Build connections with your clients online.
         </TextStyle>
         <TextStyle variant="h3" color="secondary">

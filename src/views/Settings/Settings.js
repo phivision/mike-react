@@ -360,7 +360,7 @@ export default function Settings(props) {
         <TableHead>
           <TableRow>
             <TableCell align="left" rowSpan={3}>
-              <Typography variant="h1">Account</Typography>
+              <Typography variant="h2">Account</Typography>
             </TableCell>
             <TableCell align="left">
               <Typography variant="body1">{email}</Typography>

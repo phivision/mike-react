@@ -263,7 +263,7 @@ export default function LandingPage({ ...props }) {
           </GridContainer>
           <GridContainer item direction="column" xs={12} sm={4}>
             <GridItem>
-              <Typography variant="h1">Feed</Typography>
+              <Typography variant="h2">Feed</Typography>
             </GridItem>
             {content.map((c, idx) => {
               let f = favorites.findIndex((e) => e.Content.id === content.id);
@@ -280,7 +280,7 @@ export default function LandingPage({ ...props }) {
           </GridContainer>
           <GridContainer item direction="column" xs={12} sm={4}>
             <GridItem>
-              <Typography variant="h1">Favorite Workouts</Typography>
+              <Typography variant="h2">Favorite Workouts</Typography>
             </GridItem>
             <GridItem>
               {(rowsPerPage > 0
