@@ -321,6 +321,7 @@ export default function LandingPage({ ...props }) {
             user={props.user}
             paymentMethodCallback={createSubscription}
             buttonTitle="Subscribe"
+            checkExistingPaymentMethod={true}
           />
         </Dialog>
       </Container>
