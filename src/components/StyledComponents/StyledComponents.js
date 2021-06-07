@@ -216,6 +216,7 @@ export const InputField = styled(TextField).attrs({
 export const TextStyle = styled(Typography)`
   display: inline-block;
   margin: 2px;
+  padding: 10px;
 `;
 
 export const InputButton = styled(Input).attrs({
@@ -236,6 +237,7 @@ export const FlexContain = styled(Container).attrs({
   disableGutters: true,
 })`
   display: flex;
+  position: relative;
   flex-direction: column;
   min-height: 100vh;
 `;
@@ -270,10 +272,16 @@ export const CardContentAvatar = styled(UserAvatar)`
 
 export const CustomContainer = styled(Container)`
   margin: 0 auto;
-  margin-top: 60px;
-  background-color: #f4f6fa;
+  margin-top: 30px;
   border: none;
-  margin-bottom: 30px;
+  margin-bottom: 60px;
+  padding-left: 72px;
+`;
+
+export const CustomBanner = styled(Container).attrs({ maxWidth: false })`
+  background-color: white;
+  margin: 0px;
+  border: none;
 `;
 
 export const LogoImage = styled.img`
@@ -286,9 +294,10 @@ export const LogoImage = styled.img`
 
 export const CustomFooter = styled.footer`
   position: absolute;
-  left: 0;
+  width: 100%;
+  padding-left: 72px;
+  padding-right: 72px;
   bottom: 0;
-  right: 0;
 `;
 
 export const DialogBody = styled(DialogContent)`
@@ -298,4 +307,6 @@ export const DialogBody = styled(DialogContent)`
   padding: 30px;
 `;
 
-export const TextLink = styled(Link);
+export const TextLink = styled(Link)`
+  padding: 10px;
+`;
