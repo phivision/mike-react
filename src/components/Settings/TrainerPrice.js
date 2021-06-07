@@ -1,11 +1,10 @@
-import TableRow from "@material-ui/core/TableRow";
-import TableCell from "@material-ui/core/TableCell";
 import EditableTypography from "../EditableTypography/EditableTypography";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import React, { useState } from "react";
 import DoneIcon from "@material-ui/icons/Done";
 import PropTypes from "prop-types";
+import Grid from "@material-ui/core/Grid";
 
 const TrainerPrice = ({ ...props }) => {
   const [edit, setEdit] = useState(false);
@@ -23,23 +22,31 @@ const TrainerPrice = ({ ...props }) => {
   };
 
   return (
-    <TableRow>
-      <TableCell>
+    <Grid
+      item
+      container
+      direction="row"
+      alignItems="center"
+      justify="space-between"
+      style={{ padding: "10px" }}
+    >
+      <Grid item>
         <EditableTypography
           text={price}
           edit={edit}
+          variant="h3"
           label="Monthly Subscription Price"
           onChange={(e) => {
             setPrice(e.target.value);
           }}
         />
-      </TableCell>
-      <TableCell align="right">
+      </Grid>
+      <Grid item>
         <IconButton onClick={onClick}>
           {edit ? <DoneIcon /> : <EditIcon />}
         </IconButton>
-      </TableCell>
-    </TableRow>
+      </Grid>
+    </Grid>
   );
 };
 

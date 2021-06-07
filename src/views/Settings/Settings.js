@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Dialog, Snackbar, Typography } from "@material-ui/core";
+import { Dialog, Snackbar } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 // local variables
 import { userRoles } from "variables/userRoles";
@@ -16,6 +16,7 @@ import TrainerPrice from "../../components/Settings/TrainerPrice";
 import {
   CustomButton,
   CustomContainer,
+  TextStyle,
 } from "../../components/StyledComponents/StyledComponents";
 import { useHistory } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
@@ -348,11 +349,18 @@ export default function Settings(props) {
             style={{ padding: "10px" }}
           >
             <Grid item xs>
-              <Typography variant="h2">Account</Typography>
+              <TextStyle variant="h2">Account</TextStyle>
             </Grid>
-            <Grid item xs container direction="row" justify="flex-end">
+            <Grid
+              item
+              xs
+              container
+              direction="row"
+              alignItems="center"
+              justify="flex-end"
+            >
               <Grid item>
-                <Typography variant="body1">{email}</Typography>
+                <TextStyle variant="body1">{email}</TextStyle>
               </Grid>
               <Grid item>
                 <CustomButton onClick={signOut}>Sign out</CustomButton>
@@ -369,11 +377,11 @@ export default function Settings(props) {
             style={{ padding: "10px" }}
           >
             <Grid item xs>
-              <Typography variant="h3">
+              <TextStyle variant="h3">
                 {userRole === userRoles.STUDENT
                   ? "Membership and Billing"
                   : "Account and Billing"}
-              </Typography>
+              </TextStyle>
             </Grid>
             <Grid item container xs direction="column">
               <Grid
@@ -382,6 +390,7 @@ export default function Settings(props) {
                 xs
                 direction="row"
                 justify="space-between"
+                alignItems="center"
                 style={{ padding: "10px" }}
               >
                 <Grid item>Password: ********</Grid>
@@ -441,22 +450,31 @@ export default function Settings(props) {
           {userRole === userRoles.STUDENT ? (
             <ActiveSubscriptions trainers={trainers} />
           ) : (
-            <Grid item container direction="row" style={{ padding: "10px" }}>
-              <Grid item>
-                <Typography variant="h3">Pricing Tiers</Typography>
+            isVerified && (
+              <Grid
+                item
+                container
+                direction="row"
+                alignItems="center"
+                justify="space-between"
+                style={{ padding: "10px" }}
+              >
+                <Grid item xs>
+                  <TextStyle variant="h3">Pricing Tiers</TextStyle>
+                </Grid>
+                <Grid item xs container direction="column">
+                  {prices.map((p, idx) => (
+                    <Grid item key={idx}>
+                      <TrainerPrice
+                        key={idx}
+                        price={p.unit_amount}
+                        changePrice={changePrice}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
               </Grid>
-              <Grid item container direction="column">
-                {prices.map((p, idx) => (
-                  <Grid item key={idx}>
-                    <TrainerPrice
-                      key={idx}
-                      price={p.unit_amount}
-                      changePrice={changePrice}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            </Grid>
+            )
           )}
         </Grid>
       </CustomContainer>
