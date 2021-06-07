@@ -211,7 +211,6 @@ export const UserFeedBanner = styled(Grid).attrs({
 
 export const InputField = styled(TextField).attrs({
   variant: "outlined",
-  multiline: true,
 })`
   margin: 10px;
 `;
@@ -298,6 +297,7 @@ export const LogoImage = styled.img`
 export const CustomFooter = styled.footer`
   position: absolute;
   width: 100%;
+  padding-top: 30px;
   padding-left: 72px;
   padding-right: 72px;
   bottom: 0;

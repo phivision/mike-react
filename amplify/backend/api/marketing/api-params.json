@@ -1,0 +1,35 @@
+{
+  "paths": [
+    {
+      "name": "/marketing",
+      "lambdaFunction": "marketing",
+      "privacy": {
+        "open": true
+      },
+      "policyResourceName": "/marketing"
+    }
+  ],
+  "resourceName": "marketing",
+  "apiName": "marketing",
+  "functionArns": [
+    {
+      "lambdaFunction": "marketing"
+    }
+  ],
+  "privacy": {
+    "auth": 0,
+    "unauth": 0,
+    "authRoleName": "amplify-mike-react-dev-150010-authRole",
+    "unAuthRoleName": "amplify-mike-react-dev-150010-unauthRole"
+  },
+  "dependsOn": [
+    {
+      "category": "function",
+      "resourceName": "marketing",
+      "attributes": [
+        "Name",
+        "Arn"
+      ]
+    }
+  ]
+}
