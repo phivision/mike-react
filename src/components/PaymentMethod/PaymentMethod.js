@@ -5,10 +5,9 @@ import discoverIcon from "../../assets/img/card/Discover.png";
 import amexIcon from "../../assets/img/card/AmericanExpress.png";
 import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import IconButton from "@material-ui/core/IconButton";
-import Button from "@material-ui/core/Button";
+import { CustomButton, TextStyle } from "../StyledComponents/StyledComponents";
 
 const PaymentMethod = ({ ...props }) => {
   const [image, setImage] = useState();
@@ -36,42 +35,46 @@ const PaymentMethod = ({ ...props }) => {
   }, [props]);
 
   return (
-    <Grid container>
-      <Grid item xs={1}>
-        <img style={{ height: "20px" }} src={image} />
-      </Grid>
-      <Grid item xs={3}>
-        <Typography variant="body2">
-          {"**** **** ****" + props.PaymentMethod.card.last4}
-        </Typography>
-      </Grid>
-      <Grid item xs={1}>
-        <Typography variant="body2">
-          {props.PaymentMethod.card.exp_month +
-            "/" +
-            (props.PaymentMethod.card.exp_year % 100)}
-        </Typography>
-      </Grid>
-      {props.defaultCallback && (
+    <Grid container direction="row" justify="space-between">
+      <Grid item container direction="row" xs>
         <Grid item>
-          <Button
-            variant="outlined"
-            disabled={props.isDefault}
-            onClick={() => props.defaultCallback(props.PaymentMethod.id)}
-          >
-            {props.isDefault ? "Default" : "Make Default"}
-          </Button>
+          <img style={{ height: "20px" }} src={image} />
         </Grid>
-      )}
-      {props.isDefault || !props.deleteCallback ? null : (
         <Grid item>
-          <IconButton
-            onClick={() => props.deleteCallback(props.PaymentMethod.id)}
-          >
-            <DeleteOutlineIcon />
-          </IconButton>
+          <TextStyle variant="body2">
+            {"**** **** ****" + props.PaymentMethod.card.last4}
+          </TextStyle>
         </Grid>
-      )}
+        <Grid item>
+          <TextStyle variant="body2">
+            {props.PaymentMethod.card.exp_month +
+              "/" +
+              (props.PaymentMethod.card.exp_year % 100)}
+          </TextStyle>
+        </Grid>
+      </Grid>
+      <Grid item container direction="row" justify="flex-end" xs>
+        {props.isDefault || !props.deleteCallback ? null : (
+          <Grid item>
+            <IconButton
+              onClick={() => props.deleteCallback(props.PaymentMethod.id)}
+            >
+              <DeleteOutlineIcon />
+            </IconButton>
+          </Grid>
+        )}
+        <Grid item>
+          {props.defaultCallback && (
+            <CustomButton
+              variant="outlined"
+              disabled={props.isDefault}
+              onClick={() => props.defaultCallback(props.PaymentMethod.id)}
+            >
+              {props.isDefault ? "Default" : "Make Default"}
+            </CustomButton>
+          )}
+        </Grid>
+      </Grid>
     </Grid>
   );
 };

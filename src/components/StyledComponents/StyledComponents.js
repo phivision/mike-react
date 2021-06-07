@@ -275,8 +275,9 @@ export const CustomContainer = styled(Container)`
   margin: 0 auto;
   margin-top: 30px;
   border: none;
-  margin-bottom: 60px;
-  padding-left: 72px;
+  margin-bottom: 30px;
+  padding-left: 50px;
+  padding-right: 50px;
 `;
 
 export const CustomBanner = styled(Container).attrs({ maxWidth: false })`
