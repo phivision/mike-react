@@ -31,6 +31,10 @@
         "videoConvertComplete": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
           "s3Key": "amplify-builds/videoConvertComplete-61312f6664443767554b-build.zip"
+        },
+        "marketing": {
+          "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
+          "s3Key": "amplify-builds/marketing-364c45596f6c55736c43-build.zip"
         }
       },
       "storage": {
