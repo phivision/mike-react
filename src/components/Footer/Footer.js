@@ -1,25 +1,19 @@
 /*eslint-disable*/
 import React from "react";
 // @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Link, Typography } from "@material-ui/core";
-// core components
-import styles from "assets/jss/material-dashboard-react/components/footerStyle.js";
-
-const useStyles = makeStyles(styles);
+import { Grid, Link } from "@material-ui/core";
+import { CustomFooter, TextStyle } from "../StyledComponents/StyledComponents";
 
 export default function Footer() {
-  const classes = useStyles();
-  // TODO: adding & fixing links to company blog and contact us
   return (
-    <footer className={classes.footer}>
+    <CustomFooter>
       <Grid container alignItems="center">
         <Grid item xs>
-          <Typography variant="body1" color="textSecondary" align="left">
+          <TextStyle variant="body1" color="textSecondary" align="left">
             {"Copyright © " +
               new Date().getFullYear() +
               " PhiVision Inc. All rights reserved."}
-          </Typography>
+          </TextStyle>
         </Grid>
         <Grid item xs={1}>
           <Link
@@ -38,6 +32,6 @@ export default function Footer() {
           </Link>
         </Grid>
       </Grid>
-    </footer>
+    </CustomFooter>
   );
 }

@@ -1,22 +1,12 @@
 import React from "react";
-import {
-  TextField,
-  FormControlLabel,
-  Button,
-  Grid,
-  Checkbox,
-  Dialog,
-} from "@material-ui/core";
+import { TextField, FormControlLabel, Grid, Checkbox } from "@material-ui/core";
 import { Auth } from "aws-amplify";
 import { Link, useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
+import { CustomButton } from "../StyledComponents/StyledComponents";
 // import auth styles
-import authStyles from "../../assets/jss/material-dashboard-react/views/authStyle";
-import { TextLink } from "../StyledComponents/StyledComponents";
-import ForgotPassword from "./ForgotPassword";
 
 export default function SignInForm({ openError: openError, ...props }) {
-  const classes = authStyles();
   const history = useHistory();
 
   const [state, setState] = React.useState(
@@ -32,16 +22,6 @@ export default function SignInForm({ openError: openError, ...props }) {
           remember: false,
         }
   );
-
-  const [open, setOpen] = React.useState(false);
-
-  const handleModalOpen = () => {
-    setOpen(true);
-  };
-
-  const handleModalClose = () => {
-    setOpen(false);
-  };
 
   const handleChange = (e) => {
     const value =
@@ -68,17 +48,49 @@ export default function SignInForm({ openError: openError, ...props }) {
           if (props.location.state.next !== undefined) {
             history.push(props.location.state.next);
           }
-        } else {
-          history.push("/user/");
         }
+        history.push("/user/");
       });
     } catch (error) {
       openError(error.message);
     }
   }
 
+  const signUpLink = () => {
+    return props.location.state !== undefined ? (
+      <Link
+        to={{
+          pathname: "/signup/student",
+          state: { next: props.location.state.next },
+        }}
+      >
+        {"Don't have an account? Sign Up"}
+      </Link>
+    ) : (
+      <Link
+        to={{
+          pathname: "/signup/student",
+        }}
+      >
+        {"Don't have an account? Sign Up"}
+      </Link>
+    );
+  };
+
+  const resetPasswordLink = () => {
+    return (
+      <Link
+        to={{
+          pathname: "/reset",
+        }}
+      >
+        Forgot password?
+      </Link>
+    );
+  };
+
   return (
-    <form className={classes.form} onSubmit={(e) => handleSubmit(e)} noValidate>
+    <form onSubmit={(e) => handleSubmit(e)} noValidate>
       <TextField
         variant="outlined"
         margin="normal"
@@ -117,50 +129,14 @@ export default function SignInForm({ openError: openError, ...props }) {
         }
         label="Remember me"
       />
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        color="primary"
-        className={classes.submit}
-      >
+      <CustomButton type="submit" fullWidth variant="contained">
         Sign In
-      </Button>
+      </CustomButton>
       <Grid container>
         <Grid item xs>
-          <TextLink onClick={handleModalOpen}>Forgot password?</TextLink>
-          <Dialog
-            open={open}
-            onClose={handleModalClose}
-            aria-labelledby="form-dialog-title"
-          >
-            <ForgotPassword
-              state={state}
-              handleChange={handleChange}
-              handleModalClose={handleModalClose}
-            />
-          </Dialog>
+          {resetPasswordLink()}
         </Grid>
-        <Grid item>
-          {props.location.state !== undefined ? (
-            <Link
-              to={{
-                pathname: "/signup/student",
-                state: { next: props.location.state.next },
-              }}
-            >
-              {"Don't have an account? Sign Up"}
-            </Link>
-          ) : (
-            <Link
-              to={{
-                pathname: "/signup/student",
-              }}
-            >
-              {"Don't have an account? Sign Up"}
-            </Link>
-          )}
-        </Grid>
+        <Grid item>{signUpLink()}</Grid>
       </Grid>
     </form>
   );

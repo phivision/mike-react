@@ -10,19 +10,20 @@ import {
   TextField,
   Input,
   Divider,
-  Container,
   DialogContent,
 } from "@material-ui/core";
 import SearchBar from "material-ui-search-bar";
-import { primaryColor } from "assets/jss/material-dashboard-react.js";
 import { Link } from "react-router-dom";
 import Person from "@material-ui/icons/Person";
 import SettingsIcon from "@material-ui/icons/Settings";
 import UserAvatar from "../UserAvatar/UserAvatar";
-import TableContainer from "@material-ui/core/TableContainer";
+import Container from "@material-ui/core/Container";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import { MobileVersion, uptoMobileWidth } from "variables/mediaQueries";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+// import { useTheme } from "@material-ui/core/styles";
+
+// const theme = useTheme();
 
 export const ContainBox = styled(Container).attrs({
   disableGutters: true,
@@ -96,9 +97,9 @@ export const SearchButton = styled(SearchBar)`
     box-shadow: none;
     border-radius: 10px;
     min-width: 80px;
-    .MuiIconButton-label {
-      color: ${primaryColor[0]};
-    }
+    //.MuiIconButton-label {
+    //  color: theme.palette.primary.main;
+    //}
   }
 `;
 
@@ -267,10 +268,9 @@ export const CardContentAvatar = styled(UserAvatar)`
   border-radius: 10px;
 `;
 
-export const SettingTableContainer = styled(TableContainer)`
+export const CustomContainer = styled(Container)`
   margin: 0 auto;
   margin-top: 60px;
-  width: 80%;
   background-color: #f4f6fa;
   border: none;
   margin-bottom: 30px;
@@ -284,6 +284,13 @@ export const LogoImage = styled.img`
   }
 `;
 
+export const CustomFooter = styled.footer`
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+`;
+
 export const DialogBody = styled(DialogContent)`
   display: flex;
   flex-direction: column;
@@ -291,6 +298,4 @@ export const DialogBody = styled(DialogContent)`
   padding: 30px;
 `;
 
-export const TextLink = styled.a`
-  cursor: pointer;
-`;
+export const TextLink = styled(Link);
