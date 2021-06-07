@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Dialog, Snackbar, Typography } from "@material-ui/core";
-import ChangePassword from "../../components/Settings/ChangePassword";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -53,7 +52,6 @@ export default function Settings(props) {
   const [trainers, setTrainers] = useState([]);
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [isVerified, setVerified] = useState(true);
-  const [openDialog, setOpenDialog] = useState(false);
   const [openCheckout, setOpenCheckout] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -62,24 +60,10 @@ export default function Settings(props) {
   const history = useHistory();
 
   const handleOpenPassword = () => {
-    setOpenDialog(true);
-  };
-
-  const handleClosePassword = () => {
-    setOpenDialog(false);
+    history.push({ pathname: "/reset", state: { next: window.location.href } });
   };
 
   const userRole = props.user.role;
-
-  const PasswordDialog = () => {
-    return (
-      <Dialog open={openDialog} onClose={handleClosePassword}>
-        <div>
-          <ChangePassword />
-        </div>
-      </Dialog>
-    );
-  };
 
   const fetchSettings = () => {
     API.graphql(graphqlOperation(getUserSettings, { id: props.user.id }))
@@ -460,7 +444,6 @@ export default function Settings(props) {
           </TableRow>
         )}
       </Table>
-      <PasswordDialog />
       <Dialog
         onClose={handleCloseCheckout}
         fullWidth
