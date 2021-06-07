@@ -6,7 +6,7 @@ import {
   AttriTitle,
   Attribute,
   Unit,
-} from "../StyledComponets/StyledComponets";
+} from "../StyledComponents/StyledComponents";
 
 const TrainerMetrics = ({ ...props }) => {
   return (

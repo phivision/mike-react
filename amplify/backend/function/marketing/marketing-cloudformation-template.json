@@ -15,9 +15,6 @@
     },
     "s3Key": {
       "Type": "String"
-    },
-    "apiGraphQLAPIIdOutput": {
-      "Type": "String"
     }
   },
   "Conditions": {
@@ -50,12 +47,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "stripeAPI",
+            "marketing",
             {
               "Fn::Join": [
                 "",
                 [
-                  "stripeAPI",
+                  "marketing",
                   "-",
                   {
                     "Ref": "env"
@@ -72,16 +69,6 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
-            },
-            "TABLE_NAME": {
-              "Fn::ImportValue": {
-                "Fn::Sub": "${apiGraphQLAPIIdOutput}:GetAtt:UserProfileTable:Name"
-              }
-            },
-            "SUB_TABLE_NAME": {
-              "Fn::ImportValue": {
-                "Fn::Sub": "${apiGraphQLAPIIdOutput}:GetAtt:UserSubscriptionTrainerTable:Name"
-              }
             }
           }
         },
@@ -102,12 +89,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "mikereactLambdaRolec61fac22",
+            "mikereactLambdaRole43181ea1",
             {
               "Fn::Join": [
                 "",
                 [
-                  "mikereactLambdaRolec61fac22",
+                  "mikereactLambdaRole43181ea1",
                   "-",
                   {
                     "Ref": "env"

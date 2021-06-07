@@ -4,8 +4,11 @@ import PropTypes from "prop-types";
 import { API } from "aws-amplify";
 import { userRoles } from "../../variables/userRoles";
 import PaymentMethod from "../PaymentMethod/PaymentMethod";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
+import {
+  CustomButton,
+  CustomContainer,
+  TextStyle,
+} from "../StyledComponents/StyledComponents";
 
 export default function Checkout({ ...props }) {
   const [defaultPaymentMethod, setDefaultPaymentMethod] = useState("");
@@ -73,36 +76,44 @@ export default function Checkout({ ...props }) {
   };
 
   useEffect(() => {
-    fetchPaymentMethod();
-    fetchDefaultPaymentMethod();
-  }, []);
+    if (props.checkExistingPaymentMethod) {
+      fetchPaymentMethod();
+      fetchDefaultPaymentMethod();
+    }
+  }, [props]);
 
   return (
     <>
       {defaultPaymentMethod ? (
-        <>
-          <Typography variant="h3">Checkout</Typography>
-          <Typography variant="body1">
+        <CustomContainer>
+          <TextStyle variant="h3">Checkout</TextStyle>
+          <TextStyle variant="body1">
             Using default payment method. To change payment methods, go to
             settings.
-          </Typography>
+          </TextStyle>
           {paymentMethods.map((p, idx) => {
             let isDefault = p.id === defaultPaymentMethod;
             return isDefault ? (
-              <PaymentMethod PaymentMethod={p} key={idx} />
+              <div style={{ padding: "15px" }}>
+                <PaymentMethod PaymentMethod={p} key={idx} />
+              </div>
             ) : null;
           })}
-          <Button onClick={onClick}>Subscribe</Button>
-        </>
+          <CustomButton variant="contained" onClick={onClick}>
+            Subscribe
+          </CustomButton>
+        </CustomContainer>
       ) : (
-        <>
+        <CustomContainer>
           <form onSubmit={handleSubmit}>
-            <CardElement />
-            <button type="submit" disabled={!stripe}>
+            <div style={{ padding: "10px" }}>
+              <CardElement />
+            </div>
+            <CustomButton variant="contained" type="submit" disabled={!stripe}>
               {props.buttonTitle}
-            </button>
+            </CustomButton>
           </form>
-        </>
+        </CustomContainer>
       )}
     </>
   );
@@ -116,4 +127,5 @@ Checkout.propTypes = {
     id: PropTypes.string,
     role: PropTypes.string,
   }),
+  checkExistingPaymentMethod: PropTypes.bool,
 };

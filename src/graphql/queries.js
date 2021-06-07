@@ -157,6 +157,7 @@ export const getUserSubscriptionTrainer = /* GraphQL */ `
       id
       StripeID
       ExpireDate
+      CancelAtPeriodEnd
       createdAt
       updatedAt
       Trainer {
@@ -220,6 +221,7 @@ export const listUserSubscriptionTrainers = /* GraphQL */ `
         id
         StripeID
         ExpireDate
+        CancelAtPeriodEnd
         createdAt
         updatedAt
         owner

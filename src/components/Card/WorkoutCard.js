@@ -8,14 +8,12 @@ import { FavoriteBorder } from "@material-ui/icons";
 import ViewerDialog from "../../views/ContentViewer/ViewerDialog";
 import ImageButton from "../CustomButtons/ImageButton";
 import UploadDialog from "../../views/ContentUpload/UploadDialog";
-import { GridContainer, CardStyled } from "../StyledComponets/StyledComponets";
-
-import styles from "assets/jss/material-dashboard-react/components/cardContentStyle.js";
+import {
+  GridContainer,
+  CardStyled,
+} from "../StyledComponents/StyledComponents";
 
 import empty from "assets/img/empty.jpg";
-import { makeStyles } from "@material-ui/core/styles";
-
-const useStyles = makeStyles(styles);
 
 export default function WorkoutCard(props) {
   const [img, setImg] = useState(empty);
@@ -24,7 +22,6 @@ export default function WorkoutCard(props) {
   const [openViewer, setOpenViewer] = React.useState(false);
   const [openContentEdit, setOpenContentEdit] = React.useState(false);
   var times = 0;
-  const classes = useStyles();
 
   const handleCloseContentEdit = () => {
     setOpenContentEdit(false);
@@ -88,7 +85,7 @@ export default function WorkoutCard(props) {
               onClick={handleOpenViewer}
             />
           ) : (
-            <Card className={classes.cardImage}>
+            <Card>
               <CardMedia
                 style={{ height: "150px", width: "250px" }}
                 image={img}

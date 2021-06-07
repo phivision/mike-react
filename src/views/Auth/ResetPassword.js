@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import SignUpForm from "../../components/Authentication/SignUpForm";
+import { Snackbar } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import { Snackbar } from "@material-ui/core";
+import React, { useState } from "react";
+import ResetPasswordForm from "../../components/Authentication/ResetPasswordForm";
+import PropTypes from "prop-types";
 import {
   CustomContainer,
   TextStyle,
 } from "../../components/StyledComponents/StyledComponents";
 
-export default function SignUp({ ...props }) {
+const ResetPassword = ({ ...props }) => {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
 
@@ -25,10 +25,6 @@ export default function SignUp({ ...props }) {
 
   return (
     <>
-      <CustomContainer maxWidth="sm">
-        <TextStyle variant="h2">Sign up</TextStyle>
-        <SignUpForm openError={handleOpen} {...props} />
-      </CustomContainer>
       <Snackbar
         open={open}
         autoHideDuration={6000}
@@ -47,17 +43,16 @@ export default function SignUp({ ...props }) {
           </>
         }
       />
+      <CustomContainer maxWidth="sm">
+        <TextStyle variant="h2">Reset Password</TextStyle>
+        <ResetPasswordForm openError={handleOpen} {...props} />
+      </CustomContainer>
     </>
   );
-}
+};
 
-SignUp.propTypes = {
+ResetPassword.propTypes = {
   props: PropTypes.shape({
-    match: PropTypes.shape({
-      params: PropTypes.shape({
-        role: PropTypes.string,
-      }),
-    }),
     location: PropTypes.shape({
       state: PropTypes.shape({
         next: PropTypes.object,
@@ -65,3 +60,5 @@ SignUp.propTypes = {
     }),
   }),
 };
+
+export default ResetPassword;

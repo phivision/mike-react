@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import {
   InputButton,
   // BlackTitle,
-} from "components/StyledComponets/StyledComponets";
+} from "components/StyledComponents/StyledComponents";
 
 const useStyles = makeStyles((theme) => ({
   root: {

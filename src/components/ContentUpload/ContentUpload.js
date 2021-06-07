@@ -9,7 +9,7 @@ import {
   GridItem,
   CustomButton,
   CardStyled,
-} from "components/StyledComponets/StyledComponets";
+} from "components/StyledComponents/StyledComponents";
 // amplify components
 import { API, Storage, graphqlOperation } from "aws-amplify";
 import { createUserContent, updateUserContent } from "graphql/mutations";
@@ -344,7 +344,9 @@ export default function ContentUpload(props) {
           }
           label="Demo Video?"
         />
-        <CustomButton onClick={handleVideoUpload}>Upload Content</CustomButton>
+        <CustomButton variant="contained" onClick={handleVideoUpload}>
+          Upload Content
+        </CustomButton>
       </GridContainer>
       <GridItem xs={12} sm={6}>
         <CardStyled>

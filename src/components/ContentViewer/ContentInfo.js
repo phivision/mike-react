@@ -8,7 +8,7 @@ import {
   BlackTitle,
   ContainBox,
   Attribute,
-} from "components/StyledComponets/StyledComponets";
+} from "components/StyledComponents/StyledComponents";
 
 const Segment = ({ segment }) => {
   return (
