@@ -7,9 +7,11 @@ import Avatar from "@material-ui/core/Avatar";
 import { Button, TableCell, Typography } from "@material-ui/core";
 import TableRow from "@material-ui/core/TableRow";
 
-const TrainerCard = ({ trainer, expire }) => {
+const TrainerCard = ({ trainer, expire, CancelAtPeriodEnd }) => {
   const [imageURL, setImageURL] = useState();
   const fullName = trainer.FirstName + " " + trainer.LastName;
+  const date = new Date(expire);
+  const options = { year: "numeric", month: "long", day: "numeric" };
 
   async function getTrainerImage() {
     return await Storage.get(trainer.UserImage);
@@ -25,7 +27,12 @@ const TrainerCard = ({ trainer, expire }) => {
       <Avatar alt={fullName} src={imageURL} />
       <div>
         <Typography variant="h6">{fullName}</Typography>
-        <Typography>Next billing date: {expire}</Typography>
+        <Typography>
+          {CancelAtPeriodEnd
+            ? "Your subscription will expire at "
+            : "Your next billing date is "}
+          {date.toLocaleDateString("en-US", options)}
+        </Typography>
       </div>
     </Card>
   );
@@ -38,6 +45,7 @@ TrainerCard.propTypes = {
     LastName: PropTypes.string,
   }),
   expire: PropTypes.string,
+  CancelAtPeriodEnd: PropTypes.bool,
 };
 
 export default function ActiveSubscriptions(props) {
@@ -76,6 +84,7 @@ export default function ActiveSubscriptions(props) {
             <TrainerCard
               trainer={trainerData.Trainer}
               expire={trainerData.ExpireDate}
+              CancelAtPeriodEnd={trainerData.CancelAtPeriodEnd}
             />
           </TableCell>
           <TableCell align="right">

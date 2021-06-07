@@ -1,18 +1,12 @@
 /*eslint-disable*/
 import React from "react";
 // @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Link, Typography } from "@material-ui/core";
-// core components
-import styles from "assets/jss/material-dashboard-react/components/footerStyle.js";
-
-const useStyles = makeStyles(styles);
 
 export default function Footer() {
-  const classes = useStyles();
   // TODO: adding & fixing links to company blog and contact us
   return (
-    <footer className={classes.footer}>
+    <footer>
       <Grid container alignItems="center">
         <Grid item xs>
           <Typography variant="body1" color="textSecondary" align="left">

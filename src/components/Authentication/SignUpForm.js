@@ -1,15 +1,13 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import { Auth } from "aws-amplify";
 import { Link, useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
+import { CustomButton } from "../StyledComponents/StyledComponents";
 // import auth styles
-import authStyles from "../../assets/jss/material-dashboard-react/views/authStyle";
 
 export default function SignUpForm({ openError: openError, ...props }) {
-  const classes = authStyles();
   const history = useHistory();
 
   const [state, setState] = React.useState({
@@ -69,7 +67,7 @@ export default function SignUpForm({ openError: openError, ...props }) {
     }
   }
   return (
-    <form className={classes.form} onSubmit={(e) => handleSubmit(e)} noValidate>
+    <form onSubmit={(e) => handleSubmit(e)} noValidate>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -122,15 +120,9 @@ export default function SignUpForm({ openError: openError, ...props }) {
           />
         </Grid>
       </Grid>
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        color="primary"
-        className={classes.submit}
-      >
+      <CustomButton type="submit" fullWidth variant="contained">
         Sign Up
-      </Button>
+      </CustomButton>
       <Grid container justify="flex-end">
         <Grid item>
           <Link to="/signin">Already have an account? Sign in</Link>

@@ -21,7 +21,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import TrainerPrice from "../../components/Settings/TrainerPrice";
 import {
   CustomButton,
-  SettingTableContainer,
+  CustomContainer,
 } from "../../components/StyledComponents/StyledComponents";
 import { useHistory } from "react-router-dom";
 
@@ -353,7 +353,7 @@ export default function Settings(props) {
   }, [props.user.id, setDefaultPaymentMethod, setPaymentMethods]);
 
   return (
-    <SettingTableContainer>
+    <CustomContainer>
       <Snackbar
         open={openSnackbar}
         autoHideDuration={6000}
@@ -473,7 +473,7 @@ export default function Settings(props) {
           buttonTitle="Add"
         />
       </Dialog>
-    </SettingTableContainer>
+    </CustomContainer>
   );
 }
 

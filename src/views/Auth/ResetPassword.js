@@ -1,16 +1,15 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-// import auth styles
-import VerifyForm from "../../components/Authentication/VerifyForm";
+import { Snackbar } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import { Snackbar } from "@material-ui/core";
+import React, { useState } from "react";
+import ResetPasswordForm from "../../components/Authentication/ResetPasswordForm";
+import PropTypes from "prop-types";
 import {
   CustomContainer,
   TextStyle,
 } from "../../components/StyledComponents/StyledComponents";
 
-export default function Verify({ ...props }) {
+const ResetPassword = ({ ...props }) => {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
 
@@ -23,12 +22,9 @@ export default function Verify({ ...props }) {
     setError(null);
     setOpen(false);
   };
+
   return (
     <>
-      <CustomContainer maxWidth="xs">
-        <TextStyle variant="h1">Verify your email</TextStyle>
-        <VerifyForm openError={handleOpen} {...props} />
-      </CustomContainer>
       <Snackbar
         open={open}
         autoHideDuration={6000}
@@ -47,19 +43,22 @@ export default function Verify({ ...props }) {
           </>
         }
       />
+      <CustomContainer maxWidth="xs">
+        <TextStyle variant="h1">Reset Password</TextStyle>
+        <ResetPasswordForm openError={handleOpen} {...props} />
+      </CustomContainer>
     </>
   );
-}
+};
 
-Verify.propTypes = {
+ResetPassword.propTypes = {
   props: PropTypes.shape({
     location: PropTypes.shape({
       state: PropTypes.shape({
-        username: PropTypes.string.isRequired,
-        password: PropTypes.string.isRequired,
-        role: PropTypes.string.isRequired,
         next: PropTypes.object,
       }),
     }),
   }),
 };
+
+export default ResetPassword;
