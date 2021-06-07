@@ -210,6 +210,7 @@ export const UserFeedBanner = styled(Grid).attrs({
 `;
 
 export const InputField = styled(TextField).attrs({
+  variant: "outlined",
   multiline: true,
 })`
   margin: 10px;
