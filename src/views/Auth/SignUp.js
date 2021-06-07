@@ -25,7 +25,7 @@ export default function SignUp({ ...props }) {
 
   return (
     <>
-      <CustomContainer maxWidth="xs">
+      <CustomContainer maxWidth="sm">
         <TextStyle variant="h2">Sign up</TextStyle>
         <SignUpForm openError={handleOpen} {...props} />
       </CustomContainer>

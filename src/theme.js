@@ -54,7 +54,7 @@ const theme = createMuiTheme({
     },
     h6: {
       fontWeight: 700,
-      fontSize: 14,
+      fontSize: 18,
       letterSpacing: "0.167 em",
       textTransform: "uppercase",
       color: "#7265E3",

@@ -28,7 +28,7 @@ export default function SignIn({ ...props }) {
 
   return (
     <>
-      <CustomContainer maxWidth="xs">
+      <CustomContainer maxWidth="sm">
         <TextStyle variant="h2" align="center">
           Sign in
         </TextStyle>

@@ -73,6 +73,8 @@ export const AttriTitle = styled(Typography).attrs({
   variant: "h6",
 })`
   display: inline-block;
+  text-decoration: none;
+  text-transform: none;
   font-weight: 800;
 `;
 
@@ -216,7 +218,6 @@ export const InputField = styled(TextField).attrs({
 export const TextStyle = styled(Typography)`
   display: inline-block;
   margin: 2px;
-  padding: 10px;
 `;
 
 export const InputButton = styled(Input).attrs({
@@ -309,4 +310,5 @@ export const DialogBody = styled(DialogContent)`
 
 export const TextLink = styled(Link)`
   padding: 10px;
+  text-decoration: none;
 `;

@@ -43,7 +43,7 @@ const ResetPassword = ({ ...props }) => {
           </>
         }
       />
-      <CustomContainer maxWidth="xs">
+      <CustomContainer maxWidth="sm">
         <TextStyle variant="h2">Reset Password</TextStyle>
         <ResetPasswordForm openError={handleOpen} {...props} />
       </CustomContainer>
