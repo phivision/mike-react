@@ -89,7 +89,7 @@ export default function Home() {
           >
             <InputField label="Your email" value={email} onChange={onChange} />
             <IconButton onClick={onClick}>
-              <SendIcon color="primary" disableRipple fontSize="large" />
+              <SendIcon color="primary" fontSize="large" />
             </IconButton>
           </Grid>
         </CustomContainer>
