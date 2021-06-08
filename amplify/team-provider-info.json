@@ -34,7 +34,7 @@
         },
         "marketing": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/marketing-364c45596f6c55736c43-build.zip"
+          "s3Key": "amplify-builds/marketing-53727a72735179396c68-build.zip"
         }
       },
       "storage": {
@@ -144,7 +144,7 @@
         },
         "marketing": {
           "deploymentBucketName": "amplify-mikereact-feature-115326-deployment",
-          "s3Key": "amplify-builds/marketing-364c45596f6c55736c43-build.zip"
+          "s3Key": "amplify-builds/marketing-53727a72735179396c68-build.zip"
         }
       },
       "storage": {
