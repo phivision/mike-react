@@ -308,7 +308,7 @@ export default function UserFeed({ ...props }) {
                   label="Description"
                   onChange={onChange}
                   id="description"
-                  multiline
+                  multiline="true"
                   text={profile.Description}
                 />
               </GridItem>
