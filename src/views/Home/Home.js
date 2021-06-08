@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { API } from "aws-amplify";
 import { listUserProfiles } from "graphql/queries";
 import {
@@ -10,10 +10,14 @@ import {
 import SendIcon from "@material-ui/icons/Send";
 import IconButton from "@material-ui/core/IconButton";
 import Grid from "@material-ui/core/Grid";
+import CloseIcon from "@material-ui/icons/Close";
+import { Snackbar } from "@material-ui/core";
 
 export default function Home() {
   const [trainers, setTrainers] = React.useState([]);
   const [email, setEmail] = React.useState("");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   async function trainerQuery() {
     const trainerList = await API.graphql({
@@ -30,6 +34,10 @@ export default function Home() {
     setEmail(e.target.value);
   };
 
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
+  };
+
   const onClick = () => {
     const myInit = {
       headers: {}, // AWS-IAM authorization if using empty headers
@@ -38,9 +46,12 @@ export default function Home() {
       },
       response: true,
     };
-    console.log("Email is: " + email);
     API.post("marketing", "/marketing", myInit)
-      .then(console.log)
+      .then(() => {
+        setEmail("");
+        setSnackbarMessage("Successfully signed up. We'll reach out soon!");
+        setOpenSnackbar(true);
+      })
       .catch(console.log);
   };
 
@@ -126,6 +137,24 @@ export default function Home() {
           </TextStyle>
         </CustomContainer>
       </div>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+        action={
+          <>
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={handleSnackbarClose}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </>
+        }
+      />
     </>
   );
 }

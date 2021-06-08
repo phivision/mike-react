@@ -24,6 +24,12 @@ app.use(function (req, res, next) {
 
 app.post("/marketing", function (req, res) {
   console.log(req.body.email);
+  res.status(200).send();
+});
+
+app.post("/*", function (req, res) {
+  console.log("Route not found.");
+  res.status(404).send();
 });
 
 app.listen(3000, function () {
