@@ -56,6 +56,7 @@ export default function Settings(props) {
   const [prices, setPrices] = useState([]);
 
   const history = useHistory();
+  let mounted = true;
 
   const handleOpenPassword = () => {
     history.push({ pathname: "/reset", state: { next: window.location.href } });
@@ -174,7 +175,9 @@ export default function Settings(props) {
 
     API.post("stripeAPI", "/stripe/api/user/get/payment", myInit)
       .then((d) => {
-        setPaymentMethods(d.data.data);
+        if (mounted) {
+          setPaymentMethods(d.data.data);
+        }
       })
       .catch(console.log);
   };
@@ -334,6 +337,9 @@ export default function Settings(props) {
         fetchPaymentMethod();
       }
     }
+    return () => {
+      mounted = false;
+    };
   }, [props.user.id, setDefaultPaymentMethod, setPaymentMethods]);
 
   return (
