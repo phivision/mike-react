@@ -29,6 +29,7 @@ import {
 } from "../../graphql/UserFeed";
 import { onContentByCreatorID } from "../../graphql/subscriptions";
 import DataPagination from "components/DataPagination/DataPagination";
+import { beforeImageUpload } from "../../utilities/ImagesCompress";
 
 // import initial profile
 const initialProfileState = {
@@ -115,12 +116,23 @@ export default function UserFeed({ ...props }) {
 
   const handleImageChange = async (e) => {
     if (!e.target.files[0]) return;
+    var avatar = e.target.files[0];
+    let newAvatr;
     const nameArray = e.target.files[0].name.split(".");
     const userImageName =
       ("UserImage" + props.user.id + Date.now()).replace(/[^0-9a-z]/gi, "") +
       "." +
       nameArray[nameArray.length - 1];
-    await Storage.put(userImageName, e.target.files[0], {
+    //if > 100kb, then compress avatar image to small size
+    console.log("original Avatar size", avatar.size / 1024);
+    if (avatar.size > 1024 * 1024 * 0.1) {
+      newAvatr = await beforeImageUpload(avatar, 150);
+      console.log("compressed Avatar size", newAvatr.size / 1024);
+    } else {
+      newAvatr = avatar;
+    }
+    console.log("newAvatr", newAvatr);
+    await Storage.put(userImageName, newAvatr, {
       contentType: "image/*",
     });
     setProfile({ ...profile, UserImage: userImageName });
