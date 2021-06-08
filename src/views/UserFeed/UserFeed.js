@@ -308,6 +308,7 @@ export default function UserFeed({ ...props }) {
                   label="Description"
                   onChange={onChange}
                   id="description"
+                  multiline
                   text={profile.Description}
                 />
               </GridItem>
@@ -363,7 +364,7 @@ export default function UserFeed({ ...props }) {
           </GridContainer>
           <GridContainer item direction="column" xs={12} sm={4}>
             <GridItem>
-              <Typography variant="h1">Feed</Typography>
+              <Typography variant="h2">Feed</Typography>
             </GridItem>
             {contents.map((c, idx) => {
               let f = favorites.findIndex((e) => e.Content.id === c.id);
@@ -383,7 +384,7 @@ export default function UserFeed({ ...props }) {
           </GridContainer>
           <GridContainer item direction="column" xs={12} sm={4}>
             <GridItem>
-              <Typography variant="h1">Favorite Workouts</Typography>
+              <Typography variant="h2">Favorite Workouts</Typography>
             </GridItem>
             <GridItem>
               {(rowsPerPage > 0

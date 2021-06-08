@@ -10,19 +10,20 @@ import {
   TextField,
   Input,
   Divider,
-  Container,
   DialogContent,
 } from "@material-ui/core";
 import SearchBar from "material-ui-search-bar";
-import { primaryColor } from "assets/jss/material-dashboard-react.js";
 import { Link } from "react-router-dom";
 import Person from "@material-ui/icons/Person";
 import SettingsIcon from "@material-ui/icons/Settings";
 import UserAvatar from "../UserAvatar/UserAvatar";
-import TableContainer from "@material-ui/core/TableContainer";
+import Container from "@material-ui/core/Container";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import { MobileVersion, uptoMobileWidth } from "variables/mediaQueries";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+// import { useTheme } from "@material-ui/core/styles";
+
+// const theme = useTheme();
 
 export const ContainBox = styled(Container).attrs({
   disableGutters: true,
@@ -72,6 +73,8 @@ export const AttriTitle = styled(Typography).attrs({
   variant: "h6",
 })`
   display: inline-block;
+  text-decoration: none;
+  text-transform: none;
   font-weight: 800;
 `;
 
@@ -96,9 +99,9 @@ export const SearchButton = styled(SearchBar)`
     box-shadow: none;
     border-radius: 10px;
     min-width: 80px;
-    .MuiIconButton-label {
-      color: ${primaryColor[0]};
-    }
+    //.MuiIconButton-label {
+    //  color: theme.palette.primary.main;
+    //}
   }
 `;
 
@@ -207,7 +210,7 @@ export const UserFeedBanner = styled(Grid).attrs({
 `;
 
 export const InputField = styled(TextField).attrs({
-  multiline: true,
+  variant: "outlined",
 })`
   margin: 10px;
 `;
@@ -235,6 +238,7 @@ export const FlexContain = styled(Container).attrs({
   disableGutters: true,
 })`
   display: flex;
+  position: relative;
   flex-direction: column;
   min-height: 100vh;
 `;
@@ -267,13 +271,19 @@ export const CardContentAvatar = styled(UserAvatar)`
   border-radius: 10px;
 `;
 
-export const SettingTableContainer = styled(TableContainer)`
+export const CustomContainer = styled(Container)`
   margin: 0 auto;
-  margin-top: 60px;
-  width: 80%;
-  background-color: #f4f6fa;
+  margin-top: 30px;
   border: none;
   margin-bottom: 30px;
+  padding-left: 50px;
+  padding-right: 50px;
+`;
+
+export const CustomBanner = styled(Container).attrs({ maxWidth: false })`
+  background-color: white;
+  margin: 0px;
+  border: none;
 `;
 
 export const LogoImage = styled.img`
@@ -284,6 +294,15 @@ export const LogoImage = styled.img`
   }
 `;
 
+export const CustomFooter = styled.footer`
+  position: absolute;
+  width: 100%;
+  padding-top: 30px;
+  padding-left: 72px;
+  padding-right: 72px;
+  bottom: 0;
+`;
+
 export const DialogBody = styled(DialogContent)`
   display: flex;
   flex-direction: column;
@@ -291,6 +310,7 @@ export const DialogBody = styled(DialogContent)`
   padding: 30px;
 `;
 
-export const TextLink = styled.a`
-  cursor: pointer;
+export const TextLink = styled(Link)`
+  padding: 10px;
+  text-decoration: none;
 `;

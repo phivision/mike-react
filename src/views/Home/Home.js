@@ -1,30 +1,19 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
 import { API } from "aws-amplify";
 import { listUserProfiles } from "graphql/queries";
-import Banner from "../../components/Banner/banner";
-import banner from "assets/img/banner.jpg";
-
-const trainerList = (trainers) => {
-  if (!trainers) {
-    return;
-  }
-
-  return (
-    <div>
-      {trainers.map((trainer, idx) => {
-        return (
-          <Link key={idx} to={{ pathname: "/landingpage/" + trainer.id }}>
-            {"Trainer: " + trainer.FirstName + " " + trainer.LastName}
-          </Link>
-        );
-      })}
-    </div>
-  );
-};
+import {
+  CustomBanner,
+  CustomContainer,
+  InputField,
+  TextStyle,
+} from "../../components/StyledComponents/StyledComponents";
+import SendIcon from "@material-ui/icons/Send";
+import IconButton from "@material-ui/core/IconButton";
+import Grid from "@material-ui/core/Grid";
 
 export default function Home() {
   const [trainers, setTrainers] = React.useState([]);
+  const [email, setEmail] = React.useState("");
 
   async function trainerQuery() {
     const trainerList = await API.graphql({
@@ -37,6 +26,24 @@ export default function Home() {
     }
   }
 
+  const onChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const onClick = () => {
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        email: email,
+      },
+      response: true,
+    };
+    console.log("Email is: " + email);
+    API.post("marketing", "/marketing", myInit)
+      .then(console.log)
+      .catch(console.log);
+  };
+
   useEffect(() => {
     trainerQuery()
       .then((r) => setTrainers(r))
@@ -44,10 +51,81 @@ export default function Home() {
   }, [trainers.length]);
 
   return (
-    <div style={{ backgroundColor: "white" }}>
-      <Banner bannerURL={banner} bannerText="A better way change your life" />
-      <div>Welcome to Mike</div>
-      <div>{trainerList(trainers)}</div>
-    </div>
+    <>
+      <CustomBanner>
+        <CustomContainer
+          style={{
+            marginTop: "0px",
+            paddingTop: "144px",
+            paddingBottom: "144px",
+            paddingLeft: "72px",
+          }}
+        >
+          <TextStyle
+            variant="h1"
+            color="primary"
+            style={{ paddingBottom: "64px" }}
+          >
+            Monetize your audience + expertise.
+          </TextStyle>
+          <TextStyle variant="h3">
+            Get in touch to start growing a brand online.
+          </TextStyle>
+          <Grid
+            container
+            alignItems="center"
+            style={{ paddingTop: "10px", paddingBottom: "10px" }}
+          >
+            <InputField label="Your email" value={email} onChange={onChange} />
+            <IconButton onClick={onClick}>
+              <SendIcon color="primary" disableRipple fontSize="large" />
+            </IconButton>
+          </Grid>
+        </CustomContainer>
+      </CustomBanner>
+      <div style={{ padding: "30px" }}>
+        <CustomContainer>
+          <TextStyle variant="h2" color="primary">
+            {"What's Motion?"}
+          </TextStyle>
+          <TextStyle variant="h3" color="secondary">
+            {
+              "On Motion, you can offer exclusive fitness content and personalized feedback to your audience or clients in return for a monthly subscription. We put the power in your hands to make money off the content that you want to produce at the rate that you set. Don't throw away your time and content by posting it to social media for free."
+            }
+          </TextStyle>
+        </CustomContainer>
+        <CustomContainer>
+          <TextStyle variant="h2" color="primary">
+            Reach more people and spend less time teaching.
+          </TextStyle>
+          <TextStyle variant="h3" color="secondary">
+            Your knowledge and expertise is valuable. Our platform allows you to
+            monetize it without having to be on your feet all day or finding a
+            physical court or gym to train at. We work with you by providing the
+            tools and training for you to succeed.
+          </TextStyle>
+        </CustomContainer>
+        <CustomContainer>
+          <TextStyle variant="h2" color="primary">
+            Develop a recurring monthly income stream.
+          </TextStyle>
+          <TextStyle variant="h3" color="secondary">
+            Tired of losing clients due to factors out of your control? Our
+            online platform allows you to keep clients with more flexibility
+            with consistent monthly subscriptions.
+          </TextStyle>
+        </CustomContainer>
+        <CustomContainer>
+          <TextStyle variant="h2" color="primary">
+            Build connections with your clients online.
+          </TextStyle>
+          <TextStyle variant="h3" color="secondary">
+            No ads, no algorithms. Develop deeper relationships with frequent
+            contact between you and your audience by offering personalized
+            feedback and direct contact at a rate that values your time.
+          </TextStyle>
+        </CustomContainer>
+      </div>
+    </>
   );
 }
