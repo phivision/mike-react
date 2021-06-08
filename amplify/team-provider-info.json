@@ -18,23 +18,23 @@
       "function": {
         "stripeAPI": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/stripeAPI-6e4c4a612b6366713546-build.zip"
+          "s3Key": "amplify-builds/stripeAPI-66624f4f734c63593247-build.zip"
         },
         "stripeWebhook": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/stripeWebhook-745a775642587a344d6d-build.zip"
+          "s3Key": "amplify-builds/stripeWebhook-6b4645462b5175596d69-build.zip"
         },
         "cognitoPostConfirm": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/cognitoPostConfirm-4130695a6c696a45662b-build.zip"
+          "s3Key": "amplify-builds/cognitoPostConfirm-6f325a4f544453526e77-build.zip"
         },
         "videoConvertComplete": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/videoConvertComplete-61312f6664443767554b-build.zip"
+          "s3Key": "amplify-builds/videoConvertComplete-6654626f4446792f5678-build.zip"
         },
         "marketing": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/marketing-53727a72735179396c68-build.zip"
+          "s3Key": "amplify-builds/marketing-42486837684666376b78-build.zip"
         }
       },
       "storage": {
