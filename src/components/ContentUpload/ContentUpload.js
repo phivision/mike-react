@@ -23,6 +23,7 @@ import CustomDialog from "../Dialog/CustomDialog";
 // local components
 import { checkS3PrefixReady, deleteVideo } from "../../utilities/VideoTools";
 import LinearProgressWithLabel from "./LinearProgressWithLabel";
+import { beforeImageUpload } from "../../utilities/ImagesCompress";
 // the video transcoder will generate a number of files in prefix
 const videoTranscodeCount = 12;
 
@@ -41,6 +42,7 @@ const initialVideoForm = {
 // global video file handler
 let videoFile;
 let thumbFile;
+let newImage;
 
 export default function ContentUpload(props) {
   const [videoForm, setVideoForm] = React.useState(initialVideoForm);
@@ -232,14 +234,22 @@ export default function ContentUpload(props) {
   };
 
   async function uploadVideo() {
-    if (videoFile !== undefined && thumbFile !== undefined) {
+    //larger than 500K will start compress
+    console.log("original image size", thumbFile.size / 1024);
+    if (thumbFile.size > 1024 * 1024 * 0.5) {
+      newImage = await beforeImageUpload(thumbFile, 350);
+      console.log("compressed size", newImage.size / 1024);
+    } else {
+      newImage = thumbFile;
+    }
+    if (videoFile !== undefined && newImage !== undefined) {
       // prepare progress bar
       setUploadProgress(1);
       // notify uploader
       setVideoStatus(`Uploading file: ${videoFile.name}!`);
       // upload video on S3
       await Promise.all([
-        Storage.put(videoForm.Thumbnail, thumbFile, {
+        Storage.put(videoForm.Thumbnail, newImage, {
           contentType: "image/*",
         }),
         Storage.put(videoForm.ContentName, videoFile, {
