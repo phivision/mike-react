@@ -55,7 +55,7 @@ export default function LandingPage({ ...props }) {
   const [nextToken, setNextToken] = useState("");
   const [contentAll, setContentAll] = useState([]);
   const [contentMore, setContentMore] = useState([]);
-  var limit = 2;
+  var limit = 1;
 
   const userQuery = async () => {
     API.graphql(
@@ -70,27 +70,50 @@ export default function LandingPage({ ...props }) {
         setProfile(p);
         setFavorites(Favorites.items);
         setContent(Contents.items);
-        setContentAll(Contents);
+        if (nextToken === []) {
+          setNextToken(Contents.nextToken);
+          console.log("userQuery", nextToken);
+        }
+        // setContentAll(Contents);
       })
       .catch((e) => console.log(e));
   };
 
   const ContentNextTokenQuery = async () => {
-    API.graphql({
+    const { data } = await API.graphql({
       query: profilePaginatingQuery,
       variables: {
         id: props.match.params.id,
-        limit: limit,
-        nextToken,
+        limit: 1,
+        nextToken: nextToken,
       },
-    })
-      .then((d) => {
-        // const { Contents, ...p } = d.data.getUserProfile;
-        setContent(d.data.profileWithNextTokenQuery.Contents.items);
-        setContentAll(d.data.profileWithNextTokenQuery.Contents);
-      })
-      .catch((e) => console.log(e));
+    });
+    setContentAll(data.getUserProfile.Contents);
+    console.log("data:~~~~~", contentAll, nextToken);
+    if (nextToken !== []) {
+      setNextToken(contentAll.nextToken);
+      console.log("nextToken changed", nextToken);
+    }
   };
+
+  // const ContentNextTokenQuery = async () => {
+  //   console.log("query nextToken", nextToken);
+  //   API.graphql({
+  //     query: profilePaginatingQuery,
+  //     variables: {
+  //       id: props.match.params.id,
+  //       limit: limit,
+  //       nextToken: nextToken,
+  //     },
+  //   })
+  //     .then((d) => {
+  //       // const { Contents, ...p } = d.data.getUserProfile;
+  //       console.log("ContentNextTokenQuery", d.data);
+  //       setContent(d.data.getUserProfile.Contents.items);
+  //       setContentAll(d.data.getUserProfile.Contents);
+  //     })
+  //     .catch((e) => console.log(e));
+  // };
 
   const getPrice = async (id) => {
     const myInit = {
@@ -166,17 +189,20 @@ export default function LandingPage({ ...props }) {
   useEffect(() => {
     getPrice(props.match.params.id);
     userQuery();
+    ContentNextTokenQuery();
   }, [props.match.params.id]);
 
-  useEffect(() => {
-    ContentNextTokenQuery();
-  }, [props.match.params.id, nextToken]);
+  // useEffect(() => {
+  //   ContentNextTokenQuery();
+  // }, [props.match.params.id, nextToken]);
 
   const handleContentMore = () => {
+    //   const { data2: { profilePaginatingQuery: { items: itemsPage2 } } } =
+    // await API.graphql({ query: profilePaginatingQuery, variables: { id: props.match.params.id, limit: 20, nextToken }});
     var newArr = [];
     var arrId = [];
     var temp = contentMore;
-    temp.push.apply(temp, content);
+    temp.push.apply(temp, contentAll.items);
     for (var item of temp) {
       if (arrId.indexOf(item["id"]) == -1) {
         arrId.push(item["id"]);
@@ -192,7 +218,7 @@ export default function LandingPage({ ...props }) {
   }
 
   console.log("contentAll", contentAll);
-  console.log("content", content);
+  // console.log("content", content);
   console.log("contentMore", contentMore);
 
   return (
