@@ -52,10 +52,27 @@ export default function LandingPage({ ...props }) {
   const history = useHistory();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
-  const [nextToken, setNextToken] = useState("");
   const [contentAll, setContentAll] = useState([]);
   const [contentMore, setContentMore] = useState([]);
   var limit = 1;
+  let nextToken = "";
+
+  const ContentNextTokenQuery = async (nextToken) => {
+    console.log("nextToken", nextToken);
+    const { data } = await API.graphql({
+      query: profilePaginatingQuery,
+      variables: {
+        id: props.match.params.id,
+        limit: 1,
+        nextToken: nextToken,
+      },
+    });
+    setContentAll(data.getUserProfile.Contents);
+    console.log("data:~~~~~", contentAll, nextToken);
+    if (nextToken !== []) {
+      nextToken = contentAll.nextToken;
+    }
+  };
 
   const userQuery = async () => {
     API.graphql(
@@ -70,50 +87,14 @@ export default function LandingPage({ ...props }) {
         setProfile(p);
         setFavorites(Favorites.items);
         setContent(Contents.items);
-        if (nextToken === []) {
-          setNextToken(Contents.nextToken);
-          console.log("userQuery", nextToken);
+        console.log("userQuery1", nextToken);
+        if (!nextToken) {
+          nextToken = Contents.nextToken;
+          ContentNextTokenQuery(nextToken);
         }
-        // setContentAll(Contents);
       })
       .catch((e) => console.log(e));
   };
-
-  const ContentNextTokenQuery = async () => {
-    const { data } = await API.graphql({
-      query: profilePaginatingQuery,
-      variables: {
-        id: props.match.params.id,
-        limit: 1,
-        nextToken: nextToken,
-      },
-    });
-    setContentAll(data.getUserProfile.Contents);
-    console.log("data:~~~~~", contentAll, nextToken);
-    if (nextToken !== []) {
-      setNextToken(contentAll.nextToken);
-      console.log("nextToken changed", nextToken);
-    }
-  };
-
-  // const ContentNextTokenQuery = async () => {
-  //   console.log("query nextToken", nextToken);
-  //   API.graphql({
-  //     query: profilePaginatingQuery,
-  //     variables: {
-  //       id: props.match.params.id,
-  //       limit: limit,
-  //       nextToken: nextToken,
-  //     },
-  //   })
-  //     .then((d) => {
-  //       // const { Contents, ...p } = d.data.getUserProfile;
-  //       console.log("ContentNextTokenQuery", d.data);
-  //       setContent(d.data.getUserProfile.Contents.items);
-  //       setContentAll(d.data.getUserProfile.Contents);
-  //     })
-  //     .catch((e) => console.log(e));
-  // };
 
   const getPrice = async (id) => {
     const myInit = {
@@ -189,7 +170,6 @@ export default function LandingPage({ ...props }) {
   useEffect(() => {
     getPrice(props.match.params.id);
     userQuery();
-    ContentNextTokenQuery();
   }, [props.match.params.id]);
 
   // useEffect(() => {
@@ -197,8 +177,6 @@ export default function LandingPage({ ...props }) {
   // }, [props.match.params.id, nextToken]);
 
   const handleContentMore = () => {
-    //   const { data2: { profilePaginatingQuery: { items: itemsPage2 } } } =
-    // await API.graphql({ query: profilePaginatingQuery, variables: { id: props.match.params.id, limit: 20, nextToken }});
     var newArr = [];
     var arrId = [];
     var temp = contentMore;
@@ -218,7 +196,6 @@ export default function LandingPage({ ...props }) {
   }
 
   console.log("contentAll", contentAll);
-  // console.log("content", content);
   console.log("contentMore", contentMore);
 
   return (
@@ -272,14 +249,13 @@ export default function LandingPage({ ...props }) {
               <TextLink
                 size="20px"
                 onClick={() => {
-                  setNextToken("");
                   handleContentMore();
                 }}
               >
                 More
               </TextLink>
             </GridTitleFlex>
-            {content.map((c, idx) => {
+            {contentMore.map((c, idx) => {
               let f = favorites.findIndex((e) => e.Content.id === content.id);
               return (
                 <ContentCard
