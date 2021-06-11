@@ -157,6 +157,7 @@ export const getUserSubscriptionTrainer = /* GraphQL */ `
       id
       StripeID
       ExpireDate
+      CancelAtPeriodEnd
       createdAt
       updatedAt
       Trainer {
@@ -220,6 +221,7 @@ export const listUserSubscriptionTrainers = /* GraphQL */ `
         id
         StripeID
         ExpireDate
+        CancelAtPeriodEnd
         createdAt
         updatedAt
         owner
@@ -281,6 +283,43 @@ export const listUserContents = /* GraphQL */ `
     $nextToken: String
   ) {
     listUserContents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        CreatorID
+        ContentName
+        Description
+        Title
+        Level
+        Length
+        IsDemo
+        TranscodeReady
+        ViewCount
+        Thumbnail
+        Preview
+        Segments
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const contentByName = /* GraphQL */ `
+  query ContentByName(
+    $ContentName: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserContentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    contentByName(
+      ContentName: $ContentName
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         CreatorID

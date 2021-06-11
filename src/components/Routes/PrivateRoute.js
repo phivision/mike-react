@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Route } from "react-router-dom";
+import { Route, useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Auth } from "aws-amplify";
 
 const PrivateRoute = ({ component: Component, user: user, ...rest }) => {
   const [auth, setAuth] = useState(false);
+  const history = useHistory();
 
   const isAuthenticated = () => {
     setAuth(false);

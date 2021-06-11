@@ -83,20 +83,6 @@ export const userProfileQuery = `query GetUserProfile ($id: ID!) {
                 }
               }
             }
-            Favorites {
-              items {
-                Content {
-                  id
-                  ContentName
-                  Title
-                  Thumbnail
-                  createdAt
-                  Description
-                  Segments
-                }
-                id
-              }
-            }
             id
             LastName
             FirstName
@@ -115,6 +101,7 @@ export const userFavoriteQuery = `query GetUserProfile ($id: ID!) {
                   Title
                   Thumbnail
                   createdAt
+                  owner
                   Description
                   Segments
                 }
@@ -152,21 +139,6 @@ export const trainerProfileQuery = `query GetUserProfile ($id: ID!) {
                   id
                 }
                 owner
-              }
-            }
-            Favorites {
-              items {
-                Content {
-                  id
-                  ContentName
-                  Title
-                  Thumbnail
-                  createdAt
-                  Description
-                  Segments
-                  owner
-                }
-                id
               }
             }
             id

@@ -1,52 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import { API, Storage } from "aws-amplify";
-import TableBody from "@material-ui/core/TableBody";
-import Card from "@material-ui/core/Card";
-import Avatar from "@material-ui/core/Avatar";
-import { Button, TableCell, Typography } from "@material-ui/core";
-import TableRow from "@material-ui/core/TableRow";
-
-const TrainerCard = ({ trainer, expire }) => {
-  const [imageURL, setImageURL] = useState();
-  const fullName = trainer.FirstName + " " + trainer.LastName;
-
-  async function getTrainerImage() {
-    return await Storage.get(trainer.UserImage);
-  }
-
-  useEffect(() => {
-    getTrainerImage().then((url) => {
-      setImageURL(url);
-    });
-  });
-  return (
-    <Card>
-      <Avatar alt={fullName} src={imageURL} />
-      <div>
-        <Typography variant="h6">{fullName}</Typography>
-        <Typography>Next billing date: {expire}</Typography>
-      </div>
-    </Card>
-  );
-};
-
-TrainerCard.propTypes = {
-  trainer: PropTypes.shape({
-    UserImage: PropTypes.string,
-    FirstName: PropTypes.string,
-    LastName: PropTypes.string,
-  }),
-  expire: PropTypes.string,
-};
+import { API } from "aws-amplify";
+import { Typography } from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
+import { CustomButton } from "../StyledComponents/StyledComponents";
+import { TrainerCard } from "../Card/TrainerCard";
 
 export default function ActiveSubscriptions(props) {
-  const deleteSubscription = async (e) => {
+  const deleteSubscription = async (stripeID, subscriptionID) => {
     const myInit = {
       headers: {},
       body: {
-        id: props.user,
-        subscriptionID: e.currentTarget.value,
+        stripeID: stripeID,
+        subscriptionID: subscriptionID,
       },
       response: true,
     };
@@ -63,34 +29,49 @@ export default function ActiveSubscriptions(props) {
   };
 
   return (
-    <TableBody>
-      <TableRow>
-        <TableCell rowSpan={props.trainers.length + 1} align="left">
-          <Typography variant="h3">Active Subscriptions</Typography>
-        </TableCell>
-        <TableCell colSpan={2} />
-      </TableRow>
-      {props.trainers.map((trainerData, idx) => (
-        <TableRow key={idx}>
-          <TableCell align="left">
-            <TrainerCard
-              trainer={trainerData.Trainer}
-              expire={trainerData.ExpireDate}
-            />
-          </TableCell>
-          <TableCell align="right">
-            <Button value={trainerData.StripeID} onClick={deleteSubscription}>
-              Cancel Subscription
-            </Button>
-          </TableCell>
-        </TableRow>
-      ))}
-    </TableBody>
+    <Grid
+      item
+      container
+      alignItems="center"
+      justify="space-between"
+      style={{ padding: "10px" }}
+    >
+      <Grid item xs>
+        <Typography variant="h3">Active Subscriptions</Typography>
+      </Grid>
+      <Grid item container xs justify="flex-end">
+        {props.trainers.map((trainerData, idx) => (
+          <Grid item container justify="space-around" key={idx}>
+            <Grid item align="left">
+              <TrainerCard
+                trainer={trainerData.Trainer}
+                expire={trainerData.ExpireDate}
+                CancelAtPeriodEnd={trainerData.CancelAtPeriodEnd}
+              />
+            </Grid>
+            <Grid item align="right">
+              {trainerData.CancelAtPeriodEnd ? (
+                <CustomButton variant="outlined" disabled>
+                  Canceled
+                </CustomButton>
+              ) : (
+                <CustomButton
+                  onClick={() =>
+                    deleteSubscription(trainerData.StripeID, trainerData.id)
+                  }
+                >
+                  Cancel Subscription
+                </CustomButton>
+              )}
+            </Grid>
+          </Grid>
+        ))}
+      </Grid>
+    </Grid>
   );
 }
 
 ActiveSubscriptions.propTypes = {
-  user: PropTypes.string.isRequired,
   trainers: PropTypes.arrayOf(
     PropTypes.shape({
       Trainer: PropTypes.shape({
@@ -100,6 +81,8 @@ ActiveSubscriptions.propTypes = {
       }),
       ExpireDate: PropTypes.string,
       StripeID: PropTypes.string,
+      id: PropTypes.string,
+      CancelAtPeriodEnd: PropTypes.bool,
     })
   ),
 };

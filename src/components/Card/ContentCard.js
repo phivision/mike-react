@@ -21,7 +21,7 @@ import {
   CardContentImage,
   CardContentDate,
   CardContentAvatar,
-} from "../StyledComponets/StyledComponets";
+} from "../StyledComponents/StyledComponents";
 
 export default function ContentCard(props) {
   const [img, setImg] = useState(empty);
@@ -91,7 +91,7 @@ export default function ContentCard(props) {
     <CardContent>
       <GridContainer>
         <GridItem xs={headerCol}>
-          <Typography variant="h3">{props.post.Description}</Typography>
+          <Typography variant="body1">{props.post.Description}</Typography>
           {props.post.ContentName ? (
             <ImageButton url={img} onClick={handleOpenViewer} width="100%" />
           ) : (

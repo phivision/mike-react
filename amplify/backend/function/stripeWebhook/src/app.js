@@ -65,7 +65,7 @@ app.post(
     ) => {
       const i = v5(trainerID + userID, UUID);
       const time = new Date();
-      const expire = new Date(expireDate).toISOString();
+      const expire = new Date(expireDate * 1000).toISOString();
       const exp = expire.slice(0, 10);
       const params = {
         TableName: process.env.SUB_TABLE_NAME,
@@ -73,6 +73,7 @@ app.post(
           id: i,
           __typename: "UserSubscriptionTrainer",
           createdAt: time.toISOString(),
+          CancelAtPeriodEnd: false,
           userSubscriptionTrainerTrainerId: trainerID,
           userSubscriptionTrainerUserId: userID,
           StripeID: subscriptionID,

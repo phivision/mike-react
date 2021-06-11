@@ -18,7 +18,7 @@ import {
   UserFeedBanner,
   TextLink,
   GridTitleFlex,
-} from "../../components/StyledComponets/StyledComponets";
+} from "../../components/StyledComponents/StyledComponents";
 import DataPagination from "components/DataPagination/DataPagination";
 import {
   profilePaginatingQuery,
@@ -56,6 +56,7 @@ export default function LandingPage({ ...props }) {
   const [contentMore, setContentMore] = useState([]);
   var limit = 1;
   let nextToken = "";
+  const [subscribed, setSubscribed] = useState(false);
 
   const ContentNextTokenQuery = async (nextToken) => {
     console.log("nextToken", nextToken);
@@ -125,15 +126,17 @@ export default function LandingPage({ ...props }) {
       response: true,
     };
 
-    API.post("stripeAPI", "/stripe/api/user/create/subscription", myInit).then(
-      (res) => {
+    API.post("stripeAPI", "/stripe/api/user/create/subscription", myInit)
+      .then((res) => {
         if (res.error) {
           checkoutError(res.error);
         } else {
           checkoutSuccess();
         }
-      }
-    );
+      })
+      .catch((e) => {
+        checkoutError(e);
+      });
   };
 
   const handleSnackbarClose = () => {
@@ -167,6 +170,32 @@ export default function LandingPage({ ...props }) {
     setOpenCheckout(false);
   };
 
+  const checkSubscription = (userID, trainerID) => {
+    const query = /* GraphQL */ `
+      query GetUserProfile($id: ID!) {
+        getUserProfile(id: $id) {
+          Subscriptions {
+            items {
+              Trainer {
+                id
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    API.graphql(graphqlOperation(query, { id: userID }))
+      .then((d) => {
+        d.data.getUserProfile.Subscriptions.items.forEach((sub) => {
+          if (sub.Trainer.id === trainerID) {
+            setSubscribed(true);
+          }
+        });
+      })
+      .catch(console.log);
+  };
+
   useEffect(() => {
     getPrice(props.match.params.id);
     userQuery();
@@ -197,6 +226,11 @@ export default function LandingPage({ ...props }) {
 
   console.log("contentAll", contentAll);
   console.log("contentMore", contentMore);
+  useEffect(() => {
+    if (props.user.id) {
+      checkSubscription(props.user.id, props.match.params.id);
+    }
+  }, [props.user.id]);
 
   return (
     <>
@@ -237,9 +271,15 @@ export default function LandingPage({ ...props }) {
               </GridItem>
               <GridItem variant="body1">{profile.Description}</GridItem>
               <GridItem>
-                <CustomButton onClick={onClick}>
-                  {"Join for $" + price + " per month"}
-                </CustomButton>
+                {subscribed ? (
+                  <CustomButton variant="outlined" disabled>
+                    Already Subscribed
+                  </CustomButton>
+                ) : (
+                  <CustomButton variant="contained" onClick={onClick}>
+                    {"Subscribe for $" + price + " per month"}
+                  </CustomButton>
+                )}
               </GridItem>
             </ProfileBox>
           </GridContainer>
@@ -270,7 +310,7 @@ export default function LandingPage({ ...props }) {
           </GridContainer>
           <GridContainer item direction="column" xs={12} sm={4}>
             <GridItem>
-              <Typography variant="h1">Favorite Workouts</Typography>
+              <Typography variant="h2">Favorite Workouts</Typography>
             </GridItem>
             <GridItem>
               {(rowsPerPage > 0
@@ -311,6 +351,7 @@ export default function LandingPage({ ...props }) {
             user={props.user}
             paymentMethodCallback={createSubscription}
             buttonTitle="Subscribe"
+            checkExistingPaymentMethod={true}
           />
         </Dialog>
       </Container>

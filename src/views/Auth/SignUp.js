@@ -1,18 +1,17 @@
 import React, { useState } from "react";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
 import PropTypes from "prop-types";
-import authStyles from "../../assets/jss/material-dashboard-react/views/authStyle";
 import SignUpForm from "../../components/Authentication/SignUpForm";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import { Snackbar } from "@material-ui/core";
+import {
+  CustomContainer,
+  TextStyle,
+} from "../../components/StyledComponents/StyledComponents";
 
 export default function SignUp({ ...props }) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
-  const classes = authStyles();
 
   const handleOpen = (e) => {
     setError(e);
@@ -25,33 +24,30 @@ export default function SignUp({ ...props }) {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Snackbar
-          open={open}
-          autoHideDuration={6000}
-          onClose={handleClose}
-          message={error}
-          action={
-            <React.Fragment>
-              <IconButton
-                size="small"
-                aria-label="close"
-                color="inherit"
-                onClick={handleClose}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            </React.Fragment>
-          }
-        />
-        <Typography component="h1" variant="h5">
-          Sign up
-        </Typography>
+    <>
+      <CustomContainer maxWidth="sm">
+        <TextStyle variant="h2">Sign up</TextStyle>
         <SignUpForm openError={handleOpen} {...props} />
-      </div>
-    </Container>
+      </CustomContainer>
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message={error}
+        action={
+          <>
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={handleClose}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </>
+        }
+      />
+    </>
   );
 }
 

@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Button, Dialog, Snackbar, Typography } from "@material-ui/core";
-import ChangePassword from "../../components/Settings/ChangePassword";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
+import { Dialog, Snackbar } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 // local variables
 import { userRoles } from "variables/userRoles";
@@ -19,8 +13,14 @@ import IconButton from "@material-ui/core/IconButton";
 import Checkout from "../../components/Checkout/Checkout";
 import CloseIcon from "@material-ui/icons/Close";
 import TrainerPrice from "../../components/Settings/TrainerPrice";
-import { SettingTableContainer } from "../../components/StyledComponets/StyledComponets";
+import {
+  CustomButton,
+  CustomContainer,
+  TextStyle,
+} from "../../components/StyledComponents/StyledComponents";
 import { useHistory } from "react-router-dom";
+import Grid from "@material-ui/core/Grid";
+import Divider from "@material-ui/core/Divider";
 
 const getUserSettings = /* GraphQL */ `
   query GetUserProfile($id: ID!) {
@@ -36,6 +36,8 @@ const getUserSettings = /* GraphQL */ `
           }
           ExpireDate
           StripeID
+          id
+          CancelAtPeriodEnd
         }
       }
     }
@@ -48,41 +50,30 @@ export default function Settings(props) {
   const [trainers, setTrainers] = useState([]);
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [isVerified, setVerified] = useState(true);
-  const [openDialog, setOpenDialog] = useState(false);
   const [openCheckout, setOpenCheckout] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [prices, setPrices] = useState([]);
 
   const history = useHistory();
+  let mounted = true;
 
   const handleOpenPassword = () => {
-    setOpenDialog(true);
-  };
-
-  const handleClosePassword = () => {
-    setOpenDialog(false);
+    history.push({ pathname: "/reset", state: { next: window.location.href } });
   };
 
   const userRole = props.user.role;
 
-  const PasswordDialog = () => {
-    return (
-      <Dialog open={openDialog} onClose={handleClosePassword}>
-        <div>
-          <ChangePassword />
-        </div>
-      </Dialog>
-    );
+  const fetchSettings = () => {
+    API.graphql(graphqlOperation(getUserSettings, { id: props.user.id }))
+      .then((userSettingData) => {
+        setEmail(userSettingData.data.getUserProfile.Email);
+        if (userRole === userRoles.STUDENT) {
+          setTrainers(userSettingData.data.getUserProfile.Subscriptions.items);
+        }
+      })
+      .catch(console.log);
   };
-
-  async function fetchSettings() {
-    const userSettingData = await API.graphql(
-      graphqlOperation(getUserSettings, { id: props.user.id })
-    );
-    setEmail(userSettingData.data.getUserProfile.Email);
-    return userSettingData.data.getUserProfile.Subscriptions.items;
-  }
 
   const fetchDefaultPaymentMethod = () => {
     if (props.user.role === userRoles.STUDENT) {
@@ -93,7 +84,7 @@ export default function Settings(props) {
         },
         response: true,
       };
-
+      console.log("Requesting: " + props.user.id);
       API.post("stripeAPI", "/stripe/api/user/get/customer", myInit)
         .then((d) => {
           setDefaultPaymentMethod(
@@ -184,7 +175,9 @@ export default function Settings(props) {
 
     API.post("stripeAPI", "/stripe/api/user/get/payment", myInit)
       .then((d) => {
-        setPaymentMethods(d.data.data);
+        if (mounted) {
+          setPaymentMethods(d.data.data);
+        }
       })
       .catch(console.log);
   };
@@ -328,129 +321,169 @@ export default function Settings(props) {
   }, [defaultPaymentMethod, paymentMethods.length]);
 
   useEffect(() => {
-    checkVerification();
-    getPrices();
-    fetchSettings().then((subs) => {
-      if (userRole === userRoles.STUDENT) {
-        setTrainers(subs);
+    if (props.user.id) {
+      if (userRole === userRoles.TRAINER) {
+        checkVerification();
+        getPrices();
       }
-    });
+      fetchSettings();
+    }
   }, [props.user.id, setPrices, setVerified, setTrainers]);
 
   useEffect(() => {
-    if (props.user.role === userRoles.STUDENT) {
-      fetchDefaultPaymentMethod();
-      fetchPaymentMethod();
+    if (props.user.id) {
+      if (props.user.role === userRoles.STUDENT) {
+        fetchDefaultPaymentMethod();
+        fetchPaymentMethod();
+      }
     }
+    return () => {
+      mounted = false;
+    };
   }, [props.user.id, setDefaultPaymentMethod, setPaymentMethods]);
 
   return (
-    <SettingTableContainer>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        message={snackbarMessage}
-        action={
-          <React.Fragment>
-            <IconButton
-              size="small"
-              aria-label="close"
-              color="inherit"
-              onClick={handleSnackbarClose}
+    <>
+      <CustomContainer>
+        <Grid direction="column" container>
+          <Grid
+            item
+            container
+            direction="row"
+            alignItems="center"
+            justify="space-between"
+            style={{ padding: "10px" }}
+          >
+            <Grid item xs>
+              <TextStyle variant="h2">Account</TextStyle>
+            </Grid>
+            <Grid
+              item
+              xs
+              container
+              direction="row"
+              alignItems="center"
+              justify="flex-end"
             >
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </React.Fragment>
-        }
-      />
-      <Table aria-label="spanning table">
-        <TableHead>
-          <TableRow>
-            <TableCell align="left" rowSpan={3}>
-              <Typography variant="h1">Account</Typography>
-            </TableCell>
-            <TableCell align="left">
-              <Typography variant="body1">{email}</Typography>
-            </TableCell>
-            <TableCell align="right">
-              <Button onClick={signOut}>Sign out</Button>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-            <TableCell rowSpan={4}>
-              <Typography variant="h3">
+              <Grid item>
+                <TextStyle variant="body1">{email}</TextStyle>
+              </Grid>
+              <Grid item>
+                <CustomButton onClick={signOut}>Sign out</CustomButton>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Divider light />
+          <Grid
+            item
+            container
+            direction="row"
+            alignItems="center"
+            justify="space-between"
+            style={{ padding: "10px" }}
+          >
+            <Grid item xs>
+              <TextStyle variant="h3">
                 {userRole === userRoles.STUDENT
                   ? "Membership and Billing"
                   : "Account and Billing"}
-              </Typography>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell align="left">Password: ********</TableCell>
-            <TableCell align="right">
-              <Button onClick={handleOpenPassword}>Change password</Button>
-            </TableCell>
-          </TableRow>
-          {userRole === userRoles.STUDENT ? (
-            <TableRow>
-              <TableCell align="left">
-                {paymentMethods.map((p, idx) => {
-                  let isDefault = p.id === defaultPaymentMethod;
-                  return (
-                    <PaymentMethod
-                      isDefault={isDefault}
-                      PaymentMethod={p}
-                      deleteCallback={deletePaymentMethod}
-                      defaultCallback={makeDefaultPaymentMethod}
-                      key={idx}
-                    />
-                  );
-                })}
-                <IconButton onClick={handleOpenCheckout}>
-                  <AddIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ) : (
-            <TableRow>
-              <TableCell>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  onClick={() => {
-                    isVerified ? login() : onboard();
-                  }}
+              </TextStyle>
+            </Grid>
+            <Grid item container xs direction="column">
+              <Grid
+                item
+                container
+                xs
+                direction="row"
+                justify="space-between"
+                alignItems="center"
+                style={{ padding: "10px" }}
+              >
+                <Grid item>Password: ********</Grid>
+                <Grid item>
+                  <CustomButton onClick={handleOpenPassword}>
+                    Change password
+                  </CustomButton>
+                </Grid>
+              </Grid>
+              <Divider light />
+              {userRole === userRoles.STUDENT ? (
+                <Grid
+                  item
+                  container
+                  direction="column"
+                  style={{ padding: "10px" }}
                 >
-                  {isVerified
-                    ? "Manage Billing on Stripe"
-                    : "Verify Account on Stripe"}
-                </Button>
-              </TableCell>
-            </TableRow>
+                  {paymentMethods.map((p, idx) => {
+                    let isDefault = p.id === defaultPaymentMethod;
+                    return (
+                      <Grid item key={idx}>
+                        <PaymentMethod
+                          isDefault={isDefault}
+                          PaymentMethod={p}
+                          deleteCallback={deletePaymentMethod}
+                          defaultCallback={makeDefaultPaymentMethod}
+                          key={idx}
+                        />
+                      </Grid>
+                    );
+                  })}
+                  <Grid item>
+                    <IconButton onClick={handleOpenCheckout}>
+                      <AddIcon />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              ) : (
+                <Grid item style={{ padding: "10px" }}>
+                  <CustomButton
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    onClick={() => {
+                      isVerified ? login() : onboard();
+                    }}
+                  >
+                    {isVerified
+                      ? "Manage Billing on Stripe"
+                      : "Verify Account on Stripe"}
+                  </CustomButton>
+                </Grid>
+              )}
+            </Grid>
+          </Grid>
+          <Divider light />
+          {userRole === userRoles.STUDENT ? (
+            <ActiveSubscriptions trainers={trainers} />
+          ) : (
+            isVerified && (
+              <Grid
+                item
+                container
+                direction="row"
+                alignItems="center"
+                justify="space-between"
+                style={{ padding: "10px" }}
+              >
+                <Grid item xs>
+                  <TextStyle variant="h3">Pricing Tiers</TextStyle>
+                </Grid>
+                <Grid item xs container direction="column">
+                  {prices.map((p, idx) => (
+                    <Grid item key={idx}>
+                      <TrainerPrice
+                        key={idx}
+                        price={p.unit_amount}
+                        changePrice={changePrice}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Grid>
+            )
           )}
-        </TableBody>
-        {userRole === userRoles.STUDENT ? (
-          <ActiveSubscriptions trainers={trainers} user={props.user.id} />
-        ) : (
-          <TableRow>
-            <TableCell align="left">
-              <Typography variant="h3">Pricing Tiers</Typography>
-            </TableCell>
-            {prices.map((p, idx) => (
-              <TrainerPrice
-                key={idx}
-                price={p.unit_amount}
-                changePrice={changePrice}
-              />
-            ))}
-          </TableRow>
-        )}
-      </Table>
-      <PasswordDialog />
+        </Grid>
+      </CustomContainer>
       <Dialog
         onClose={handleCloseCheckout}
         fullWidth
@@ -461,9 +494,29 @@ export default function Settings(props) {
           errorCallback={checkoutError}
           paymentMethodCallback={addPaymentMethod}
           buttonTitle="Add"
+          user={props.user}
+          checkExistingPaymentMethod={false}
         />
       </Dialog>
-    </SettingTableContainer>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+        action={
+          <>
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={handleSnackbarClose}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </>
+        }
+      />
+    </>
   );
 }
 

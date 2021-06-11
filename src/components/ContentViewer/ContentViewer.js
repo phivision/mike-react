@@ -7,7 +7,7 @@ import {
   GridContainer,
   GridItem,
   CardStyled,
-} from "components/StyledComponets/StyledComponets";
+} from "components/StyledComponents/StyledComponents";
 
 export default function ContentViewer({ post }) {
   const segments = post.Segments ? post.Segments : JSON.stringify([]);

@@ -5,7 +5,6 @@ import { Hub } from "aws-amplify";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { BrowserRouter, Switch, Redirect } from "react-router-dom";
-import "assets/css/material-dashboard-react.css?v=1.9.0";
 import theme from "./theme.js";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import Header from "./components/Header/Header";
@@ -15,11 +14,12 @@ import PrivateRoute from "./components/Routes/PrivateRoute";
 import PublicRoute from "./components/Routes/PublicRoute";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import UploadDialog from "./views/ContentUpload/UploadDialog";
-import { FlexContain } from "components/StyledComponets/StyledComponets";
+import { FlexContain } from "./components/StyledComponents/StyledComponents";
+import { getStripeKey } from "./utilities/StripeTools";
 
-const stripePromise = loadStripe(
-  "pk_test_51IWoNlAXegvVyt5sEGxoPrV9MfyryI7OR5vKuY4bLXUgqWIE2Dv0TmtY5R9BVHpjhg3qssoAF3z5GhtkgHrc8Mc400VDRuU2yX"
-);
+const stripePublishableKey = getStripeKey();
+
+const stripePromise = loadStripe(stripePublishableKey);
 
 const initialUser = { id: null, role: "unknown" };
 
