@@ -21,8 +21,8 @@ import {
 } from "../../components/StyledComponents/StyledComponents";
 import DataPagination from "components/DataPagination/DataPagination";
 import {
-  profilePaginatingQuery,
   profileLimitQuery,
+  contentPaginatingQuery,
 } from "../../graphql/UserFeed";
 
 // import initial profile
@@ -52,27 +52,22 @@ export default function LandingPage({ ...props }) {
   const history = useHistory();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
+  const [subscribed, setSubscribed] = useState(false);
   const [contentAll, setContentAll] = useState([]);
   const [contentMore, setContentMore] = useState([]);
-  var limit = 1;
+  const limit = 2;
   let nextToken = "";
-  const [subscribed, setSubscribed] = useState(false);
 
   const ContentNextTokenQuery = async (nextToken) => {
-    console.log("nextToken", nextToken);
     const { data } = await API.graphql({
-      query: profilePaginatingQuery,
+      query: contentPaginatingQuery,
       variables: {
         id: props.match.params.id,
-        limit: 1,
+        limit: limit,
         nextToken: nextToken,
       },
     });
     setContentAll(data.getUserProfile.Contents);
-    console.log("data:~~~~~", contentAll, nextToken);
-    if (nextToken !== []) {
-      nextToken = contentAll.nextToken;
-    }
   };
 
   const userQuery = async () => {
@@ -84,11 +79,9 @@ export default function LandingPage({ ...props }) {
     )
       .then((d) => {
         const { Contents, Favorites, ...p } = d.data.getUserProfile;
-        console.log(d.data.getUserProfile);
         setProfile(p);
         setFavorites(Favorites.items);
         setContent(Contents.items);
-        console.log("userQuery1", nextToken);
         if (!nextToken) {
           nextToken = Contents.nextToken;
           ContentNextTokenQuery(nextToken);
@@ -201,11 +194,9 @@ export default function LandingPage({ ...props }) {
     userQuery();
   }, [props.match.params.id]);
 
-  // useEffect(() => {
-  //   ContentNextTokenQuery();
-  // }, [props.match.params.id, nextToken]);
-
   const handleContentMore = () => {
+    nextToken = contentAll.nextToken;
+    ContentNextTokenQuery(nextToken);
     var newArr = [];
     var arrId = [];
     var temp = contentMore;
@@ -216,7 +207,6 @@ export default function LandingPage({ ...props }) {
         newArr.push(item);
       }
     }
-    console.log("newArr", newArr);
     setContentMore(newArr);
   };
 
@@ -224,8 +214,6 @@ export default function LandingPage({ ...props }) {
     setContentMore(content);
   }
 
-  console.log("contentAll", contentAll);
-  console.log("contentMore", contentMore);
   useEffect(() => {
     if (props.user.id) {
       checkSubscription(props.user.id, props.match.params.id);
@@ -285,7 +273,7 @@ export default function LandingPage({ ...props }) {
           </GridContainer>
           <GridContainer item direction="column" xs={12} sm={4}>
             <GridTitleFlex>
-              <Typography variant="h1">Feed</Typography>
+              <Typography variant="h2">Feed</Typography>
               <TextLink
                 size="20px"
                 onClick={() => {
