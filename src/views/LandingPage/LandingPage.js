@@ -16,7 +16,7 @@ import {
   CustomButton,
   ProfileBox,
   UserFeedBanner,
-  TextLink,
+  TextA,
   GridTitleFlex,
 } from "../../components/StyledComponents/StyledComponents";
 import DataPagination from "components/DataPagination/DataPagination";
@@ -274,14 +274,14 @@ export default function LandingPage({ ...props }) {
           <GridContainer item direction="column" xs={12} sm={4}>
             <GridTitleFlex>
               <Typography variant="h2">Feed</Typography>
-              <TextLink
+              <TextA
                 size="20px"
                 onClick={() => {
                   handleContentMore();
                 }}
               >
                 More
-              </TextLink>
+              </TextA>
             </GridTitleFlex>
             {contentMore.map((c, idx) => {
               let f = favorites.findIndex((e) => e.Content.id === content.id);

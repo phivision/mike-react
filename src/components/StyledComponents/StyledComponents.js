@@ -311,9 +311,13 @@ export const DialogBody = styled(DialogContent)`
   padding: 30px;
 `;
 
-export const TextLink = styled.a`
+export const TextA = styled.a`
   cursor: pointer;
   font-size: ${(props) => props.size};
+  :hover {
+    color: #7265e3;
+    font-weight: bold;
+  }
 `;
 
 export const GridTitleFlex = styled(Grid).attrs({
@@ -325,6 +329,11 @@ export const GridTitleFlex = styled(Grid).attrs({
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+`;
+
+export const TextLink = styled(Link)`
+  padding: 10px;
+  text-decoration: none;
 `;
 
 export const TextExtLink = styled(ExternalLink)`

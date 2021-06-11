@@ -17,7 +17,7 @@ import {
   CustomButton,
   ProfileBox,
   UserFeedBanner,
-  TextLink,
+  TextA,
   GridTitleFlex,
 } from "../../components/StyledComponents/StyledComponents";
 import {
@@ -27,7 +27,7 @@ import {
   userFavoriteQuery,
   userFavoriteIdQuery,
   contentPaginatingQuery,
-  profileLimitQuery,
+  userProfileQuery,
 } from "../../graphql/UserFeed";
 import { onContentByCreatorID } from "../../graphql/subscriptions";
 import DataPagination from "components/DataPagination/DataPagination";
@@ -169,7 +169,7 @@ export default function UserFeed({ ...props }) {
 
   const userQuery = async () => {
     const d = await API.graphql(
-      graphqlOperation(profileLimitQuery, { id: props.user.id, limit: limit })
+      graphqlOperation(userProfileQuery, { id: props.user.id, limit: limit })
     ).catch(console.log);
     const { Subscriptions: SubsData, ...p } = d.data.getUserProfile;
     setProfile(p);
@@ -425,14 +425,14 @@ export default function UserFeed({ ...props }) {
           <GridContainer item direction="column" xs={12} sm={4}>
             <GridTitleFlex>
               <Typography variant="h2">Feed</Typography>
-              <TextLink
+              <TextA
                 size="20px"
                 onClick={() => {
                   handleContentMore();
                 }}
               >
                 More
-              </TextLink>
+              </TextA>
             </GridTitleFlex>
             {contentMore.map((c, idx) => {
               let f = favorites.findIndex((e) => e.Content.id === c.id);
