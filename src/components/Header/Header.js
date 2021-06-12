@@ -66,12 +66,12 @@ export default function Header(props) {
         {isMobileMenuOpen ? (
           <MenuItem>
             <Nav to="/signup/trainer">
-              <AttriTitle>Coach on Mike</AttriTitle>
+              <AttriTitle>Coach on Motion</AttriTitle>
             </Nav>
           </MenuItem>
         ) : (
           <Nav to="/signup/trainer">
-            <CustomButton variant="contained">Coach on Mike</CustomButton>
+            <CustomButton variant="contained">Coach on Motion</CustomButton>
           </Nav>
         )}
       </>

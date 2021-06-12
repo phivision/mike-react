@@ -18,6 +18,7 @@
   FirstName: String
   UserRole: String!
   Weight: Float
+  IsVerified: Boolean
   Description: String
   Biography: String
   """
