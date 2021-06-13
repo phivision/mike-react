@@ -31,9 +31,6 @@ const initialProfileState = {
   Weight: null,
   Description: null,
 };
-//TODO: Add payment functionality
-//TODO: Add cards for payment tiers
-//TODO: Add images + description, nicely formatted
 
 export default function LandingPage({ ...props }) {
   const [profile, setProfile] = useState(initialProfileState);
@@ -47,6 +44,7 @@ export default function LandingPage({ ...props }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
   const [subscribed, setSubscribed] = useState(false);
+  const [isVerified, setVerified] = useState(false);
 
   async function userQuery() {
     const query = /* GraphQL */ `
@@ -60,6 +58,7 @@ export default function LandingPage({ ...props }) {
           FirstName
           Weight
           Description
+          IsVerified
           Favorites {
             items {
               id
@@ -92,8 +91,9 @@ export default function LandingPage({ ...props }) {
     `;
     API.graphql(graphqlOperation(query, { id: props.match.params.id }))
       .then((d) => {
-        const { Contents, Favorites, ...p } = d.data.getUserProfile;
+        const { Contents, IsVerified, Favorites, ...p } = d.data.getUserProfile;
         setProfile(p);
+        setVerified(IsVerified);
         setFavorites(Favorites.items);
         setContent(Contents.items);
       })
@@ -249,14 +249,18 @@ export default function LandingPage({ ...props }) {
               </GridItem>
               <GridItem variant="body1">{profile.Description}</GridItem>
               <GridItem>
-                {subscribed ? (
-                  <CustomButton variant="outlined" disabled>
-                    Already Subscribed
-                  </CustomButton>
-                ) : (
-                  <CustomButton variant="contained" onClick={onClick}>
-                    {"Subscribe for $" + price + " per month"}
-                  </CustomButton>
+                {isVerified && (
+                  <>
+                    {subscribed ? (
+                      <CustomButton variant="outlined" disabled>
+                        Already Subscribed
+                      </CustomButton>
+                    ) : (
+                      <CustomButton variant="contained" onClick={onClick}>
+                        {"Subscribe for $" + price + " per month"}
+                      </CustomButton>
+                    )}
+                  </>
                 )}
               </GridItem>
             </ProfileBox>
