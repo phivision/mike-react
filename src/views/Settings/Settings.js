@@ -27,6 +27,7 @@ const getUserSettings = /* GraphQL */ `
     getUserProfile(id: $id) {
       Email
       StripeID
+      IsVerified
       Subscriptions {
         items {
           Trainer {
@@ -70,6 +71,9 @@ export default function Settings(props) {
         setEmail(userSettingData.data.getUserProfile.Email);
         if (userRole === userRoles.STUDENT) {
           setTrainers(userSettingData.data.getUserProfile.Subscriptions.items);
+        }
+        if (userRole === userRoles.TRAINER) {
+          setVerified(userSettingData.data.getUserProfile.IsVerified);
         }
       })
       .catch(console.log);
@@ -244,22 +248,6 @@ export default function Settings(props) {
       });
   };
 
-  const checkVerification = () => {
-    const myInit = {
-      headers: {}, // AWS-IAM authorization if using empty headers
-      body: {
-        id: props.user.id,
-      },
-      response: true,
-    };
-
-    API.post("stripeAPI", "/stripe/api/trainer/get/account", myInit)
-      .then((d) => {
-        setVerified(d.data.details_submitted);
-      })
-      .catch(console.log);
-  };
-
   const getPrices = () => {
     const myInit = {
       headers: {}, // AWS-IAM authorization if using empty headers
@@ -323,12 +311,11 @@ export default function Settings(props) {
   useEffect(() => {
     if (props.user.id) {
       if (userRole === userRoles.TRAINER) {
-        checkVerification();
         getPrices();
       }
       fetchSettings();
     }
-  }, [props.user.id, setPrices, setVerified, setTrainers]);
+  }, [props.user.id, setPrices, setTrainers]);
 
   useEffect(() => {
     if (props.user.id) {
