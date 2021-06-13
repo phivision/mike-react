@@ -18,6 +18,7 @@ export const getUserProfile = /* GraphQL */ `
       FirstName
       UserRole
       Weight
+      IsVerified
       Description
       Biography
       createdAt
@@ -60,6 +61,7 @@ export const listUserProfiles = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        IsVerified
         Description
         Biography
         createdAt
@@ -100,6 +102,7 @@ export const profilesByStripeID = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        IsVerified
         Description
         Biography
         createdAt
@@ -140,6 +143,7 @@ export const searchUserProfiles = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        IsVerified
         Description
         Biography
         createdAt
@@ -175,6 +179,7 @@ export const getUserSubscriptionTrainer = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        IsVerified
         Description
         Biography
         createdAt
@@ -196,6 +201,7 @@ export const getUserSubscriptionTrainer = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        IsVerified
         Description
         Biography
         createdAt
@@ -263,6 +269,7 @@ export const getUserContent = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        IsVerified
         Description
         Biography
         createdAt

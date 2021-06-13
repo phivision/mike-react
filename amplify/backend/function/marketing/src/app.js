@@ -6,6 +6,14 @@ or in the "license" file accompanying this file. This file is distributed on an 
 See the License for the specific language governing permissions and limitations under the License.
 */
 
+const mailchimp = require("@mailchimp/mailchimp_marketing");
+mailchimp.setConfig({
+  apiKey: "5497a4533a2814a5eaca674911a805b4-us6",
+  server: "us6",
+});
+
+const trainerCTA = "513c9c2876";
+
 var express = require("express");
 var bodyParser = require("body-parser");
 var awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
@@ -23,8 +31,22 @@ app.use(function (req, res, next) {
 });
 
 app.post("/marketing", function (req, res) {
-  console.log(req.body.email);
-  res.status(200).send();
+  const subscribe = async () => {
+    const query = {
+      email_address: req.body.email,
+      status: "subscribed",
+    };
+
+    const response = await mailchimp.lists.addListMember(trainerCTA, query);
+
+    console.log(
+      `Successfully added contact as an audience member. The contact's id is ${response.id}.`
+    );
+  };
+
+  subscribe().then(() => {
+    res.status(200).send();
+  });
 });
 
 app.post("/*", function (req, res) {

@@ -21,6 +21,7 @@ export const createUserProfile = /* GraphQL */ `
       FirstName
       UserRole
       Weight
+      IsVerified
       Description
       Biography
       createdAt
@@ -61,6 +62,7 @@ export const updateUserProfile = /* GraphQL */ `
       FirstName
       UserRole
       Weight
+      IsVerified
       Description
       Biography
       createdAt
@@ -101,6 +103,7 @@ export const deleteUserProfile = /* GraphQL */ `
       FirstName
       UserRole
       Weight
+      IsVerified
       Description
       Biography
       createdAt
@@ -148,6 +151,7 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        IsVerified
         Description
         Biography
         createdAt
@@ -169,6 +173,7 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        IsVerified
         Description
         Biography
         createdAt
@@ -206,6 +211,7 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        IsVerified
         Description
         Biography
         createdAt
@@ -227,6 +233,7 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        IsVerified
         Description
         Biography
         createdAt
@@ -264,6 +271,7 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        IsVerified
         Description
         Biography
         createdAt
@@ -285,6 +293,7 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        IsVerified
         Description
         Biography
         createdAt
@@ -319,6 +328,7 @@ export const createUserFavoriteContent = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        IsVerified
         Description
         Biography
         createdAt
@@ -371,6 +381,7 @@ export const updateUserFavoriteContent = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        IsVerified
         Description
         Biography
         createdAt
@@ -423,6 +434,7 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        IsVerified
         Description
         Biography
         createdAt
@@ -487,6 +499,7 @@ export const createUserContent = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        IsVerified
         Description
         Biography
         createdAt
@@ -536,6 +549,7 @@ export const updateUserContent = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        IsVerified
         Description
         Biography
         createdAt
@@ -585,6 +599,7 @@ export const deleteUserContent = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        IsVerified
         Description
         Biography
         createdAt

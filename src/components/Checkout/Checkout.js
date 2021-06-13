@@ -80,7 +80,7 @@ export default function Checkout({ ...props }) {
       fetchPaymentMethod();
       fetchDefaultPaymentMethod();
     }
-  }, [props]);
+  }, [props.checkExistingPaymentMethod]);
 
   return (
     <>

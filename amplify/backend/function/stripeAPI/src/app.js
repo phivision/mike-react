@@ -342,8 +342,7 @@ app.post("/stripe/api/user/create/subscription", function (req, res) {
   };
 
   const createSubscription = async (customerID, priceID, trainerID) => {
-    // Create the subscription
-    return await stripe.subscriptions.create({
+    const req = {
       customer: customerID,
       items: [{ price: priceID }],
       expand: ["latest_invoice.payment_intent"],
@@ -351,7 +350,11 @@ app.post("/stripe/api/user/create/subscription", function (req, res) {
       transfer_data: {
         destination: trainerID,
       },
-    });
+    };
+
+    console.log(req);
+    // Create the subscription
+    return await stripe.subscriptions.create(req);
   };
 
   const update = async () => {
@@ -361,6 +364,7 @@ app.post("/stripe/api/user/create/subscription", function (req, res) {
 
     await setPayment(customer.StripeID);
     await setInvoice(customer.StripeID);
+
     return await createSubscription(
       customer.StripeID,
       price.id,
