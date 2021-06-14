@@ -16,8 +16,14 @@ import {
   CustomButton,
   ProfileBox,
   UserFeedBanner,
+  TextA,
+  GridTitleFlex,
 } from "../../components/StyledComponents/StyledComponents";
 import DataPagination from "components/DataPagination/DataPagination";
+import {
+  profileLimitQuery,
+  contentPaginatingQuery,
+} from "../../graphql/UserFeed";
 
 // import initial profile
 const initialProfileState = {
@@ -44,61 +50,44 @@ export default function LandingPage({ ...props }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
   const [subscribed, setSubscribed] = useState(false);
+  const [contentAll, setContentAll] = useState([]);
+  const [contentMore, setContentMore] = useState([]);
+  const limit = 2;
+  let nextToken = "";
   const [isVerified, setVerified] = useState(false);
 
-  async function userQuery() {
-    const query = /* GraphQL */ `
-      query GetUserProfile($id: ID!) {
-        getUserProfile(id: $id) {
-          id
-          Birthday
-          Height
-          UserImage
-          LastName
-          FirstName
-          Weight
-          Description
-          IsVerified
-          Favorites {
-            items {
-              id
-              Content {
-                id
-                Title
-                Thumbnail
-                createdAt
-                Description
-                Segments
-                owner
-              }
-            }
-            nextToken
-          }
-          Contents {
-            items {
-              id
-              Description
-              Title
-              createdAt
-              Thumbnail
-              Segments
-              owner
-            }
-            nextToken
-          }
-        }
-      }
-    `;
-    API.graphql(graphqlOperation(query, { id: props.match.params.id }))
+  const ContentNextTokenQuery = async (nextToken) => {
+    const { data } = await API.graphql({
+      query: contentPaginatingQuery,
+      variables: {
+        id: props.match.params.id,
+        limit: limit,
+        nextToken: nextToken,
+      },
+    });
+    setContentAll(data.getUserProfile.Contents);
+  };
+
+  const userQuery = async () => {
+    API.graphql(
+      graphqlOperation(profileLimitQuery, {
+        id: props.match.params.id,
+        limit: limit,
+      })
+    )
       .then((d) => {
         const { Contents, IsVerified, Favorites, ...p } = d.data.getUserProfile;
         setProfile(p);
         setVerified(IsVerified);
         setFavorites(Favorites.items);
         setContent(Contents.items);
+        if (!nextToken) {
+          nextToken = Contents.nextToken;
+          ContentNextTokenQuery(nextToken);
+        }
       })
       .catch((e) => console.log(e));
-  }
+  };
 
   const getPrice = async (id) => {
     const myInit = {
@@ -204,6 +193,26 @@ export default function LandingPage({ ...props }) {
     userQuery();
   }, [props.match.params.id]);
 
+  const handleContentMore = () => {
+    nextToken = contentAll.nextToken;
+    ContentNextTokenQuery(nextToken);
+    var newArr = [];
+    var arrId = [];
+    var temp = contentMore;
+    temp.push.apply(temp, contentAll.items);
+    for (var item of temp) {
+      if (arrId.indexOf(item["id"]) == -1) {
+        arrId.push(item["id"]);
+        newArr.push(item);
+      }
+    }
+    setContentMore(newArr);
+  };
+
+  if (contentMore.length < 1 && content.length > 0) {
+    setContentMore(content);
+  }
+
   useEffect(() => {
     if (props.user.id) {
       checkSubscription(props.user.id, props.match.params.id);
@@ -266,10 +275,18 @@ export default function LandingPage({ ...props }) {
             </ProfileBox>
           </GridContainer>
           <GridContainer item direction="column" xs={12} sm={4}>
-            <GridItem>
+            <GridTitleFlex>
               <Typography variant="h2">Feed</Typography>
-            </GridItem>
-            {content.map((c, idx) => {
+              <TextA
+                size="20px"
+                onClick={() => {
+                  handleContentMore();
+                }}
+              >
+                More
+              </TextA>
+            </GridTitleFlex>
+            {contentMore.map((c, idx) => {
               let f = favorites.findIndex((e) => e.Content.id === content.id);
               return (
                 <ContentCard
@@ -337,6 +354,8 @@ LandingPage.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
+      limit: PropTypes.number,
+      nextToken: PropTypes.string,
     }),
   }),
   user: PropTypes.shape({ id: PropTypes.string }),

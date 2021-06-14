@@ -311,6 +311,26 @@ export const DialogBody = styled(DialogContent)`
   padding: 30px;
 `;
 
+export const TextA = styled.a`
+  cursor: pointer;
+  font-size: ${(props) => props.size};
+  :hover {
+    color: #7265e3;
+    font-weight: bold;
+  }
+`;
+
+export const GridTitleFlex = styled(Grid).attrs({
+  item: true,
+  container: true,
+})`
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 export const TextLink = styled(Link)`
   padding: 10px;
   text-decoration: none;
