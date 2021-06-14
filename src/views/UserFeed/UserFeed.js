@@ -29,7 +29,10 @@ import {
   contentPaginatingQuery,
   userProfileQuery,
 } from "../../graphql/UserFeed";
-import { onContentByCreatorID } from "../../graphql/subscriptions";
+import {
+  onContentByCreatorID,
+  // onDeletionByCreatorID,
+} from "../../graphql/subscriptions";
 import DataPagination from "components/DataPagination/DataPagination";
 import { beforeImageUpload } from "../../utilities/ImagesCompress";
 
@@ -308,9 +311,29 @@ export default function UserFeed({ ...props }) {
     setContentMore(newArr);
   };
 
+  // const pushDeleteContent = (d) => {
+  //   console.log("d is", d);
+  //   console.log("onDeletionByCreatorID", d.value.data.onDeletionByCreatorID);
+  //   setContents(d.value.data.onDeletionByCreatorID);
+  // };
+
+  // const trainerDeleSub = () => {
+  //   const subscription = API.graphql({
+  //     query: onDeletionByCreatorID,
+  //     variables: {
+  //       CreatorID: props.user.id,
+  //     },
+  //   }).subscribe({
+  //     next: pushDeleteContent,
+  //   });
+  //   setSubscriptions([subscription]);
+  // };
+
   if (contentMore.length < contents.length) {
     setContentMore(contents);
   }
+
+  console.log("subscriptions", subscriptions);
 
   return (
     <>
