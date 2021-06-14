@@ -124,6 +124,20 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda",
       "dependsOn": []
+    },
+    "videoFlutterMove": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "storage",
+          "resourceName": "mikereact48af3338",
+          "attributes": [
+            "BucketName"
+          ]
+        }
+      ]
     }
   }
 }

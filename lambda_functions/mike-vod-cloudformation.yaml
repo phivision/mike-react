@@ -41,7 +41,7 @@ Outputs:
   BucketName:
     Value: !Ref SourceBucket
   TranscodingFunctionVersion:
-    Value: !Ref TranscodingFunctionVersion2
+    Value: !Ref TranscodingFunctionVersion
   HLSEndpoint:
     Value: !Sub 'https://${SimpleVODDistribution.DomainName}/${OutputPrefix}hls/'
     Export:
@@ -107,7 +107,7 @@ Resources:
     Type: 'AWS::Lambda::Permission'
     Properties:
       Action: 'lambda:InvokeFunction'
-      FunctionName: !Ref TranscodingFunctionVersion2
+      FunctionName: !Ref TranscodingFunctionVersion
       SourceArn: !Sub 'arn:aws:s3:::${BucketName}'
       Principal: s3.amazonaws.com
   MySNSPolicy:
@@ -221,7 +221,7 @@ Resources:
               SSEAlgorithm: AES256
       NotificationConfiguration:
         LambdaConfigurations:
-          - Function: !Ref TranscodingFunctionVersion2
+          - Function: !Ref TranscodingFunctionVersion
             Filter:
               S3Key:
                 Rules:
@@ -275,11 +275,6 @@ Resources:
     Properties:
       FunctionName: !Ref TranscodingFunction
       Description: A version of TranscodingFunction
-  TranscodingFunctionVersion2:
-    Type: 'AWS::Lambda::Version'
-    Properties:
-      FunctionName: !Ref TranscodingFunction
-      Description: A new version of TranscodingFunction, adding metadata to function
   SimpleVODTopic:
     Type: 'AWS::SNS::Topic'
   SimpleVODDistribution:

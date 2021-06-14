@@ -18,48 +18,31 @@
       "function": {
         "stripeAPI": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/stripeAPI-426e366f4c65786b7337-build.zip"
+          "s3Key": "amplify-builds/stripeAPI-7050716f61726d694149-build.zip"
         },
         "stripeWebhook": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/stripeWebhook-584c766d2f4252657173-build.zip"
+          "s3Key": "amplify-builds/stripeWebhook-30666e514a4e722b7469-build.zip"
         },
         "cognitoPostConfirm": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/cognitoPostConfirm-4130695a6c696a45662b-build.zip"
+          "s3Key": "amplify-builds/cognitoPostConfirm-6f325a4f544453526e77-build.zip"
         },
         "videoConvertComplete": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/videoConvertComplete-61312f6664443767554b-build.zip"
+          "s3Key": "amplify-builds/videoConvertComplete-6654626f4446792f5678-build.zip"
         },
         "marketing": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/marketing-4336456a746451494672-build.zip"
-        }
+          "s3Key": "amplify-builds/marketing-793858774a2b32684d34-build.zip"
+        },
+        "videoFlutterMove": {}
       },
       "storage": {
         "mikereact48af3338": {
           "bucketName": "mike-vod-dev",
           "region": "us-east-1"
         }
-      }
-    }
-  },
-  "staging": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-amplify4ec2fcacdac84-staging-211930-authRole",
-      "UnauthRoleArn": "arn:aws:iam::301286101195:role/amplify-amplify4ec2fcacdac84-staging-211930-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::301286101195:role/amplify-amplify4ec2fcacdac84-staging-211930-authRole",
-      "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-amplify4ec2fcacdac84-staging-211930-deployment",
-      "UnauthRoleName": "amplify-amplify4ec2fcacdac84-staging-211930-unauthRole",
-      "StackName": "amplify-amplify4ec2fcacdac84-staging-211930",
-      "StackId": "arn:aws:cloudformation:us-east-1:301286101195:stack/amplify-amplify4ec2fcacdac84-staging-211930/26116b30-77af-11eb-9247-12ff7c2f10c5",
-      "AmplifyAppId": "d20xl061ri8mnn"
-    },
-    "categories": {
-      "auth": {
-        "mikereact": {}
       }
     }
   },
@@ -140,16 +123,20 @@
         },
         "videoConvertComplete": {
           "deploymentBucketName": "amplify-mikereact-feature-115326-deployment",
-          "s3Key": "amplify-builds/videoConvertComplete-61312f6664443767554b-build.zip"
+          "s3Key": "amplify-builds/videoConvertComplete-3334434b6f7233394158-build.zip"
         },
         "marketing": {
           "deploymentBucketName": "amplify-mikereact-feature-115326-deployment",
-          "s3Key": "amplify-builds/marketing-4336456a746451494672-build.zip"
+          "s3Key": "amplify-builds/marketing-694c372b487632754a39-build.zip"
+        },
+        "videoFlutterMove": {
+          "deploymentBucketName": "amplify-mikereact-feature-115326-deployment",
+          "s3Key": "amplify-builds/videoFlutterMove-7a2f6f694152626c5778-build.zip"
         }
       },
       "storage": {
         "mikereact48af3338": {
-          "bucketName": "mike-vod-dev",
+          "bucketName": "mike-vod-feature",
           "region": "us-east-1"
         }
       }
