@@ -7,7 +7,7 @@ const video_bucket_name = aws_config.aws_user_files_s3_bucket.match(REGEX);
 const env = video_bucket_name[video_bucket_name.length - 1];
 
 const getVideoEndpoint = () => {
-  if (env === "dev" || env === "prod") {
+  if (env === "dev" || env === "prod" || env === "feature") {
     return video_endpoint[env];
   } else {
     throw "Cannot load valid endpoint info!";
