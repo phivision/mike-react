@@ -145,3 +145,51 @@ export const onDeletionByCreatorID = /* GraphQL */ `
     }
   }
 `;
+
+export const onDeletionByCreatorID = /* GraphQL */ `
+  subscription onDeletionByCreatorID($CreatorID: ID!) {
+    onDeletionByCreatorID(CreatorID: $CreatorID) {
+      id
+      CreatorID
+      ContentName
+      Description
+      Title
+      Level
+      Length
+      IsDemo
+      TranscodeReady
+      ViewCount
+      Thumbnail
+      Preview
+      Segments
+      createdAt
+      updatedAt
+      Creator {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        IsVerified
+        Description
+        Biography
+        createdAt
+        updatedAt
+        owner
+      }
+      FavoriteUser {
+        nextToken
+      }
+      owner
+    }
+  }
+`;
