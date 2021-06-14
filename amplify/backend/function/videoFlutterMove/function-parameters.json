@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "storage": {
+      "mikereact48af3338": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

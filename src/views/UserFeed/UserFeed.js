@@ -17,18 +17,21 @@ import {
   CustomButton,
   ProfileBox,
   UserFeedBanner,
+  TextA,
+  GridTitleFlex,
 } from "../../components/StyledComponents/StyledComponents";
 import {
   deleteUserFavoriteContent,
   removeDeletedFavoriteContent,
   createUserFavoriteContent,
-  userProfileQuery,
   userFavoriteQuery,
   userFavoriteIdQuery,
-  trainerProfileQuery,
+  contentPaginatingQuery,
+  userProfileQuery,
 } from "../../graphql/UserFeed";
 import { onContentByCreatorID } from "../../graphql/subscriptions";
 import DataPagination from "components/DataPagination/DataPagination";
+import { beforeImageUpload } from "../../utilities/ImagesCompress";
 
 // import initial profile
 const initialProfileState = {
@@ -55,6 +58,22 @@ export default function UserFeed({ ...props }) {
   contentRef.current = contents;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
+  const [contentAll, setContentAll] = useState([]);
+  const [contentMore, setContentMore] = useState([]);
+  const limit = 2;
+  let nextToken = "";
+
+  const ContentNextTokenQuery = async (nextToken) => {
+    const { data } = await API.graphql({
+      query: contentPaginatingQuery,
+      variables: {
+        id: props.user.id,
+        limit: limit,
+        nextToken: nextToken,
+      },
+    });
+    setContentAll(data.getUserProfile.Contents);
+  };
 
   const onChange = (e) => {
     switch (e.target.id) {
@@ -115,12 +134,23 @@ export default function UserFeed({ ...props }) {
 
   const handleImageChange = async (e) => {
     if (!e.target.files[0]) return;
+    var avatar = e.target.files[0];
+    let newAvatr;
     const nameArray = e.target.files[0].name.split(".");
     const userImageName =
       ("UserImage" + props.user.id + Date.now()).replace(/[^0-9a-z]/gi, "") +
       "." +
       nameArray[nameArray.length - 1];
-    await Storage.put(userImageName, e.target.files[0], {
+    //if > 100kb, then compress avatar image to small size
+    console.log("original Avatar size", avatar.size / 1024);
+    if (avatar.size > 1024 * 1024 * 0.1) {
+      newAvatr = await beforeImageUpload(avatar, 150);
+      console.log("compressed Avatar size", newAvatr.size / 1024);
+    } else {
+      newAvatr = avatar;
+    }
+    console.log("newAvatr", newAvatr);
+    await Storage.put(userImageName, newAvatr, {
       contentType: "image/*",
     });
     setProfile({ ...profile, UserImage: userImageName });
@@ -133,12 +163,13 @@ export default function UserFeed({ ...props }) {
   };
 
   const pushNewContent = (d) => {
+    console.log("d is", d);
     setContents([d.value.data.onContentByCreatorID].concat(contentRef.current));
   };
 
   const userQuery = async () => {
     const d = await API.graphql(
-      graphqlOperation(userProfileQuery, { id: props.user.id })
+      graphqlOperation(userProfileQuery, { id: props.user.id, limit: limit })
     ).catch(console.log);
     const { Subscriptions: SubsData, ...p } = d.data.getUserProfile;
     setProfile(p);
@@ -206,11 +237,20 @@ export default function UserFeed({ ...props }) {
   };
 
   const trainerQuery = async () => {
-    API.graphql(graphqlOperation(trainerProfileQuery, { id: props.user.id }))
+    API.graphql(
+      graphqlOperation(contentPaginatingQuery, {
+        id: props.user.id,
+        limit: limit,
+      })
+    )
       .then((d) => {
         const { Contents, ...p } = d.data.getUserProfile;
         setProfile(p);
         setSortedContent(Contents.items);
+        if (!nextToken) {
+          nextToken = Contents.nextToken;
+          ContentNextTokenQuery(nextToken);
+        }
       })
       .catch(console.log);
   };
@@ -251,6 +291,26 @@ export default function UserFeed({ ...props }) {
     });
     setContents(sorted);
   };
+
+  const handleContentMore = () => {
+    nextToken = contentAll.nextToken;
+    ContentNextTokenQuery(nextToken);
+    var newArr = [];
+    var arrId = [];
+    var temp = contentMore;
+    temp.push.apply(temp, contentAll.items);
+    for (var item of temp) {
+      if (arrId.indexOf(item["id"]) == -1) {
+        arrId.push(item["id"]);
+        newArr.push(item);
+      }
+    }
+    setContentMore(newArr);
+  };
+
+  if (contentMore.length < contents.length) {
+    setContentMore(contents);
+  }
 
   return (
     <>
@@ -308,7 +368,7 @@ export default function UserFeed({ ...props }) {
                   label="Description"
                   onChange={onChange}
                   id="description"
-                  multiline
+                  multiline="true"
                   text={profile.Description}
                 />
               </GridItem>
@@ -363,10 +423,18 @@ export default function UserFeed({ ...props }) {
             )}
           </GridContainer>
           <GridContainer item direction="column" xs={12} sm={4}>
-            <GridItem>
+            <GridTitleFlex>
               <Typography variant="h2">Feed</Typography>
-            </GridItem>
-            {contents.map((c, idx) => {
+              <TextA
+                size="20px"
+                onClick={() => {
+                  handleContentMore();
+                }}
+              >
+                More
+              </TextA>
+            </GridTitleFlex>
+            {contentMore.map((c, idx) => {
               let f = favorites.findIndex((e) => e.Content.id === c.id);
               return (
                 <ContentCard

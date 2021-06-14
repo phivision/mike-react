@@ -34,6 +34,7 @@ export const onContentByCreatorID = /* GraphQL */ `
         FirstName
         UserRole
         Weight
+        IsVerified
         Description
         Biography
         createdAt

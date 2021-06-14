@@ -81,10 +81,7 @@ const updateTranscodeStatus = async (event) => {
   const s3Bucket = event.detail.userMetadata.S3Bucket;
   const s3Env = s3Bucket.split("-").pop();
   // if in feature backend, use dev video pipeline
-  if (
-    process.env.ENV === s3Env ||
-    (process.env.ENV === "feature" && s3Env === "dev")
-  ) {
+  if (process.env.ENV === s3Env) {
     const s3Key = event.detail.userMetadata.S3Key;
     const contentName = s3Key.split("/").pop();
     console.log("Transcoding is completed for content: ", contentName);

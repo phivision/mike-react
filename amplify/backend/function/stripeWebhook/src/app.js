@@ -24,6 +24,7 @@ app.use(function (req, res, next) {
 
 let stripe;
 let ENDPOINT_SECRET;
+let CONNECT_SECRET;
 let UUID = "d2b157d4-5a66-49ca-b868-c83008f1e126";
 
 if (process.env.ENV === "prod") {
@@ -34,13 +35,86 @@ if (process.env.ENV === "prod") {
 } else {
   if (process.env.ENV === "dev") {
     ENDPOINT_SECRET = "whsec_DjCSZgxymENwj2yF0iAyIUKsJ1da0kIO";
+    CONNECT_SECRET = "whsec_cmRg2kJ0dxuJZPDfaJgivyf7mf7bZZJl";
   } else {
     ENDPOINT_SECRET = "whsec_XMAGthm9Glxu8vSlrdYNDHMZ36LSmOvu";
+    CONNECT_SECRET = "whsec_fRhIhpQ2H22msNN5HXWVwX3jjp5LmBnk";
   }
   stripe = require("stripe")(
     "sk_test_51IWoNlAXegvVyt5s8RgdmlA7kMtgxRkk5ckcNHQYVjgTyMCxKHDlgJm810tTm3KIVXe34FvDSlnsqzigH25AwsLU00nIkry9yo"
   );
 }
+
+app.post(
+  "/stripe/webhook/connect",
+  bodyParser.raw({ type: "application/json" }),
+  (request, response) => {
+    const payload = request.body;
+    const sig = request.headers["stripe-signature"];
+
+    let event;
+
+    try {
+      event = stripe.webhooks.constructEvent(payload, sig, CONNECT_SECRET);
+    } catch (err) {
+      return response.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    const query = async (stripeID) => {
+      const params = {
+        TableName: process.env.TABLE_NAME,
+        IndexName: "profilesByStripeID",
+        KeyConditionExpression: "StripeID = :s",
+        ExpressionAttributeValues: {
+          ":s": stripeID,
+        },
+      };
+
+      return await docClient.query(params).promise();
+    };
+
+    const setVerified = async (id) => {
+      const params = {
+        TableName: process.env.TABLE_NAME,
+        Key: {
+          id: id,
+        },
+        UpdateExpression: "set #s = :d",
+        ExpressionAttributeNames: {
+          "#s": "IsVerified",
+        },
+        ExpressionAttributeValues: {
+          ":d": true,
+        },
+        ReturnValues: "ALL_NEW",
+      };
+
+      return await docClient.update(params).promise();
+    };
+
+    // Handle the event
+    switch (event.type) {
+      case "account.updated":
+        const account = event.data.object;
+        if (
+          account.requirements.currently_due.length === 0 &&
+          account.requirements.pending_verification.length === 0
+        ) {
+          query(account.id).then((user) => {
+            setVerified(user.Items[0].id)
+              .then(() => response.json({ received: true }))
+              .catch(console.log);
+          });
+        }
+        response.json({ received: true });
+        break;
+
+      default:
+        console.log(`Unhandled event type ${event.type}`);
+        response.json({ received: true });
+    }
+  }
+);
 
 app.post(
   "/stripe/webhook",
@@ -129,7 +203,9 @@ app.post(
                   user.Items[0].id,
                   subscription.id,
                   subscription.current_period_end
-                ).then(() => response.json({ received: true }));
+                )
+                  .then(() => response.json({ received: true }))
+                  .catch(console.log);
               });
           });
         });
@@ -142,10 +218,9 @@ app.post(
         query(subscription.customer).then((user) => {
           getTrainer(subscription.plan.id).then((trainerStripeID) => {
             query(trainerStripeID.lookup_key).then((trainer) => {
-              deleteSubscription(
-                trainer.Items[0].id,
-                user.Items[0].id
-              ).then(() => response.json({ received: true }));
+              deleteSubscription(trainer.Items[0].id, user.Items[0].id)
+                .then(() => response.json({ received: true }))
+                .catch(console.log);
             });
           });
         });

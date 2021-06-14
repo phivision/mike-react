@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import Amplify, { API, Auth } from "aws-amplify";
+import Amplify, { API, Auth, graphqlOperation } from "aws-amplify";
 import { Hub } from "aws-amplify";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -56,17 +56,17 @@ const App = () => {
   };
 
   const checkVerification = () => {
-    const myInit = {
-      headers: {}, // AWS-IAM authorization if using empty headers
-      body: {
-        id: user.id,
-      },
-      response: true,
-    };
+    const getVerification = /* GraphQL */ `
+      query GetUserProfile($id: ID!) {
+        getUserProfile(id: $id) {
+          IsVerified
+        }
+      }
+    `;
 
-    API.post("stripeAPI", "/stripe/api/trainer/get/account", myInit)
+    API.graphql(graphqlOperation(getVerification, { id: user.id }))
       .then((d) => {
-        setVerified(d.data.details_submitted);
+        setVerified(d.data.getUserProfile.IsVerified);
         setOpenContentUpload(true);
       })
       .catch(console.log);

@@ -51,7 +51,7 @@ const TrainerPrice = ({ ...props }) => {
 };
 
 TrainerPrice.propTypes = {
-  price: PropTypes.string,
+  price: PropTypes.number,
   changePrice: PropTypes.func,
 };
 

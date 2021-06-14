@@ -21,6 +21,7 @@ import Container from "@material-ui/core/Container";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import { MobileVersion, uptoMobileWidth } from "variables/mediaQueries";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import { ExternalLink } from "../Link/ExternalLink";
 // import { useTheme } from "@material-ui/core/styles";
 
 // const theme = useTheme();
@@ -282,7 +283,7 @@ export const CustomContainer = styled(Container)`
 
 export const CustomBanner = styled(Container).attrs({ maxWidth: false })`
   background-color: white;
-  margin: 0px;
+  margin: 0;
   border: none;
 `;
 
@@ -310,7 +311,32 @@ export const DialogBody = styled(DialogContent)`
   padding: 30px;
 `;
 
+export const TextA = styled.a`
+  cursor: pointer;
+  font-size: ${(props) => props.size};
+  :hover {
+    color: #7265e3;
+    font-weight: bold;
+  }
+`;
+
+export const GridTitleFlex = styled(Grid).attrs({
+  item: true,
+  container: true,
+})`
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 export const TextLink = styled(Link)`
+  padding: 10px;
+  text-decoration: none;
+`;
+
+export const TextExtLink = styled(ExternalLink)`
   padding: 10px;
   text-decoration: none;
 `;
