@@ -37,9 +37,6 @@ const initialProfileState = {
   Weight: null,
   Description: null,
 };
-//TODO: Add payment functionality
-//TODO: Add cards for payment tiers
-//TODO: Add images + description, nicely formatted
 
 export default function LandingPage({ ...props }) {
   const [profile, setProfile] = useState(initialProfileState);
@@ -57,6 +54,7 @@ export default function LandingPage({ ...props }) {
   const [contentMore, setContentMore] = useState([]);
   const limit = 2;
   let nextToken = "";
+  const [isVerified, setVerified] = useState(false);
 
   const ContentNextTokenQuery = async (nextToken) => {
     const { data } = await API.graphql({
@@ -78,8 +76,9 @@ export default function LandingPage({ ...props }) {
       })
     )
       .then((d) => {
-        const { Contents, Favorites, ...p } = d.data.getUserProfile;
+        const { Contents, IsVerified, Favorites, ...p } = d.data.getUserProfile;
         setProfile(p);
+        setVerified(IsVerified);
         setFavorites(Favorites.items);
         setContent(Contents.items);
         if (!nextToken) {
@@ -259,14 +258,18 @@ export default function LandingPage({ ...props }) {
               </GridItem>
               <GridItem variant="body1">{profile.Description}</GridItem>
               <GridItem>
-                {subscribed ? (
-                  <CustomButton variant="outlined" disabled>
-                    Already Subscribed
-                  </CustomButton>
-                ) : (
-                  <CustomButton variant="contained" onClick={onClick}>
-                    {"Subscribe for $" + price + " per month"}
-                  </CustomButton>
+                {isVerified && (
+                  <>
+                    {subscribed ? (
+                      <CustomButton variant="outlined" disabled>
+                        Already Subscribed
+                      </CustomButton>
+                    ) : (
+                      <CustomButton variant="contained" onClick={onClick}>
+                        {"Subscribe for $" + price + " per month"}
+                      </CustomButton>
+                    )}
+                  </>
                 )}
               </GridItem>
             </ProfileBox>
