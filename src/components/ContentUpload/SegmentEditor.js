@@ -34,10 +34,7 @@ export default function SegmentEditor(props) {
   };
 
   const addSegment = () => {
-    setSegments([
-      ...segments,
-      { Name: "", Timestamp: "", Sets: "", Reps: "", RPE: "" },
-    ]);
+    setSegments([...segments, { Name: "", Timestamp: "" }]);
     setEditSection(() => {
       editSection.push(true);
       return [...editSection];
@@ -95,33 +92,6 @@ export default function SegmentEditor(props) {
                 text={segments[idx].Timestamp}
                 name="Timestamp"
                 label="Timestamp"
-                variant="body2"
-                edit={editSection[idx]}
-                showLabel={true}
-              />
-              <EditableTypography
-                id={idx + "-SectionSets"}
-                text={value.Sets}
-                name="Sets"
-                label="Sets"
-                variant="body2"
-                edit={editSection[idx]}
-                showLabel={true}
-              />
-              <EditableTypography
-                id={idx + "-SectionReps"}
-                text={value.Reps}
-                name="Reps"
-                label="Reps"
-                variant="body2"
-                edit={editSection[idx]}
-                showLabel={true}
-              />
-              <EditableTypography
-                id={idx + "-SectionRpe"}
-                text={value.RPE}
-                name="RPE"
-                label="RPE"
                 variant="body2"
                 edit={editSection[idx]}
                 showLabel={true}

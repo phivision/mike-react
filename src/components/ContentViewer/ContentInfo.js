@@ -12,23 +12,13 @@ import {
 
 const Segment = ({ segment }) => {
   return (
-    <GridContainer>
-      <GridItem xs={3}>
+    <GridContainer direction="row" justify="space-between" alignItems="center">
+      <GridItem xs>
         <BlackTitle>{segment.Name}</BlackTitle>
       </GridItem>
-      <GridContainer item xs={9} justify="flex-end">
-        <Typography variant="body2">
-          {segment.Sets} sets of {segment.Reps} reps
-        </Typography>
-      </GridContainer>
-      <GridItem item xs={3}>
-        <Typography variant="body2">{segment.Timestamp} min</Typography>
+      <GridItem xs>
+        <Typography variant="body2">{segment.Timestamp}</Typography>
       </GridItem>
-      <GridContainer item xs={9} justify="flex-end">
-        <Typography variant="body2" align="right">
-          Rate of Perceived Exhaustion: {segment.RPE}
-        </Typography>
-      </GridContainer>
       <DividerLine />
     </GridContainer>
   );
