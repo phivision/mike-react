@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 // @material-ui/core components
 import { Typography, Checkbox, FormControlLabel } from "@material-ui/core";
 // core components
-import EditableTypography from "../../components/EditableTypography/EditableTypography";
 import {
   GridContainer,
   GridItem,
   CustomButton,
   CardStyled,
+  InputField,
 } from "components/StyledComponents/StyledComponents";
 // amplify components
 import { API, Storage, graphqlOperation } from "aws-amplify";
@@ -55,7 +55,6 @@ export default function ContentUpload(props) {
   const [openDuplicationDialog, setOpenDuplicationDialog] = React.useState(
     false
   );
-  const [edit, setEdit] = useState(false);
   const videoFileRef = React.useRef();
   const thumbFileRef = React.useRef();
   const thumbReader = new FileReader();
@@ -312,25 +311,19 @@ export default function ContentUpload(props) {
         </GridItem>
       ) : null}
       <GridContainer item xs={12} sm={3} direction="column">
-        <EditableTypography
+        <InputField
           id="video-title"
-          label="videoTitle"
+          label="Title"
           name="Title"
-          variant="h3"
-          text={videoForm.Title || "Title"}
+          value={videoForm.Title}
           onChange={handleVideoFormChange}
-          onClick={() => setEdit(true)}
-          edit={edit}
         />
-        <EditableTypography
+        <InputField
           id="video-description"
-          label="videoDescription"
+          label="Description"
           name="Description"
-          variant="body1"
-          text={videoForm.Description || "Description"}
+          value={videoForm.Description}
           onChange={handleVideoFormChange}
-          edit={edit}
-          onClick={() => setEdit(true)}
         />
         <CardStyled>
           <ImageInput
