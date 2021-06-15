@@ -91,6 +91,7 @@ export default function ContentCard(props) {
     <CardContent>
       <GridContainer>
         <GridItem xs={headerCol}>
+          <Typography variant="h3">{props.post.Title}</Typography>
           <Typography variant="body1">{props.post.Description}</Typography>
           {props.post.ContentName ? (
             <ImageButton url={img} onClick={handleOpenViewer} width="100%" />
