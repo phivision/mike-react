@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 // @material-ui/core components
-import { Typography, Checkbox, FormControlLabel } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 // core components
 import {
   GridContainer,
@@ -295,10 +295,6 @@ export default function ContentUpload(props) {
     setVideoForm({ ...videoForm, [event.target.name]: event.target.value });
   };
 
-  const handleVideoDemoChange = (event) => {
-    setVideoForm({ ...videoForm, [event.target.name]: event.target.checked });
-  };
-
   const statusCol = uploadProgress > 0 ? 3 : 12;
   return (
     <GridContainer>
@@ -336,17 +332,6 @@ export default function ContentUpload(props) {
             onChange={handleThumbnailChange}
           />
         </CardStyled>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={videoForm.IsDemo}
-              onChange={handleVideoDemoChange}
-              name="IsDemo"
-              color="primary"
-            />
-          }
-          label="Demo Video?"
-        />
         <CustomButton variant="contained" onClick={handleVideoUpload}>
           Upload Content
         </CustomButton>
