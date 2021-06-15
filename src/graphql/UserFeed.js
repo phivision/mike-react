@@ -177,6 +177,7 @@ query GetUserProfile ($id: ID!, $limit: Int, $nextToken: String) {
     FirstName
     UserImage
     Description
+    IsVerified
   }
 }`;
 
@@ -191,6 +192,7 @@ export const profileLimitQuery = /* GraphQL */ `
       FirstName
       Weight
       Description
+      IsVerified
       Favorites {
         items {
           id

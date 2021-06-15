@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 // @material-ui/core components
-import { Typography, Checkbox, FormControlLabel } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 // core components
-import EditableTypography from "../../components/EditableTypography/EditableTypography";
 import {
   GridContainer,
   GridItem,
   CustomButton,
   CardStyled,
+  InputField,
 } from "components/StyledComponents/StyledComponents";
 // amplify components
 import { API, Storage, graphqlOperation } from "aws-amplify";
@@ -55,7 +55,6 @@ export default function ContentUpload(props) {
   const [openDuplicationDialog, setOpenDuplicationDialog] = React.useState(
     false
   );
-  const [edit, setEdit] = useState(false);
   const videoFileRef = React.useRef();
   const thumbFileRef = React.useRef();
   const thumbReader = new FileReader();
@@ -296,10 +295,6 @@ export default function ContentUpload(props) {
     setVideoForm({ ...videoForm, [event.target.name]: event.target.value });
   };
 
-  const handleVideoDemoChange = (event) => {
-    setVideoForm({ ...videoForm, [event.target.name]: event.target.checked });
-  };
-
   const statusCol = uploadProgress > 0 ? 3 : 12;
   return (
     <GridContainer>
@@ -312,25 +307,19 @@ export default function ContentUpload(props) {
         </GridItem>
       ) : null}
       <GridContainer item xs={12} sm={3} direction="column">
-        <EditableTypography
+        <InputField
           id="video-title"
-          label="videoTitle"
+          label="Title"
           name="Title"
-          variant="h3"
-          text={videoForm.Title || "Title"}
+          value={videoForm.Title}
           onChange={handleVideoFormChange}
-          onClick={() => setEdit(true)}
-          edit={edit}
         />
-        <EditableTypography
+        <InputField
           id="video-description"
-          label="videoDescription"
+          label="Description"
           name="Description"
-          variant="body1"
-          text={videoForm.Description || "Description"}
+          value={videoForm.Description}
           onChange={handleVideoFormChange}
-          edit={edit}
-          onClick={() => setEdit(true)}
         />
         <CardStyled>
           <ImageInput
@@ -343,17 +332,6 @@ export default function ContentUpload(props) {
             onChange={handleThumbnailChange}
           />
         </CardStyled>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={videoForm.IsDemo}
-              onChange={handleVideoDemoChange}
-              name="IsDemo"
-              color="primary"
-            />
-          }
-          label="Demo Video?"
-        />
         <CustomButton variant="contained" onClick={handleVideoUpload}>
           Upload Content
         </CustomButton>
