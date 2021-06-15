@@ -109,6 +109,7 @@ export default function SignInForm({ openError: openError, ...props }) {
         label="Email Address"
         name="email"
         autoComplete="email"
+        data-test="email-input"
         autoFocus
         value={state.email}
         onChange={(e) => handleChange(e)}
@@ -122,6 +123,7 @@ export default function SignInForm({ openError: openError, ...props }) {
         label="Password"
         type="password"
         id="password"
+        data-test="password-input"
         autoComplete="current-password"
         value={state.password}
         onChange={(e) => handleChange(e)}
@@ -138,7 +140,12 @@ export default function SignInForm({ openError: openError, ...props }) {
         }
         label="Remember me"
       />
-      <CustomButton type="submit" fullWidth variant="contained">
+      <CustomButton
+        type="submit"
+        data-test="sign-in-button"
+        fullWidth
+        variant="contained"
+      >
         Sign In
       </CustomButton>
       <Grid container>
