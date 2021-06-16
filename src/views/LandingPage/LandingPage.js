@@ -52,6 +52,7 @@ export default function LandingPage({ ...props }) {
   const [subscribed, setSubscribed] = useState(false);
   const [contentAll, setContentAll] = useState([]);
   const [contentMore, setContentMore] = useState([]);
+  const [id, setId] = useState("");
   const limit = 2;
   let nextToken = "";
   const [isVerified, setVerified] = useState(false);
@@ -60,7 +61,7 @@ export default function LandingPage({ ...props }) {
     const { data } = await API.graphql({
       query: contentPaginatingQuery,
       variables: {
-        id: props.match.params.id,
+        id: id,
         limit: limit,
         nextToken: nextToken,
       },
@@ -71,7 +72,7 @@ export default function LandingPage({ ...props }) {
   const userQuery = async () => {
     API.graphql(
       graphqlOperation(profileLimitQuery, {
-        id: props.match.params.id,
+        id: id,
         limit: limit,
       })
     )
@@ -111,7 +112,7 @@ export default function LandingPage({ ...props }) {
     const myInit = {
       headers: {}, // AWS-IAM authorization if using empty headers
       body: {
-        trainerID: props.match.params.id,
+        trainerID: id,
         customerID: props.user.id,
         paymentMethodID: paymentMethodId,
       },
@@ -189,9 +190,33 @@ export default function LandingPage({ ...props }) {
   };
 
   useEffect(() => {
-    getPrice(props.match.params.id);
-    userQuery();
+    if (props.match.params.id.length < 36) {
+      const urlQuery = `query MyQuery($LandingURL: String!) {
+        profilesByURL(LandingURL: $LandingURL) {
+          items {
+            id
+          }
+        }
+      }`;
+
+      API.graphql(
+        graphqlOperation(urlQuery, { LandingURL: props.match.params.id })
+      )
+        .then((d) => {
+          setId(d.data.profilesByURL.items[0].id);
+        })
+        .catch(() => {
+          history.push("/404");
+        });
+    } else {
+      setId(props.match.params.id);
+    }
   }, [props.match.params.id]);
+
+  useEffect(() => {
+    getPrice(id);
+    userQuery();
+  }, [id]);
 
   const handleContentMore = () => {
     nextToken = contentAll.nextToken;
@@ -214,10 +239,10 @@ export default function LandingPage({ ...props }) {
   }
 
   useEffect(() => {
-    if (props.user.id) {
-      checkSubscription(props.user.id, props.match.params.id);
+    if (props.user.id && id) {
+      checkSubscription(props.user.id, id);
     }
-  }, [props.user.id]);
+  }, [props.user.id, id]);
 
   return (
     <>

@@ -21,6 +21,7 @@ import {
 import { useHistory } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Divider from "@material-ui/core/Divider";
+import EditURL from "../../components/Settings/EditURL";
 
 const getUserSettings = /* GraphQL */ `
   query GetUserProfile($id: ID!) {
@@ -28,6 +29,7 @@ const getUserSettings = /* GraphQL */ `
       Email
       StripeID
       IsVerified
+      LandingURL
       Subscriptions {
         items {
           Trainer {
@@ -47,6 +49,7 @@ const getUserSettings = /* GraphQL */ `
 
 export default function Settings(props) {
   const [email, setEmail] = useState("");
+  const [url, setURL] = useState("");
   const [defaultPaymentMethod, setDefaultPaymentMethod] = useState("");
   const [trainers, setTrainers] = useState([]);
   const [paymentMethods, setPaymentMethods] = useState([]);
@@ -69,6 +72,8 @@ export default function Settings(props) {
     API.graphql(graphqlOperation(getUserSettings, { id: props.user.id }))
       .then((userSettingData) => {
         setEmail(userSettingData.data.getUserProfile.Email);
+        console.log(userSettingData.data.getUserProfile.LandingURL);
+        setURL(userSettingData.data.getUserProfile.LandingURL);
         if (userRole === userRoles.STUDENT) {
           setTrainers(userSettingData.data.getUserProfile.Subscriptions.items);
         }
@@ -162,6 +167,11 @@ export default function Settings(props) {
 
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
+  };
+
+  const openError = (e) => {
+    setSnackbarMessage(e);
+    setOpenSnackbar(true);
   };
 
   const handleCloseCheckout = () => {
@@ -444,29 +454,47 @@ export default function Settings(props) {
             <ActiveSubscriptions trainers={trainers} />
           ) : (
             isVerified && (
-              <Grid
-                item
-                container
-                direction="row"
-                alignItems="center"
-                justify="space-between"
-                style={{ padding: "10px" }}
-              >
-                <Grid item xs>
-                  <TextStyle variant="h3">Pricing Tiers</TextStyle>
+              <>
+                <Grid
+                  item
+                  container
+                  direction="row"
+                  alignItems="center"
+                  justify="space-between"
+                  style={{ padding: "10px" }}
+                >
+                  <EditURL
+                    url={url}
+                    openSnackbar={openError}
+                    user={props.user}
+                  />
                 </Grid>
-                <Grid item xs container direction="column">
-                  {prices.map((p, idx) => (
-                    <Grid item key={idx}>
-                      <TrainerPrice
-                        key={idx}
-                        price={p.unit_amount}
-                        changePrice={changePrice}
-                      />
-                    </Grid>
-                  ))}
+                <Divider light />
+                <Grid
+                  item
+                  container
+                  direction="row"
+                  alignItems="center"
+                  justify="space-between"
+                  style={{ padding: "10px" }}
+                >
+                  <Grid item xs>
+                    <TextStyle variant="h3">Pricing Tiers</TextStyle>
+                  </Grid>
+                  <Grid item xs container direction="column">
+                    {prices.map((p, idx) => (
+                      <Grid item key={idx}>
+                        <TrainerPrice
+                          key={idx}
+                          price={p.unit_amount}
+                          changePrice={changePrice}
+                        />
+                      </Grid>
+                    ))}
+                  </Grid>
                 </Grid>
-              </Grid>
+                <Divider light />
+              </>
             )
           )}
         </Grid>
