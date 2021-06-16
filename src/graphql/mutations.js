@@ -24,6 +24,7 @@ export const createUserProfile = /* GraphQL */ `
       IsVerified
       Description
       Biography
+      LandingURL
       createdAt
       updatedAt
       owner
@@ -65,6 +66,7 @@ export const updateUserProfile = /* GraphQL */ `
       IsVerified
       Description
       Biography
+      LandingURL
       createdAt
       updatedAt
       owner
@@ -106,6 +108,7 @@ export const deleteUserProfile = /* GraphQL */ `
       IsVerified
       Description
       Biography
+      LandingURL
       createdAt
       updatedAt
       owner
@@ -154,6 +157,7 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         IsVerified
         Description
         Biography
+        LandingURL
         createdAt
         updatedAt
         owner
@@ -176,6 +180,7 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         IsVerified
         Description
         Biography
+        LandingURL
         createdAt
         updatedAt
         owner
@@ -214,6 +219,7 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         IsVerified
         Description
         Biography
+        LandingURL
         createdAt
         updatedAt
         owner
@@ -236,6 +242,7 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         IsVerified
         Description
         Biography
+        LandingURL
         createdAt
         updatedAt
         owner
@@ -274,6 +281,7 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         IsVerified
         Description
         Biography
+        LandingURL
         createdAt
         updatedAt
         owner
@@ -296,6 +304,7 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         IsVerified
         Description
         Biography
+        LandingURL
         createdAt
         updatedAt
         owner
@@ -331,6 +340,7 @@ export const createUserFavoriteContent = /* GraphQL */ `
         IsVerified
         Description
         Biography
+        LandingURL
         createdAt
         updatedAt
         owner
@@ -384,6 +394,7 @@ export const updateUserFavoriteContent = /* GraphQL */ `
         IsVerified
         Description
         Biography
+        LandingURL
         createdAt
         updatedAt
         owner
@@ -437,6 +448,7 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
         IsVerified
         Description
         Biography
+        LandingURL
         createdAt
         updatedAt
         owner
@@ -502,6 +514,7 @@ export const createUserContent = /* GraphQL */ `
         IsVerified
         Description
         Biography
+        LandingURL
         createdAt
         updatedAt
         owner
@@ -552,6 +565,7 @@ export const updateUserContent = /* GraphQL */ `
         IsVerified
         Description
         Biography
+        LandingURL
         createdAt
         updatedAt
         owner
@@ -602,6 +616,7 @@ export const deleteUserContent = /* GraphQL */ `
         IsVerified
         Description
         Biography
+        LandingURL
         createdAt
         updatedAt
         owner

@@ -1,14 +1,18 @@
 import EditableTypography from "../EditableTypography/EditableTypography";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DoneIcon from "@material-ui/icons/Done";
 import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 
 const TrainerPrice = ({ ...props }) => {
   const [edit, setEdit] = useState(false);
-  const [price, setPrice] = useState(props.price / 100);
+  const [price, setPrice] = useState();
+
+  useEffect(() => {
+    setPrice(props.price / 100);
+  }, [props.price]);
 
   const onClick = () => {
     if (!edit) {
@@ -34,7 +38,7 @@ const TrainerPrice = ({ ...props }) => {
         <EditableTypography
           text={price}
           edit={edit}
-          variant="h3"
+          variant="body1"
           label="Monthly Subscription Price"
           onChange={(e) => {
             setPrice(e.target.value);
