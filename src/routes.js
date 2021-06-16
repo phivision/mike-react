@@ -12,6 +12,7 @@ import SignIn from "views/Auth/SignIn.js";
 import SignUp from "views/Auth/SignUp.js";
 import Verify from "views/Auth/Verify.js";
 import ResetPassword from "views/Auth/ResetPassword";
+import NotFound from "./views/NotFound/NotFound";
 
 const routes = [
   {
@@ -67,6 +68,11 @@ const routes = [
     path: "/reset",
     name: "Reset Password",
     component: ResetPassword,
+  },
+  {
+    path: "/404",
+    name: "Reset Password",
+    component: NotFound,
   },
 ];
 

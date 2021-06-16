@@ -3,6 +3,7 @@
   { allow: private, operations: [read]},
   { allow: public, provider: iam, operations: [read]}])
 @key(name: "profilesByStripeID", fields: ["StripeID"], queryField: "profilesByStripeID")
+@key(name: "profilesByURL", fields: ["LandingURL"], queryField: "profilesByURL")
 {
   id: ID!
   Birthday: AWSDate
@@ -21,6 +22,7 @@
   IsVerified: Boolean
   Description: String
   Biography: String
+  LandingURL: String
   """
   A list of user's favorite contents
   """
@@ -96,4 +98,5 @@ type UserContent @model(subscriptions: null)
 
 type Subscription {
   onContentByCreatorID(CreatorID: ID!): UserContent @aws_subscribe(mutations: ["createUserContent"])
+  onDeletionByCreatorID(CreatorID: ID!): UserContent @aws_subscribe(mutations: ["deleteUserContent"])
 }

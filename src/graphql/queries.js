@@ -21,6 +21,7 @@ export const getUserProfile = /* GraphQL */ `
       IsVerified
       Description
       Biography
+      LandingURL
       createdAt
       updatedAt
       owner
@@ -64,6 +65,7 @@ export const listUserProfiles = /* GraphQL */ `
         IsVerified
         Description
         Biography
+        LandingURL
         createdAt
         updatedAt
         owner
@@ -105,6 +107,49 @@ export const profilesByStripeID = /* GraphQL */ `
         IsVerified
         Description
         Biography
+        LandingURL
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const profilesByURL = /* GraphQL */ `
+  query ProfilesByURL(
+    $LandingURL: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserProfileFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    profilesByURL(
+      LandingURL: $LandingURL
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        IsVerified
+        Description
+        Biography
+        LandingURL
         createdAt
         updatedAt
         owner
@@ -146,6 +191,7 @@ export const searchUserProfiles = /* GraphQL */ `
         IsVerified
         Description
         Biography
+        LandingURL
         createdAt
         updatedAt
         owner
@@ -182,6 +228,7 @@ export const getUserSubscriptionTrainer = /* GraphQL */ `
         IsVerified
         Description
         Biography
+        LandingURL
         createdAt
         updatedAt
         owner
@@ -204,6 +251,7 @@ export const getUserSubscriptionTrainer = /* GraphQL */ `
         IsVerified
         Description
         Biography
+        LandingURL
         createdAt
         updatedAt
         owner
@@ -272,6 +320,7 @@ export const getUserContent = /* GraphQL */ `
         IsVerified
         Description
         Biography
+        LandingURL
         createdAt
         updatedAt
         owner
