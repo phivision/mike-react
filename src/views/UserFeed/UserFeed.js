@@ -51,7 +51,7 @@ let tempProfile;
 
 export default function UserFeed({ ...props }) {
   const [profile, setProfile] = useState(initialProfileState);
-  const [subscriptions, setSubscriptions] = useState([]);
+  const [createSub, setCreateSub] = useState([]);
   const [deleteSub, setDeleteSub] = useState([]);
   const [contents, setContents] = useState([]);
   const [favorites, setFavorites] = useState([]);
@@ -59,13 +59,11 @@ export default function UserFeed({ ...props }) {
   const [trainers, setTrainers] = useState([]);
   const history = useHistory();
   const contentRef = useRef([]);
+  const nextTokenRef = useRef("");
   contentRef.current = contents;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
-  const [contentAll, setContentAll] = useState([]);
-  const [contentMore, setContentMore] = useState([]);
   const limit = 2;
-  let nextToken = "";
 
   const ContentNextTokenQuery = async (nextToken) => {
     const { data } = await API.graphql({
@@ -76,7 +74,8 @@ export default function UserFeed({ ...props }) {
         nextToken: nextToken,
       },
     });
-    setContentAll(data.getUserProfile.Contents);
+    nextTokenRef.current = data.getUserProfile.Contents.nextToken;
+    return data.getUserProfile.Contents;
   };
 
   const onChange = (e) => {
@@ -161,7 +160,7 @@ export default function UserFeed({ ...props }) {
   };
 
   const unsubscribeAll = () => {
-    subscriptions.map((sub) => {
+    createSub.map((sub) => {
       sub.unsubscribe();
     });
     deleteSub.map((sub) => {
@@ -172,29 +171,14 @@ export default function UserFeed({ ...props }) {
   const pushNewContent = (d) => {
     console.log("d is", d);
     setContents([d.value.data.onContentByCreatorID].concat(contentRef.current));
-    setContentMore(
-      [d.value.data.onContentByCreatorID].concat(contentRef.current)
-    );
   };
 
   const pushDeleteContent = (d) => {
-    console.log("begin delete local data!!!!!!!!", contentMore);
-    if (contentMore.length == 0 && contents.length > 0) {
-      setContentMore(contents);
-    }
-    if (contentMore.length > 0 && d) {
-      var contentMoreDele = [];
-      contentMoreDele = contentMore
-        .filter(function (item) {
-          return item.id !== d.value.data.onDeletionByCreatorID.id;
-        })
-        .map(function (item) {
-          return item;
-        });
-      console.log("删除之后的数组:", contentMoreDele);
-      setContents(contentMoreDele);
-      setContentMore(contentMoreDele);
-    }
+    const contentMoreDel = contentRef.current.filter(function (item) {
+      return item.id !== d.value.data.onDeletionByCreatorID.id;
+    });
+    // console.log("new content array after deletion", contentMoreDel);
+    setContents(contentMoreDel);
   };
 
   const userQuery = async () => {
@@ -263,7 +247,7 @@ export default function UserFeed({ ...props }) {
       });
       temp_subs.push(subscription);
     });
-    setSubscriptions(temp_subs);
+    setCreateSub(temp_subs);
   };
 
   const trainerQuery = async () => {
@@ -277,16 +261,15 @@ export default function UserFeed({ ...props }) {
         const { Contents, ...p } = d.data.getUserProfile;
         setProfile(p);
         setSortedContent(Contents.items);
-        if (!nextToken) {
-          nextToken = Contents.nextToken;
-          ContentNextTokenQuery(nextToken);
+        if (!nextTokenRef.current) {
+          nextTokenRef.current = Contents.nextToken;
         }
       })
       .catch(console.log);
   };
 
   const trainerSub = () => {
-    const subscription = API.graphql({
+    const createSub = API.graphql({
       query: onContentByCreatorID,
       variables: {
         CreatorID: props.user.id,
@@ -294,7 +277,16 @@ export default function UserFeed({ ...props }) {
     }).subscribe({
       next: pushNewContent,
     });
-    setSubscriptions([subscription]);
+    const deleteSub = API.graphql({
+      query: onDeletionByCreatorID,
+      variables: {
+        CreatorID: props.user.id,
+      },
+    }).subscribe({
+      next: pushDeleteContent,
+    });
+    setCreateSub([createSub]);
+    setDeleteSub([deleteSub]);
   };
 
   useEffect(() => {
@@ -303,11 +295,8 @@ export default function UserFeed({ ...props }) {
         ? userQuery().then((subs) => {
             userSub(subs);
           })
-        : trainerQuery().then(trainerSub());
+        : trainerQuery().then(trainerSub);
       return unsubscribeAll();
-    }
-    if (contentMore.length == [] && contents.length > 0) {
-      setContentMore(contentRef.current);
     }
   }, [props.user.id]);
 
@@ -326,48 +315,21 @@ export default function UserFeed({ ...props }) {
   };
 
   const handleContentMore = () => {
-    nextToken = contentAll.nextToken;
-    ContentNextTokenQuery(nextToken);
-    var newArr = [];
-    var arrId = [];
-    var temp = contentMore;
-    temp.push.apply(temp, contentAll.items);
-    for (var item of temp) {
-      if (arrId.indexOf(item["id"]) == -1) {
-        arrId.push(item["id"]);
-        newArr.push(item);
+    ContentNextTokenQuery(nextTokenRef.current).then((newContents) => {
+      let newArr = [];
+      let arrId = [];
+      let temp = contentRef.current;
+      temp.push.apply(temp, newContents.items);
+      for (const item of temp) {
+        // push into the new list only if it is not contained in the existing list
+        if (arrId.indexOf(item.id) === -1) {
+          arrId.push(item.id);
+          newArr.push(item);
+        }
       }
-    }
-    setContentMore(newArr);
-  };
-
-  const trainerDeleSub = () => {
-    const deleteSub = API.graphql({
-      query: onDeletionByCreatorID,
-      variables: {
-        CreatorID: props.user.id,
-      },
-    }).subscribe({
-      next: pushDeleteContent,
+      setSortedContent(newArr);
     });
-    setDeleteSub([deleteSub]);
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      trainerDeleSub();
-    };
-    fetchData();
-  }, [props.user.id]);
-
-  useEffect(() => {
-    if (contentMore.length == 0 && contents.length > 0) {
-      setContentMore(contents);
-    }
-  }, [contents]);
-
-  console.log("subscriptions", deleteSub, subscriptions);
-  console.log("content", contents, contentAll, contentMore);
 
   return (
     <>
@@ -491,7 +453,7 @@ export default function UserFeed({ ...props }) {
                 More
               </TextA>
             </GridTitleFlex>
-            {contentMore.map((c, idx) => {
+            {contents.map((c, idx) => {
               let f = favorites.findIndex((e) => e.Content.id === c.id);
               return (
                 <ContentCard
@@ -500,7 +462,6 @@ export default function UserFeed({ ...props }) {
                   user={profile}
                   favorite={favorites[f]}
                   segments={c.Segments}
-                  onCloseEditor={trainerQuery}
                   favoriteCallback={editFavorite}
                   key={idx}
                 />
