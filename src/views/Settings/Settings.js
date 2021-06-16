@@ -158,7 +158,9 @@ export default function Settings(props) {
     API.post("stripeAPI", "/stripe/api/user/update/defaultpayment", myInit)
       .then(() => {
         checkoutSuccess("Successfully updated payment method");
-        setDefaultPaymentMethod(paymentMethodID);
+        if (mounted) {
+          setDefaultPaymentMethod(paymentMethodID);
+        }
       })
       .catch((err) => {
         console.log(err);

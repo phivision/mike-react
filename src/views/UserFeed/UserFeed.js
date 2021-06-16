@@ -214,7 +214,7 @@ export default function UserFeed(props) {
     setUpdateSub(tempUpdateSub);
   };
 
-  const trainerQuery = async () => {
+  const contentQuery = async () => {
     API.graphql(
       graphqlOperation(contentPaginatingQuery, {
         id: props.user.id,
@@ -267,7 +267,7 @@ export default function UserFeed(props) {
         ? subQuery().then((subs) => {
             userSub(subs);
           })
-        : trainerQuery().then(trainerSub);
+        : contentQuery().then(trainerSub);
       return unsubscribeAll();
     }
   }, [props.user.id]);
