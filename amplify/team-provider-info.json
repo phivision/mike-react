@@ -126,11 +126,11 @@
         },
         "cognitoPostConfirm": {
           "deploymentBucketName": "amplify-mikereact-feature-115326-deployment",
-          "s3Key": "amplify-builds/cognitoPostConfirm-4130695a6c696a45662b-build.zip"
+          "s3Key": "amplify-builds/cognitoPostConfirm-5a2b77384c45372b7435-build.zip"
         },
         "videoConvertComplete": {
           "deploymentBucketName": "amplify-mikereact-feature-115326-deployment",
-          "s3Key": "amplify-builds/videoConvertComplete-3334434b6f7233394158-build.zip"
+          "s3Key": "amplify-builds/videoConvertComplete-39316244773246665439-build.zip"
         },
         "marketing": {
           "deploymentBucketName": "amplify-mikereact-feature-115326-deployment",

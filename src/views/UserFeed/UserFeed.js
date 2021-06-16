@@ -24,6 +24,7 @@ import {
 } from "../../graphql/UserFeed";
 import {
   onContentByCreatorID,
+  onUpdateByCreatorID,
   onDeletionByCreatorID,
 } from "../../graphql/subscriptions";
 import DataPagination from "components/DataPagination/DataPagination";
@@ -32,6 +33,7 @@ import UserProfile from "../../components/UserProfile/UserProfile";
 export default function UserFeed(props) {
   const [createSub, setCreateSub] = useState([]);
   const [deleteSub, setDeleteSub] = useState([]);
+  const [updateSub, setUpdateSub] = useState([]);
   const [contents, setContents] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [trainers, setTrainers] = useState([]);
@@ -89,6 +91,9 @@ export default function UserFeed(props) {
     deleteSub.map((sub) => {
       sub.unsubscribe();
     });
+    updateSub.map((sub) => {
+      sub.unsubscribe();
+    });
   };
 
   const pushNewContent = (d) => {
@@ -96,12 +101,25 @@ export default function UserFeed(props) {
     setContents([d.value.data.onContentByCreatorID].concat(contentRef.current));
   };
 
-  const pushDeleteContent = (d) => {
-    const contentMoreDel = contentRef.current.filter(function (item) {
+  const removeDeleteContent = (d) => {
+    const filteredContents = contentRef.current.filter(function (item) {
       return item.id !== d.value.data.onDeletionByCreatorID.id;
     });
     // console.log("new content array after deletion", contentMoreDel);
-    setContents(contentMoreDel);
+    setContents(filteredContents);
+  };
+
+  const updateCurrentContent = (d) => {
+    const currentContents = contentRef.current;
+    let newContents = [];
+    currentContents.map((content) => {
+      if (content.id === d.value.data.onUpdateByCreatorID.id) {
+        newContents.push(d.value.data.onUpdateByCreatorID);
+      } else {
+        newContents.push(content);
+      }
+    });
+    setContents(newContents);
   };
 
   const subQuery = async () => {
@@ -159,9 +177,11 @@ export default function UserFeed(props) {
   };
 
   const userSub = (subs) => {
-    let temp_subs = [];
+    let tempCreateSub = [];
+    let tempDeleteSub = [];
+    let tempUpdateSub = [];
     subs.items.map((sub) => {
-      const subscription = API.graphql({
+      const createSub = API.graphql({
         query: onContentByCreatorID,
         variables: {
           CreatorID: sub.Trainer.id,
@@ -169,9 +189,29 @@ export default function UserFeed(props) {
       }).subscribe({
         next: pushNewContent,
       });
-      temp_subs.push(subscription);
+      const deleteSub = API.graphql({
+        query: onDeletionByCreatorID,
+        variables: {
+          CreatorID: sub.Trainer.id,
+        },
+      }).subscribe({
+        next: removeDeleteContent,
+      });
+      const updateSub = API.graphql({
+        query: onUpdateByCreatorID,
+        variables: {
+          CreatorID: sub.Trainer.id,
+        },
+      }).subscribe({
+        next: updateCurrentContent,
+      });
+      tempCreateSub.push(createSub);
+      tempDeleteSub.push(deleteSub);
+      tempUpdateSub.push(updateSub);
     });
-    setCreateSub(temp_subs);
+    setCreateSub(tempCreateSub);
+    setDeleteSub(tempDeleteSub);
+    setUpdateSub(tempUpdateSub);
   };
 
   const trainerQuery = async () => {
@@ -206,10 +246,19 @@ export default function UserFeed(props) {
         CreatorID: props.user.id,
       },
     }).subscribe({
-      next: pushDeleteContent,
+      next: removeDeleteContent,
+    });
+    const updateSub = API.graphql({
+      query: onUpdateByCreatorID,
+      variables: {
+        CreatorID: props.user.id,
+      },
+    }).subscribe({
+      next: updateCurrentContent,
     });
     setCreateSub([createSub]);
     setDeleteSub([deleteSub]);
+    setUpdateSub([updateSub]);
   };
 
   useEffect(() => {
