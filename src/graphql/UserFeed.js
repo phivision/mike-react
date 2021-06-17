@@ -53,7 +53,7 @@ export const createUserFavoriteContent = /* GraphQL */ `
     }
   }
 `;
-export const userProfileQuery = `query GetUserProfile ($id: ID!) {
+export const userSubscriptionQuery = `query GetUserProfile ($id: ID!) {
           getUserProfile(id: $id) {
             Subscriptions {
               items {
@@ -83,11 +83,6 @@ export const userProfileQuery = `query GetUserProfile ($id: ID!) {
                 }
               }
             }
-            id
-            LastName
-            FirstName
-            UserImage
-            Description
           }
         }`;
 
@@ -121,9 +116,20 @@ export const userFavoriteIdQuery = `query GetUserProfile ($id: ID!) {
           }
         }`;
 
-export const trainerProfileQuery = `query GetUserProfile ($id: ID!, $limit: Int) {
+export const userProfileQuery = `query GetUserProfile ($id: ID!) {
           getUserProfile(id: $id) {
-            Contents(limit: $limit, sortDirection: DESC) {
+            id
+            LastName
+            FirstName
+            UserImage
+            Description
+          }
+        }`;
+
+export const contentPaginatingQuery = `
+        query GetUserProfile ($id: ID!, $limit: Int, $nextToken: String) {
+          getUserProfile(id: $id) {
+            Contents(limit: $limit, nextToken: $nextToken, sortDirection: DESC) {
               items {
                 id
                 ContentName
@@ -142,44 +148,8 @@ export const trainerProfileQuery = `query GetUserProfile ($id: ID!, $limit: Int)
               }
               nextToken
             }
-            id
-            LastName
-            FirstName
-            UserImage
-            Description
           }
         }`;
-
-export const contentPaginatingQuery = `
-query GetUserProfile ($id: ID!, $limit: Int, $nextToken: String) {
-  getUserProfile(id: $id) {
-    Contents(limit: $limit, nextToken: $nextToken, sortDirection: DESC) {
-      items {
-        id
-        ContentName
-        Description
-        Title
-        createdAt
-        Thumbnail
-        Segments
-        Creator{
-          UserImage
-          FirstName
-          LastName
-          id
-        }
-        owner
-      }
-      nextToken
-    }
-    id
-    LastName
-    FirstName
-    UserImage
-    Description
-    IsVerified
-  }
-}`;
 
 export const profileLimitQuery = /* GraphQL */ `
   query GetUserProfile($id: ID!, $limit: Int) {

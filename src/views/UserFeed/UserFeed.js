@@ -1,21 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { API, graphqlOperation, Storage } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 import PropTypes from "prop-types";
 import { Typography, Container } from "@material-ui/core";
 import ContentCard from "../../components/Card/ContentCard";
 import WorkoutCard from "../../components/Card/WorkoutCard";
 import Banner from "assets/img/banner.jpeg";
-import { updateUserProfile } from "../../graphql/mutations";
-import { useHistory } from "react-router-dom";
-import UserAvatar from "../../components/UserAvatar/UserAvatar";
-import EditableTypography from "../../components/EditableTypography/EditableTypography";
-import IconButton from "@material-ui/core/IconButton";
 import { userRoles } from "../../variables/userRoles";
 import {
   GridItem,
   GridContainer,
-  CustomButton,
-  ProfileBox,
   UserFeedBanner,
   TextA,
   GridTitleFlex,
@@ -27,41 +20,29 @@ import {
   userFavoriteQuery,
   userFavoriteIdQuery,
   contentPaginatingQuery,
-  userProfileQuery,
+  userSubscriptionQuery,
 } from "../../graphql/UserFeed";
-import { onContentByCreatorID } from "../../graphql/subscriptions";
+import {
+  onContentByCreatorID,
+  onUpdateByCreatorID,
+  onDeletionByCreatorID,
+} from "../../graphql/subscriptions";
 import DataPagination from "components/DataPagination/DataPagination";
-import { beforeImageUpload } from "../../utilities/ImagesCompress";
+import UserProfile from "../../components/UserProfile/UserProfile";
 
-// import initial profile
-const initialProfileState = {
-  id: "",
-  Birthday: null,
-  Height: null,
-  UserImage: null,
-  LastName: "",
-  FirstName: "",
-  Weight: null,
-  Description: null,
-};
-let tempProfile;
-
-export default function UserFeed({ ...props }) {
-  const [profile, setProfile] = useState(initialProfileState);
-  const [subscriptions, setSubscriptions] = useState([]);
+export default function UserFeed(props) {
+  const [createSub, setCreateSub] = useState([]);
+  const [deleteSub, setDeleteSub] = useState([]);
+  const [updateSub, setUpdateSub] = useState([]);
   const [contents, setContents] = useState([]);
   const [favorites, setFavorites] = useState([]);
-  const [edit, setEdit] = useState(false);
   const [trainers, setTrainers] = useState([]);
-  const history = useHistory();
   const contentRef = useRef([]);
+  const nextTokenRef = useRef("");
   contentRef.current = contents;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
-  const [contentAll, setContentAll] = useState([]);
-  const [contentMore, setContentMore] = useState([]);
   const limit = 2;
-  let nextToken = "";
 
   const ContentNextTokenQuery = async (nextToken) => {
     const { data } = await API.graphql({
@@ -72,37 +53,8 @@ export default function UserFeed({ ...props }) {
         nextToken: nextToken,
       },
     });
-    setContentAll(data.getUserProfile.Contents);
-  };
-
-  const onChange = (e) => {
-    switch (e.target.id) {
-      case "firstName":
-        setProfile({ ...profile, FirstName: e.target.value });
-        break;
-      case "lastName":
-        setProfile({ ...profile, LastName: e.target.value });
-        break;
-      case "description":
-        setProfile({ ...profile, Description: e.target.value });
-        break;
-    }
-  };
-
-  const onClickEditProfile = async (type) => {
-    if (edit) {
-      if (type === "submit-changes") {
-        API.graphql({
-          query: updateUserProfile,
-          variables: { input: profile },
-        });
-      } else {
-        setProfile(tempProfile);
-      }
-    } else {
-      tempProfile = { ...profile };
-    }
-    setEdit(!edit);
+    nextTokenRef.current = data.getUserProfile.Contents.nextToken;
+    return data.getUserProfile.Contents;
   };
 
   const editFavorite = (fav, contentId) => {
@@ -120,7 +72,7 @@ export default function UserFeed({ ...props }) {
       API.graphql(
         graphqlOperation(createUserFavoriteContent, {
           input: {
-            userFavoriteContentUserId: profile.id,
+            userFavoriteContentUserId: props.user.id,
             userFavoriteContentContentId: contentId,
           },
         })
@@ -132,32 +84,14 @@ export default function UserFeed({ ...props }) {
     }
   };
 
-  const handleImageChange = async (e) => {
-    if (!e.target.files[0]) return;
-    var avatar = e.target.files[0];
-    let newAvatr;
-    const nameArray = e.target.files[0].name.split(".");
-    const userImageName =
-      ("UserImage" + props.user.id + Date.now()).replace(/[^0-9a-z]/gi, "") +
-      "." +
-      nameArray[nameArray.length - 1];
-    //if > 100kb, then compress avatar image to small size
-    console.log("original Avatar size", avatar.size / 1024);
-    if (avatar.size > 1024 * 1024 * 0.1) {
-      newAvatr = await beforeImageUpload(avatar, 150);
-      console.log("compressed Avatar size", newAvatr.size / 1024);
-    } else {
-      newAvatr = avatar;
-    }
-    console.log("newAvatr", newAvatr);
-    await Storage.put(userImageName, newAvatr, {
-      contentType: "image/*",
-    });
-    setProfile({ ...profile, UserImage: userImageName });
-  };
-
   const unsubscribeAll = () => {
-    subscriptions.map((sub) => {
+    createSub.map((sub) => {
+      sub.unsubscribe();
+    });
+    deleteSub.map((sub) => {
+      sub.unsubscribe();
+    });
+    updateSub.map((sub) => {
       sub.unsubscribe();
     });
   };
@@ -167,12 +101,34 @@ export default function UserFeed({ ...props }) {
     setContents([d.value.data.onContentByCreatorID].concat(contentRef.current));
   };
 
-  const userQuery = async () => {
+  const removeDeleteContent = (d) => {
+    const filteredContents = contentRef.current.filter(function (item) {
+      return item.id !== d.value.data.onDeletionByCreatorID.id;
+    });
+    // console.log("new content array after deletion", contentMoreDel);
+    setContents(filteredContents);
+  };
+
+  const updateCurrentContent = (d) => {
+    const currentContents = contentRef.current;
+    let newContents = [];
+    currentContents.map((content) => {
+      if (content.id === d.value.data.onUpdateByCreatorID.id) {
+        newContents.push(d.value.data.onUpdateByCreatorID);
+      } else {
+        newContents.push(content);
+      }
+    });
+    setContents(newContents);
+  };
+
+  const subQuery = async () => {
     const d = await API.graphql(
-      graphqlOperation(userProfileQuery, { id: props.user.id, limit: limit })
+      graphqlOperation(userSubscriptionQuery, {
+        id: props.user.id,
+      })
     ).catch(console.log);
-    const { Subscriptions: SubsData, ...p } = d.data.getUserProfile;
-    setProfile(p);
+    const SubsData = d.data.getUserProfile.Subscriptions;
     let temp_contents = [];
     let temp_trainers = [];
     SubsData.items.map((sub) => {
@@ -221,9 +177,11 @@ export default function UserFeed({ ...props }) {
   };
 
   const userSub = (subs) => {
-    let temp_subs = [];
+    let tempCreateSub = [];
+    let tempDeleteSub = [];
+    let tempUpdateSub = [];
     subs.items.map((sub) => {
-      const subscription = API.graphql({
+      const createSub = API.graphql({
         query: onContentByCreatorID,
         variables: {
           CreatorID: sub.Trainer.id,
@@ -231,12 +189,32 @@ export default function UserFeed({ ...props }) {
       }).subscribe({
         next: pushNewContent,
       });
-      temp_subs.push(subscription);
+      const deleteSub = API.graphql({
+        query: onDeletionByCreatorID,
+        variables: {
+          CreatorID: sub.Trainer.id,
+        },
+      }).subscribe({
+        next: removeDeleteContent,
+      });
+      const updateSub = API.graphql({
+        query: onUpdateByCreatorID,
+        variables: {
+          CreatorID: sub.Trainer.id,
+        },
+      }).subscribe({
+        next: updateCurrentContent,
+      });
+      tempCreateSub.push(createSub);
+      tempDeleteSub.push(deleteSub);
+      tempUpdateSub.push(updateSub);
     });
-    setSubscriptions(temp_subs);
+    setCreateSub(tempCreateSub);
+    setDeleteSub(tempDeleteSub);
+    setUpdateSub(tempUpdateSub);
   };
 
-  const trainerQuery = async () => {
+  const contentQuery = async () => {
     API.graphql(
       graphqlOperation(contentPaginatingQuery, {
         id: props.user.id,
@@ -244,19 +222,17 @@ export default function UserFeed({ ...props }) {
       })
     )
       .then((d) => {
-        const { Contents, ...p } = d.data.getUserProfile;
-        setProfile(p);
+        const Contents = d.data.getUserProfile.Contents;
         setSortedContent(Contents.items);
-        if (!nextToken) {
-          nextToken = Contents.nextToken;
-          ContentNextTokenQuery(nextToken);
+        if (!nextTokenRef.current) {
+          nextTokenRef.current = Contents.nextToken;
         }
       })
       .catch(console.log);
   };
 
   const trainerSub = () => {
-    const subscription = API.graphql({
+    const createSub = API.graphql({
       query: onContentByCreatorID,
       variables: {
         CreatorID: props.user.id,
@@ -264,16 +240,34 @@ export default function UserFeed({ ...props }) {
     }).subscribe({
       next: pushNewContent,
     });
-    setSubscriptions([subscription]);
+    const deleteSub = API.graphql({
+      query: onDeletionByCreatorID,
+      variables: {
+        CreatorID: props.user.id,
+      },
+    }).subscribe({
+      next: removeDeleteContent,
+    });
+    const updateSub = API.graphql({
+      query: onUpdateByCreatorID,
+      variables: {
+        CreatorID: props.user.id,
+      },
+    }).subscribe({
+      next: updateCurrentContent,
+    });
+    setCreateSub([createSub]);
+    setDeleteSub([deleteSub]);
+    setUpdateSub([updateSub]);
   };
 
   useEffect(() => {
     if (props.user.role !== userRoles.UNKNOWN) {
       props.user.role === userRoles.STUDENT
-        ? userQuery().then((subs) => {
+        ? subQuery().then((subs) => {
             userSub(subs);
           })
-        : trainerQuery().then(trainerSub);
+        : contentQuery().then(trainerSub);
       return unsubscribeAll();
     }
   }, [props.user.id]);
@@ -293,24 +287,21 @@ export default function UserFeed({ ...props }) {
   };
 
   const handleContentMore = () => {
-    nextToken = contentAll.nextToken;
-    ContentNextTokenQuery(nextToken);
-    var newArr = [];
-    var arrId = [];
-    var temp = contentMore;
-    temp.push.apply(temp, contentAll.items);
-    for (var item of temp) {
-      if (arrId.indexOf(item["id"]) == -1) {
-        arrId.push(item["id"]);
-        newArr.push(item);
+    ContentNextTokenQuery(nextTokenRef.current).then((newContents) => {
+      let newArr = [];
+      let arrId = [];
+      let temp = contentRef.current;
+      temp.push.apply(temp, newContents.items);
+      for (const item of temp) {
+        // push into the new list only if it is not contained in the existing list
+        if (arrId.indexOf(item.id) === -1) {
+          arrId.push(item.id);
+          newArr.push(item);
+        }
       }
-    }
-    setContentMore(newArr);
+      setSortedContent(newArr);
+    });
   };
-
-  if (contentMore.length < contents.length) {
-    setContentMore(contents);
-  }
 
   return (
     <>
@@ -321,107 +312,11 @@ export default function UserFeed({ ...props }) {
           justify="space-evenly"
           alignItems="flex-start"
         >
-          <GridContainer item direction="column" xs={12} sm={4}>
-            <ProfileBox>
-              <GridContainer>
-                {edit ? (
-                  <div>
-                    <input
-                      accept="image/*"
-                      id="profile-upload"
-                      type="file"
-                      onChange={handleImageChange}
-                      style={{ display: "none" }}
-                    />
-                    <label htmlFor="profile-upload">
-                      <IconButton component="span">
-                        <UserAvatar UserImage={profile.UserImage} />
-                      </IconButton>
-                    </label>
-                  </div>
-                ) : (
-                  <UserAvatar UserImage={profile.UserImage} />
-                )}
-              </GridContainer>
-              <GridContainer item direction="row">
-                <EditableTypography
-                  variant="h3"
-                  label="First Name"
-                  text={profile.FirstName}
-                  edit={edit}
-                  onChange={onChange}
-                  id="firstName"
-                />
-                <EditableTypography
-                  variant="h3"
-                  label="Last Name"
-                  text={profile.LastName}
-                  edit={edit}
-                  onChange={onChange}
-                  id="lastName"
-                />
-              </GridContainer>
-              <GridItem variant="body1" xs={12}>
-                <EditableTypography
-                  variant="body1"
-                  edit={edit}
-                  label="Description"
-                  onChange={onChange}
-                  id="description"
-                  multiline="true"
-                  text={profile.Description}
-                />
-              </GridItem>
-              <GridItem xs={12}>
-                {edit ? (
-                  <GridItem>
-                    <CustomButton
-                      variant="contained"
-                      fullWidth
-                      onClick={() => onClickEditProfile("submit-changes")}
-                    >
-                      Submit Changes
-                    </CustomButton>
-                    <CustomButton fullWidth onClick={onClickEditProfile}>
-                      Discard Changes
-                    </CustomButton>
-                  </GridItem>
-                ) : (
-                  <CustomButton
-                    color="primary"
-                    variant="contained"
-                    onClick={onClickEditProfile}
-                    size="large"
-                  >
-                    Edit
-                  </CustomButton>
-                )}
-              </GridItem>
-            </ProfileBox>
-            {props.user.role === userRoles.STUDENT ? (
-              <>
-                <GridItem>
-                  <Typography variant="h3">My Trainers</Typography>
-                </GridItem>
-                <GridItem container direction="row">
-                  {trainers.map((trainer, idx) => {
-                    return (
-                      <GridItem key={idx}>
-                        <UserAvatar
-                          UserImage={trainer.UserImage}
-                          onClick={() =>
-                            history.push(`/landingpage/${trainer.id}`)
-                          }
-                        />
-                      </GridItem>
-                    );
-                  })}
-                </GridItem>
-              </>
-            ) : (
-              <></>
-            )}
-          </GridContainer>
+          {props.user.role === userRoles.STUDENT ? (
+            <UserProfile user={props.user} trainers={trainers} />
+          ) : (
+            <UserProfile user={props.user} />
+          )}
           <GridContainer item direction="column" xs={12} sm={4}>
             <GridTitleFlex>
               <Typography variant="h2">Feed</Typography>
@@ -434,16 +329,15 @@ export default function UserFeed({ ...props }) {
                 More
               </TextA>
             </GridTitleFlex>
-            {contentMore.map((c, idx) => {
+            {contents.map((c, idx) => {
               let f = favorites.findIndex((e) => e.Content.id === c.id);
               return (
                 <ContentCard
                   post={c}
                   trainer={c.Creator}
-                  user={profile}
+                  user={{ id: props.user.id }}
                   favorite={favorites[f]}
                   segments={c.Segments}
-                  onCloseEditor={trainerQuery}
                   favoriteCallback={editFavorite}
                   key={idx}
                 />
@@ -465,7 +359,6 @@ export default function UserFeed({ ...props }) {
                 return (
                   <WorkoutCard
                     post={fav.Content}
-                    trainer={profile}
                     favorite={fav}
                     segments={fav.Content.Segments}
                     favoriteCallback={editFavorite}

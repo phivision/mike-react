@@ -98,5 +98,6 @@ type UserContent @model(subscriptions: null)
 
 type Subscription {
   onContentByCreatorID(CreatorID: ID!): UserContent @aws_subscribe(mutations: ["createUserContent"])
+  onUpdateByCreatorID(CreatorID: ID!): UserContent @aws_subscribe(mutations: ["updateUserContent"])
   onDeletionByCreatorID(CreatorID: ID!): UserContent @aws_subscribe(mutations: ["deleteUserContent"])
 }
