@@ -36,7 +36,9 @@ export default function ContentCard(props) {
 
   const handleCloseContentEdit = () => {
     setOpenContentEdit(false);
-    props.onCloseEditor();
+    if (props.onCloseEditor) {
+      props.onCloseEditor();
+    }
   };
 
   const handleOpenViewer = () => {
@@ -67,7 +69,9 @@ export default function ContentCard(props) {
           props.favoriteCallback(props.favorite, props.post.id);
         }
         handleCloseDeletion();
-        props.onCloseEditor();
+        if (props.onCloseEditor) {
+          props.onCloseEditor();
+        }
       });
     });
   };
@@ -118,7 +122,7 @@ export default function ContentCard(props) {
               {liked ? <FavoriteIcon /> : <FavoriteBorder />}
             </CardContentIcon>
           )}
-          {props.onCloseEditor && props.trainer.id === props.user.id && (
+          {props.trainer.id === props.user.id && (
             <>
               <CardContentIcon
                 aria-label="delete this post"

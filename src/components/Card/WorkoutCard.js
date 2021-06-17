@@ -125,9 +125,7 @@ WorkoutCard.propTypes = {
   }),
   segments: PropTypes.string,
   trainer: PropTypes.shape({
-    FirstName: PropTypes.string.isRequired,
-    LastName: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
+    id: PropTypes.string,
   }),
   favorite: PropTypes.object,
   onCloseEditor: PropTypes.func,
