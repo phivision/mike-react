@@ -68,7 +68,8 @@ type UserContent @model(subscriptions: null)
 @auth(rules: [{ allow: owner, operations: [create, delete, update] },
   { allow: private, operations: [read]},
   { allow: public, provider: iam, operations: [read]}])
-@key(name: "byContent", fields: ["CreatorID", "createdAt"], queryField: "byContentCreatedAt")
+@key(name: "byContent", fields: ["CreatorID", "createdAt"])
+@key(name: "byName", fields: ["ContentName"], queryField: "contentByName")
 {
   id: ID!
   """
@@ -97,10 +98,10 @@ type UserContent @model(subscriptions: null)
   FavoriteUser: [UserFavoriteContent] @connection(name: "byFavoriteUser")
 }
 
-type Message @model(subscriptions: null)
+type Messages @model(subscriptions: null)
 @auth(rules: [{ allow: owner, operations: [create, delete, update] }])
-@key(name: "byToUser", fields: ["ToUserID", "createdAt"], queryField: "messageByToUserID")
-@key(name: "byFromUser", fields: ["FromUserID", "createdAt"], queryField: "messageByFromUserID")
+@key(name: "byToUser", fields: ["ToUserID", "createdAt"], queryField: "messagesByToUserID")
+@key(name: "byFromUser", fields: ["FromUserID"])
   {
   id: ID!
   PostMessages: String!
@@ -136,5 +137,5 @@ type Subscription {
   onContentByCreatorID(CreatorID: ID!): UserContent @aws_subscribe(mutations: ["createUserContent"])
   onUpdateByCreatorID(CreatorID: ID!): UserContent @aws_subscribe(mutations: ["updateUserContent"])
   onDeletionByCreatorID(CreatorID: ID!): UserContent @aws_subscribe(mutations: ["deleteUserContent"])
-  onMessagesByToUserID(ToUserID: ID!): Message @aws_subscribe(mutations: ["createMessage"])
+  onMessagesByToUserID(ToUserID: ID!): Messages @aws_subscribe(mutations: ["createMessages"])
 }

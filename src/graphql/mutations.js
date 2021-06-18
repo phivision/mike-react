@@ -25,6 +25,7 @@ export const createUserProfile = /* GraphQL */ `
       Description
       Biography
       LandingURL
+      TokenBalance
       createdAt
       updatedAt
       owner
@@ -67,6 +68,7 @@ export const updateUserProfile = /* GraphQL */ `
       Description
       Biography
       LandingURL
+      TokenBalance
       createdAt
       updatedAt
       owner
@@ -109,6 +111,7 @@ export const deleteUserProfile = /* GraphQL */ `
       Description
       Biography
       LandingURL
+      TokenBalance
       createdAt
       updatedAt
       owner
@@ -158,6 +161,7 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
@@ -181,6 +185,7 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
@@ -220,6 +225,7 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
@@ -243,6 +249,7 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
@@ -282,6 +289,7 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
@@ -305,6 +313,7 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
@@ -341,6 +350,7 @@ export const createUserFavoriteContent = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
@@ -349,6 +359,7 @@ export const createUserFavoriteContent = /* GraphQL */ `
       Content {
         id
         CreatorID
+        createdAt
         ContentName
         Description
         Title
@@ -360,7 +371,6 @@ export const createUserFavoriteContent = /* GraphQL */ `
         Thumbnail
         Preview
         Segments
-        createdAt
         updatedAt
         owner
       }
@@ -395,6 +405,7 @@ export const updateUserFavoriteContent = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
@@ -403,6 +414,7 @@ export const updateUserFavoriteContent = /* GraphQL */ `
       Content {
         id
         CreatorID
+        createdAt
         ContentName
         Description
         Title
@@ -414,7 +426,6 @@ export const updateUserFavoriteContent = /* GraphQL */ `
         Thumbnail
         Preview
         Segments
-        createdAt
         updatedAt
         owner
       }
@@ -449,6 +460,7 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
@@ -457,6 +469,7 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
       Content {
         id
         CreatorID
+        createdAt
         ContentName
         Description
         Title
@@ -468,7 +481,6 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
         Thumbnail
         Preview
         Segments
-        createdAt
         updatedAt
         owner
       }
@@ -483,6 +495,7 @@ export const createUserContent = /* GraphQL */ `
     createUserContent(input: $input, condition: $condition) {
       id
       CreatorID
+      createdAt
       ContentName
       Description
       Title
@@ -494,7 +507,6 @@ export const createUserContent = /* GraphQL */ `
       Thumbnail
       Preview
       Segments
-      createdAt
       updatedAt
       Creator {
         id
@@ -515,6 +527,7 @@ export const createUserContent = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
@@ -534,6 +547,7 @@ export const updateUserContent = /* GraphQL */ `
     updateUserContent(input: $input, condition: $condition) {
       id
       CreatorID
+      createdAt
       ContentName
       Description
       Title
@@ -545,7 +559,6 @@ export const updateUserContent = /* GraphQL */ `
       Thumbnail
       Preview
       Segments
-      createdAt
       updatedAt
       Creator {
         id
@@ -566,6 +579,7 @@ export const updateUserContent = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
@@ -585,6 +599,7 @@ export const deleteUserContent = /* GraphQL */ `
     deleteUserContent(input: $input, condition: $condition) {
       id
       CreatorID
+      createdAt
       ContentName
       Description
       Title
@@ -596,7 +611,6 @@ export const deleteUserContent = /* GraphQL */ `
       Thumbnail
       Preview
       Segments
-      createdAt
       updatedAt
       Creator {
         id
@@ -617,12 +631,211 @@ export const deleteUserContent = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
       }
       FavoriteUser {
         nextToken
+      }
+      owner
+    }
+  }
+`;
+export const createMessages = /* GraphQL */ `
+  mutation CreateMessages(
+    $input: CreateMessagesInput!
+    $condition: ModelMessagesConditionInput
+  ) {
+    createMessages(input: $input, condition: $condition) {
+      id
+      PostMessages
+      FromUserID
+      ToUserID
+      createdAt
+      Type
+      Status
+      updatedAt
+      FromUser {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        IsVerified
+        Description
+        Biography
+        LandingURL
+        TokenBalance
+        createdAt
+        updatedAt
+        owner
+      }
+      ToUser {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        IsVerified
+        Description
+        Biography
+        LandingURL
+        TokenBalance
+        createdAt
+        updatedAt
+        owner
+      }
+      owner
+    }
+  }
+`;
+export const updateMessages = /* GraphQL */ `
+  mutation UpdateMessages(
+    $input: UpdateMessagesInput!
+    $condition: ModelMessagesConditionInput
+  ) {
+    updateMessages(input: $input, condition: $condition) {
+      id
+      PostMessages
+      FromUserID
+      ToUserID
+      createdAt
+      Type
+      Status
+      updatedAt
+      FromUser {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        IsVerified
+        Description
+        Biography
+        LandingURL
+        TokenBalance
+        createdAt
+        updatedAt
+        owner
+      }
+      ToUser {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        IsVerified
+        Description
+        Biography
+        LandingURL
+        TokenBalance
+        createdAt
+        updatedAt
+        owner
+      }
+      owner
+    }
+  }
+`;
+export const deleteMessages = /* GraphQL */ `
+  mutation DeleteMessages(
+    $input: DeleteMessagesInput!
+    $condition: ModelMessagesConditionInput
+  ) {
+    deleteMessages(input: $input, condition: $condition) {
+      id
+      PostMessages
+      FromUserID
+      ToUserID
+      createdAt
+      Type
+      Status
+      updatedAt
+      FromUser {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        IsVerified
+        Description
+        Biography
+        LandingURL
+        TokenBalance
+        createdAt
+        updatedAt
+        owner
+      }
+      ToUser {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        IsVerified
+        Description
+        Biography
+        LandingURL
+        TokenBalance
+        createdAt
+        updatedAt
+        owner
       }
       owner
     }
