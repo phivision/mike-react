@@ -42,8 +42,26 @@ export const onContentByCreatorID = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       FavoriteUser {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       owner
@@ -91,8 +109,26 @@ export const onUpdateByCreatorID = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       FavoriteUser {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       owner
@@ -140,8 +176,26 @@ export const onDeletionByCreatorID = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       FavoriteUser {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       owner
@@ -182,6 +236,18 @@ export const onMessagesByToUserID = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       ToUser {
         id
@@ -206,6 +272,18 @@ export const onMessagesByToUserID = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       owner
     }
