@@ -30,15 +30,57 @@ export const createUserProfile = /* GraphQL */ `
       updatedAt
       owner
       Subscriptions {
+        items {
+          id
+          StripeID
+          ExpireDate
+          CancelAtPeriodEnd
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       Users {
+        items {
+          id
+          StripeID
+          ExpireDate
+          CancelAtPeriodEnd
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       Favorites {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       Contents {
+        items {
+          id
+          CreatorID
+          createdAt
+          ContentName
+          Description
+          Title
+          Level
+          Length
+          IsDemo
+          TranscodeReady
+          ViewCount
+          Thumbnail
+          Preview
+          Segments
+          updatedAt
+          owner
+        }
         nextToken
       }
     }
@@ -73,15 +115,57 @@ export const updateUserProfile = /* GraphQL */ `
       updatedAt
       owner
       Subscriptions {
+        items {
+          id
+          StripeID
+          ExpireDate
+          CancelAtPeriodEnd
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       Users {
+        items {
+          id
+          StripeID
+          ExpireDate
+          CancelAtPeriodEnd
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       Favorites {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       Contents {
+        items {
+          id
+          CreatorID
+          createdAt
+          ContentName
+          Description
+          Title
+          Level
+          Length
+          IsDemo
+          TranscodeReady
+          ViewCount
+          Thumbnail
+          Preview
+          Segments
+          updatedAt
+          owner
+        }
         nextToken
       }
     }
@@ -116,15 +200,57 @@ export const deleteUserProfile = /* GraphQL */ `
       updatedAt
       owner
       Subscriptions {
+        items {
+          id
+          StripeID
+          ExpireDate
+          CancelAtPeriodEnd
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       Users {
+        items {
+          id
+          StripeID
+          ExpireDate
+          CancelAtPeriodEnd
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       Favorites {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       Contents {
+        items {
+          id
+          CreatorID
+          createdAt
+          ContentName
+          Description
+          Title
+          Level
+          Length
+          IsDemo
+          TranscodeReady
+          ViewCount
+          Thumbnail
+          Preview
+          Segments
+          updatedAt
+          owner
+        }
         nextToken
       }
     }
@@ -165,6 +291,18 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       User {
         id
@@ -189,6 +327,18 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       owner
     }
@@ -229,6 +379,18 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       User {
         id
@@ -253,6 +415,18 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       owner
     }
@@ -293,6 +467,18 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       User {
         id
@@ -317,6 +503,18 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       owner
     }
@@ -354,6 +552,18 @@ export const createUserFavoriteContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       owner
       Content {
@@ -372,6 +582,33 @@ export const createUserFavoriteContent = /* GraphQL */ `
         Preview
         Segments
         updatedAt
+        Creator {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          createdAt
+          updatedAt
+          owner
+        }
+        FavoriteUser {
+          nextToken
+        }
         owner
       }
     }
@@ -409,6 +646,18 @@ export const updateUserFavoriteContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       owner
       Content {
@@ -427,6 +676,33 @@ export const updateUserFavoriteContent = /* GraphQL */ `
         Preview
         Segments
         updatedAt
+        Creator {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          createdAt
+          updatedAt
+          owner
+        }
+        FavoriteUser {
+          nextToken
+        }
         owner
       }
     }
@@ -464,6 +740,18 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       owner
       Content {
@@ -482,6 +770,33 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
         Preview
         Segments
         updatedAt
+        Creator {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          createdAt
+          updatedAt
+          owner
+        }
+        FavoriteUser {
+          nextToken
+        }
         owner
       }
     }
@@ -531,8 +846,26 @@ export const createUserContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       FavoriteUser {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       owner
@@ -583,8 +916,26 @@ export const updateUserContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       FavoriteUser {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       owner
@@ -635,20 +986,38 @@ export const deleteUserContent = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       FavoriteUser {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       owner
     }
   }
 `;
-export const createMessages = /* GraphQL */ `
-  mutation CreateMessages(
-    $input: CreateMessagesInput!
-    $condition: ModelMessagesConditionInput
+export const createMessage = /* GraphQL */ `
+  mutation CreateMessage(
+    $input: CreateMessageInput!
+    $condition: ModelMessageConditionInput
   ) {
-    createMessages(input: $input, condition: $condition) {
+    createMessage(input: $input, condition: $condition) {
       id
       PostMessages
       FromUserID
@@ -680,6 +1049,18 @@ export const createMessages = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       ToUser {
         id
@@ -704,17 +1085,29 @@ export const createMessages = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       owner
     }
   }
 `;
-export const updateMessages = /* GraphQL */ `
-  mutation UpdateMessages(
-    $input: UpdateMessagesInput!
-    $condition: ModelMessagesConditionInput
+export const updateMessage = /* GraphQL */ `
+  mutation UpdateMessage(
+    $input: UpdateMessageInput!
+    $condition: ModelMessageConditionInput
   ) {
-    updateMessages(input: $input, condition: $condition) {
+    updateMessage(input: $input, condition: $condition) {
       id
       PostMessages
       FromUserID
@@ -746,6 +1139,18 @@ export const updateMessages = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       ToUser {
         id
@@ -770,17 +1175,29 @@ export const updateMessages = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       owner
     }
   }
 `;
-export const deleteMessages = /* GraphQL */ `
-  mutation DeleteMessages(
-    $input: DeleteMessagesInput!
-    $condition: ModelMessagesConditionInput
+export const deleteMessage = /* GraphQL */ `
+  mutation DeleteMessage(
+    $input: DeleteMessageInput!
+    $condition: ModelMessageConditionInput
   ) {
-    deleteMessages(input: $input, condition: $condition) {
+    deleteMessage(input: $input, condition: $condition) {
       id
       PostMessages
       FromUserID
@@ -812,6 +1229,18 @@ export const deleteMessages = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       ToUser {
         id
@@ -836,6 +1265,18 @@ export const deleteMessages = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       owner
     }
