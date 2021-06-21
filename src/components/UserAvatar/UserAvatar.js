@@ -4,8 +4,9 @@ import PropTypes from "prop-types";
 import avatar from "assets/img/faces/blank.png";
 import { CardIcon } from "../StyledComponents/StyledComponents";
 
-const UserAvatar = ({ UserImage: UserImage, ...p }) => {
+const UserAvatar = ({ UserImage: UserImage, width: width, ...p }) => {
   const [UserURL, setURL] = useState("");
+  width ? width : "150px";
 
   useEffect(() => {
     if (UserImage) {
@@ -18,7 +19,7 @@ const UserAvatar = ({ UserImage: UserImage, ...p }) => {
   }, [UserImage]);
 
   return (
-    <div style={{ maxWidth: "150px" }}>
+    <div style={{ maxWidth: width }}>
       <CardIcon {...p} alt="Profile Picture" src={UserURL} />
     </div>
   );
@@ -26,6 +27,7 @@ const UserAvatar = ({ UserImage: UserImage, ...p }) => {
 
 UserAvatar.propTypes = {
   UserImage: PropTypes.string,
+  width: PropTypes.string,
 };
 
 export default UserAvatar;
