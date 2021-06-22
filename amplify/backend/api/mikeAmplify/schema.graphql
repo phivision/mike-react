@@ -23,6 +23,7 @@
   Description: String
   Biography: String
   LandingURL: String
+  TokenBalance: Int
   """
   A list of user's favorite contents
   """
@@ -67,14 +68,14 @@ type UserContent @model(subscriptions: null)
 @auth(rules: [{ allow: owner, operations: [create, delete, update] },
   { allow: private, operations: [read]},
   { allow: public, provider: iam, operations: [read]}])
-@key(name: "byContent", fields: ["CreatorID", "ContentName"])
-@key(name: "byName", fields: ["ContentName"], queryField: "contentByName")
+@key(name: "byContent", fields: ["CreatorID", "createdAt"], queryField: "byContentCreatedAt")
 {
   id: ID!
   """
   The ID of the user who created and own this content
   """
   CreatorID: ID!
+  createdAt: AWSDateTime!
   ContentName: String!
   Description: String
   Title: String
@@ -96,8 +97,44 @@ type UserContent @model(subscriptions: null)
   FavoriteUser: [UserFavoriteContent] @connection(name: "byFavoriteUser")
 }
 
+type Message @model(subscriptions: null)
+@auth(rules: [{ allow: owner, operations: [create, delete, update] }])
+@key(name: "byToUser", fields: ["ToUserID", "createdAt"], queryField: "messageByToUserID")
+@key(name: "byFromUser", fields: ["FromUserID", "createdAt"], queryField: "messageByFromUserID")
+  {
+  id: ID!
+  PostMessages: String!
+  FromUserID: ID!
+  ToUserID: ID!
+  createdAt: AWSDateTime!
+  """
+  The message type can be text, voice, image, video, etc
+  """
+  Type: MessageType
+  """
+  The message status, unread, read bu unresponded, responded, etc
+  """
+  Status: MessageStatus
+  FromUser: UserProfile! @connection(fields: ["FromUserID"])
+  ToUser: UserProfile! @connection(fields: ["ToUserID"])
+}
+
+enum MessageStatus {
+  UNREAD
+  UNRESPONDED
+  RESPONDED
+}
+
+enum MessageType {
+  TEXT
+  VOICE
+  IMAGE
+  VIDEO
+}
+
 type Subscription {
   onContentByCreatorID(CreatorID: ID!): UserContent @aws_subscribe(mutations: ["createUserContent"])
   onUpdateByCreatorID(CreatorID: ID!): UserContent @aws_subscribe(mutations: ["updateUserContent"])
   onDeletionByCreatorID(CreatorID: ID!): UserContent @aws_subscribe(mutations: ["deleteUserContent"])
+  onMessagesByToUserID(ToUserID: ID!): Message @aws_subscribe(mutations: ["createMessage"])
 }

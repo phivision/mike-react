@@ -32,6 +32,7 @@ if (process.env.ENV === "prod") {
     "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"
   );
   ENDPOINT_SECRET = "whsec_QlApDvB6XPkqQEZv40xzjrLBUMu7mENM";
+  CONNECT_SECRET = "whsec_1UVRXpjEK7waebehSsr0ujUXWDRWNup7";
 } else {
   if (process.env.ENV === "dev") {
     ENDPOINT_SECRET = "whsec_DjCSZgxymENwj2yF0iAyIUKsJ1da0kIO";
