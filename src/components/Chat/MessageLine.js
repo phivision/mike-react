@@ -7,9 +7,9 @@ import {
 } from "../StyledComponents/StyledComponents";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
 
-const MessageLine = ({ profile, text }) => {
+const MessageLine = ({ profile, message, user }) => {
   var myDate = new Date();
-  console.log("profile", profile);
+  console.log("profile", profile, user);
   return (
     <div>
       <GridContainer>
@@ -17,22 +17,23 @@ const MessageLine = ({ profile, text }) => {
           <UserAvatar src={profile.UserImage} width="50px" />
         </GridItem>
         <GridItem xs={3}>
-          <TextStyle variant="body1">
+          <TextStyle variant="body2">
             {profile.FirstName + " " + profile.LastName}
           </TextStyle>
         </GridItem>
-        <GridItem xs={4}>
-          <TextStyle variant="body1">{myDate.toLocaleDateString()}</TextStyle>
+        <GridItem xs={3}>
+          <TextStyle variant="body2">{myDate.toLocaleTimeString()}</TextStyle>
         </GridItem>
-        <GridItem xs={12}>{text}</GridItem>
+        <GridItem xs={12}>{message.PostMessages}</GridItem>
       </GridContainer>
     </div>
   );
 };
 
 MessageLine.propTypes = {
-  text: PropTypes.string,
+  message: PropTypes.string,
   profile: PropTypes.object,
+  user: PropTypes.object,
 };
 
 export default MessageLine;

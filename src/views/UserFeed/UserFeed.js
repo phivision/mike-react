@@ -12,6 +12,8 @@ import {
   UserFeedBanner,
   TextA,
   GridTitleFlex,
+  FloatBox,
+  IconStyle,
 } from "../../components/StyledComponents/StyledComponents";
 import {
   deleteUserFavoriteContent,
@@ -29,6 +31,8 @@ import {
 } from "../../graphql/subscriptions";
 import DataPagination from "components/DataPagination/DataPagination";
 import UserProfile from "../../components/UserProfile/UserProfile";
+import MessageIcon from "@material-ui/icons/Message";
+import Chat from "../../components/Chat/Chat";
 
 export default function UserFeed(props) {
   const [createSub, setCreateSub] = useState([]);
@@ -43,6 +47,7 @@ export default function UserFeed(props) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
   const limit = 2;
+  const [openChat, setOpenChat] = useState(false);
 
   const ContentNextTokenQuery = async (nextToken) => {
     const { data } = await API.graphql({
@@ -303,6 +308,14 @@ export default function UserFeed(props) {
     });
   };
 
+  const handleClickOpenChat = () => {
+    setOpenChat(true);
+  };
+
+  const handleCloseChat = () => {
+    setOpenChat(false);
+  };
+
   return (
     <>
       <UserFeedBanner url={Banner} />
@@ -377,6 +390,20 @@ export default function UserFeed(props) {
           </GridContainer>
         </GridContainer>
       </Container>
+      <FloatBox>
+        <IconStyle
+          onClick={() => {
+            handleClickOpenChat();
+          }}
+        >
+          <MessageIcon />
+        </IconStyle>
+      </FloatBox>
+      <Chat
+        openChat={openChat}
+        handleCloseChat={handleCloseChat}
+        sender={props.user}
+      />
     </>
   );
 }

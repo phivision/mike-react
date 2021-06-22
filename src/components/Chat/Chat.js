@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -11,6 +11,8 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import PropTypes from "prop-types";
 import MessageLine from "./MessageLine";
+import { API, graphqlOperation } from "aws-amplify";
+import { messagesByToUserID } from "../../graphql/message";
 
 const styles = (theme) => ({
   root: {
@@ -58,7 +60,47 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 export default function Chat({ openChat, handleCloseChat, profile, user }) {
-  console.log("user", user);
+  // import initial message
+  // const initialMessageState = {
+  //   id: "",
+  //   FromUserID: user.id,
+  //   ToUserID: "",
+  //   PostMessages: "",
+  //   Status: "UNREAD",
+  //   Type: "TEXT",
+  // };
+
+  const [message, setMessage] = useState([]);
+  const handleMessagehange = (event) => {
+    setMessage({ ...message, [event.target.name]: event.target.value });
+  };
+
+  let limit = 3;
+
+  const MessageQuery = async () => {
+    API.graphql(
+      graphqlOperation(messagesByToUserID, {
+        FromUserID: user.id,
+        ToUserID: profile.id,
+        limit: limit,
+      })
+    )
+      .then((d) => {
+        setMessage(d.data.messagesByToUserID);
+      })
+      .catch(console.log);
+  };
+
+  useEffect(() => {
+    MessageQuery();
+  }, [user.id, profile.id]);
+
+  console.log("message", message, MessageQuery);
+  console.log("user", user, profile);
+  const addMessage = (Messages) => {
+    setMessage([...message, { PostMessages: Messages }]);
+  };
+
   return (
     <div>
       <Dialog
@@ -70,16 +112,30 @@ export default function Chat({ openChat, handleCloseChat, profile, user }) {
           Chat
         </DialogTitle>
         <DialogContent dividers>
-          <MessageLine profile={profile} text="this is a message" />
+          {/* {message.length <= 1
+            ? ""
+            : message.map((m, idx) => {
+                return <MessageLine profile={profile} message={message} user={user} key={idx} />;
+              })} */}
+          <MessageLine profile={profile} message={message} user={user} />
         </DialogContent>
         <DialogActions>
           <TextField
-            id="outlined-basic"
+            id="PostMessages"
             variant="outlined"
             multiline
             fullWidth
+            name="PostMessages"
+            value={message.PostMessages}
+            onChange={handleMessagehange}
           />
-          <Button autoFocus color="primary">
+          <Button
+            autoFocus
+            color="primary"
+            onClick={() => {
+              addMessage(message.PostMessages);
+            }}
+          >
             Send
           </Button>
         </DialogActions>
