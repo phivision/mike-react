@@ -316,6 +316,8 @@ export default function UserFeed(props) {
     setOpenChat(false);
   };
 
+  console.log("props.user", props.user);
+
   return (
     <>
       <UserFeedBanner url={Banner} />
@@ -402,7 +404,7 @@ export default function UserFeed(props) {
       <Chat
         openChat={openChat}
         handleCloseChat={handleCloseChat}
-        sender={props.user}
+        userid={props.user.id}
       />
     </>
   );

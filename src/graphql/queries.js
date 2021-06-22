@@ -1065,3 +1065,29 @@ export const messageByFromUserID = /* GraphQL */ `
     }
   }
 `;
+
+export const getUserTrainers = /* GraphQL */ `
+  query GetUserTrainers($id: ID!) {
+    getUserProfile(id: $id) {
+      Email
+      Description
+      FirstName
+      LastName
+      UserImage
+      UserRole
+      Subscriptions {
+        items {
+          Trainer {
+            Description
+            Email
+            FirstName
+            Gender
+            LastName
+            UserImage
+            UserRole
+          }
+        }
+      }
+    }
+  }
+`;

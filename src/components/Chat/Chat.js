@@ -10,9 +10,16 @@ import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import PropTypes from "prop-types";
-import MessageLine from "./MessageLine";
+// import MessageLine from "./MessageLine";
 import { API, graphqlOperation } from "aws-amplify";
-import { messagesByToUserID } from "../../graphql/message";
+// import { messagesByToUserID } from "../../graphql/message";
+import { getUserTrainers } from "../../graphql/queries";
+import VerticalTabs from "./VerticalTabs";
+// import UserAvatar from "../../components/UserAvatar/UserAvatar";
+// import {
+//   GridItem,
+//   GridTitleFlex,
+// } from "../../components/StyledComponents/StyledComponents";
 
 const styles = (theme) => ({
   root: {
@@ -59,7 +66,7 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-export default function Chat({ openChat, handleCloseChat, profile, user }) {
+export default function Chat({ openChat, handleCloseChat, userid }) {
   // import initial message
   // const initialMessageState = {
   //   id: "",
@@ -69,37 +76,59 @@ export default function Chat({ openChat, handleCloseChat, profile, user }) {
   //   Status: "UNREAD",
   //   Type: "TEXT",
   // };
-
+  const [trainers, setTrainers] = useState([]);
+  const [user, setUser] = useState([]);
   const [message, setMessage] = useState([]);
   const handleMessagehange = (event) => {
     setMessage({ ...message, [event.target.name]: event.target.value });
   };
 
-  let limit = 3;
+  // let limit = 3;
 
-  const MessageQuery = async () => {
+  const SubscriptionTrainer = async () => {
     API.graphql(
-      graphqlOperation(messagesByToUserID, {
-        FromUserID: user.id,
-        ToUserID: profile.id,
-        limit: limit,
+      graphqlOperation(getUserTrainers, {
+        id: userid,
       })
     )
       .then((d) => {
-        setMessage(d.data.messagesByToUserID);
+        console.log("d.data", d.data);
+        const { Subscriptions, ...p } = d.data.getUserProfile;
+        setUser(p);
+        setTrainers(Subscriptions.items);
       })
-      .catch(console.log);
+      .catch((e) => console.log(e));
   };
 
-  useEffect(() => {
-    MessageQuery();
-  }, [user.id, profile.id]);
+  // const MessageQuery = async () => {
+  //   API.graphql(
+  //     graphqlOperation(messagesByToUserID, {
+  //       FromUserID: user.id,
+  //       ToUserID: profile.id,
+  //       limit: limit,
+  //     })
+  //   )
+  //     .then((d) => {
+  //       setMessage(d.data.messagesByToUserID);
+  //     })
+  //     .catch(console.log);
+  // };
 
-  console.log("message", message, MessageQuery);
-  console.log("user", user, profile);
+  // useEffect(() => {
+  //   MessageQuery();
+  // }, [user.id, profile.id]);
+
+  // console.log("message", message, MessageQuery);
+
   const addMessage = (Messages) => {
     setMessage([...message, { PostMessages: Messages }]);
   };
+
+  useEffect(() => {
+    SubscriptionTrainer();
+  }, [userid]);
+
+  // console.log("chart user", user, trainers);
 
   return (
     <div>
@@ -107,17 +136,19 @@ export default function Chat({ openChat, handleCloseChat, profile, user }) {
         onClose={handleCloseChat}
         aria-labelledby="customized-dialog-title"
         open={openChat}
+        maxWidth="lg"
       >
         <DialogTitle id="customized-dialog-title" onClose={handleCloseChat}>
-          Chat
+          {user.FirstName} {user.LastName}
         </DialogTitle>
         <DialogContent dividers>
+          <VerticalTabs tabData={trainers} user={user} />
           {/* {message.length <= 1
             ? ""
             : message.map((m, idx) => {
                 return <MessageLine profile={profile} message={message} user={user} key={idx} />;
               })} */}
-          <MessageLine profile={profile} message={message} user={user} />
+          {/* <MessageLine trainers={trainers} message={message} user={user} /> */}
         </DialogContent>
         <DialogActions>
           <TextField
@@ -147,6 +178,5 @@ export default function Chat({ openChat, handleCloseChat, profile, user }) {
 Chat.propTypes = {
   openChat: PropTypes.bool,
   handleCloseChat: PropTypes.func,
-  profile: PropTypes.object,
-  user: PropTypes.array,
+  userid: PropTypes.string,
 };

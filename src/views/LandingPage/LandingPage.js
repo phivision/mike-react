@@ -355,8 +355,7 @@ export default function LandingPage({ ...props }) {
       <Chat
         openChat={openChat}
         handleCloseChat={handleCloseChat}
-        profile={profile}
-        user={props.user}
+        userid={props.user.id}
       />
       <CustomSnackbar
         message={snackbarMessage}
