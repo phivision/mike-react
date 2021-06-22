@@ -8,6 +8,7 @@ import Box from "@material-ui/core/Box";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
+  console.log("TabPanel", children, value, index);
 
   return (
     <div
@@ -62,7 +63,7 @@ export default function VerticalTabs({ tabData, children }) {
     setValue(newValue);
   };
 
-  console.log("tabData", tabData);
+  // console.log("tabData", tabData);
 
   return (
     <div className={classes.root}>

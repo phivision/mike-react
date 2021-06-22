@@ -10,16 +10,14 @@ import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import PropTypes from "prop-types";
-// import MessageLine from "./MessageLine";
 import { API, graphqlOperation } from "aws-amplify";
-// import { messagesByToUserID } from "../../graphql/message";
-import { getUserTrainers } from "../../graphql/queries";
+import {
+  getMessageByToUserID,
+  getUserTrainers,
+  creatNewMessage,
+} from "../../graphql/message";
 import VerticalTabs from "./VerticalTabs";
-// import UserAvatar from "../../components/UserAvatar/UserAvatar";
-// import {
-//   GridItem,
-//   GridTitleFlex,
-// } from "../../components/StyledComponents/StyledComponents";
+import MessageLine from "./MessageLine";
 
 const styles = (theme) => ({
   root: {
@@ -66,23 +64,19 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
+const initialMessageForm = {
+  id: "",
+  ToUserID: "",
+  FromUserID: "",
+  PostMessages: "",
+  createdAt: "",
+};
+
 export default function Chat({ openChat, handleCloseChat, userid }) {
-  // import initial message
-  // const initialMessageState = {
-  //   id: "",
-  //   FromUserID: user.id,
-  //   ToUserID: "",
-  //   PostMessages: "",
-  //   Status: "UNREAD",
-  //   Type: "TEXT",
-  // };
   const [trainers, setTrainers] = useState([]);
   const [user, setUser] = useState([]);
   const [message, setMessage] = useState([]);
-  const handleMessagehange = (event) => {
-    setMessage({ ...message, [event.target.name]: event.target.value });
-  };
-
+  const [messageInput, setMessageInput] = useState(initialMessageForm);
   // let limit = 3;
 
   const SubscriptionTrainer = async () => {
@@ -92,7 +86,6 @@ export default function Chat({ openChat, handleCloseChat, userid }) {
       })
     )
       .then((d) => {
-        console.log("d.data", d.data);
         const { Subscriptions, ...p } = d.data.getUserProfile;
         setUser(p);
         setTrainers(Subscriptions.items);
@@ -100,35 +93,55 @@ export default function Chat({ openChat, handleCloseChat, userid }) {
       .catch((e) => console.log(e));
   };
 
-  // const MessageQuery = async () => {
-  //   API.graphql(
-  //     graphqlOperation(messagesByToUserID, {
-  //       FromUserID: user.id,
-  //       ToUserID: profile.id,
-  //       limit: limit,
-  //     })
-  //   )
-  //     .then((d) => {
-  //       setMessage(d.data.messagesByToUserID);
-  //     })
-  //     .catch(console.log);
+  const MessageQuery = async () => {
+    API.graphql(
+      graphqlOperation(getMessageByToUserID, {
+        ToUserID: userid,
+      })
+    )
+      .then((d) => {
+        // console.log("MessageQuery d.data", d.data);
+        const UserMessages = d.data.messageByToUserID.items;
+        setMessage(UserMessages);
+      })
+      .catch(console.log);
+  };
+
+  const createNewMessage = async () => {
+    const result = await API.graphql(
+      graphqlOperation(creatNewMessage, {
+        input: {
+          ToUserID: messageInput.ToUserID,
+          FromUserID: userid,
+          PostMessages: messageInput.PostMessages,
+        },
+      })
+    );
+    // updated message form with returned id and timestamp
+    messageInput.id = result.data.creatNewMessage.id;
+    messageInput.createdAt = result.data.creatNewMessage.createdAt;
+  };
+
+  console.log("message", message);
+
+  // const addMessage = (Messages) => {
+  //   setMessage([...message, { PostMessages: Messages }]);
   // };
 
-  // useEffect(() => {
-  //   MessageQuery();
-  // }, [user.id, profile.id]);
-
-  // console.log("message", message, MessageQuery);
-
-  const addMessage = (Messages) => {
-    setMessage([...message, { PostMessages: Messages }]);
+  const handleMessagehange = (event) => {
+    setMessageInput({
+      ...messageInput,
+      [event.target.name]: event.target.value,
+    });
   };
 
   useEffect(() => {
     SubscriptionTrainer();
+    MessageQuery();
   }, [userid]);
 
   // console.log("chart user", user, trainers);
+  console.log("messageInput", messageInput);
 
   return (
     <div>
@@ -142,13 +155,13 @@ export default function Chat({ openChat, handleCloseChat, userid }) {
           {user.FirstName} {user.LastName}
         </DialogTitle>
         <DialogContent dividers>
-          <VerticalTabs tabData={trainers} user={user} />
-          {/* {message.length <= 1
-            ? ""
-            : message.map((m, idx) => {
-                return <MessageLine profile={profile} message={message} user={user} key={idx} />;
-              })} */}
-          {/* <MessageLine trainers={trainers} message={message} user={user} /> */}
+          <VerticalTabs tabData={trainers} user={user}>
+            {message.length < 1
+              ? "No message"
+              : message.map((m, idx) => {
+                  return <MessageLine message={m} user={user} key={idx} />;
+                })}
+          </VerticalTabs>
         </DialogContent>
         <DialogActions>
           <TextField
@@ -164,7 +177,8 @@ export default function Chat({ openChat, handleCloseChat, userid }) {
             autoFocus
             color="primary"
             onClick={() => {
-              addMessage(message.PostMessages);
+              createNewMessage();
+              // addMessage(message.PostMessages);
             }}
           >
             Send
@@ -178,5 +192,5 @@ export default function Chat({ openChat, handleCloseChat, userid }) {
 Chat.propTypes = {
   openChat: PropTypes.bool,
   handleCloseChat: PropTypes.func,
-  userid: PropTypes.string,
+  userid: PropTypes.string.isRequired,
 };
