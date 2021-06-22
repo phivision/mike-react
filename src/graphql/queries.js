@@ -22,19 +22,62 @@ export const getUserProfile = /* GraphQL */ `
       Description
       Biography
       LandingURL
+      TokenBalance
       createdAt
       updatedAt
       owner
       Subscriptions {
+        items {
+          id
+          StripeID
+          ExpireDate
+          CancelAtPeriodEnd
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       Users {
+        items {
+          id
+          StripeID
+          ExpireDate
+          CancelAtPeriodEnd
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       Favorites {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       Contents {
+        items {
+          id
+          CreatorID
+          createdAt
+          ContentName
+          Description
+          Title
+          Level
+          Length
+          IsDemo
+          TranscodeReady
+          ViewCount
+          Thumbnail
+          Preview
+          Segments
+          updatedAt
+          owner
+        }
         nextToken
       }
     }
@@ -66,9 +109,22 @@ export const listUserProfiles = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       nextToken
     }
@@ -108,9 +164,22 @@ export const profilesByStripeID = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       nextToken
     }
@@ -150,9 +219,22 @@ export const profilesByURL = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       nextToken
     }
@@ -192,9 +274,22 @@ export const searchUserProfiles = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       nextToken
       total
@@ -229,9 +324,22 @@ export const getUserSubscriptionTrainer = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       User {
         id
@@ -252,9 +360,22 @@ export const getUserSubscriptionTrainer = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       owner
     }
@@ -278,6 +399,54 @@ export const listUserSubscriptionTrainers = /* GraphQL */ `
         CancelAtPeriodEnd
         createdAt
         updatedAt
+        Trainer {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          createdAt
+          updatedAt
+          owner
+        }
+        User {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          createdAt
+          updatedAt
+          owner
+        }
         owner
       }
       nextToken
@@ -289,6 +458,7 @@ export const getUserContent = /* GraphQL */ `
     getUserContent(id: $id) {
       id
       CreatorID
+      createdAt
       ContentName
       Description
       Title
@@ -300,7 +470,6 @@ export const getUserContent = /* GraphQL */ `
       Thumbnail
       Preview
       Segments
-      createdAt
       updatedAt
       Creator {
         id
@@ -321,11 +490,30 @@ export const getUserContent = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       FavoriteUser {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       owner
@@ -342,6 +530,7 @@ export const listUserContents = /* GraphQL */ `
       items {
         id
         CreatorID
+        createdAt
         ContentName
         Description
         Title
@@ -353,24 +542,52 @@ export const listUserContents = /* GraphQL */ `
         Thumbnail
         Preview
         Segments
-        createdAt
         updatedAt
+        Creator {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          createdAt
+          updatedAt
+          owner
+        }
+        FavoriteUser {
+          nextToken
+        }
         owner
       }
       nextToken
     }
   }
 `;
-export const contentByName = /* GraphQL */ `
-  query ContentByName(
-    $ContentName: String
+export const byContentCreatedAt = /* GraphQL */ `
+  query ByContentCreatedAt(
+    $CreatorID: ID
+    $createdAt: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelUserContentFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    contentByName(
-      ContentName: $ContentName
+    byContentCreatedAt(
+      CreatorID: $CreatorID
+      createdAt: $createdAt
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -379,6 +596,7 @@ export const contentByName = /* GraphQL */ `
       items {
         id
         CreatorID
+        createdAt
         ContentName
         Description
         Title
@@ -390,8 +608,351 @@ export const contentByName = /* GraphQL */ `
         Thumbnail
         Preview
         Segments
+        updatedAt
+        Creator {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          createdAt
+          updatedAt
+          owner
+        }
+        FavoriteUser {
+          nextToken
+        }
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getMessage = /* GraphQL */ `
+  query GetMessage($id: ID!) {
+    getMessage(id: $id) {
+      id
+      PostMessages
+      FromUserID
+      ToUserID
+      createdAt
+      Type
+      Status
+      updatedAt
+      FromUser {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        IsVerified
+        Description
+        Biography
+        LandingURL
+        TokenBalance
         createdAt
         updatedAt
+        owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
+      }
+      ToUser {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        IsVerified
+        Description
+        Biography
+        LandingURL
+        TokenBalance
+        createdAt
+        updatedAt
+        owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
+      }
+      owner
+    }
+  }
+`;
+export const listMessages = /* GraphQL */ `
+  query ListMessages(
+    $filter: ModelMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMessages(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        PostMessages
+        FromUserID
+        ToUserID
+        createdAt
+        Type
+        Status
+        updatedAt
+        FromUser {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          createdAt
+          updatedAt
+          owner
+        }
+        ToUser {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          createdAt
+          updatedAt
+          owner
+        }
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const messageByToUserID = /* GraphQL */ `
+  query MessageByToUserID(
+    $ToUserID: ID
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    messageByToUserID(
+      ToUserID: $ToUserID
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        PostMessages
+        FromUserID
+        ToUserID
+        createdAt
+        Type
+        Status
+        updatedAt
+        FromUser {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          createdAt
+          updatedAt
+          owner
+        }
+        ToUser {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          createdAt
+          updatedAt
+          owner
+        }
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const messageByFromUserID = /* GraphQL */ `
+  query MessageByFromUserID(
+    $FromUserID: ID
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    messageByFromUserID(
+      FromUserID: $FromUserID
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        PostMessages
+        FromUserID
+        ToUserID
+        createdAt
+        Type
+        Status
+        updatedAt
+        FromUser {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          createdAt
+          updatedAt
+          owner
+        }
+        ToUser {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          createdAt
+          updatedAt
+          owner
+        }
         owner
       }
       nextToken
