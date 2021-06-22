@@ -6,6 +6,7 @@ export const onContentByCreatorID = /* GraphQL */ `
     onContentByCreatorID(CreatorID: $CreatorID) {
       id
       CreatorID
+      createdAt
       ContentName
       Description
       Title
@@ -17,7 +18,6 @@ export const onContentByCreatorID = /* GraphQL */ `
       Thumbnail
       Preview
       Segments
-      createdAt
       updatedAt
       Creator {
         id
@@ -38,11 +38,30 @@ export const onContentByCreatorID = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       FavoriteUser {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       owner
@@ -54,6 +73,7 @@ export const onUpdateByCreatorID = /* GraphQL */ `
     onUpdateByCreatorID(CreatorID: $CreatorID) {
       id
       CreatorID
+      createdAt
       ContentName
       Description
       Title
@@ -65,7 +85,6 @@ export const onUpdateByCreatorID = /* GraphQL */ `
       Thumbnail
       Preview
       Segments
-      createdAt
       updatedAt
       Creator {
         id
@@ -86,11 +105,30 @@ export const onUpdateByCreatorID = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       FavoriteUser {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
       }
       owner
@@ -102,6 +140,7 @@ export const onDeletionByCreatorID = /* GraphQL */ `
     onDeletionByCreatorID(CreatorID: $CreatorID) {
       id
       CreatorID
+      createdAt
       ContentName
       Description
       Title
@@ -113,7 +152,6 @@ export const onDeletionByCreatorID = /* GraphQL */ `
       Thumbnail
       Preview
       Segments
-      createdAt
       updatedAt
       Creator {
         id
@@ -134,12 +172,118 @@ export const onDeletionByCreatorID = /* GraphQL */ `
         Description
         Biography
         LandingURL
+        TokenBalance
         createdAt
         updatedAt
         owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       FavoriteUser {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
+      }
+      owner
+    }
+  }
+`;
+export const onMessagesByToUserID = /* GraphQL */ `
+  subscription OnMessagesByToUserID($ToUserID: ID!) {
+    onMessagesByToUserID(ToUserID: $ToUserID) {
+      id
+      PostMessages
+      FromUserID
+      ToUserID
+      createdAt
+      Type
+      Status
+      updatedAt
+      FromUser {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        IsVerified
+        Description
+        Biography
+        LandingURL
+        TokenBalance
+        createdAt
+        updatedAt
+        owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
+      }
+      ToUser {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        IsVerified
+        Description
+        Biography
+        LandingURL
+        TokenBalance
+        createdAt
+        updatedAt
+        owner
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
       }
       owner
     }

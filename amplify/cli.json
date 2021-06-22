@@ -4,7 +4,7 @@
       "addmissingownerfields": true,
       "validatetypenamereservedwords": true,
       "useexperimentalpipelinedtransformer": false,
-      "enableiterativegsiupdates": false,
+      "enableiterativegsiupdates": true,
       "secondarykeyasgsi": true
     },
     "frontend-ios": {
