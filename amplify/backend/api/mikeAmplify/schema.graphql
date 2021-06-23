@@ -98,7 +98,8 @@ type UserContent @model(subscriptions: null)
 }
 
 type Message @model(subscriptions: null)
-@auth(rules: [{ allow: owner, operations: [create, delete, update] }])
+@auth(rules: [{ allow: owner, operations: [create, delete] },
+              { allow: public, provider: iam, operations: [read] }])
 @key(name: "byToUser", fields: ["ToUserID", "createdAt"], queryField: "messageByToUserID")
 @key(name: "byFromUser", fields: ["FromUserID", "createdAt"], queryField: "messageByFromUserID")
   {
