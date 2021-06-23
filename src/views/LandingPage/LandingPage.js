@@ -25,8 +25,8 @@ import {
   contentPaginatingQuery,
 } from "../../graphql/UserFeed";
 import MessageIcon from "@material-ui/icons/Message";
-import Chat from "../../components/Chat/Chat";
 import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
+import ChatPopUp from "../../components/Chat/ChatPopUp";
 
 // import initial profile
 const initialProfileState = {
@@ -352,7 +352,7 @@ export default function LandingPage({ ...props }) {
           <MessageIcon />
         </IconStyle>
       </FloatBox>
-      <Chat
+      <ChatPopUp
         openChat={openChat}
         handleCloseChat={handleCloseChat}
         userid={props.user.id}

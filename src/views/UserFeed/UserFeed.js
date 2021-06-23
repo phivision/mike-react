@@ -32,7 +32,7 @@ import {
 import DataPagination from "components/DataPagination/DataPagination";
 import UserProfile from "../../components/UserProfile/UserProfile";
 import MessageIcon from "@material-ui/icons/Message";
-import Chat from "../../components/Chat/Chat";
+import ChatPopUp from "../../components/Chat/ChatPopUp";
 
 export default function UserFeed(props) {
   const [createSub, setCreateSub] = useState([]);
@@ -399,7 +399,7 @@ export default function UserFeed(props) {
           <MessageIcon />
         </IconStyle>
       </FloatBox>
-      <Chat
+      <ChatPopUp
         openChat={openChat}
         handleCloseChat={handleCloseChat}
         userid={props.user.id}

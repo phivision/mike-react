@@ -1,6 +1,7 @@
 export const getUserTrainers = /* GraphQL */ `
   query GetUserTrainers($id: ID!) {
     getUserProfile(id: $id) {
+      id
       Email
       Description
       FirstName
@@ -10,6 +11,7 @@ export const getUserTrainers = /* GraphQL */ `
       Subscriptions {
         items {
           Trainer {
+            id
             Description
             Email
             FirstName
@@ -40,11 +42,13 @@ export const getMessageByToUserID = /* GraphQL */ `
         createdAt
         id
         FromUser {
+          id
           FirstName
           LastName
           UserImage
         }
         ToUser {
+          id
           FirstName
           UserImage
           LastName
