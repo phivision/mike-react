@@ -2,11 +2,8 @@ FROM amazonlinux:2
 MAINTAINER Amazon AWS
 
 # Framework Versions
-ENV VERSION_NODE_8=8.12.0
-ENV VERSION_NODE_10=10.16.0
-ENV VERSION_NODE_12=12
-ENV VERSION_NODE_DEFAULT=$VERSION_NODE_12
-ENV VERSION_YARN=1.16.0
+ENV VERSION_NODE_14=14.15.5
+ENV VERSION_YARN=1.22.5
 ENV VERSION_AMPLIFY=5.0.1
 
 # UTF-8 Environment
@@ -82,15 +79,11 @@ RUN ln -fs /usr/local/bin/python3.8 /usr/bin/python3
 RUN ln -fs /usr/local/bin/pip3.8 /usr/bin/pip3
 RUN cd $BASE_PATH
 
-## Install Node 8 & 10 & 12
-RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+## Install Node 14
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
 RUN curl -o- -L https://yarnpkg.com/install.sh > /usr/local/bin/yarn-install.sh
 RUN /bin/bash -c ". ~/.nvm/nvm.sh && \
-    nvm install $VERSION_NODE_8 && nvm use $VERSION_NODE_8 && \
-	nvm install $VERSION_NODE_10 && nvm use $VERSION_NODE_10 && \
-	npm install -g sm grunt-cli bower vuepress gatsby-cli && \
-    bash /usr/local/bin/yarn-install.sh --version $VERSION_YARN && \
-	nvm install $VERSION_NODE_12 && nvm use $VERSION_NODE_12 && \
+	nvm install $VERSION_NODE_14 && nvm use $VERSION_NODE_14 && \
 	npm install -g sm grunt-cli bower vuepress gatsby-cli && \
     bash /usr/local/bin/yarn-install.sh --version $VERSION_YARN && \
 	nvm alias default node && nvm cache clear"
@@ -103,14 +96,11 @@ RUN /bin/bash -c "pip3 install aws-sam-cli"
 
 ## Installing Cypress
 RUN /bin/bash -c ". ~/.nvm/nvm.sh && \
-    nvm use ${VERSION_NODE_DEFAULT} && \
+    nvm use ${VERSION_NODE_14} && \
     npm install -g --unsafe-perm=true --allow-root cypress"
 
-## Install AWS Amplify CLI for VERSION_NODE_DEFAULT and VERSION_NODE_10
-RUN /bin/bash -c ". ~/.nvm/nvm.sh && nvm use ${VERSION_NODE_DEFAULT} && \
-    npm config set user 0 && npm config set unsafe-perm true && \
-	npm install -g @aws-amplify/cli@${VERSION_AMPLIFY}"
-RUN /bin/bash -c ". ~/.nvm/nvm.sh && nvm use ${VERSION_NODE_10} && \
+## Install AWS Amplify CLI for VERSION_NODE_DEFAULT
+RUN /bin/bash -c ". ~/.nvm/nvm.sh && nvm use ${VERSION_NODE_14} && \
     npm config set user 0 && npm config set unsafe-perm true && \
 	npm install -g @aws-amplify/cli@${VERSION_AMPLIFY}"
 
@@ -118,9 +108,9 @@ RUN /bin/bash -c ". ~/.nvm/nvm.sh && nvm use ${VERSION_NODE_10} && \
 RUN echo export PATH="\
 /root/.yarn/bin:\
 /root/.config/yarn/global/node_modules/.bin:\
-/root/.nvm/versions/node/${VERSION_NODE_DEFAULT}/bin:\
+/root/.nvm/versions/node/${VERSION_NODE_14}/bin:\
 $(python3 -m site --user-base)/bin:\
 $PATH" >> ~/.bashrc  && \
-    echo "nvm use ${VERSION_NODE_DEFAULT} 1> /dev/null" >> ~/.bashrc
+    echo "nvm use ${VERSION_NODE_14} 1> /dev/null" >> ~/.bashrc
 
 ENTRYPOINT [ "bash", "-c" ]
