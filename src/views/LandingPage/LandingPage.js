@@ -27,6 +27,7 @@ import {
 import MessageIcon from "@material-ui/icons/Message";
 import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
 import ChatPopUp from "../../components/Chat/ChatPopUp";
+import Badge from "@material-ui/core/Badge";
 
 // import initial profile
 const initialProfileState = {
@@ -59,6 +60,7 @@ export default function LandingPage({ ...props }) {
   let nextToken = "";
   const [isVerified, setVerified] = useState(false);
   const [openChat, setOpenChat] = useState(false);
+  const [allMessageLength, setAllMessageLength] = useState(0);
 
   const ContentNextTokenQuery = async (nextToken) => {
     const { data } = await API.graphql({
@@ -349,13 +351,16 @@ export default function LandingPage({ ...props }) {
             handleClickOpenChat();
           }}
         >
-          <MessageIcon />
+          <Badge badgeContent={allMessageLength} color="primary">
+            <MessageIcon />
+          </Badge>
         </IconStyle>
       </FloatBox>
       <ChatPopUp
         openChat={openChat}
         handleCloseChat={handleCloseChat}
         userid={props.user.id}
+        setAllMessageLength={setAllMessageLength}
       />
       <CustomSnackbar
         message={snackbarMessage}

@@ -47,15 +47,13 @@ const DialogContent = withStyles((theme) => ({
   },
 }))(MuiDialogContent);
 
-// const DialogActions = withStyles((theme) => ({
-//   root: {
-//     margin: 0,
-//     padding: theme.spacing(1),
-//   },
-// }))(MuiDialogActions);
-
-export default function ChatPopUp({ openChat, handleCloseChat, userid, user }) {
-  console.log("user", user, userid);
+export default function ChatPopUp({
+  openChat,
+  handleCloseChat,
+  userData,
+  setAllMessageLength,
+}) {
+  console.log("user", userData);
   return (
     <div>
       <Dialog
@@ -66,14 +64,11 @@ export default function ChatPopUp({ openChat, handleCloseChat, userid, user }) {
       >
         <DialogTitle id="customized-dialog-title" onClose={handleCloseChat}>
           chat
-          {/* {user.FirstName} {user.LastName} */}
         </DialogTitle>
         <DialogContent dividers>
           <VerticalTabs
-            // tabData={trainers}
-            userid={userid}
-            // setMessageInput={setMessageInput}
-            // message={message}
+            userData={userData}
+            setAllMessageLength={setAllMessageLength}
           />
         </DialogContent>
       </Dialog>
@@ -84,6 +79,6 @@ export default function ChatPopUp({ openChat, handleCloseChat, userid, user }) {
 ChatPopUp.propTypes = {
   openChat: PropTypes.bool,
   handleCloseChat: PropTypes.func,
-  userid: PropTypes.string.isRequired,
-  user: PropTypes.object.isRequired,
+  userData: PropTypes.any.isRequired,
+  setAllMessageLength: PropTypes.any,
 };

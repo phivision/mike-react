@@ -4,15 +4,17 @@ import { makeStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import { API, graphqlOperation } from "aws-amplify";
-import { getMessageByToUserID, getUserTrainers } from "../../graphql/message";
+import { getMessageByToUserID } from "../../graphql/message";
 import { createMessage } from "../../graphql/mutations";
 import TextField from "@material-ui/core/TextField";
+import Badge from "@material-ui/core/Badge";
 import MessageLine from "./MessageLine";
 import {
   CustomButton,
   GridContainer,
   GridItem,
 } from "../StyledComponents/StyledComponents";
+import MessageIcon from "@material-ui/icons/Message";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -58,11 +60,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function VerticalTabs({ userid }) {
+export default function VerticalTabs({ userData, setAllMessageLength }) {
   const initialMessageForm = {
     id: "",
     ToUserID: "",
-    FromUserID: userid,
+    FromUserID: userData.id,
     PostMessages: "",
     createdAt: "",
     src: "",
@@ -71,36 +73,39 @@ export default function VerticalTabs({ userid }) {
   };
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-  const [trainers, setTrainers] = useState([]);
+  // const [trainers, setTrainers] = useState([]);
   const [user, setUser] = useState([]);
   const [message, setMessage] = useState([]);
   const [messageInput, setMessageInput] = useState(initialMessageForm);
   const messageInputRef = useRef({});
   messageInputRef.current = messageInput;
+  // const [fromUsers, setFromUsers] = useState([]);
 
-  const SubscriptionTrainer = async () => {
-    API.graphql(
-      graphqlOperation(getUserTrainers, {
-        id: userid,
-      })
-    )
-      .then((d) => {
-        const { Subscriptions, ...p } = d.data.getUserProfile;
-        setUser(p);
-        setTrainers(Subscriptions.items);
-      })
-      .catch((e) => console.log(e));
-  };
+  // const SubscriptionTrainer = async () => {
+  //   API.graphql(
+  //     graphqlOperation(getUserTrainers, {
+  //       id: userData.id,
+  //     })
+  //   )
+  //     .then((d) => {
+  //       const { Subscriptions, ...p } = d.data.getUserProfile;
+  //       setUser(p);
+  //       setTrainers(Subscriptions.items);
+  //     })
+  //     .catch((e) => console.log(e));
+  // };
 
   const MessageQuery = async () => {
     API.graphql(
       graphqlOperation(getMessageByToUserID, {
-        ToUserID: userid,
+        ToUserID: userData.id,
       })
     )
       .then((d) => {
         const UserMessages = d.data.messageByToUserID.items;
         setMessage(UserMessages);
+        setUser(UserMessages[0].ToUser);
+        console.log("UserMessages", UserMessages[0].ToUser);
       })
       .catch(console.log);
   };
@@ -118,18 +123,18 @@ export default function VerticalTabs({ userid }) {
 
   const addMessage = (ToUserID, src, name) => {
     var myDate = new Date();
-    return new Promise((resolve) => {
-      setMessageInput({
-        ...messageInput,
-        ToUserID: ToUserID,
-        createdAt: myDate,
-        src: src,
-        name: name,
-        send: true,
-      });
-      console.log("message is add!", ToUserID, messageInput);
-      resolve(messageInput);
+    // return new Promise((resolve) => {
+    setMessageInput({
+      ...messageInput,
+      ToUserID: ToUserID,
+      createdAt: myDate,
+      src: src,
+      name: name,
+      send: true,
     });
+    console.log("message is add!", ToUserID, messageInput);
+    //   resolve(messageInput);
+    // });
   };
 
   const createNewMessage = async (
@@ -159,9 +164,35 @@ export default function VerticalTabs({ userid }) {
   };
 
   useEffect(() => {
-    SubscriptionTrainer();
-    MessageQuery();
-  }, [userid]);
+    if (userData.role == "student" || userData.role == "trainer") {
+      // SubscriptionTrainer();
+      MessageQuery();
+    } else {
+      console.log("please login");
+    }
+  }, [userData.id]);
+
+  if (message) {
+    setAllMessageLength(message.length);
+  }
+
+  console.log("messageInput", message);
+  if (!userData.id) {
+    alert("please login!");
+  }
+
+  let fromUsers = [];
+  let arrId = [];
+
+  for (const item of message) {
+    if (arrId.indexOf(item.FromUserID) === -1) {
+      arrId.push(item.FromUserID);
+      fromUsers.push(item.FromUser);
+    }
+  }
+
+  console.log("list is ", fromUsers, arrId);
+  console.log("users ", user);
 
   return (
     <div className={classes.root}>
@@ -173,25 +204,36 @@ export default function VerticalTabs({ userid }) {
         aria-label="Vertical tabs example"
         className={classes.tabs}
       >
-        {trainers.map((trainer, idx) => {
+        {fromUsers.map((trainer, idx) => {
+          let msmTrainer = message.filter((value) => {
+            return value.FromUserID == trainer.id;
+          });
           return (
             <Tab
-              label={trainer.Trainer.FirstName + " " + trainer.Trainer.LastName}
+              label={trainer.FirstName + " " + trainer.LastName}
               {...a11yProps(idx)}
               key={"TabLabel" + idx}
               onClick={() => {
                 setMessageInput({
                   ...messageInput,
-                  ToUserID: trainer.Trainer.id,
+                  ToUserID: trainer.id,
                   PostMessages: "",
                 });
               }}
+              icon={
+                <Badge badgeContent={msmTrainer.length} color="primary">
+                  <MessageIcon />
+                </Badge>
+              }
             />
           );
         })}
       </Tabs>
-      {trainers.map((trainer, idx) => {
-        var trainerId = trainer.Trainer.id;
+      {fromUsers.map((trainer, idx) => {
+        var trainerId = trainer.id;
+        let msmTrainer = message.filter((value) => {
+          return value.FromUserID == trainerId;
+        });
         return (
           <TabPanel
             value={value}
@@ -200,7 +242,7 @@ export default function VerticalTabs({ userid }) {
             style={{ width: 500 }}
           >
             <div style={{ height: 150, overflowY: "auto" }}>
-              {message.length < 1
+              {msmTrainer.length < 1
                 ? "No message" && (
                     <MessageLine
                       message=""
@@ -210,18 +252,20 @@ export default function VerticalTabs({ userid }) {
                       trainerId={trainerId}
                     />
                   )
-                : message.map((m, idx) => {
-                    if (trainerId === m.FromUserID) {
-                      return (
-                        <MessageLine
-                          message={m}
-                          user={user}
-                          key={idx}
-                          messageInput={messageInput}
-                          trainerId={trainerId}
-                        />
-                      );
-                    }
+                : msmTrainer.map((m, idx) => {
+                    // : message.map((m, idx) => {
+                    //     if (trainerId === m.FromUserID) {
+                    // console.log("msmTrainer, m", msmTrainer, m);
+                    return (
+                      <MessageLine
+                        message={m}
+                        user={user}
+                        key={idx}
+                        messageInput={messageInput}
+                        trainerId={trainerId}
+                      />
+                    );
+                    // }
                   })}
             </div>
             <GridContainer
@@ -270,5 +314,6 @@ export default function VerticalTabs({ userid }) {
 }
 
 VerticalTabs.propTypes = {
-  userid: PropTypes.string.isRequired,
+  userData: PropTypes.any.isRequired,
+  setAllMessageLength: PropTypes.any.isRequired,
 };

@@ -39,7 +39,7 @@ MessageRecord.propTypes = {
 };
 
 const MessageLine = ({ message, user, messageInput }) => {
-  console.log("MessageLine", message);
+  console.log("MessageLine", user);
   return (
     <div>
       {message ? (
@@ -51,7 +51,7 @@ const MessageLine = ({ message, user, messageInput }) => {
           style={{ background: "" }}
         />
       ) : (
-        "No new message."
+        ""
       )}
       {messageInput.send && messageInput.PostMessages ? (
         <MessageRecord

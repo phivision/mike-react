@@ -31,7 +31,7 @@ export const getMessageByToUserID = /* GraphQL */ `
     messageByToUserID(
       ToUserID: $ToUserID
       filter: { Status: { eq: UNRESPONDED } }
-      sortDirection: DESC
+      sortDirection: ASC
     ) {
       items {
         FromUserID
