@@ -30,7 +30,7 @@ export const getMessageByToUserID = /* GraphQL */ `
   query GetMessageByToUserID($ToUserID: ID!) {
     messageByToUserID(
       ToUserID: $ToUserID
-      filter: { Status: { eq: UNREAD } }
+      filter: { Status: { eq: UNRESPONDED } }
       sortDirection: DESC
     ) {
       items {
@@ -69,7 +69,7 @@ export const creatNewMessage = /* GraphQL */ `
         FromUserID: $FromUserID
         PostMessages: $PostMessages
         ToUserID: $ToUserID
-        Status: UNREAD
+        Status: UNRESPONDED
         Type: TEXT
       }
     ) {

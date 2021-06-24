@@ -358,3 +358,11 @@ export const FloatBox = styled.div`
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
 `;
+
+export const TextWithColor = styled.div`
+  background-color: ${(props) => props.color};
+  padding: 10px;
+  border-radius: 10px;
+  margin: 0 10px;
+  text-align: ${(props) => props.align};
+`;

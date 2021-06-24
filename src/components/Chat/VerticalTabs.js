@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 // import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
+// import Box from "@material-ui/core/Box";
 import { API, graphqlOperation } from "aws-amplify";
 import {
   getMessageByToUserID,
   getUserTrainers,
-  // creatNewMessage,
+  creatNewMessage,
 } from "../../graphql/message";
 import TextField from "@material-ui/core/TextField";
 import MessageLine from "./MessageLine";
@@ -30,9 +30,9 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box p={3}>
+        <div>
           <div>{children}</div>
-        </Box>
+        </div>
       )}
     </div>
   );
@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     display: "flex",
-    height: 224,
+    height: 300,
   },
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
@@ -64,11 +64,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function VerticalTabs({ userid }) {
+  const initialMessageForm = {
+    id: "",
+    ToUserID: "",
+    FromUserID: userid,
+    PostMessages: "",
+    createdAt: "",
+    src: "",
+    name: "",
+  };
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [trainers, setTrainers] = useState([]);
   const [user, setUser] = useState([]);
   const [message, setMessage] = useState([]);
+  const [messageInput, setMessageInput] = useState(initialMessageForm);
+  const messageInputRef = useRef({});
+  messageInputRef.current = messageInput;
 
   const SubscriptionTrainer = async () => {
     API.graphql(
@@ -103,12 +115,76 @@ export default function VerticalTabs({ userid }) {
     setValue(newValue);
   };
 
+  const handleMessagehange = (event) => {
+    setMessageInput({
+      ...messageInput,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const addMessage = (ToUserID, FromUserID, PostMessages, src, name) => {
+    console.log("addMessage", ToUserID, FromUserID, PostMessages);
+    var myDate = new Date();
+    // setMessageInput([
+    //   ...messageInput,
+    //   {
+    //     ToUserID: ToUserID,
+    //     FromUserID: FromUserID,
+    //     PostMessages: PostMessages,
+    //     createdAt: myDate.toLocaleTimeString(),
+    //     src: src,
+    //     name: name,
+    //   },
+    // ]);
+    const p = new Promise((resolve) => {
+      setMessageInput({
+        ToUserID: ToUserID,
+        FromUserID: FromUserID,
+        PostMessages: PostMessages,
+        createdAt: myDate.toLocaleTimeString(),
+        src: src,
+        name: name,
+      });
+      resolve("setMessageInput");
+    }).then(createNewMessage());
+    console.log(p);
+    // setEditSection(() => {
+    //   editSection.push(true);
+    //   return [...editSection];
+    // });
+  };
+
+  const createNewMessage = async () => {
+    const currentInput = messageInputRef.current;
+    console.log("currentInput", currentInput);
+    if (
+      currentInput.ToUserID &&
+      currentInput.FromUserID &&
+      currentInput.PostMessages
+    ) {
+      const result = await API.graphql(
+        graphqlOperation(creatNewMessage, {
+          input: {
+            ToUserID: currentInput.ToUserID,
+            FromUserID: currentInput.FromUserID,
+            PostMessages: currentInput.PostMessages,
+          },
+        })
+      );
+      // updated message form with returned id and timestamp
+      messageInputRef.current.id = result.data.creatNewMessage.id;
+      messageInputRef.current.createdAt = result.data.creatNewMessage.createdAt;
+    } else {
+      console.log("messageInput is empty!", currentInput);
+    }
+  };
+
   useEffect(() => {
     SubscriptionTrainer();
     MessageQuery();
   }, [userid]);
 
-  console.log(userid, trainers, user);
+  console.log("messageInput", messageInput, message);
 
   return (
     <div className={classes.root}>
@@ -120,15 +196,15 @@ export default function VerticalTabs({ userid }) {
         aria-label="Vertical tabs example"
         className={classes.tabs}
       >
-        {trainers.map((data, idx) => {
+        {trainers.map((trainer, idx) => {
           // setMessageInput({
           //   ...messageInput,
           //   ["FromUserID"]: data.Trainer.id,
           // });
-          // console.log("messageInput", messageInput);
+          // console.log("trainer", trainer);
           return (
             <Tab
-              label={data.Trainer.FirstName + " " + data.Trainer.LastName}
+              label={trainer.Trainer.FirstName + " " + trainer.Trainer.LastName}
               {...a11yProps(idx)}
               key={"TabLabel" + idx}
               onClick={() => {
@@ -142,8 +218,8 @@ export default function VerticalTabs({ userid }) {
           );
         })}
       </Tabs>
-      {trainers.map((data, idx) => {
-        // console.log("data", data.Trainer.id);
+      {trainers.map((trainer, idx) => {
+        var trainerId = trainer.Trainer.id;
         return (
           <TabPanel
             value={value}
@@ -151,13 +227,19 @@ export default function VerticalTabs({ userid }) {
             key={"TabPanel" + idx}
             style={{ width: 500 }}
           >
-            <div style={{ height: 150 }}>
+            <div style={{ height: 150, overflowY: "auto" }}>
               {message.length < 1
                 ? "No message"
                 : message.map((m, idx) => {
-                    console.log("data", data.Trainer.id, m.FromUserID);
-                    if (data.Trainer.id === m.FromUserID) {
-                      return <MessageLine message={m} user={user} key={idx} />;
+                    if (trainerId === m.FromUserID) {
+                      return (
+                        <MessageLine
+                          message={m}
+                          user={user}
+                          key={idx}
+                          messageInput={messageInput}
+                        />
+                      );
                     }
                   })}
             </div>
@@ -178,17 +260,23 @@ export default function VerticalTabs({ userid }) {
                   fullWidth
                   name="PostMessages"
                   // value={message.PostMessages}
-                  // onChange={handleMessagehange}
+                  onChange={handleMessagehange}
                 />
               </GridItem>
               <GridItem xs={2}>
                 <CustomButton
                   autoFocus
                   color="primary"
-                  // onClick={() => {
-                  //   createNewMessage();
-                  //   // addMessage(message.PostMessages);
-                  // }}
+                  onClick={() => {
+                    // createNewMessage();
+                    addMessage(
+                      trainerId,
+                      messageInput.FromUserID,
+                      messageInput.PostMessages,
+                      user.UserImage,
+                      user.FirstName + " " + user.LastName
+                    );
+                  }}
                 >
                   Send
                 </CustomButton>
