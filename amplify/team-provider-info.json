@@ -139,6 +139,10 @@
         "videoFlutterMove": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
           "s3Key": "amplify-builds/videoFlutterMove-3378536f55673042754d-build.zip"
+        },
+        "messageTokenTransaction": {
+          "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
+          "s3Key": "amplify-builds/messageTokenTransaction-594339754a6157304538-build.zip"
         }
       },
       "storage": {
