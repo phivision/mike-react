@@ -34,22 +34,26 @@ const MessageRecord = (props) => {
 MessageRecord.propTypes = {
   src: PropTypes.string,
   name: PropTypes.string,
-  time: PropTypes.string,
+  time: PropTypes.any,
   text: PropTypes.string,
 };
 
 const MessageLine = ({ message, user, messageInput }) => {
-  console.log("MessageLine", message, messageInput);
+  console.log("MessageLine", message);
   return (
     <div>
-      <MessageRecord
-        src={message.FromUser.UserImage}
-        name={message.FromUser.FirstName + " " + message.FromUser.LastName}
-        time={message.createdAt}
-        text={message.PostMessages}
-        style={{ background: "" }}
-      />
-      {messageInput.ToUserID ? (
+      {message ? (
+        <MessageRecord
+          src={message.FromUser.UserImage}
+          name={message.FromUser.FirstName + " " + message.FromUser.LastName}
+          time={message.createdAt}
+          text={message.PostMessages}
+          style={{ background: "" }}
+        />
+      ) : (
+        "No new message."
+      )}
+      {messageInput.send && messageInput.PostMessages ? (
         <MessageRecord
           src={user.UserImage}
           name={user.FirstName + " " + user.LastName}
@@ -64,8 +68,7 @@ const MessageLine = ({ message, user, messageInput }) => {
 };
 
 MessageLine.propTypes = {
-  message: PropTypes.string,
-  profile: PropTypes.object,
+  message: PropTypes.any,
   user: PropTypes.object,
   messageInput: PropTypes.object,
 };
