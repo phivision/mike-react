@@ -142,7 +142,7 @@
         },
         "messageTokenTransaction": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
-          "s3Key": "amplify-builds/messageTokenTransaction-594339754a6157304538-build.zip"
+          "s3Key": "amplify-builds/messageTokenTransaction-61484a62414754776266-build.zip"
         }
       },
       "storage": {
