@@ -3,7 +3,6 @@ const bodyParser = require("body-parser");
 const awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
 const AWS = require("aws-sdk");
 const gql = require("graphql-tag");
-const { default: client } = require("aws-appsync/lib/client");
 const AWSAppSyncClient = require("aws-appsync").default;
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
@@ -65,32 +64,39 @@ const queryTokenBalanceById = gql`
 
 const updateTokenBalance = gql`
   mutation MyMutation($id: ID!, $TokenBalance: Int) {
-    updateUserProfile(input: {id: $id, TokenBalance: $TokenBalance}) {
+    updateUserProfile(input: { id: $id, TokenBalance: $TokenBalance }) {
       id
       TokenBalance
     }
-  } 
+  }
 `;
 const updateUserTokenBalance = async (msgModel) => {
-    const fromUserId = msgModel.FromUserID.S;
-    const toUserId = msgModel.ToUserID.S;
-    return appsyncClient.hydrated().then((client) => {
-      return client.query({
+  const fromUserId = msgModel.FromUserID.S;
+  const toUserId = msgModel.ToUserID.S;
+  return appsyncClient
+    .hydrated()
+    .then((client) => {
+      return client
+        .query({
           query: queryTokenBalanceById,
-          variables: { id: fromUserId}, 
+          variables: { id: fromUserId },
         })
         .then((d) => {
           const userRole = d.data.getUserProfile.UserRole;
           const tokenBalance = d.data.getUserProfile.TokenBalance;
-          if(userRole == "student"){
-            if(tokenBalance > 0){
-              return reduceStudentTokenBalance(fromUserId,toUserId,tokenBalance).then((res)=>{
+          if (userRole === "student") {
+            if (tokenBalance > 0) {
+              return reduceStudentTokenBalance(
+                fromUserId,
+                toUserId,
+                tokenBalance
+              ).then((res) => {
                 return res;
               });
-            }else{
+            } else {
               return "Don't have enough tokenBalance";
             }
-          }else{
+          } else {
             return "Don't need to mutate!";
           }
         })
@@ -104,75 +110,94 @@ const updateUserTokenBalance = async (msgModel) => {
       return e.message;
     });
 };
-const reduceStudentTokenBalance = async (fromUserId,toUserId,tokenBalance) => {
-  return appsyncClient.hydrated().then((client)=>{
-    client.mutate({
-      mutation:updateTokenBalance,
-      variables:{id:fromUserId,TokenBalance:tokenBalance - 1}
-    }).then((res)=>{
-      return queryAndAddTrainerTokenBalance(toUserId).then((res)=>{
-        return res;
-      });
-    }).catch((e) => {
-      console.log(e);
-      return e.message;
-    });
-  }).catch((e) => {
-    console.log(e);
-    return e.message;
-  });
-};
-const queryAndAddTrainerTokenBalance = async (trainerId)=>{
-  return appsyncClient.hydrated().then((client) => {
-    return client.query({
-        query: queryTokenBalanceById,
-        variables: { id: trainerId}, 
-      })
-      .then((d) => {
-        var tokenBalance = d.data.getUserProfile.TokenBalance;
-        if(tokenBalance == null){
-          tokenBalance = 1;
-        }else{
-          tokenBalance = tokenBalance + 1;
-        }
-        return appsyncClient.hydrated().then((client)=>{
-          client.mutate({
-            mutation:updateTokenBalance,
-            variables:{id:trainerId,TokenBalance:tokenBalance}
-          }).then((res)=>{
-            return "Add tokenbalance from trainer suc!";
-          }).catch((e) => {
-            console.log(e);
-            return e.message;
+const reduceStudentTokenBalance = async (
+  fromUserId,
+  toUserId,
+  tokenBalance
+) => {
+  return appsyncClient
+    .hydrated()
+    .then((client) => {
+      client
+        .mutate({
+          mutation: updateTokenBalance,
+          variables: { id: fromUserId, TokenBalance: tokenBalance - 1 },
+        })
+        .then(() => {
+          return queryAndAddTrainerTokenBalance(toUserId).then((res) => {
+            return res;
           });
-        }).catch((e) => {
+        })
+        .catch((e) => {
           console.log(e);
           return e.message;
         });
-      })
-      .catch((e) => {
-        console.log(e);
-        return e.message;
-      });
-  })
-  .catch((e) => {
-    console.log(e);
-    return e.message;
-  }); 
-};
-exports.handler = event => {
-  var message;
-  for(var i=0;i<event.Records.length;i++){
-    const record = event.Records[i];
-    if(record.eventName == 'INSERT'){
-      message = record.dynamodb.NewImage;
-    } 
-  }
-  if(message){
-    updateUserTokenBalance(message).then((res) => {
-      
+    })
+    .catch((e) => {
+      console.log(e);
+      return e.message;
     });
-  }else{
-    return Promise.resolve('Successfully processed DynamoDB record');
-  }  
+};
+const queryAndAddTrainerTokenBalance = async (trainerId) => {
+  return appsyncClient
+    .hydrated()
+    .then((client) => {
+      return client
+        .query({
+          query: queryTokenBalanceById,
+          variables: { id: trainerId },
+        })
+        .then((d) => {
+          var tokenBalance = d.data.getUserProfile.TokenBalance;
+          if (tokenBalance == null) {
+            tokenBalance = 1;
+          } else {
+            tokenBalance = tokenBalance + 1;
+          }
+          return appsyncClient
+            .hydrated()
+            .then((client) => {
+              client
+                .mutate({
+                  mutation: updateTokenBalance,
+                  variables: { id: trainerId, TokenBalance: tokenBalance },
+                })
+                .then(() => {
+                  return "Add token balance to trainer!";
+                })
+                .catch((e) => {
+                  console.log(e);
+                  return e.message;
+                });
+            })
+            .catch((e) => {
+              console.log(e);
+              return e.message;
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+          return e.message;
+        });
+    })
+    .catch((e) => {
+      console.log(e);
+      return e.message;
+    });
+};
+exports.handler = (event) => {
+  var message;
+  for (var i = 0; i < event.Records.length; i++) {
+    const record = event.Records[i];
+    if (record.eventName === "INSERT") {
+      message = record.dynamodb.NewImage;
+    }
+  }
+  if (message) {
+    updateUserTokenBalance(message).then(() => {
+      return Promise.resolve("Successfully process token transaction.");
+    });
+  } else {
+    return Promise.resolve("No token transaction is processed.");
+  }
 };
