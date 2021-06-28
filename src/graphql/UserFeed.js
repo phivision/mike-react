@@ -123,6 +123,7 @@ export const userProfileQuery = `query GetUserProfile ($id: ID!) {
             FirstName
             UserImage
             Description
+            TokenBalance
           }
         }`;
 

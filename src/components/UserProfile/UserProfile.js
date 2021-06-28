@@ -170,6 +170,11 @@ export default function UserProfile(props) {
             text={profile.Description}
           />
         </GridItem>
+        <GridItem>
+          <Typography variant="body1">
+            Tokens: {profile.TokenBalance}
+          </Typography>
+        </GridItem>
         <GridItem xs={12}>
           {edit ? (
             <GridItem>

@@ -11,6 +11,7 @@ import UserAvatar from "../../components/UserAvatar/UserAvatar";
 const MessageRecord = (props) => {
   const { src, name, time, text } = props;
   // var curTime = new Date(time).getTime
+  // console.log("12311111111111111");
   return (
     <>
       <GridContainer>
@@ -38,39 +39,70 @@ MessageRecord.propTypes = {
   text: PropTypes.string,
 };
 
-const MessageLine = ({ message, user, messageInput }) => {
-  console.log("MessageLine", user);
-  return (
-    <div>
-      {message ? (
-        <MessageRecord
-          src={message.FromUser.UserImage}
-          name={message.FromUser.FirstName + " " + message.FromUser.LastName}
-          time={message.createdAt}
-          text={message.PostMessages}
-          style={{ background: "" }}
-        />
+const MessageLine = ({ user, contact, chatRecord }) => {
+  console.log("MessageLine ", contact, chatRecord);
+  if (chatRecord.length > 0) {
+    return (
+      <div>
+        {chatRecord.map((record, idx) => {
+          // console.log("record", record);
+          return (
+            <div key={"record" + idx}>
+              {record.Status == "SEND" ? (
+                <MessageRecord
+                  src={user.UserImage}
+                  name={user.FirstName + " " + user.LastName}
+                  time={record.createdAt}
+                  text={record.PostMessages}
+                />
+              ) : (
+                <MessageRecord
+                  src={record.FromUser.UserImage}
+                  // name={record.FromUser.FirstName + " " + record.FromUser.LastName}
+                  name={
+                    record.FromUser.FirstName + " " + record.FromUser.LastName
+                  }
+                  time={record.createdAt}
+                  text={record.PostMessages}
+                />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  } else {
+    return <>Please select contact!</>;
+  }
+  /* {message ? (
+        message.Status == "SEND" ? (
+          <MessageRecord
+            src={user.UserImage}
+            name={user.FirstName + " " + user.LastName}
+            time={message.createdAt}
+            text={message.PostMessages}
+          />
+        ) : (
+          <MessageRecord
+            src={message.FromUser.UserImage}
+            name={message.FromUser.FirstName + " " + message.FromUser.LastName}
+            time={message.createdAt}
+            text={message.PostMessages}
+            style={{ background: "" }}
+          />
+        )
       ) : (
         ""
-      )}
-      {messageInput.send && messageInput.PostMessages ? (
-        <MessageRecord
-          src={user.UserImage}
-          name={user.FirstName + " " + user.LastName}
-          time={messageInput.createdAt}
-          text={messageInput.PostMessages}
-        />
-      ) : (
-        ""
-      )}
-    </div>
-  );
+      )} */
+  /* </div>
+  ); */
 };
 
 MessageLine.propTypes = {
-  message: PropTypes.any,
+  contact: PropTypes.any,
   user: PropTypes.object,
   messageInput: PropTypes.object,
+  chatRecord: PropTypes.any,
 };
 
 export default MessageLine;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -8,6 +8,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
 import VerticalTabs from "./VerticalTabs";
+import { API, graphqlOperation } from "aws-amplify";
+import { getUserTrainers } from "../../graphql/message";
 
 const styles = (theme) => ({
   root: {
@@ -54,6 +56,30 @@ export default function ChatPopUp({
   setAllMessageLength,
 }) {
   console.log("user", userData);
+  const [trainers, setTrainers] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [user, setUser] = useState([]);
+  // var chatRecord = [];
+  // var TokenBalance = 0;
+
+  const SubscriptionStudent = async () => {
+    API.graphql(
+      graphqlOperation(getUserTrainers, {
+        id: userData.id,
+      })
+    )
+      .then((d) => {
+        const { Subscriptions, Users, ...p } = d.data.getUserProfile;
+        setUser(p);
+        setTrainers(Subscriptions.items);
+        setStudents(Users.items);
+      })
+      .catch((e) => console.log(e));
+  };
+
+  useEffect(() => {
+    SubscriptionStudent();
+  }, [userData.id]);
   return (
     <div>
       <Dialog
@@ -67,8 +93,10 @@ export default function ChatPopUp({
         </DialogTitle>
         <DialogContent dividers>
           <VerticalTabs
-            userData={userData}
             setAllMessageLength={setAllMessageLength}
+            trainers={trainers}
+            students={students}
+            user={user}
           />
         </DialogContent>
       </Dialog>

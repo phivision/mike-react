@@ -2,20 +2,34 @@ export const getUserTrainers = /* GraphQL */ `
   query GetUserTrainers($id: ID!) {
     getUserProfile(id: $id) {
       id
+      FirstName
       Email
       Description
-      FirstName
+      Gender
       LastName
+      TokenBalance
       UserImage
       UserRole
       Subscriptions {
         items {
           Trainer {
             id
+            FirstName
+            LastName
+            UserImage
+            UserRole
+            Description
+            Email
+          }
+        }
+      }
+      Users {
+        items {
+          User {
+            id
             Description
             Email
             FirstName
-            Gender
             LastName
             UserImage
             UserRole
