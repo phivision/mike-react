@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
 import VerticalTabs from "./VerticalTabs";
 import { API, graphqlOperation } from "aws-amplify";
-import { getUserTrainers } from "../../graphql/message";
+import { getUserTrainers, getMessageByToUserID } from "../../graphql/message";
 
 const styles = (theme) => ({
   root: {
@@ -55,12 +55,14 @@ export default function ChatPopUp({
   userData,
   setAllMessageLength,
 }) {
-  console.log("user", userData);
   const [trainers, setTrainers] = useState([]);
   const [students, setStudents] = useState([]);
   const [user, setUser] = useState([]);
-  // var chatRecord = [];
-  // var TokenBalance = 0;
+  const [message, setMessage] = useState([]);
+  // const memoizedJOKER = useMemo(() => <JOKER count={count} />, [count]);
+  // const [chatRecord, setChatRecord] = useState([]);
+  var contactList = [];
+  var chatRecord = [];
 
   const SubscriptionStudent = async () => {
     API.graphql(
@@ -77,9 +79,72 @@ export default function ChatPopUp({
       .catch((e) => console.log(e));
   };
 
+  const MessageQuery = async () => {
+    API.graphql(
+      graphqlOperation(getMessageByToUserID, {
+        ToUserID: userData.id,
+      })
+    )
+      .then((d) => {
+        const UserMessages = d.data.messageByToUserID.items;
+        setMessage(UserMessages);
+        console.log(UserMessages);
+      })
+      .catch(console.log);
+  };
+
   useEffect(() => {
-    SubscriptionStudent();
+    if (userData.role == "student" || userData.role == "trainer") {
+      SubscriptionStudent();
+      MessageQuery();
+    } else {
+      console.log("please login");
+    }
   }, [userData.id]);
+
+  // Generate contact lists based on user roles
+  if (students.length < 1) {
+    for (var t of trainers) {
+      contactList.push({
+        id: t.Trainer.id,
+        name: t.Trainer.FirstName + " " + t.Trainer.LastName,
+        UserImage: t.Trainer.UserImage,
+        Email: t.Trainer.Email,
+        Description: t.Trainer.Description,
+      });
+    }
+  } else {
+    for (var s of students) {
+      contactList.push({
+        id: s.User.id,
+        name: s.User.FirstName + " " + s.User.LastName,
+        UserImage: s.User.UserImage,
+        Email: s.User.Email,
+        Description: s.User.Description,
+      });
+    }
+  }
+
+  // generate local chat Record
+  if (message.length > 0) {
+    setAllMessageLength(message.length);
+    for (var m of message) {
+      chatRecord.push({
+        id: m.id,
+        FromUserID: m.FromUserID,
+        FromUser: m.FromUser,
+        ToUserID: m.ToUserID,
+        ToUser: m.ToUser,
+        PostMessages: m.PostMessages,
+        Status: m.Status,
+        createdAt: m.createdAt,
+        Type: m.Type,
+      });
+    }
+    console.log("generate local chat Record", chatRecord);
+  }
+  console.log("all state", userData, message, trainers, students, user);
+
   return (
     <div>
       <Dialog
@@ -93,10 +158,11 @@ export default function ChatPopUp({
         </DialogTitle>
         <DialogContent dividers>
           <VerticalTabs
-            setAllMessageLength={setAllMessageLength}
-            trainers={trainers}
-            students={students}
             user={user}
+            contactList={contactList}
+            message={message}
+            chatRecord={chatRecord}
+            setMessage={setMessage}
           />
         </DialogContent>
       </Dialog>

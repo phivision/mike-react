@@ -10,8 +10,6 @@ import UserAvatar from "../../components/UserAvatar/UserAvatar";
 
 const MessageRecord = (props) => {
   const { src, name, time, text } = props;
-  // var curTime = new Date(time).getTime
-  // console.log("12311111111111111");
   return (
     <>
       <GridContainer>
