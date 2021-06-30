@@ -37,13 +37,11 @@ MessageRecord.propTypes = {
   text: PropTypes.string,
 };
 
-const MessageLine = ({ user, contact, chatRecord }) => {
-  console.log("MessageLine ", contact, chatRecord);
+const MessageLine = ({ user, chatRecord }) => {
   if (chatRecord.length > 0) {
     return (
       <div>
         {chatRecord.map((record, idx) => {
-          // console.log("record", record);
           return (
             <div key={"record" + idx}>
               {record.Status == "SEND" ? (
@@ -56,7 +54,6 @@ const MessageLine = ({ user, contact, chatRecord }) => {
               ) : (
                 <MessageRecord
                   src={record.FromUser.UserImage}
-                  // name={record.FromUser.FirstName + " " + record.FromUser.LastName}
                   name={
                     record.FromUser.FirstName + " " + record.FromUser.LastName
                   }
@@ -70,36 +67,12 @@ const MessageLine = ({ user, contact, chatRecord }) => {
       </div>
     );
   } else {
-    return <>Please select contact!</>;
+    return <></>;
   }
-  /* {message ? (
-        message.Status == "SEND" ? (
-          <MessageRecord
-            src={user.UserImage}
-            name={user.FirstName + " " + user.LastName}
-            time={message.createdAt}
-            text={message.PostMessages}
-          />
-        ) : (
-          <MessageRecord
-            src={message.FromUser.UserImage}
-            name={message.FromUser.FirstName + " " + message.FromUser.LastName}
-            time={message.createdAt}
-            text={message.PostMessages}
-            style={{ background: "" }}
-          />
-        )
-      ) : (
-        ""
-      )} */
-  /* </div>
-  ); */
 };
 
 MessageLine.propTypes = {
-  contact: PropTypes.any,
   user: PropTypes.object,
-  messageInput: PropTypes.object,
   chatRecord: PropTypes.any,
 };
 

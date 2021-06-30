@@ -9,7 +9,12 @@ import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
 import VerticalTabs from "./VerticalTabs";
 import { API, graphqlOperation } from "aws-amplify";
-import { getUserTrainers, getMessageByToUserID } from "../../graphql/message";
+import {
+  getUserTrainers,
+  getMessageByToUserID,
+  // updateMessageStatus,
+} from "../../graphql/message";
+import { onMessagesByToUserID } from "../../graphql/subscriptions";
 
 const styles = (theme) => ({
   root: {
@@ -59,8 +64,7 @@ export default function ChatPopUp({
   const [students, setStudents] = useState([]);
   const [user, setUser] = useState([]);
   const [message, setMessage] = useState([]);
-  // const memoizedJOKER = useMemo(() => <JOKER count={count} />, [count]);
-  // const [chatRecord, setChatRecord] = useState([]);
+  const [createMsmSub, setCreateMsmSub] = useState([]);
   var contactList = [];
   var chatRecord = [];
 
@@ -75,6 +79,7 @@ export default function ChatPopUp({
         setUser(p);
         setTrainers(Subscriptions.items);
         setStudents(Users.items);
+        return Subscriptions;
       })
       .catch((e) => console.log(e));
   };
@@ -93,10 +98,39 @@ export default function ChatPopUp({
       .catch(console.log);
   };
 
+  const messageSub = () => {
+    let tempCreateSub = [];
+    const createMsmSub = API.graphql({
+      query: onMessagesByToUserID,
+      variables: {
+        ToUserID: userData.id,
+      },
+    }).subscribe({
+      next: pushNewContent,
+    });
+    tempCreateSub.push(createMsmSub);
+    setCreateMsmSub(tempCreateSub);
+  };
+
+  const unsubscribeAll = () => {
+    createMsmSub.map((sub) => {
+      sub.unsubscribe();
+    });
+  };
+  const pushNewContent = (d) => {
+    console.log("d is", d);
+    chatRecord.push(d.value.data.onMessagesByToUserID);
+    setMessage([...message, d.value.data.onMessagesByToUserID]);
+    console.log("pushNewContent", chatRecord);
+  };
+
   useEffect(() => {
     if (userData.role == "student" || userData.role == "trainer") {
-      SubscriptionStudent();
+      SubscriptionStudent().then(() => {
+        messageSub();
+      });
       MessageQuery();
+      return unsubscribeAll();
     } else {
       console.log("please login");
     }
@@ -141,9 +175,9 @@ export default function ChatPopUp({
         Type: m.Type,
       });
     }
-    console.log("generate local chat Record", chatRecord);
   }
-  console.log("all state", userData, message, trainers, students, user);
+
+  // console.log("message, chatRecord", message, chatRecord);
 
   return (
     <div>
@@ -160,9 +194,7 @@ export default function ChatPopUp({
           <VerticalTabs
             user={user}
             contactList={contactList}
-            message={message}
             chatRecord={chatRecord}
-            setMessage={setMessage}
           />
         </DialogContent>
       </Dialog>

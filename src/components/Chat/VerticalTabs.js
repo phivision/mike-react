@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import { API, graphqlOperation } from "aws-amplify";
-
 import { createMessage } from "../../graphql/mutations";
 import TextField from "@material-ui/core/TextField";
 import Badge from "@material-ui/core/Badge";
@@ -15,6 +14,7 @@ import {
   GridItem,
 } from "../StyledComponents/StyledComponents";
 import MessageIcon from "@material-ui/icons/Message";
+// import { updateMessage } from "../../graphql/mutations";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -60,45 +60,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function VerticalTabs({
-  user,
-  contactList,
-  message,
-  chatRecord,
-  setMessage,
-}) {
-  // const initialMessageForm = {
-  //   id: "",
-  //   ToUserID: "",
-  //   FromUserID: user.id,
-  //   PostMessages: "",
-  //   createdAt: "",
-  //   src: "",
-  //   name: "",
-  //   send: false,
-  // };
+export default function VerticalTabs({ user, contactList, chatRecord }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-  // const [message, setMessage] = useState([]);
-  // const messageRef = useRef({});
-  // messageRef.current = message;
   const [post, setPost] = useState("");
-  const [msmTrainer, setMsmTrainer] = useState([]);
-  const [selectedUser, setSelectedUser] = useState("");
   var records = [];
-
-  // const MessageQuery = async () => {
-  //   API.graphql(
-  //     graphqlOperation(getMessageByToUserID, {
-  //       ToUserID: user.id,
-  //     })
-  //   )
-  //     .then((d) => {
-  //       const UserMessages = d.data.messageByToUserID.items;
-  //       setMessage(UserMessages);
-  //     })
-  //     .catch(console.log);
-  // };
+  var receList = [];
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -108,23 +75,26 @@ export default function VerticalTabs({
     setPost(event.target.value);
   };
 
-  // const addMessage = (ToUserID, src, name) => {
-  //   var myDate = new Date();
-  //   return new Promise((resolve) => {
-  //   setMessageInput({
-  //     ...messageInput,
-  //     ToUserID: ToUserID,
-  //     createdAt: myDate,
-  //     src: src,
-  //     name: name,
-  //     send: true,
-  //   });
-  //   console.log("message is add!", ToUserID, messageInput);
-  //     resolve(messageInput);
-  //   });
+  // const updateMsmStatus = async (messageIds) => {
+  //   console.log("messageIds", messageIds);
+  //   if (messageIds.length > 0) {
+  //     messageIds.map((messageId) => {
+  //       API.graphql(
+  //         graphqlOperation(updateMessage, {
+  //           input: {
+  //             id: messageId,
+  //             Status: "RESPONDED",
+  //           },
+  //         })
+  //       );
+  //     });
+  //   } else {
+  //     console.log("messageIds is empty!", messageIds);
+  //   }
   // };
 
-  const createNewMessage = async (ToUser, FromUser, PostMessages) => {
+  const createNewMessage = async (ToUser, FromUser, PostMessages, receList) => {
+    var messageIds = [];
     if (ToUser && FromUser && PostMessages) {
       API.graphql(
         graphqlOperation(createMessage, {
@@ -137,29 +107,16 @@ export default function VerticalTabs({
           },
         })
       );
+
+      for (var item of receList) {
+        messageIds.push(item.id);
+      }
+      console.log("messageIds", messageIds);
+      // updateMsmStatus(messageIds);
     } else {
       console.log("message is empty!", ToUser, FromUser, PostMessages);
     }
-    // addMessage(ToUser, src, name);
-    // console.log("message is send!", ToUser, FromUser, PostMessages);
   };
-
-  // if (!user.id) {
-  //   alert("please login!");
-  // }
-
-  // let fromUsers = [];
-  // let arrId = [];
-
-  // for (const item of message) {
-  //   if (arrId.indexOf(item.FromUserID) === -1) {
-  //     arrId.push(item.FromUserID);
-  //     fromUsers.push(item.FromUser);
-  //   }
-  // }
-
-  // console.log("list is ", fromUsers, arrId);
-  // console.log("canshu", contactList, trainers, students);
 
   const addToChatRecord = (contact, user, PostMessages) => {
     var currentTime = new Date();
@@ -175,64 +132,16 @@ export default function VerticalTabs({
       Type: "TEXT",
     });
 
-    setMsmTrainer([
-      ...msmTrainer,
-      {
-        id: "",
-        FromUserID: user.id,
-        FromUser: user,
-        ToUserID: contact.id,
-        ToUser: contact,
-        PostMessages: PostMessages,
-        Status: "SEND",
-        createdAt: currentTime,
-        Type: "TEXT",
-      },
-    ]);
-    setMessage([
-      ...message,
-      {
-        id: "",
-        FromUserID: user.id,
-        FromUser: user,
-        ToUserID: contact.id,
-        ToUser: contact,
-        PostMessages: PostMessages,
-        Status: "SEND",
-        createdAt: currentTime,
-        Type: "TEXT",
-      },
-    ]);
     setPost("");
-    console.log("add new record", chatRecord);
     return chatRecord;
   };
 
-  // console.log("chatRecord message", chatRecord, message);
   const filterChatList = (contactId, chatRecord) => {
     let Trainer = chatRecord.filter((value) => {
       return value.FromUserID == contactId || value.ToUserID == contactId;
     });
     return Trainer;
   };
-
-  useEffect(() => {
-    if (contactList.length > 0) {
-      setSelectedUser(contactList[0].id);
-    }
-  }, [user.id]);
-
-  useEffect(() => {
-    console.log("selectedUser changed", chatRecord);
-    if (chatRecord.length > 0 && selectedUser !== "") {
-      setMsmTrainer(filterChatList(selectedUser, chatRecord), () => {
-        console.log("new msmTrainer", msmTrainer);
-      });
-    }
-  }, [selectedUser]);
-
-  console.log("records", selectedUser, chatRecord, message);
-  console.log("msmTrainer", msmTrainer);
 
   return (
     <div className={classes.root}>
@@ -246,23 +155,20 @@ export default function VerticalTabs({
       >
         {contactList.map((contact, idx) => {
           records = filterChatList(contact.id, chatRecord);
+          receList = records.filter((l) => {
+            return l.Status == "UNRESPONDED";
+          });
+          console.log("filterChatList", records, receList);
           return (
             <Tab
               label={contact.name}
               {...a11yProps(idx)}
               key={"TabLabel" + idx}
               onClick={() => {
-                setMsmTrainer(filterChatList(contact.id, chatRecord));
-                setSelectedUser(contact.id);
-                // setMessageInput({
-                //   ...messageInput,
-                //   ToUserID: contact.id,
-                //   PostMessages: "",
-                // });
                 setPost("");
               }}
               icon={
-                <Badge badgeContent={records.length} color="primary">
+                <Badge badgeContent={receList.length} color="primary">
                   <MessageIcon />
                 </Badge>
               }
@@ -273,7 +179,9 @@ export default function VerticalTabs({
       {contactList.map((contact, idx) => {
         var trainerId = contact.id;
         records = filterChatList(contact.id, chatRecord);
-        console.log("msmTrainer", msmTrainer, records);
+        receList = records.filter((l) => {
+          return l.Status == "UNRESPONDED";
+        });
         return (
           <TabPanel
             value={value}
@@ -282,35 +190,11 @@ export default function VerticalTabs({
             style={{ width: 500 }}
           >
             <div style={{ height: 150, overflowY: "auto" }}>
-              {
-                msmTrainer.length < 0 ? (
-                  "No message"
-                ) : (
-                  <MessageLine
-                    message={message}
-                    user={user}
-                    key={idx}
-                    contact={contact.id}
-                    chatRecord={records}
-                  />
-                )
-                // : msmTrainer.map((m, idx) => {
-                //     // : message.map((m, idx) => {
-                //     //     if (trainerId === m.FromUserID) {
-                //     // console.log("msmTrainer, m", msmTrainer, m);
-                //     return (
-                //       <MessageLine
-                //         message={m}
-                //         user={user}
-                //         key={idx}
-                //         messageInput={messageInput}
-                //         trainerId={trainerId}
-                //         chatRecord={chatRecord}
-                //       />
-                //     );
-                //     // }
-                //   })
-              }
+              {records.length < 0 ? (
+                "No message"
+              ) : (
+                <MessageLine user={user} chatRecord={records} />
+              )}
             </div>
             <GridContainer
               style={{
@@ -337,10 +221,9 @@ export default function VerticalTabs({
                   autoFocus
                   color="primary"
                   onClick={() => {
-                    createNewMessage(trainerId, user.id, post);
+                    createNewMessage(trainerId, user.id, post, receList);
                     chatRecord = addToChatRecord(contact, user, post);
                     setPost("");
-                    // console.log("onclick chatRecord", chatRecord);
                   }}
                 >
                   Send
@@ -355,9 +238,7 @@ export default function VerticalTabs({
 }
 
 VerticalTabs.propTypes = {
-  message: PropTypes.any.isRequired,
   contactList: PropTypes.any.isRequired,
   user: PropTypes.any.isRequired,
   chatRecord: PropTypes.any.isRequired,
-  setMessage: PropTypes.any.isRequired,
 };
