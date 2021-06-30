@@ -94,13 +94,13 @@ export default function Checkout({ ...props }) {
           {paymentMethods.map((p, idx) => {
             let isDefault = p.id === defaultPaymentMethod;
             return isDefault ? (
-              <div style={{ padding: "15px" }}>
+              <div style={{ padding: "15px" }} key={idx}>
                 <PaymentMethod PaymentMethod={p} key={idx} />
               </div>
             ) : null;
           })}
           <CustomButton variant="contained" onClick={onClick}>
-            Subscribe
+            {props.buttonTitle}
           </CustomButton>
         </CustomContainer>
       ) : (
