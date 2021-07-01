@@ -11,7 +11,7 @@ export default function SignInForm({ ...props }) {
   const history = useHistory();
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  const [state, setState] = React.useState(
+  const [state, setState] = useState(
     localStorage.getItem("remember")
       ? {
           email: localStorage.getItem("username"),

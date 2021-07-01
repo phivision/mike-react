@@ -13,8 +13,8 @@ import Grid from "@material-ui/core/Grid";
 import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
 
 export default function Home() {
-  const [trainers, setTrainers] = React.useState([]);
-  const [email, setEmail] = React.useState("");
+  const [trainers, setTrainers] = useState([]);
+  const [email, setEmail] = useState("");
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
   async function trainerQuery() {

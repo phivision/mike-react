@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { TextField } from "@material-ui/core";
 import { Auth } from "aws-amplify";
 import { TextStyle, CustomButton } from "../StyledComponents/StyledComponents";
@@ -7,11 +7,11 @@ import { useHistory } from "react-router-dom";
 import CustomSnackbar from "../CustomSnackbar/CustomSnackbar";
 
 const ResetPasswordForm = ({ ...props }) => {
-  const [showVerify, setShowVerify] = React.useState(false);
-  const [verifyCode, setVerifyCode] = React.useState("");
-  const [snackbarMessage, setSnackbarMessage] = React.useState("");
+  const [showVerify, setShowVerify] = useState(false);
+  const [verifyCode, setVerifyCode] = useState("");
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const history = useHistory();
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     email: "",
     password: "",
     remember: false,

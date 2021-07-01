@@ -12,7 +12,7 @@ import CustomSnackbar from "../CustomSnackbar/CustomSnackbar";
 export default function VerifyForm({ ...props }) {
   const history = useHistory();
 
-  const [verify, setVerify] = React.useState("");
+  const [verify, setVerify] = useState("");
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const handleChange = (e) => {

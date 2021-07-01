@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 // @material-ui/core components
 import { Typography } from "@material-ui/core";
@@ -45,18 +45,16 @@ let thumbFile;
 let newImage;
 
 export default function ContentUpload(props) {
-  const [videoForm, setVideoForm] = React.useState(initialVideoForm);
-  const [thumbURL, setThumbURL] = React.useState("");
-  const [videoReady, setVideoReady] = React.useState(false);
-  const [videoStatus, setVideoStatus] = React.useState("New Video");
-  const [uploadProgress, setUploadProgress] = React.useState(0);
+  const [videoForm, setVideoForm] = useState(initialVideoForm);
+  const [thumbURL, setThumbURL] = useState("");
+  const [videoReady, setVideoReady] = useState(false);
+  const [videoStatus, setVideoStatus] = useState("New Video");
+  const [uploadProgress, setUploadProgress] = useState(0);
   // uploading count down internal
-  const [count, setCount] = React.useState(0);
-  const [openDuplicationDialog, setOpenDuplicationDialog] = React.useState(
-    false
-  );
-  const videoFileRef = React.useRef();
-  const thumbFileRef = React.useRef();
+  const [count, setCount] = useState(0);
+  const [openDuplicationDialog, setOpenDuplicationDialog] = useState(false);
+  const videoFileRef = useRef();
+  const thumbFileRef = useRef();
   const thumbReader = new FileReader();
 
   // setup local image reader

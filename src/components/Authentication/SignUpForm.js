@@ -12,7 +12,7 @@ export default function SignUpForm({ ...props }) {
   const history = useHistory();
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     email: "",
     password: "",
     remember: false,

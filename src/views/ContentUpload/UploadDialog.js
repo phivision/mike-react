@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import {
   Typography,
@@ -12,9 +12,9 @@ import CloseIcon from "@material-ui/icons/Close";
 import CustomDialog from "../../components/Dialog/CustomDialog";
 
 export default function UploadDialog(props) {
-  const [openDialog, setOpenDialog] = React.useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   // state to control the upload notification dialog
-  const [uploaded, setUploaded] = React.useState(false);
+  const [uploaded, setUploaded] = useState(false);
 
   const handleOpenDialog = () => {
     setOpenDialog(true);

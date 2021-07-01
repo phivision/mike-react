@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import Amplify, { API, Auth, graphqlOperation } from "aws-amplify";
 import { Hub } from "aws-amplify";
@@ -80,7 +80,7 @@ const App = () => {
     setOpenContentUpload(false);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     Auth.currentSession().then((res) => {
       if (res.isValid()) {
         setUser({
@@ -94,7 +94,7 @@ const App = () => {
     });
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     Hub.listen("auth", (data) => {
       if (data.payload.event === "signIn") {
         setUser({
