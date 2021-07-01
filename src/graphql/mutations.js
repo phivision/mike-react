@@ -26,6 +26,8 @@ export const createUserProfile = /* GraphQL */ `
       Biography
       LandingURL
       TokenBalance
+      TokenPrice
+      DeviceToken
       createdAt
       updatedAt
       owner
@@ -111,6 +113,8 @@ export const updateUserProfile = /* GraphQL */ `
       Biography
       LandingURL
       TokenBalance
+      TokenPrice
+      DeviceToken
       createdAt
       updatedAt
       owner
@@ -196,6 +200,8 @@ export const deleteUserProfile = /* GraphQL */ `
       Biography
       LandingURL
       TokenBalance
+      TokenPrice
+      DeviceToken
       createdAt
       updatedAt
       owner
@@ -288,6 +294,8 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -324,6 +332,8 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -376,6 +386,8 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -412,6 +424,8 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -464,6 +478,8 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -500,6 +516,8 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -549,6 +567,8 @@ export const createUserFavoriteContent = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -602,6 +622,8 @@ export const createUserFavoriteContent = /* GraphQL */ `
           Biography
           LandingURL
           TokenBalance
+          TokenPrice
+          DeviceToken
           createdAt
           updatedAt
           owner
@@ -643,6 +665,8 @@ export const updateUserFavoriteContent = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -696,6 +720,8 @@ export const updateUserFavoriteContent = /* GraphQL */ `
           Biography
           LandingURL
           TokenBalance
+          TokenPrice
+          DeviceToken
           createdAt
           updatedAt
           owner
@@ -737,6 +763,8 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -790,6 +818,8 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
           Biography
           LandingURL
           TokenBalance
+          TokenPrice
+          DeviceToken
           createdAt
           updatedAt
           owner
@@ -843,6 +873,8 @@ export const createUserContent = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -913,6 +945,8 @@ export const updateUserContent = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -983,6 +1017,8 @@ export const deleteUserContent = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -1046,6 +1082,8 @@ export const createMessage = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -1082,6 +1120,8 @@ export const createMessage = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -1136,6 +1176,8 @@ export const updateMessage = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -1172,6 +1214,8 @@ export const updateMessage = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -1226,6 +1270,8 @@ export const deleteMessage = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -1262,6 +1308,8 @@ export const deleteMessage = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner

@@ -18,11 +18,11 @@
       "function": {
         "stripeAPI": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/stripeAPI-426e366f4c65786b7337-build.zip"
+          "s3Key": "amplify-builds/stripeAPI-317a302f4f7962424957-build.zip"
         },
         "stripeWebhook": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/stripeWebhook-546c6949424863766172-build.zip"
+          "s3Key": "amplify-builds/stripeWebhook-68744767375557696f64-build.zip"
         },
         "cognitoPostConfirm": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
@@ -42,7 +42,7 @@
         },
         "messageTokenTransaction": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/messageTokenTransaction-6e302f3062746e595535-build.zip"
+          "s3Key": "amplify-builds/messageTokenTransaction-586d472b694f35586d6b-build.zip"
         }
       },
       "storage": {
@@ -122,11 +122,11 @@
       "function": {
         "stripeAPI": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
-          "s3Key": "amplify-builds/stripeAPI-426e366f4c65786b7337-build.zip"
+          "s3Key": "amplify-builds/stripeAPI-317a302f4f7962424957-build.zip"
         },
         "stripeWebhook": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
-          "s3Key": "amplify-builds/stripeWebhook-546c6949424863766172-build.zip"
+          "s3Key": "amplify-builds/stripeWebhook-68744767375557696f64-build.zip"
         },
         "cognitoPostConfirm": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
@@ -146,7 +146,7 @@
         },
         "messageTokenTransaction": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
-          "s3Key": "amplify-builds/messageTokenTransaction-6e302f3062746e595535-build.zip"
+          "s3Key": "amplify-builds/messageTokenTransaction-586d472b694f35586d6b-build.zip"
         }
       },
       "storage": {
@@ -154,7 +154,8 @@
           "bucketName": "mike-vod-feature",
           "region": "us-east-1"
         }
-      }
+      },
+      "notifications": {}
     }
   }
 }
