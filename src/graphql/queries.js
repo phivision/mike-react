@@ -23,6 +23,8 @@ export const getUserProfile = /* GraphQL */ `
       Biography
       LandingURL
       TokenBalance
+      TokenPrice
+      DeviceToken
       createdAt
       updatedAt
       owner
@@ -110,6 +112,8 @@ export const listUserProfiles = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -165,6 +169,8 @@ export const profilesByStripeID = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -220,6 +226,8 @@ export const profilesByURL = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -275,6 +283,8 @@ export const searchUserProfiles = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -325,6 +335,8 @@ export const getUserSubscriptionTrainer = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -361,6 +373,8 @@ export const getUserSubscriptionTrainer = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -419,6 +433,8 @@ export const listUserSubscriptionTrainers = /* GraphQL */ `
           Biography
           LandingURL
           TokenBalance
+          TokenPrice
+          DeviceToken
           createdAt
           updatedAt
           owner
@@ -443,6 +459,8 @@ export const listUserSubscriptionTrainers = /* GraphQL */ `
           Biography
           LandingURL
           TokenBalance
+          TokenPrice
+          DeviceToken
           createdAt
           updatedAt
           owner
@@ -491,6 +509,8 @@ export const getUserContent = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -563,6 +583,8 @@ export const listUserContents = /* GraphQL */ `
           Biography
           LandingURL
           TokenBalance
+          TokenPrice
+          DeviceToken
           createdAt
           updatedAt
           owner
@@ -629,6 +651,74 @@ export const byContentCreatedAt = /* GraphQL */ `
           Biography
           LandingURL
           TokenBalance
+          TokenPrice
+          DeviceToken
+          createdAt
+          updatedAt
+          owner
+        }
+        FavoriteUser {
+          nextToken
+        }
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const contentByName = /* GraphQL */ `
+  query ContentByName(
+    $ContentName: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserContentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    contentByName(
+      ContentName: $ContentName
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        CreatorID
+        createdAt
+        ContentName
+        Description
+        Title
+        Level
+        Length
+        IsDemo
+        TranscodeReady
+        ViewCount
+        Thumbnail
+        Preview
+        Segments
+        updatedAt
+        Creator {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          TokenPrice
+          DeviceToken
           createdAt
           updatedAt
           owner
@@ -673,6 +763,8 @@ export const getMessage = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -709,6 +801,8 @@ export const getMessage = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        DeviceToken
         createdAt
         updatedAt
         owner
@@ -765,6 +859,8 @@ export const listMessages = /* GraphQL */ `
           Biography
           LandingURL
           TokenBalance
+          TokenPrice
+          DeviceToken
           createdAt
           updatedAt
           owner
@@ -789,6 +885,8 @@ export const listMessages = /* GraphQL */ `
           Biography
           LandingURL
           TokenBalance
+          TokenPrice
+          DeviceToken
           createdAt
           updatedAt
           owner
@@ -845,6 +943,8 @@ export const messageByToUserID = /* GraphQL */ `
           Biography
           LandingURL
           TokenBalance
+          TokenPrice
+          DeviceToken
           createdAt
           updatedAt
           owner
@@ -869,6 +969,8 @@ export const messageByToUserID = /* GraphQL */ `
           Biography
           LandingURL
           TokenBalance
+          TokenPrice
+          DeviceToken
           createdAt
           updatedAt
           owner
@@ -925,6 +1027,8 @@ export const messageByFromUserID = /* GraphQL */ `
           Biography
           LandingURL
           TokenBalance
+          TokenPrice
+          DeviceToken
           createdAt
           updatedAt
           owner
@@ -949,6 +1053,8 @@ export const messageByFromUserID = /* GraphQL */ `
           Biography
           LandingURL
           TokenBalance
+          TokenPrice
+          DeviceToken
           createdAt
           updatedAt
           owner

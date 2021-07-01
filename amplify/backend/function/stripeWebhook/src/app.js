@@ -9,6 +9,7 @@ const awsServerlessExpressMiddleware = require("aws-serverless-express/middlewar
 const AWS = require("aws-sdk");
 const docClient = new AWS.DynamoDB.DocumentClient();
 const v5 = require("uuid/v5");
+const prices = require("./prices").prices;
 
 // declare a new express app
 const app = express();
@@ -132,6 +133,27 @@ app.post(
       return response.status(400).send(`Webhook Error: ${err.message}`);
     }
 
+    const addTokens = async (userID, currentTokenCount, amount) => {
+      let curr = currentTokenCount ? currentTokenCount : 0;
+
+      const params = {
+        TableName: process.env.TABLE_NAME,
+        Key: {
+          id: userID,
+        },
+        UpdateExpression: "set #s = :d",
+        ExpressionAttributeNames: {
+          "#s": "TokenBalance",
+        },
+        ExpressionAttributeValues: {
+          ":d": curr + amount,
+        },
+        ReturnValues: "ALL_NEW",
+      };
+
+      return await docClient.update(params).promise();
+    };
+
     const createSubscription = async (
       trainerID,
       userID,
@@ -161,7 +183,7 @@ app.post(
     };
 
     const deleteSubscription = async (trainerID, userID) => {
-      const i = v5(trainerID + userID, process.env.UUID);
+      const i = v5(trainerID + userID, UUID);
       console.log(i);
       const params = {
         TableName: process.env.SUB_TABLE_NAME,
@@ -188,16 +210,20 @@ app.post(
       return await docClient.query(params).promise();
     };
 
+    const getKeyByPrice = (p) => {
+      return Object.keys(prices).find((key) => prices[key] === p);
+    };
+
     // Handle the event
     switch (event.type) {
       case "invoice.paid":
-        const paymentIntent = event.data.object;
+        const invoice = event.data.object;
         console.log("Invoice Paid.");
-        console.log(paymentIntent);
-        query(paymentIntent.customer).then((user) => {
-          query(paymentIntent.transfer_data.destination).then((trainer) => {
+        console.log(invoice);
+        query(invoice.customer).then((user) => {
+          query(invoice.transfer_data.destination).then((trainer) => {
             stripe.subscriptions
-              .retrieve(paymentIntent.subscription)
+              .retrieve(invoice.subscription)
               .then((subscription) => {
                 createSubscription(
                   trainer.Items[0].id,
@@ -205,7 +231,11 @@ app.post(
                   subscription.id,
                   subscription.current_period_end
                 )
-                  .then(() => response.json({ received: true }))
+                  .then(() => {
+                    addTokens(user.Items[0].id, user.Items[0].TokenBalance, 10)
+                      .then(() => response.json({ received: true }))
+                      .catch(console.log);
+                  })
                   .catch(console.log);
               });
           });
@@ -224,6 +254,23 @@ app.post(
                 .catch(console.log);
             });
           });
+        });
+        break;
+
+      case "payment_intent.succeeded":
+        const paymentIntent = event.data.object;
+        console.log("Payment Intent Succeeded after Coin Purchase.");
+        console.log(paymentIntent);
+        query(paymentIntent.customer).then((user) => {
+          console.log(getKeyByPrice(paymentIntent.amount));
+
+          addTokens(
+            user.Items[0].id,
+            user.Items[0].TokenBalance,
+            parseInt(getKeyByPrice(paymentIntent.amount))
+          )
+            .then(() => response.json({ received: true }))
+            .catch(console.log);
         });
         break;
 

@@ -9,6 +9,8 @@ var awsServerlessExpressMiddleware = require("aws-serverless-express/middleware"
 const AWS = require("aws-sdk");
 const docClient = new AWS.DynamoDB.DocumentClient();
 
+const prices = require("./prices").prices;
+
 // declare a new express app
 var app = express();
 
@@ -480,6 +482,43 @@ app.post("/stripe/api/user/get/paymentmethod", function (req, res) {
       console.log(e);
       res.status(500).send();
     });
+});
+
+app.post("/stripe/api/user/buy/coins", function (req, res) {
+  const getPrice = () => {
+    if (req.body.coinCount.toString() in prices) {
+      return prices[req.body.coinCount.toString()];
+    } else {
+      res.status(500).send();
+    }
+  };
+
+  const queryStripeID = async (id) => {
+    const params = {
+      TableName: process.env.TABLE_NAME,
+      Key: { id: id },
+    };
+
+    return await docClient.get(params).promise();
+  };
+
+  const createPaymentIntent = async (a, stripeID) => {
+    return await stripe.paymentIntents.create({
+      amount: a,
+      customer: stripeID,
+      currency: "usd",
+    });
+  };
+
+  const amount = getPrice();
+  queryStripeID(req.body.id).then((p) => {
+    createPaymentIntent(amount, p.Item.StripeID)
+      .then((p) => res.json(p.client_secret))
+      .catch((e) => {
+        console.log(e);
+        res.status(500).send();
+      });
+  });
 });
 
 app.post("/stripe/api/user/get/subscriptions", function (req, res) {

@@ -57,6 +57,7 @@ const queryTokenBalanceById = gql`
     getUserProfile(id: $id) {
       id
       TokenBalance
+      TokenPrice
       UserRole
     }
   }
@@ -86,13 +87,16 @@ const updateUserTokenBalance = async (msgModel) => {
           const tokenBalance = d.data.getUserProfile.TokenBalance;
           if (userRole === "student") {
             if (tokenBalance > 0) {
-              return reduceStudentTokenBalance(
-                fromUserId,
-                toUserId,
-                tokenBalance
-              ).then((res) => {
+              return queryAndAddTrainerTokenBalance(fromUserId,toUserId,tokenBalance).then((res) => {
                 return res;
-              });
+              }); 
+              // return reduceStudentTokenBalance(
+              //   fromUserId,
+              //   toUserId,
+              //   tokenBalance
+              // ).then((res) => {
+              //   return res;
+              // });
             } else {
               return "Don't have enough tokenBalance";
             }
@@ -110,35 +114,8 @@ const updateUserTokenBalance = async (msgModel) => {
       return e.message;
     });
 };
-const reduceStudentTokenBalance = async (
-  fromUserId,
-  toUserId,
-  tokenBalance
-) => {
-  return appsyncClient
-    .hydrated()
-    .then((client) => {
-      client
-        .mutate({
-          mutation: updateTokenBalance,
-          variables: { id: fromUserId, TokenBalance: tokenBalance - 1 },
-        })
-        .then(() => {
-          return queryAndAddTrainerTokenBalance(toUserId).then((res) => {
-            return res;
-          });
-        })
-        .catch((e) => {
-          console.log(e);
-          return e.message;
-        });
-    })
-    .catch((e) => {
-      console.log(e);
-      return e.message;
-    });
-};
-const queryAndAddTrainerTokenBalance = async (trainerId) => {
+
+const queryAndAddTrainerTokenBalance = async (fromUserId,trainerId,userTokenBalance) => {
   return appsyncClient
     .hydrated()
     .then((client) => {
@@ -148,12 +125,18 @@ const queryAndAddTrainerTokenBalance = async (trainerId) => {
           variables: { id: trainerId },
         })
         .then((d) => {
+          //fetch tokenBalance and tokenPrice for trainer
+          var tokenPrice = d.data.getUserProfile.TokenPrice;
           var tokenBalance = d.data.getUserProfile.TokenBalance;
-          if (tokenBalance == null) {
-            tokenBalance = 1;
-          } else {
-            tokenBalance = tokenBalance + 1;
+          if (tokenPrice == null){
+            tokenPrice = 0;
           }
+          if (tokenBalance == null) {
+            tokenBalance = tokenPrice;
+          } else {
+            tokenBalance = tokenBalance + tokenPrice;
+          }
+          //mutate trainer's tokenBalance add by trainer's tokenPrice
           return appsyncClient
             .hydrated()
             .then((client) => {
@@ -163,7 +146,15 @@ const queryAndAddTrainerTokenBalance = async (trainerId) => {
                   variables: { id: trainerId, TokenBalance: tokenBalance },
                 })
                 .then(() => {
-                  return "Add token balance to trainer!";
+                  //mutate student's tokenBalance reduce by trainer's tokenPrice
+                  console.log("add trainer token balance suc!");
+                  return reduceStudentTokenBalance(
+                    fromUserId,
+                    userTokenBalance,
+                    tokenPrice
+                  ).then((res) => {
+                    return res;
+                  }); 
                 })
                 .catch((e) => {
                   console.log(e);
@@ -185,6 +176,35 @@ const queryAndAddTrainerTokenBalance = async (trainerId) => {
       return e.message;
     });
 };
+
+const reduceStudentTokenBalance = async (
+  fromUserId,
+  tokenBalance,
+  tokenPrice
+) => {
+  //reduce student's tokenBalance by trainerToken
+  return appsyncClient
+    .hydrated()
+    .then((client) => {
+      client
+        .mutate({
+          mutation: updateTokenBalance,
+          variables: { id: fromUserId, TokenBalance: tokenBalance - tokenPrice },
+        })
+        .then(() => {
+          return "reduce token balance from student!";
+        })
+        .catch((e) => {
+          console.log(e);
+          return e.message;
+        });
+    })
+    .catch((e) => {
+      console.log(e);
+      return e.message;
+    });
+};
+
 exports.handler = (event) => {
   var message;
   for (var i = 0; i < event.Records.length; i++) {
