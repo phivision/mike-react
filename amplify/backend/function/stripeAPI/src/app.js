@@ -38,22 +38,22 @@ if (process.env.ENV === "prod") {
   );
 }
 
-app.post("/stripe/api/trainer/create", function (req, res) {
-  const queryName = async (id) => {
-    const params = {
-      TableName: process.env.TABLE_NAME,
-      Key: { id: id },
-    };
-
-    return await docClient.get(params).promise();
+const getProfileByID = async (id) => {
+  const params = {
+    TableName: process.env.TABLE_NAME,
+    Key: { id: id },
   };
 
+  return await docClient.get(params).promise();
+};
+
+app.post("/stripe/api/trainer/create", function (req, res) {
   const create = async (id) => {
     let account = await stripe.accounts.create({
       email: req.body.email,
       type: "express",
     });
-    const query = await queryName(id);
+    const query = await getProfileByID(id);
     const product = await stripe.products.create({
       name: query.Item.FirstName + " " + query.Item.LastName,
     });
@@ -99,15 +99,6 @@ app.post("/stripe/api/trainer/create", function (req, res) {
 
 //refresh + return url have to be https
 app.post("/stripe/api/trainer/link/onboarding", function (req, res) {
-  const queryStripeID = async (id) => {
-    const params = {
-      TableName: process.env.TABLE_NAME,
-      Key: { id: id },
-    };
-
-    return await docClient.get(params).promise();
-  };
-
   const onboard = async (StripeID) => {
     return await stripe.accountLinks.create({
       account: StripeID,
@@ -117,7 +108,7 @@ app.post("/stripe/api/trainer/link/onboarding", function (req, res) {
     });
   };
 
-  queryStripeID(req.body.id).then((p) => {
+  getProfileByID(req.body.id).then((p) => {
     onboard(p.Item.StripeID)
       .then((link) => res.json({ AccountLink: link.url }))
       .catch((e) => {
@@ -129,20 +120,11 @@ app.post("/stripe/api/trainer/link/onboarding", function (req, res) {
 
 //refresh + return url have to be https
 app.post("/stripe/api/trainer/link/login", function (req, res) {
-  const queryStripeID = async (id) => {
-    const params = {
-      TableName: process.env.TABLE_NAME,
-      Key: { id: id },
-    };
-
-    return await docClient.get(params).promise();
-  };
-
   const getLink = async (StripeID) => {
     return await stripe.accounts.createLoginLink(StripeID);
   };
 
-  queryStripeID(req.body.id).then((p) => {
+  getProfileByID(req.body.id).then((p) => {
     getLink(p.Item.StripeID)
       .then((l) => res.json({ AccountLink: l.url }))
       .catch((e) => {
@@ -153,19 +135,10 @@ app.post("/stripe/api/trainer/link/login", function (req, res) {
 });
 
 app.post("/stripe/api/trainer/get/price", function (req, res) {
-  const queryStripeID = async (id) => {
-    const params = {
-      TableName: process.env.TABLE_NAME,
-      Key: { id: id },
-    };
-
-    return await docClient.get(params).promise();
-  };
-
   const getPrices = async (StripeID) =>
     await stripe.prices.list({ active: true, lookup_keys: [StripeID] });
 
-  queryStripeID(req.body.id).then((p) => {
+  getProfileByID(req.body.id).then((p) => {
     getPrices(p.Item.StripeID)
       .then((p) => res.json(p))
       .catch((e) => {
@@ -176,19 +149,10 @@ app.post("/stripe/api/trainer/get/price", function (req, res) {
 });
 
 app.post("/stripe/api/trainer/get/balance", function (req, res) {
-  const queryStripeID = async (id) => {
-    const params = {
-      TableName: process.env.TABLE_NAME,
-      Key: { id: id },
-    };
-
-    return await docClient.get(params).promise();
-  };
-
   const getPrices = async (StripeID) =>
     await stripe.balance.retrieve({}, { stripeAccount: StripeID });
 
-  queryStripeID(req.body.id).then((p) => {
+  getProfileByID(req.body.id).then((p) => {
     getPrices(p.Item.StripeID)
       .then((p) => res.json(p))
       .catch((e) => {
@@ -200,15 +164,6 @@ app.post("/stripe/api/trainer/get/balance", function (req, res) {
 
 //TODO: modularize to be able to pick a specific price/handle multiple prices/products? in the future
 app.post("/stripe/api/trainer/update/price", function (req, res) {
-  const queryStripeID = async (id) => {
-    const params = {
-      TableName: process.env.TABLE_NAME,
-      Key: { id: id },
-    };
-
-    return await docClient.get(params).promise();
-  };
-
   const getPrices = async (StripeID) => {
     const prices = await stripe.prices.list({
       active: true,
@@ -229,7 +184,7 @@ app.post("/stripe/api/trainer/update/price", function (req, res) {
   };
 
   const update = async () => {
-    const query = await queryStripeID(req.body.id);
+    const query = await getProfileByID(req.body.id);
     const price = await getPrices(query.Item.StripeID);
     return await updatePrice(
       query.Item.StripeID,
@@ -250,19 +205,10 @@ app.post("/stripe/api/trainer/update/price", function (req, res) {
 });
 
 app.post("/stripe/api/trainer/get/account", function (req, res) {
-  const queryStripeID = async (id) => {
-    const params = {
-      TableName: process.env.TABLE_NAME,
-      Key: { id: id },
-    };
-
-    return await docClient.get(params).promise();
-  };
-
   const getAccount = async (StripeID) =>
     await stripe.accounts.retrieve(StripeID);
 
-  queryStripeID(req.body.id).then((p) => {
+  getProfileByID(req.body.id).then((p) => {
     getAccount(p.Item.StripeID)
       .then((p) => res.json(p))
       .catch((e) => {
@@ -273,15 +219,6 @@ app.post("/stripe/api/trainer/get/account", function (req, res) {
 });
 
 app.post("/stripe/api/trainer/cashout", function (req, res) {
-  const queryTokenCount = async (id) => {
-    const params = {
-      TableName: process.env.TABLE_NAME,
-      Key: { id: id },
-    };
-
-    return await docClient.get(params).promise();
-  };
-
   const resetTokens = async (userID) => {
     const params = {
       TableName: process.env.TABLE_NAME,
@@ -309,7 +246,7 @@ app.post("/stripe/api/trainer/cashout", function (req, res) {
     });
   };
 
-  queryTokenCount(req.body.id).then((p) => {
+  getProfileByID(req.body.id).then((p) => {
     transferBalance(p.Item.TokenBalance, p.Item.StripeID)
       .then(() => {
         resetTokens(req.body.id)
@@ -366,16 +303,6 @@ app.post("/stripe/api/user/create", function (req, res) {
 });
 
 app.post("/stripe/api/user/create/subscription", function (req, res) {
-  const query = async (id) => {
-    const params = {
-      TableName: process.env.TABLE_NAME,
-      Key: { id: id },
-    };
-
-    const query = await docClient.get(params).promise();
-    return query.Item;
-  };
-
   const setPayment = async (customerID) => {
     return await stripe.paymentMethods.attach(req.body.paymentMethodID, {
       customer: customerID,
@@ -415,8 +342,8 @@ app.post("/stripe/api/user/create/subscription", function (req, res) {
   };
 
   const update = async () => {
-    const customer = await query(req.body.customerID);
-    const trainer = await query(req.body.trainerID);
+    const customer = await getProfileByID(req.body.customerID).Item;
+    const trainer = await getProfileByID(req.body.trainerID).Item;
     const price = await getPrices(trainer.StripeID);
 
     await setPayment(customer.StripeID);
@@ -482,19 +409,10 @@ app.post("/stripe/api/user/delete/subscription", function (req, res) {
 });
 
 app.post("/stripe/api/user/get/payment", function (req, res) {
-  const queryStripeID = async (id) => {
-    const params = {
-      TableName: process.env.TABLE_NAME,
-      Key: { id: id },
-    };
-
-    return await docClient.get(params).promise();
-  };
-
   const getPaymentMethods = async (StripeID) =>
     await stripe.paymentMethods.list({ customer: StripeID, type: "card" });
 
-  queryStripeID(req.body.id).then((p) => {
+  getProfileByID(req.body.id).then((p) => {
     getPaymentMethods(p.Item.StripeID)
       .then((p) => res.json(p))
       .catch((e) => {
@@ -505,19 +423,10 @@ app.post("/stripe/api/user/get/payment", function (req, res) {
 });
 
 app.post("/stripe/api/user/get/customer", function (req, res) {
-  const queryStripeID = async (id) => {
-    const params = {
-      TableName: process.env.TABLE_NAME,
-      Key: { id: id },
-    };
-
-    return await docClient.get(params).promise();
-  };
-
   const getCustomer = async (StripeID) =>
     await stripe.customers.retrieve(StripeID);
 
-  queryStripeID(req.body.id).then((p) => {
+  getProfileByID(req.body.id).then((p) => {
     getCustomer(p.Item.StripeID)
       .then((p) => res.json(p))
       .catch((e) => {
@@ -548,15 +457,6 @@ app.post("/stripe/api/user/buy/coins", function (req, res) {
     }
   };
 
-  const queryStripeID = async (id) => {
-    const params = {
-      TableName: process.env.TABLE_NAME,
-      Key: { id: id },
-    };
-
-    return await docClient.get(params).promise();
-  };
-
   const createPaymentIntent = async (a, stripeID) => {
     return await stripe.paymentIntents.create({
       amount: a,
@@ -566,7 +466,7 @@ app.post("/stripe/api/user/buy/coins", function (req, res) {
   };
 
   const amount = getPrice();
-  queryStripeID(req.body.id).then((p) => {
+  getProfileByID(req.body.id).then((p) => {
     createPaymentIntent(amount, p.Item.StripeID)
       .then((p) => res.json(p.client_secret))
       .catch((e) => {
@@ -577,19 +477,10 @@ app.post("/stripe/api/user/buy/coins", function (req, res) {
 });
 
 app.post("/stripe/api/user/get/subscriptions", function (req, res) {
-  const queryStripeID = async (id) => {
-    const params = {
-      TableName: process.env.TABLE_NAME,
-      Key: { id: id },
-    };
-
-    return await docClient.get(params).promise();
-  };
-
   const getSubscriptions = async (StripeID) =>
     await stripe.subscriptions.list({ customer: StripeID });
 
-  queryStripeID(req.body.id).then((p) => {
+  getProfileByID(req.body.id).then((p) => {
     getSubscriptions(p.Item.StripeID)
       .then((p) => res.json(p))
       .catch((e) => {
@@ -600,22 +491,13 @@ app.post("/stripe/api/user/get/subscriptions", function (req, res) {
 });
 
 app.post("/stripe/api/user/create/payment", function (req, res) {
-  const queryStripeID = async (id) => {
-    const params = {
-      TableName: process.env.TABLE_NAME,
-      Key: { id: id },
-    };
-
-    return await docClient.get(params).promise();
-  };
-
   const setPayment = async (customerID) => {
     return await stripe.paymentMethods.attach(req.body.paymentMethodID, {
       customer: customerID,
     });
   };
 
-  queryStripeID(req.body.id).then((p) => {
+  getProfileByID(req.body.id).then((p) => {
     setPayment(p.Item.StripeID)
       .then((p) => res.json(p))
       .catch((e) => {
@@ -639,15 +521,6 @@ app.post("/stripe/api/user/delete/payment", function (req, res) {
 });
 
 app.post("/stripe/api/user/update/defaultpayment", function (req, res) {
-  const queryStripeID = async (id) => {
-    const params = {
-      TableName: process.env.TABLE_NAME,
-      Key: { id: id },
-    };
-
-    return await docClient.get(params).promise();
-  };
-
   const setInvoice = async (customerID) => {
     return await stripe.customers.update(customerID, {
       invoice_settings: {
@@ -656,7 +529,7 @@ app.post("/stripe/api/user/update/defaultpayment", function (req, res) {
     });
   };
 
-  queryStripeID(req.body.id).then((p) => {
+  getProfileByID(req.body.id).then((p) => {
     setInvoice(p.Item.StripeID)
       .then((p) => res.json(p))
       .catch((e) => {
