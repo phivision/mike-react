@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { API, graphqlOperation } from "aws-amplify";
 import PropTypes from "prop-types";
-import { Dialog, Snackbar, Typography, Container } from "@material-ui/core";
+import { Dialog, Typography, Container } from "@material-ui/core";
 import ContentCard from "../../components/Card/ContentCard";
 import WorkoutCard from "../../components/Card/WorkoutCard";
 import Banner from "assets/img/banner.jpeg";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
 import { useHistory } from "react-router-dom";
 import Checkout from "../../components/Checkout/Checkout";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
 import {
   GridItem,
   GridContainer,
@@ -24,6 +22,7 @@ import {
   profileLimitQuery,
   contentPaginatingQuery,
 } from "../../graphql/UserFeed";
+import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
 
 // import initial profile
 const initialProfileState = {
@@ -44,7 +43,6 @@ export default function LandingPage({ ...props }) {
   const [price, setPrice] = useState("");
   const [favorites, setFavorites] = useState([]);
   const [openCheckout, setOpenCheckout] = useState(false);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const history = useHistory();
   const [page, setPage] = useState(0);
@@ -122,30 +120,14 @@ export default function LandingPage({ ...props }) {
     API.post("stripeAPI", "/stripe/api/user/create/subscription", myInit)
       .then((res) => {
         if (res.error) {
-          checkoutError(res.error);
+          setSnackbarMessage("Subscription unsuccessful");
         } else {
-          checkoutSuccess();
+          setSnackbarMessage("Subscription successful.");
         }
       })
-      .catch((e) => {
-        checkoutError(e);
+      .catch(() => {
+        setSnackbarMessage("Subscription unsuccessful");
       });
-  };
-
-  const handleSnackbarClose = () => {
-    setOpenSnackbar(false);
-  };
-
-  const checkoutSuccess = () => {
-    handleCloseCheckout();
-    setSnackbarMessage("Subscription successful.");
-    setOpenSnackbar(true);
-  };
-
-  const checkoutError = (e) => {
-    console.log(e);
-    setSnackbarMessage("Subscription unsuccessful. Please try again.");
-    setOpenSnackbar(true);
   };
 
   const onClick = () => {
@@ -157,10 +139,6 @@ export default function LandingPage({ ...props }) {
         state: { next: props.location.pathname },
       });
     }
-  };
-
-  const handleCloseCheckout = () => {
-    setOpenCheckout(false);
   };
 
   const checkSubscription = (userID, trainerID) => {
@@ -226,7 +204,7 @@ export default function LandingPage({ ...props }) {
     var temp = contentMore;
     temp.push.apply(temp, contentAll.items);
     for (var item of temp) {
-      if (arrId.indexOf(item["id"]) == -1) {
+      if (arrId.indexOf(item["id"]) === -1) {
         arrId.push(item["id"]);
         newArr.push(item);
       }
@@ -248,24 +226,6 @@ export default function LandingPage({ ...props }) {
     <>
       <UserFeedBanner url={Banner} />
       <Container maxWidth="xl">
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={6000}
-          onClose={handleSnackbarClose}
-          message={snackbarMessage}
-          action={
-            <React.Fragment>
-              <IconButton
-                size="small"
-                aria-label="close"
-                color="inherit"
-                onClick={handleSnackbarClose}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            </React.Fragment>
-          }
-        />
         <GridContainer
           direction="row"
           justify="space-evenly"
@@ -357,13 +317,12 @@ export default function LandingPage({ ...props }) {
           </GridContainer>
         </GridContainer>
         <Dialog
-          onClose={handleCloseCheckout}
+          onClose={() => setOpenCheckout(false)}
           fullWidth
           aria-labelledby="checkout-dialog"
           open={openCheckout}
         >
           <Checkout
-            errorCallback={checkoutError}
             user={props.user}
             paymentMethodCallback={createSubscription}
             buttonTitle="Subscribe"
@@ -371,6 +330,10 @@ export default function LandingPage({ ...props }) {
           />
         </Dialog>
       </Container>
+      <CustomSnackbar
+        message={snackbarMessage}
+        setMessage={setSnackbarMessage}
+      />
     </>
   );
 }

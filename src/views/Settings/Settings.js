@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Dialog, Snackbar } from "@material-ui/core";
+import { Dialog } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 // local variables
 import { userRoles } from "variables/userRoles";
@@ -11,7 +11,6 @@ import { API, Auth, graphqlOperation } from "aws-amplify";
 import PaymentMethod from "../../components/PaymentMethod/PaymentMethod";
 import IconButton from "@material-ui/core/IconButton";
 import Checkout from "../../components/Checkout/Checkout";
-import CloseIcon from "@material-ui/icons/Close";
 import TrainerPrice from "../../components/Settings/TrainerPrice";
 import {
   CustomButton,
@@ -23,6 +22,7 @@ import Grid from "@material-ui/core/Grid";
 import Divider from "@material-ui/core/Divider";
 import EditURL from "../../components/Settings/EditURL";
 import CashOut from "../../components/Settings/CashOut";
+import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
 
 const getUserSettings = /* GraphQL */ `
   query GetUserProfile($id: ID!) {
@@ -58,7 +58,6 @@ export default function Settings(props) {
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [isVerified, setVerified] = useState(true);
   const [openCheckout, setOpenCheckout] = useState(false);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [prices, setPrices] = useState([]);
   const [balance, setBalance] = useState();
@@ -121,7 +120,7 @@ export default function Settings(props) {
 
     API.post("stripeAPI", "/stripe/api/user/delete/payment", myInit)
       .then(() => {
-        checkoutSuccess("Successfully detached payment method");
+        setSnackbarMessage("Successfully detached payment method");
         fetchPaymentMethod();
       })
       .catch((err) => {
@@ -141,7 +140,8 @@ export default function Settings(props) {
 
     API.post("stripeAPI", "/stripe/api/user/create/payment", myInit)
       .then(() => {
-        checkoutSuccess("Successfully created payment method");
+        setSnackbarMessage("Successfully created payment method");
+        setOpenCheckout(false);
         fetchPaymentMethod();
       })
       .catch((err) => {
@@ -161,7 +161,8 @@ export default function Settings(props) {
 
     API.post("stripeAPI", "/stripe/api/user/update/defaultpayment", myInit)
       .then(() => {
-        checkoutSuccess("Successfully updated payment method");
+        setSnackbarMessage("Successfully updated payment method");
+        setSnackbarMessage(false);
         if (mounted) {
           setDefaultPaymentMethod(paymentMethodID);
         }
@@ -169,11 +170,6 @@ export default function Settings(props) {
       .catch((err) => {
         console.log(err);
       });
-  };
-
-  const openError = (e) => {
-    setSnackbarMessage(e);
-    setOpenSnackbar(true);
   };
 
   const fetchPaymentMethod = () => {
@@ -201,22 +197,6 @@ export default function Settings(props) {
         history.push("/");
       })
       .catch(console.log);
-  };
-
-  const checkoutError = () => {
-    setSnackbarMessage("Adding payment method unsuccessful. Please try again.");
-    setOpenSnackbar(true);
-  };
-
-  const cashOutError = (m) => {
-    setSnackbarMessage(m);
-    setOpenSnackbar(true);
-  };
-
-  const checkoutSuccess = (m) => {
-    setOpenCheckout(false);
-    setSnackbarMessage(m);
-    setOpenSnackbar(true);
   };
 
   const onboard = async () => {
@@ -288,7 +268,6 @@ export default function Settings(props) {
     API.post("stripeAPI", "/stripe/api/trainer/update/price", myInit)
       .then(() => {
         setSnackbarMessage("Price Updated Successfully");
-        setOpenSnackbar(true);
       })
       .catch((err) => {
         console.log(err);
@@ -300,7 +279,6 @@ export default function Settings(props) {
       setSnackbarMessage(
         "Please login to Stripe in the settings to complete account verification."
       );
-      setOpenSnackbar(true);
     }
   }, [isVerified]);
 
@@ -462,11 +440,7 @@ export default function Settings(props) {
                   justify="space-between"
                   style={{ padding: "10px" }}
                 >
-                  <EditURL
-                    url={url}
-                    openSnackbar={openError}
-                    user={props.user}
-                  />
+                  <EditURL url={url} user={props.user} />
                 </Grid>
                 <Divider light />
                 <Grid
@@ -496,7 +470,6 @@ export default function Settings(props) {
                 <CashOut
                   balance={balance}
                   changeBalance={setBalance}
-                  errorCallback={cashOutError}
                   user={props.user}
                 />
               </>
@@ -511,30 +484,15 @@ export default function Settings(props) {
         open={openCheckout}
       >
         <Checkout
-          errorCallback={checkoutError}
           paymentMethodCallback={addPaymentMethod}
           buttonTitle="Add"
           user={props.user}
           checkExistingPaymentMethod={false}
         />
       </Dialog>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={() => setOpenSnackbar(false)}
+      <CustomSnackbar
+        setMessage={setSnackbarMessage}
         message={snackbarMessage}
-        action={
-          <>
-            <IconButton
-              size="small"
-              aria-label="close"
-              color="inherit"
-              onClick={() => setOpenSnackbar(false)}
-            >
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </>
-        }
       />
     </>
   );

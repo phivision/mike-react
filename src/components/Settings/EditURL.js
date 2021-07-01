@@ -9,15 +9,17 @@ import { TextStyle } from "../StyledComponents/StyledComponents";
 import { InputAdornment } from "@material-ui/core";
 import { API, graphqlOperation } from "aws-amplify";
 import { updateUserProfile } from "../../graphql/mutations";
+import CustomSnackbar from "../CustomSnackbar/CustomSnackbar";
 
 const EditURL = ({ ...props }) => {
   const [edit, setEdit] = useState(false);
   const [url, setURL] = useState("");
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const changeURL = (u) => {
     if (u.length > 35) {
       setURL(props.url);
-      props.openSnackbar("URL is too long. Use less than 36 characters.");
+      setSnackbarMessage("URL is too long. Use less than 36 characters.");
     } else {
       const urlQuery = `query MyQuery($LandingURL: String!) {
         profilesByURL(LandingURL: $LandingURL) {
@@ -32,10 +34,10 @@ const EditURL = ({ ...props }) => {
           if (d.data.profilesByURL.items.length > 0) {
             if (d.data.profilesByURL.items[0].id === props.user.id) {
               setURL(props.url);
-              props.openSnackbar("URL not changed.");
+              setSnackbarMessage("URL not changed.");
             } else {
               setURL(props.url);
-              props.openSnackbar("URL is already taken.");
+              setSnackbarMessage("URL is already taken.");
             }
           } else {
             API.graphql({
@@ -43,7 +45,7 @@ const EditURL = ({ ...props }) => {
               variables: { input: { id: props.user.id, LandingURL: u } },
             })
               .then(() => {
-                props.openSnackbar("URL Updated Successfully");
+                setSnackbarMessage("URL Updated Successfully");
               })
               .catch((err) => {
                 console.log(err);
@@ -105,13 +107,16 @@ const EditURL = ({ ...props }) => {
           </IconButton>
         </Grid>
       </Grid>
+      <CustomSnackbar
+        message={snackbarMessage}
+        setMessage={setSnackbarMessage}
+      />
     </>
   );
 };
 
 EditURL.propTypes = {
   url: PropTypes.string,
-  openSnackbar: PropTypes.func,
   user: {
     id: PropTypes.string,
   },

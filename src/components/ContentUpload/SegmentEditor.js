@@ -10,7 +10,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { DeleteOutline, Edit } from "@material-ui/icons";
 
 export default function SegmentEditor(props) {
-  const [segments, setSegments] = React.useState(JSON.parse(props.segments));
+  const [segments, setSegments] = useState(JSON.parse(props.segments));
   const [editSection, setEditSection] = useState([]);
   useEffect(() => {
     if (editSection.length < segments.length) {

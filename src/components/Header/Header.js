@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { Icon, Typography } from "@material-ui/core";
 import logo from "../../assets/img/logo.png";
@@ -38,17 +38,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Header(props) {
-  const [userRole, setUserRole] = React.useState(userRoles.UNKNOWN);
+  const [userRole, setUserRole] = useState(userRoles.UNKNOWN);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setUserRole(props.user.role);
   }, [props.user]);
 
   const handleOpenContentUpload = props.onContentUpload;
 
   let history = useHistory();
-  const [query, setQuery] = React.useState("");
-  const [mobileMore, setMobileMore] = React.useState(null);
+  const [query, setQuery] = useState("");
+  const [mobileMore, setMobileMore] = useState(null);
   const isMobileMenuOpen = Boolean(mobileMore);
   const classes = useStyles();
 

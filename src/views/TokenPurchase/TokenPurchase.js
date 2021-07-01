@@ -6,15 +6,13 @@ import {
 } from "../../components/StyledComponents/StyledComponents";
 import Grid from "@material-ui/core/Grid";
 import { API } from "aws-amplify";
-import { Dialog, Snackbar } from "@material-ui/core";
+import { Dialog } from "@material-ui/core";
 import Checkout from "../../components/Checkout/Checkout";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
 import { useStripe } from "@stripe/react-stripe-js";
 import PropTypes from "prop-types";
+import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
 
 const TokenPurchase = (props) => {
-  const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [openCheckout, setOpenCheckout] = useState(false);
   const [paymentIntentID, setPaymentIntentID] = useState("");
@@ -47,14 +45,12 @@ const TokenPurchase = (props) => {
         console.log(p);
         setOpenCheckout(false);
         setSnackbarMessage("Purchase successful.");
-        setOpenSnackbar(true);
       })
       .catch(console.log);
   };
 
   const checkoutError = () => {
     setSnackbarMessage("Purchase unsuccessful. Please try again.");
-    setOpenSnackbar(true);
   };
 
   return (
@@ -95,23 +91,9 @@ const TokenPurchase = (props) => {
           checkExistingPaymentMethod={true}
         />
       </Dialog>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={() => setOpenSnackbar(false)}
+      <CustomSnackbar
+        setMessage={setSnackbarMessage}
         message={snackbarMessage}
-        action={
-          <>
-            <IconButton
-              size="small"
-              aria-label="close"
-              color="inherit"
-              onClick={() => setOpenSnackbar(false)}
-            >
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </>
-        }
       />
     </>
   );
