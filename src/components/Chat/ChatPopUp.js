@@ -54,8 +54,8 @@ export default function ChatPopUp({
   openChat,
   handleCloseChat,
   userData,
-  // setAllMessageLength,
-  // allMessageLength,
+  setAllMessageLength,
+  allMessageLength,
 }) {
   const [trainers, setTrainers] = useState([]);
   const [students, setStudents] = useState([]);
@@ -128,12 +128,12 @@ export default function ChatPopUp({
     [message]
   );
 
-  // const handleMessageLength = useCallback(
-  //   (length) => {
-  //     setAllMessageLength(length);
-  //   },
-  //   [allMessageLength]
-  // );
+  const handleMessageLength = useCallback(
+    (length) => {
+      setAllMessageLength(length);
+    },
+    [allMessageLength]
+  );
 
   useEffect(() => {
     if (userData.role == "student" || userData.role == "trainer") {
@@ -172,7 +172,7 @@ export default function ChatPopUp({
 
   // generate local chat Record
   if (message.length > 0) {
-    // handleMessageLength(message.length);
+    handleMessageLength(message.length);
     for (var m of message) {
       chatRecord.push({
         id: m.id,
@@ -215,6 +215,6 @@ ChatPopUp.propTypes = {
   openChat: PropTypes.bool,
   handleCloseChat: PropTypes.func,
   userData: PropTypes.any.isRequired,
-  // setAllMessageLength: PropTypes.any,
-  // allMessageLength: PropTypes.number,
+  setAllMessageLength: PropTypes.any,
+  allMessageLength: PropTypes.number,
 };
