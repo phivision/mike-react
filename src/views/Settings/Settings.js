@@ -22,6 +22,7 @@ import { useHistory } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Divider from "@material-ui/core/Divider";
 import EditURL from "../../components/Settings/EditURL";
+import CashOut from "../../components/Settings/CashOut";
 
 const getUserSettings = /* GraphQL */ `
   query GetUserProfile($id: ID!) {
@@ -30,6 +31,8 @@ const getUserSettings = /* GraphQL */ `
       StripeID
       IsVerified
       LandingURL
+      TokenBalance
+      TokenPrice
       Subscriptions {
         items {
           Trainer {
@@ -58,6 +61,7 @@ export default function Settings(props) {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [prices, setPrices] = useState([]);
+  const [balance, setBalance] = useState();
 
   const history = useHistory();
   let mounted = true;
@@ -71,8 +75,8 @@ export default function Settings(props) {
   const fetchSettings = () => {
     API.graphql(graphqlOperation(getUserSettings, { id: props.user.id }))
       .then((userSettingData) => {
+        setBalance(userSettingData.data.getUserProfile.TokenBalance);
         setEmail(userSettingData.data.getUserProfile.Email);
-        console.log(userSettingData.data.getUserProfile.LandingURL);
         setURL(userSettingData.data.getUserProfile.LandingURL);
         if (userRole === userRoles.STUDENT) {
           setTrainers(userSettingData.data.getUserProfile.Subscriptions.items);
@@ -201,6 +205,11 @@ export default function Settings(props) {
 
   const checkoutError = () => {
     setSnackbarMessage("Adding payment method unsuccessful. Please try again.");
+    setOpenSnackbar(true);
+  };
+
+  const cashOutError = (m) => {
+    setSnackbarMessage(m);
     setOpenSnackbar(true);
   };
 
@@ -484,6 +493,12 @@ export default function Settings(props) {
                   </Grid>
                 </Grid>
                 <Divider light />
+                <CashOut
+                  balance={balance}
+                  changeBalance={setBalance}
+                  errorCallback={cashOutError}
+                  user={props.user}
+                />
               </>
             )
           )}
