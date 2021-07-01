@@ -29,6 +29,7 @@ const initialProfileState = {
   FirstName: "",
   Weight: null,
   Description: null,
+  TokenPrice: 0,
 };
 
 export default function UserProfile(props) {
@@ -56,6 +57,9 @@ export default function UserProfile(props) {
         break;
       case "description":
         setProfile({ ...profile, Description: e.target.value });
+        break;
+      case "tokenPrice":
+        setProfile({ ...profile, TokenPrice: e.target.value });
         break;
     }
   };
@@ -168,6 +172,18 @@ export default function UserProfile(props) {
             id="description"
             multiline="true"
             text={profile.Description}
+          />
+        </GridItem>
+        <GridItem variant="body1" xs={12}>
+          {edit ? "" : "TokenPrice: "}
+          <EditableTypography
+            variant="body1"
+            edit={edit}
+            label="TokenPrice"
+            onChange={onChange}
+            id="tokenPrice"
+            multiline="true"
+            text={profile.TokenPrice ? profile.TokenPrice : 0}
           />
         </GridItem>
         <GridItem>

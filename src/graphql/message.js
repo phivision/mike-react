@@ -97,3 +97,27 @@ export const creatNewMessage = /* GraphQL */ `
     }
   }
 `;
+
+export const mesaageSubscription = /* GraphQL */ `
+  subscription MySubscription($ToUserID: ID!) {
+    onMessagesByToUserID(ToUserID: $ToUserID) {
+      id
+      PostMessages
+      ToUserID
+      FromUserID
+      Status
+      Type
+      createdAt
+      ToUser {
+        FirstName
+        LastName
+        UserImage
+      }
+      FromUser {
+        LastName
+        FirstName
+        UserImage
+      }
+    }
+  }
+`;

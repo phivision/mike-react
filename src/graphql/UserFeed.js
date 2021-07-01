@@ -124,6 +124,7 @@ export const userProfileQuery = `query GetUserProfile ($id: ID!) {
             UserImage
             Description
             TokenBalance
+            TokenPrice
           }
         }`;
 
@@ -164,6 +165,8 @@ export const profileLimitQuery = /* GraphQL */ `
       Weight
       Description
       IsVerified
+      TokenBalance
+      TokenPrice
       Favorites {
         items {
           id

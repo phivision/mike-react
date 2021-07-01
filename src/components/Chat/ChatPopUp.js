@@ -10,7 +10,7 @@ import PropTypes from "prop-types";
 import VerticalTabs from "./VerticalTabs";
 import { API, graphqlOperation } from "aws-amplify";
 import { getUserTrainers, getMessageByToUserID } from "../../graphql/message";
-import { onMessagesByToUserID } from "../../graphql/subscriptions";
+import { mesaageSubscription } from "../../graphql/message";
 
 const styles = (theme) => ({
   root: {
@@ -71,6 +71,7 @@ export default function ChatPopUp({
       })
     )
       .then((d) => {
+        console.log("查询用户", d.data.getUserProfile);
         const { Subscriptions, Users, ...p } = d.data.getUserProfile;
         setUser(p);
         setTrainers(Subscriptions.items);
@@ -88,6 +89,7 @@ export default function ChatPopUp({
     )
       .then((d) => {
         const UserMessages = d.data.messageByToUserID.items;
+        console.log("查询message", UserMessages);
         setMessage(UserMessages);
         console.log(UserMessages);
       })
@@ -97,7 +99,7 @@ export default function ChatPopUp({
   const messageSub = () => {
     let tempCreateSub = [];
     const createMsmSub = API.graphql({
-      query: onMessagesByToUserID,
+      query: mesaageSubscription,
       variables: {
         ToUserID: userData.id,
       },
@@ -106,6 +108,7 @@ export default function ChatPopUp({
     });
     tempCreateSub.push(createMsmSub);
     setCreateMsmSub(tempCreateSub);
+    console.log("查询消息订阅", createMsmSub);
   };
 
   const unsubscribeAll = () => {
@@ -114,6 +117,7 @@ export default function ChatPopUp({
     });
   };
   const pushNewContent = (d) => {
+    console.log("订阅", d.value.data.onMessagesByToUserID);
     chatRecord.push(d.value.data.onMessagesByToUserID);
     setMessage([...message, d.value.data.onMessagesByToUserID]);
   };
@@ -156,6 +160,7 @@ export default function ChatPopUp({
   // generate local chat Record
   if (message.length > 0) {
     setAllMessageLength(message.length);
+    console.log("打印看看", message);
     for (var m of message) {
       chatRecord.push({
         id: m.id,
