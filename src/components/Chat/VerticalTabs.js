@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
@@ -14,7 +14,7 @@ import {
   GridItem,
 } from "../StyledComponents/StyledComponents";
 import MessageIcon from "@material-ui/icons/Message";
-// import { updateMessage } from "../../graphql/mutations";
+import { updateMessage } from "../../graphql/mutations";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -64,6 +64,9 @@ export default function VerticalTabs({ user, contactList, chatRecord }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [post, setPost] = useState("");
+  const [messageIds, setMessageIds] = useState([]);
+  const messageIdsRef = useRef([]);
+  messageIdsRef.current = messageIds;
   var records = [];
   var receList = [];
 
@@ -75,26 +78,26 @@ export default function VerticalTabs({ user, contactList, chatRecord }) {
     setPost(event.target.value);
   };
 
-  // const updateMsmStatus = async (messageIds) => {
-  //   console.log("messageIds", messageIds);
-  //   if (messageIds.length > 0) {
-  //     messageIds.map((messageId) => {
-  //       API.graphql(
-  //         graphqlOperation(updateMessage, {
-  //           input: {
-  //             id: messageId,
-  //             Status: "RESPONDED",
-  //           },
-  //         })
-  //       );
-  //     });
-  //   } else {
-  //     console.log("messageIds is empty!", messageIds);
-  //   }
-  // };
+  const updateMsmStatus = async () => {
+    var Ids = messageIdsRef.current;
+    console.log("updateMsmStatus", Ids);
+    if (Ids.length > 0) {
+      Ids.map((Id) => {
+        API.graphql(
+          graphqlOperation(updateMessage, {
+            input: {
+              id: Id,
+              Status: "RESPONDED",
+            },
+          })
+        );
+      });
+    } else {
+      console.log("messageIds is empty!", messageIdsRef.current);
+    }
+  };
 
-  const createNewMessage = async (ToUser, FromUser, PostMessages, receList) => {
-    var messageIds = [];
+  const createNewMessage = async (ToUser, FromUser, PostMessages) => {
     if (ToUser && FromUser && PostMessages) {
       API.graphql(
         graphqlOperation(createMessage, {
@@ -107,14 +110,19 @@ export default function VerticalTabs({ user, contactList, chatRecord }) {
           },
         })
       );
-
-      for (var item of receList) {
-        messageIds.push(item.id);
-      }
-      console.log("messageIds", messageIds);
-      // updateMsmStatus(messageIds);
+      updateMsmStatus();
     } else {
       console.log("message is empty!", ToUser, FromUser, PostMessages);
+    }
+  };
+
+  const handleMessageIds = (recelist) => {
+    var tempIds = [];
+    if (recelist.length > 0) {
+      for (var list of recelist) {
+        tempIds.push(list.id);
+      }
+      setMessageIds(tempIds);
     }
   };
 
@@ -131,7 +139,6 @@ export default function VerticalTabs({ user, contactList, chatRecord }) {
       createdAt: currentTime,
       Type: "TEXT",
     });
-
     setPost("");
     return chatRecord;
   };
@@ -142,6 +149,17 @@ export default function VerticalTabs({ user, contactList, chatRecord }) {
     });
     return Trainer;
   };
+
+  useEffect(() => {
+    if (chatRecord.length > 0 && contactList.length > 0) {
+      var templist = [];
+      records = filterChatList(contactList[0].id, chatRecord);
+      for (var record of records) {
+        templist.push(record.id);
+      }
+      setMessageIds(templist);
+    }
+  }, [user.id]);
 
   return (
     <div className={classes.root}>
@@ -158,13 +176,13 @@ export default function VerticalTabs({ user, contactList, chatRecord }) {
           receList = records.filter((l) => {
             return l.Status == "UNRESPONDED";
           });
-          console.log("filterChatList", records, receList);
           return (
             <Tab
               label={contact.name}
               {...a11yProps(idx)}
               key={"TabLabel" + idx}
               onClick={() => {
+                handleMessageIds(receList);
                 setPost("");
               }}
               icon={
@@ -179,9 +197,6 @@ export default function VerticalTabs({ user, contactList, chatRecord }) {
       {contactList.map((contact, idx) => {
         var trainerId = contact.id;
         records = filterChatList(contact.id, chatRecord);
-        receList = records.filter((l) => {
-          return l.Status == "UNRESPONDED";
-        });
         return (
           <TabPanel
             value={value}
@@ -193,7 +208,7 @@ export default function VerticalTabs({ user, contactList, chatRecord }) {
               {records.length < 0 ? (
                 "No message"
               ) : (
-                <MessageLine user={user} chatRecord={records} />
+                <MessageLine user={user} records={records} />
               )}
             </div>
             <GridContainer
@@ -221,7 +236,7 @@ export default function VerticalTabs({ user, contactList, chatRecord }) {
                   autoFocus
                   color="primary"
                   onClick={() => {
-                    createNewMessage(trainerId, user.id, post, receList);
+                    createNewMessage(trainerId, user.id, post);
                     chatRecord = addToChatRecord(contact, user, post);
                     setPost("");
                   }}

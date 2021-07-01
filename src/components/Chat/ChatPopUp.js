@@ -9,11 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
 import VerticalTabs from "./VerticalTabs";
 import { API, graphqlOperation } from "aws-amplify";
-import {
-  getUserTrainers,
-  getMessageByToUserID,
-  // updateMessageStatus,
-} from "../../graphql/message";
+import { getUserTrainers, getMessageByToUserID } from "../../graphql/message";
 import { onMessagesByToUserID } from "../../graphql/subscriptions";
 
 const styles = (theme) => ({
@@ -118,10 +114,8 @@ export default function ChatPopUp({
     });
   };
   const pushNewContent = (d) => {
-    console.log("d is", d);
     chatRecord.push(d.value.data.onMessagesByToUserID);
     setMessage([...message, d.value.data.onMessagesByToUserID]);
-    console.log("pushNewContent", chatRecord);
   };
 
   useEffect(() => {
@@ -176,8 +170,6 @@ export default function ChatPopUp({
       });
     }
   }
-
-  // console.log("message, chatRecord", message, chatRecord);
 
   return (
     <div>

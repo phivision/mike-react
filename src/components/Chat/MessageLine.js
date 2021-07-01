@@ -37,11 +37,11 @@ MessageRecord.propTypes = {
   text: PropTypes.string,
 };
 
-const MessageLine = ({ user, chatRecord }) => {
-  if (chatRecord.length > 0) {
+const MessageLine = ({ user, records }) => {
+  if (records.length > 0) {
     return (
       <div>
-        {chatRecord.map((record, idx) => {
+        {records.map((record, idx) => {
           return (
             <div key={"record" + idx}>
               {record.Status == "SEND" ? (
@@ -73,7 +73,7 @@ const MessageLine = ({ user, chatRecord }) => {
 
 MessageLine.propTypes = {
   user: PropTypes.object,
-  chatRecord: PropTypes.any,
+  records: PropTypes.object,
 };
 
 export default MessageLine;
