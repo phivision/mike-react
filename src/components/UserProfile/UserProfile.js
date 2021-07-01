@@ -183,7 +183,7 @@ export default function UserProfile(props) {
             onChange={onChange}
             id="tokenPrice"
             multiline="true"
-            text={profile.TokenPrice ? profile.TokenPrice : 0}
+            text={profile.TokenPrice ? profile.TokenPrice.toString() : "0"}
           />
         </GridItem>
         <GridItem>

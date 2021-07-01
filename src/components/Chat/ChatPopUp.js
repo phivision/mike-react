@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -54,7 +54,8 @@ export default function ChatPopUp({
   openChat,
   handleCloseChat,
   userData,
-  setAllMessageLength,
+  // setAllMessageLength,
+  // allMessageLength,
 }) {
   const [trainers, setTrainers] = useState([]);
   const [students, setStudents] = useState([]);
@@ -64,6 +65,13 @@ export default function ChatPopUp({
   var contactList = [];
   var chatRecord = [];
 
+  const handleMessage = useCallback(
+    (UserMessages) => {
+      setMessage(UserMessages);
+    },
+    [message]
+  );
+
   const SubscriptionStudent = async () => {
     API.graphql(
       graphqlOperation(getUserTrainers, {
@@ -71,7 +79,6 @@ export default function ChatPopUp({
       })
     )
       .then((d) => {
-        console.log("查询用户", d.data.getUserProfile);
         const { Subscriptions, Users, ...p } = d.data.getUserProfile;
         setUser(p);
         setTrainers(Subscriptions.items);
@@ -89,9 +96,7 @@ export default function ChatPopUp({
     )
       .then((d) => {
         const UserMessages = d.data.messageByToUserID.items;
-        console.log("查询message", UserMessages);
-        setMessage(UserMessages);
-        console.log(UserMessages);
+        handleMessage(UserMessages);
       })
       .catch(console.log);
   };
@@ -108,7 +113,6 @@ export default function ChatPopUp({
     });
     tempCreateSub.push(createMsmSub);
     setCreateMsmSub(tempCreateSub);
-    console.log("查询消息订阅", createMsmSub);
   };
 
   const unsubscribeAll = () => {
@@ -116,11 +120,20 @@ export default function ChatPopUp({
       sub.unsubscribe();
     });
   };
-  const pushNewContent = (d) => {
-    console.log("订阅", d.value.data.onMessagesByToUserID);
-    chatRecord.push(d.value.data.onMessagesByToUserID);
-    setMessage([...message, d.value.data.onMessagesByToUserID]);
-  };
+  const pushNewContent = useCallback(
+    (d) => {
+      chatRecord.push(d.value.data.onMessagesByToUserID);
+      setMessage([...message, d.value.data.onMessagesByToUserID]);
+    },
+    [message]
+  );
+
+  // const handleMessageLength = useCallback(
+  //   (length) => {
+  //     setAllMessageLength(length);
+  //   },
+  //   [allMessageLength]
+  // );
 
   useEffect(() => {
     if (userData.role == "student" || userData.role == "trainer") {
@@ -159,8 +172,7 @@ export default function ChatPopUp({
 
   // generate local chat Record
   if (message.length > 0) {
-    setAllMessageLength(message.length);
-    console.log("打印看看", message);
+    // handleMessageLength(message.length);
     for (var m of message) {
       chatRecord.push({
         id: m.id,
@@ -203,5 +215,6 @@ ChatPopUp.propTypes = {
   openChat: PropTypes.bool,
   handleCloseChat: PropTypes.func,
   userData: PropTypes.any.isRequired,
-  setAllMessageLength: PropTypes.any,
+  // setAllMessageLength: PropTypes.any,
+  // allMessageLength: PropTypes.number,
 };

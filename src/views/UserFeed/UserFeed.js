@@ -33,7 +33,7 @@ import DataPagination from "components/DataPagination/DataPagination";
 import UserProfile from "../../components/UserProfile/UserProfile";
 import MessageIcon from "@material-ui/icons/Message";
 import ChatPopUp from "../../components/Chat/ChatPopUp";
-import Badge from "@material-ui/core/Badge";
+// import Badge from "@material-ui/core/Badge";
 
 export default function UserFeed(props) {
   const [createSub, setCreateSub] = useState([]);
@@ -49,7 +49,7 @@ export default function UserFeed(props) {
   const [rowsPerPage, setRowsPerPage] = useState(3);
   const limit = 2;
   const [openChat, setOpenChat] = useState(false);
-  const [allMessageLength, setAllMessageLength] = useState(0);
+  // const [allMessageLength, setAllMessageLength] = useState(0);
 
   const ContentNextTokenQuery = async (nextToken) => {
     const { data } = await API.graphql({
@@ -398,16 +398,17 @@ export default function UserFeed(props) {
             handleClickOpenChat();
           }}
         >
-          <Badge badgeContent={allMessageLength} color="primary">
-            <MessageIcon />
-          </Badge>
+          {/* <Badge badgeContent={allMessageLength} color="primary"> */}
+          <MessageIcon />
+          {/* </Badge> */}
         </IconStyle>
       </FloatBox>
       <ChatPopUp
         openChat={openChat}
         handleCloseChat={handleCloseChat}
         userData={props.user}
-        setAllMessageLength={setAllMessageLength}
+        // setAllMessageLength={setAllMessageLength}
+        // allMessageLength={allMessageLength}
       />
     </>
   );

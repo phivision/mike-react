@@ -73,7 +73,7 @@ const MessageLine = ({ user, records }) => {
 
 MessageLine.propTypes = {
   user: PropTypes.object,
-  records: PropTypes.object,
+  records: PropTypes.array,
 };
 
 export default MessageLine;

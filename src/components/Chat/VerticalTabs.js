@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
@@ -70,17 +70,22 @@ export default function VerticalTabs({ user, contactList, chatRecord }) {
   var records = [];
   var receList = [];
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  const handleChange = useCallback(
+    (event, newValue) => {
+      setValue(newValue);
+    },
+    [value]
+  );
 
-  const handlePostchange = (event) => {
-    setPost(event.target.value);
-  };
+  const handlePostchange = useCallback(
+    (event) => {
+      setPost(event.target.value);
+    },
+    [post]
+  );
 
   const updateMsmStatus = async () => {
     var Ids = messageIdsRef.current;
-    console.log("updateMsmStatus", Ids);
     if (Ids.length > 0) {
       Ids.map((Id) => {
         API.graphql(
@@ -116,15 +121,18 @@ export default function VerticalTabs({ user, contactList, chatRecord }) {
     }
   };
 
-  const handleMessageIds = (recelist) => {
-    var tempIds = [];
-    if (recelist.length > 0) {
-      for (var list of recelist) {
-        tempIds.push(list.id);
+  const handleMessageIds = useCallback(
+    (recelist) => {
+      var tempIds = [];
+      if (recelist.length > 0) {
+        for (var list of recelist) {
+          tempIds.push(list.id);
+        }
+        setMessageIds(tempIds);
       }
-      setMessageIds(tempIds);
-    }
-  };
+    },
+    [messageIds]
+  );
 
   const addToChatRecord = (contact, user, PostMessages) => {
     var currentTime = new Date();
