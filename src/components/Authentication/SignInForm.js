@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { TextField, FormControlLabel, Grid, Checkbox } from "@material-ui/core";
 import { Auth } from "aws-amplify";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import { CustomButton, TextLink } from "../StyledComponents/StyledComponents";
+import CustomSnackbar from "../CustomSnackbar/CustomSnackbar";
 // import auth styles
 
-export default function SignInForm({ openError: openError, ...props }) {
+export default function SignInForm({ ...props }) {
   const history = useHistory();
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const [state, setState] = React.useState(
     localStorage.getItem("remember")
@@ -52,7 +54,7 @@ export default function SignInForm({ openError: openError, ...props }) {
         history.push("/user/");
       });
     } catch (error) {
-      openError(error.message);
+      setSnackbarMessage(error.message);
     }
   }
 
@@ -99,62 +101,68 @@ export default function SignInForm({ openError: openError, ...props }) {
   };
 
   return (
-    <form onSubmit={(e) => handleSubmit(e)} noValidate>
-      <TextField
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        id="email"
-        label="Email Address"
-        name="email"
-        autoComplete="email"
-        data-test="email-input"
-        autoFocus
-        value={state.email}
-        onChange={(e) => handleChange(e)}
-      />
-      <TextField
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        name="password"
-        label="Password"
-        type="password"
-        id="password"
-        data-test="password-input"
-        autoComplete="current-password"
-        value={state.password}
-        onChange={(e) => handleChange(e)}
-      />
-      <FormControlLabel
-        control={
-          <Checkbox
-            value="remember"
-            name="remember"
-            color="primary"
-            defaultChecked={state.remember}
-            onChange={(e) => handleChange(e)}
-          />
-        }
-        label="Remember me"
-      />
-      <CustomButton
-        type="submit"
-        data-test="sign-in-button"
-        fullWidth
-        variant="contained"
-      >
-        Sign In
-      </CustomButton>
-      <Grid container>
-        <Grid item xs>
-          {resetPasswordLink()}
+    <>
+      <form onSubmit={(e) => handleSubmit(e)} noValidate>
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          id="email"
+          label="Email Address"
+          name="email"
+          autoComplete="email"
+          data-test="email-input"
+          autoFocus
+          value={state.email}
+          onChange={(e) => handleChange(e)}
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          name="password"
+          label="Password"
+          type="password"
+          id="password"
+          data-test="password-input"
+          autoComplete="current-password"
+          value={state.password}
+          onChange={(e) => handleChange(e)}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              value="remember"
+              name="remember"
+              color="primary"
+              defaultChecked={state.remember}
+              onChange={(e) => handleChange(e)}
+            />
+          }
+          label="Remember me"
+        />
+        <CustomButton
+          type="submit"
+          data-test="sign-in-button"
+          fullWidth
+          variant="contained"
+        >
+          Sign In
+        </CustomButton>
+        <Grid container>
+          <Grid item xs>
+            {resetPasswordLink()}
+          </Grid>
+          <Grid item>{signUpLink()}</Grid>
         </Grid>
-        <Grid item>{signUpLink()}</Grid>
-      </Grid>
-    </form>
+      </form>
+      <CustomSnackbar
+        message={snackbarMessage}
+        setMessage={setSnackbarMessage}
+      />
+    </>
   );
 }
 
@@ -164,5 +172,4 @@ SignInForm.propTypes = {
       next: PropTypes.object,
     }),
   }),
-  openError: PropTypes.func,
 };

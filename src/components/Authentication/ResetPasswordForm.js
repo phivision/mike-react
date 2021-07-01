@@ -4,10 +4,12 @@ import { Auth } from "aws-amplify";
 import { TextStyle, CustomButton } from "../StyledComponents/StyledComponents";
 import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom";
+import CustomSnackbar from "../CustomSnackbar/CustomSnackbar";
 
 const ResetPasswordForm = ({ ...props }) => {
   const [showVerify, setShowVerify] = React.useState(false);
   const [verifyCode, setVerifyCode] = React.useState("");
+  const [snackbarMessage, setSnackbarMessage] = React.useState("");
   const history = useHistory();
   const [state, setState] = React.useState({
     email: "",
@@ -37,7 +39,7 @@ const ResetPasswordForm = ({ ...props }) => {
         setShowVerify(true);
       })
       .catch((err) => {
-        props.openError(err.message);
+        setSnackbarMessage(err.message);
       });
   };
 
@@ -58,7 +60,7 @@ const ResetPasswordForm = ({ ...props }) => {
         });
       })
       .catch((err) => {
-        props.openError(err.message);
+        setSnackbarMessage(err.message);
       });
   };
 
@@ -143,6 +145,10 @@ const ResetPasswordForm = ({ ...props }) => {
           </CustomButton>
         </>
       )}
+      <CustomSnackbar
+        setMessage={setSnackbarMessage}
+        message={snackbarMessage}
+      />
     </>
   );
 };
@@ -153,7 +159,6 @@ ResetPasswordForm.propTypes = {
       next: PropTypes.object,
     }),
   }),
-  openError: PropTypes.func,
 };
 
 export default ResetPasswordForm;

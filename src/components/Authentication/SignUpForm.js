@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import { Auth } from "aws-amplify";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import { CustomButton, TextLink } from "../StyledComponents/StyledComponents";
+import CustomSnackbar from "../CustomSnackbar/CustomSnackbar";
 // import auth styles
 
-export default function SignUpForm({ openError: openError, ...props }) {
+export default function SignUpForm({ ...props }) {
   const history = useHistory();
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const [state, setState] = React.useState({
     email: "",
@@ -63,72 +65,78 @@ export default function SignUpForm({ openError: openError, ...props }) {
         });
       }
     } catch (error) {
-      openError(error.message);
+      setSnackbarMessage(error.message);
     }
   }
   return (
-    <form onSubmit={(e) => handleSubmit(e)} noValidate>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            autoComplete="fname"
-            name="firstName"
-            variant="outlined"
-            required
-            fullWidth
-            id="firstName"
-            label="First Name"
-            onChange={(e) => handleChange(e)}
-            autoFocus
-          />
+    <>
+      <form onSubmit={(e) => handleSubmit(e)} noValidate>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              autoComplete="fname"
+              name="firstName"
+              variant="outlined"
+              required
+              fullWidth
+              id="firstName"
+              label="First Name"
+              onChange={(e) => handleChange(e)}
+              autoFocus
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              id="lastName"
+              label="Last Name"
+              name="lastName"
+              autoComplete="lname"
+              onChange={(e) => handleChange(e)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              onChange={(e) => handleChange(e)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              onChange={(e) => handleChange(e)}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            variant="outlined"
-            required
-            fullWidth
-            id="lastName"
-            label="Last Name"
-            name="lastName"
-            autoComplete="lname"
-            onChange={(e) => handleChange(e)}
-          />
+        <CustomButton type="submit" fullWidth variant="contained">
+          Sign Up
+        </CustomButton>
+        <Grid container justify="flex-end">
+          <Grid item>
+            <TextLink to="/signin">Already have an account? Sign in</TextLink>
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <TextField
-            variant="outlined"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            onChange={(e) => handleChange(e)}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            variant="outlined"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            onChange={(e) => handleChange(e)}
-          />
-        </Grid>
-      </Grid>
-      <CustomButton type="submit" fullWidth variant="contained">
-        Sign Up
-      </CustomButton>
-      <Grid container justify="flex-end">
-        <Grid item>
-          <TextLink to="/signin">Already have an account? Sign in</TextLink>
-        </Grid>
-      </Grid>
-    </form>
+      </form>
+      <CustomSnackbar
+        setMessage={setSnackbarMessage}
+        message={snackbarMessage}
+      />
+    </>
   );
 }
 
@@ -143,5 +151,4 @@ SignUpForm.propTypes = {
       next: PropTypes.object,
     }),
   }),
-  openError: PropTypes.func,
 };
