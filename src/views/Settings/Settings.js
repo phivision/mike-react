@@ -167,17 +167,9 @@ export default function Settings(props) {
       });
   };
 
-  const handleSnackbarClose = () => {
-    setOpenSnackbar(false);
-  };
-
   const openError = (e) => {
     setSnackbarMessage(e);
     setOpenSnackbar(true);
-  };
-
-  const handleCloseCheckout = () => {
-    setOpenCheckout(false);
   };
 
   const fetchPaymentMethod = () => {
@@ -198,10 +190,6 @@ export default function Settings(props) {
       .catch(console.log);
   };
 
-  const handleOpenCheckout = () => {
-    setOpenCheckout(true);
-  };
-
   const signOut = () => {
     Auth.signOut()
       .then(() => {
@@ -217,7 +205,7 @@ export default function Settings(props) {
   };
 
   const checkoutSuccess = (m) => {
-    handleCloseCheckout();
+    setOpenCheckout(false);
     setSnackbarMessage(m);
     setOpenSnackbar(true);
   };
@@ -428,7 +416,7 @@ export default function Settings(props) {
                     );
                   })}
                   <Grid item>
-                    <IconButton onClick={handleOpenCheckout}>
+                    <IconButton onClick={() => setOpenCheckout(true)}>
                       <AddIcon />
                     </IconButton>
                   </Grid>
@@ -502,7 +490,7 @@ export default function Settings(props) {
         </Grid>
       </CustomContainer>
       <Dialog
-        onClose={handleCloseCheckout}
+        onClose={() => setOpenCheckout(false)}
         fullWidth
         aria-labelledby="checkout-dialog"
         open={openCheckout}
@@ -518,7 +506,7 @@ export default function Settings(props) {
       <Snackbar
         open={openSnackbar}
         autoHideDuration={6000}
-        onClose={handleSnackbarClose}
+        onClose={() => setOpenSnackbar(false)}
         message={snackbarMessage}
         action={
           <>
@@ -526,7 +514,7 @@ export default function Settings(props) {
               size="small"
               aria-label="close"
               color="inherit"
-              onClick={handleSnackbarClose}
+              onClick={() => setOpenSnackbar(false)}
             >
               <CloseIcon fontSize="small" />
             </IconButton>
