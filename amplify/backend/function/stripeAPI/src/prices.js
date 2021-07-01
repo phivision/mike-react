@@ -6,6 +6,9 @@ const prices = {
   "150": 2000,
 };
 
+const conversionRate = 10;
+
 module.exports = {
   prices,
+  conversionRate,
 };

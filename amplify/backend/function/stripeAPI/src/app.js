@@ -10,6 +10,7 @@ const AWS = require("aws-sdk");
 const docClient = new AWS.DynamoDB.DocumentClient();
 
 const prices = require("./prices").prices;
+const conversionRate = require("./prices").conversionRate;
 
 // declare a new express app
 var app = express();
@@ -264,6 +265,60 @@ app.post("/stripe/api/trainer/get/account", function (req, res) {
   queryStripeID(req.body.id).then((p) => {
     getAccount(p.Item.StripeID)
       .then((p) => res.json(p))
+      .catch((e) => {
+        console.log(e);
+        res.status(500).send();
+      });
+  });
+});
+
+app.post("/stripe/api/trainer/cashout", function (req, res) {
+  const queryTokenCount = async (id) => {
+    const params = {
+      TableName: process.env.TABLE_NAME,
+      Key: { id: id },
+    };
+
+    return await docClient.get(params).promise();
+  };
+
+  const resetTokens = async (userID) => {
+    const params = {
+      TableName: process.env.TABLE_NAME,
+      Key: {
+        id: userID,
+      },
+      UpdateExpression: "set #s = :d",
+      ExpressionAttributeNames: {
+        "#s": "TokenBalance",
+      },
+      ExpressionAttributeValues: {
+        ":d": 0,
+      },
+      ReturnValues: "ALL_NEW",
+    };
+
+    return await docClient.update(params).promise();
+  };
+
+  const transferBalance = async (balance, stripeID) => {
+    return await stripe.transfers.create({
+      amount: balance * conversionRate,
+      currency: "usd",
+      destination: stripeID,
+    });
+  };
+
+  queryTokenCount(req.body.id).then((p) => {
+    transferBalance(p.Item.TokenBalance, p.Item.StripeID)
+      .then(() => {
+        resetTokens(req.body.id)
+          .then(() => res.status(200).send())
+          .catch((e) => {
+            console.log(e);
+            res.status(500).send();
+          });
+      })
       .catch((e) => {
         console.log(e);
         res.status(500).send();
