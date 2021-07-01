@@ -24,7 +24,6 @@
   Biography: String
   LandingURL: String
   TokenBalance: Int
-  TokenPrice: Int
   """
   Apple device token for push notifications
   """
