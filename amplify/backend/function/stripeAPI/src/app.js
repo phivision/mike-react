@@ -364,6 +364,18 @@ app.post("/stripe/api/user/create/subscription", function (req, res) {
     });
 });
 
+app.post("/stripe/api/user/update/name", function (req, res) {
+  getProfileByID(req.body.id).then((p) => {
+    stripe.customers
+      .update(p.Item.StripeID, { name: req.body.name })
+      .then((p) => res.json(p))
+      .catch((e) => {
+        console.log(e);
+        res.status(500).send();
+      });
+  });
+});
+
 app.post("/stripe/api/user/delete/subscription", function (req, res) {
   const updatePeriodEnd = async (id) => {
     const params = {
