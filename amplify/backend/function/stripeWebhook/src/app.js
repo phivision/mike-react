@@ -255,7 +255,8 @@ app.post(
   })
 );
 
-app.post("/*", function (req, res) {
+app.use(function (req, res, next) {
+  console.log("Route not found.");
   res.status(404).send();
 });
 

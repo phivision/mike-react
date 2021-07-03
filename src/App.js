@@ -23,7 +23,6 @@ const stripePromise = loadStripe(stripePublishableKey);
 
 const initialUser = { id: null, role: "unknown" };
 
-//TODO: Remove excess components
 const App = () => {
   const [user, setUser] = React.useState(initialUser);
   const [verified, setVerified] = React.useState(false);
