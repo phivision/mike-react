@@ -155,5 +155,10 @@
       ]
     }
   },
-  "notifications": {}
+  "notifications": {
+    "iosMessagePush": {
+      "service": "Pinpoint",
+      "channels": []
+    }
+  }
 }
