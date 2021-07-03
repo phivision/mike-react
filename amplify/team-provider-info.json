@@ -18,7 +18,7 @@
       "function": {
         "stripeAPI": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/stripeAPI-4a41473641394f673538-build.zip"
+          "s3Key": "amplify-builds/stripeAPI-6931455043506b685244-build.zip"
         },
         "stripeWebhook": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
@@ -49,6 +49,13 @@
         "mikereact48af3338": {
           "bucketName": "mike-vod-dev",
           "region": "us-east-1"
+        }
+      },
+      "notifications": {
+        "Pinpoint": {
+          "Name": "iosMessagePush-dev",
+          "Id": "3f9d3c0805944df4b85ca3ef793bbbbf",
+          "Region": "us-east-1"
         }
       }
     }
@@ -126,7 +133,7 @@
         },
         "stripeWebhook": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
-          "s3Key": "amplify-builds/stripeWebhook-706c646876342b4c3044-build.zip"
+          "s3Key": "amplify-builds/stripeWebhook-5a666c58657671554b6c-build.zip"
         },
         "cognitoPostConfirm": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
