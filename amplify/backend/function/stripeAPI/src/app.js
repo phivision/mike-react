@@ -257,7 +257,7 @@ app.post(
   asyncHandler(async (req, res, next) => {
     const [customer, trainer] = await Promise.all([
       getProfileByID(req.body.customerID),
-      getProfileByID(req.body.trainerID)
+      getProfileByID(req.body.trainerID),
     ]);
 
     const prices = await stripe.prices.list({
@@ -428,8 +428,7 @@ app.post(
   })
 );
 
-app.post("/*", function (req, res) {
-  console.log("Route not found.");
+app.use(function (req, res, next) {
   res.status(404).send();
 });
 
