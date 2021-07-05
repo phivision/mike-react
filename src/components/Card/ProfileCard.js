@@ -24,7 +24,7 @@ const ProfileCard = ({ ...props }) => {
   }, [props.profile.UserImage]);
 
   const link = () => {
-    history.push("/landingpage/" + props.profile.id);
+    history.push("/user/" + props.profile.id);
   };
 
   return (

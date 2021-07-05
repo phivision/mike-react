@@ -56,7 +56,7 @@ const ResetPasswordForm = ({ ...props }) => {
               history.push(props.location.state.next);
             }
           }
-          history.push("/user/");
+          history.push("/feed/");
         });
       })
       .catch((err) => {

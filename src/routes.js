@@ -15,7 +15,7 @@ import TokenPurchase from "./views/TokenPurchase/TokenPurchase";
 
 const routes = [
   {
-    path: "/user",
+    path: "/feed",
     name: "Feed",
     component: UserFeed,
     auth: "both",
@@ -40,7 +40,7 @@ const routes = [
     exact: true,
   },
   {
-    path: "/landingpage/:id",
+    path: "/user/:id",
     name: "Landing Page",
     component: LandingPage,
     exact: true,

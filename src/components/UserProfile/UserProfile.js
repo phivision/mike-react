@@ -207,7 +207,7 @@ export default function UserProfile(props) {
                 <GridItem key={idx}>
                   <UserAvatar
                     UserImage={trainer.UserImage}
-                    onClick={() => history.push(`/landingpage/${trainer.id}`)}
+                    onClick={() => history.push(`/user/${trainer.id}`)}
                   />
                 </GridItem>
               );
