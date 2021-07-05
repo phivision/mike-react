@@ -140,7 +140,7 @@ export default function Settings(props) {
       response: true,
     };
 
-    const paymentMethods = API.post(
+    const paymentMethods = await API.post(
       "stripeAPI",
       "/stripe/api/user/get/payment",
       myInit
