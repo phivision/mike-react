@@ -9,6 +9,7 @@
     "body-parser": "^1.17.1",
     "dotenv": "^8.2.0",
     "express": "^4.15.2",
+    "express-async-handler": "^1.1.4",
     "stripe": "^8.140.0",
     "uuid": "^3.3.2"
   },

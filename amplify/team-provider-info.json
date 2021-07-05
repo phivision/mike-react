@@ -18,11 +18,11 @@
       "function": {
         "stripeAPI": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/stripeAPI-2b58766c734e7a307441-build.zip"
+          "s3Key": "amplify-builds/stripeAPI-76416f6142386d64777a-build.zip"
         },
         "stripeWebhook": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/stripeWebhook-6b5a3346517a57634547-build.zip"
+          "s3Key": "amplify-builds/stripeWebhook-4b77534e584632664a56-build.zip"
         },
         "cognitoPostConfirm": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
