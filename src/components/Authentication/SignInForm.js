@@ -51,7 +51,7 @@ export default function SignInForm({ ...props }) {
             history.push(props.location.state.next);
           }
         }
-        history.push("/user/");
+        history.push("/feed/");
       });
     } catch (error) {
       setSnackbarMessage(error.message);

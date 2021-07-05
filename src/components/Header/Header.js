@@ -123,7 +123,7 @@ export default function Header(props) {
         <LogoImage src={logo} alt="logo" />
       </LogoLink>
     ) : (
-      <LogoLink to="/user">
+      <LogoLink to="/feed">
         <LogoImage src={logo} alt="logo" />
       </LogoLink>
     );
@@ -131,12 +131,12 @@ export default function Header(props) {
 
   const UserButton = () => {
     const location = useLocation();
-    let color = location.pathname === "/user" ? "primary" : "secondary";
+    let color = location.pathname === "/feed" ? "primary" : "secondary";
     return (
       <>
         {isMobileMenuOpen ? (
           <MenuItem>
-            <Nav to={"/user"} key={"User Profile"}>
+            <Nav to={"/feed"} key={"User Profile"}>
               <CustomIcon color={color}>
                 <UserIcon />
               </CustomIcon>
@@ -146,7 +146,7 @@ export default function Header(props) {
             </Nav>
           </MenuItem>
         ) : (
-          <Nav to={"/user"} key={"User Profile"}>
+          <Nav to={"/feed"} key={"User Profile"}>
             <CustomIcon color={color}>
               {typeof UserIcon === "string" ? (
                 <Icon> {UserIcon} </Icon>

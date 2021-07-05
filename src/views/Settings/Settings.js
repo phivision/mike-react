@@ -61,9 +61,9 @@ export default function Settings(props) {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [prices, setPrices] = useState([]);
   const [balance, setBalance] = useState();
+  const [loaded, setLoaded] = useState(false);
 
   const history = useHistory();
-  let mounted = true;
 
   const handleOpenPassword = () => {
     history.push({ pathname: "/reset", state: { next: window.location.href } });
@@ -71,43 +71,99 @@ export default function Settings(props) {
 
   const userRole = props.user.role;
 
-  const fetchSettings = () => {
-    API.graphql(graphqlOperation(getUserSettings, { id: props.user.id }))
-      .then((userSettingData) => {
-        setBalance(userSettingData.data.getUserProfile.TokenBalance);
-        setEmail(userSettingData.data.getUserProfile.Email);
-        setURL(userSettingData.data.getUserProfile.LandingURL);
-        if (userRole === userRoles.STUDENT) {
-          setTrainers(userSettingData.data.getUserProfile.Subscriptions.items);
-        }
-        if (userRole === userRoles.TRAINER) {
-          setVerified(userSettingData.data.getUserProfile.IsVerified);
-        }
-      })
-      .catch(console.log);
+  const getPrices = async () => {
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        id: props.user.id,
+      },
+      response: true,
+    };
+
+    const prices = await API.post(
+      "stripeAPI",
+      "/stripe/api/trainer/get/price",
+      myInit
+    );
+
+    setPrices(prices.data.data);
+
+    return prices;
   };
 
-  const fetchDefaultPaymentMethod = () => {
-    if (props.user.role === userRoles.STUDENT) {
-      const myInit = {
-        headers: {}, // AWS-IAM authorization if using empty headers
-        body: {
-          id: props.user.id,
-        },
-        response: true,
-      };
-      console.log("Requesting: " + props.user.id);
-      API.post("stripeAPI", "/stripe/api/user/get/customer", myInit)
-        .then((d) => {
-          setDefaultPaymentMethod(
-            d.data.invoice_settings.default_payment_method
-          );
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+  const fetchSettings = async () => {
+    const userSettingData = await API.graphql(
+      graphqlOperation(getUserSettings, { id: props.user.id })
+    );
+
+    setBalance(userSettingData.data.getUserProfile.TokenBalance);
+    setEmail(userSettingData.data.getUserProfile.Email);
+    setURL(userSettingData.data.getUserProfile.LandingURL);
+    if (userRole === userRoles.STUDENT) {
+      setTrainers(userSettingData.data.getUserProfile.Subscriptions.items);
     }
+    if (userRole === userRoles.TRAINER) {
+      setVerified(userSettingData.data.getUserProfile.IsVerified);
+    }
+
+    return userSettingData;
   };
+
+  const fetchDefaultPaymentMethod = async () => {
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        id: props.user.id,
+      },
+      response: true,
+    };
+
+    const paymentMethod = await API.post(
+      "stripeAPI",
+      "/stripe/api/user/get/customer",
+      myInit
+    );
+
+    setDefaultPaymentMethod(
+      paymentMethod.data.invoice_settings.default_payment_method
+    );
+
+    return paymentMethod;
+  };
+
+  const fetchPaymentMethod = async () => {
+    const myInit = {
+      headers: {}, // AWS-IAM authorization if using empty headers
+      body: {
+        id: props.user.id,
+      },
+      response: true,
+    };
+
+    const paymentMethods = API.post(
+      "stripeAPI",
+      "/stripe/api/user/get/payment",
+      myInit
+    );
+
+    setPaymentMethods(paymentMethods.data.data);
+
+    return paymentMethods;
+  };
+
+  useEffect(() => {
+    if (props.user.id) {
+      if (userRole === userRoles.TRAINER) {
+        Promise.all([getPrices(), fetchSettings()]).then(() => setLoaded(true));
+      } else {
+        Promise.all([
+          fetchDefaultPaymentMethod(),
+          fetchPaymentMethod(),
+          fetchSettings(),
+        ]).then(() => setLoaded(true));
+      }
+    }
+  }, [props.user.id]);
 
   const deletePaymentMethod = (id) => {
     const myInit = {
@@ -163,31 +219,11 @@ export default function Settings(props) {
       .then(() => {
         setSnackbarMessage("Successfully updated payment method");
         setSnackbarMessage(false);
-        if (mounted) {
-          setDefaultPaymentMethod(paymentMethodID);
-        }
+        setDefaultPaymentMethod(paymentMethodID);
       })
       .catch((err) => {
         console.log(err);
       });
-  };
-
-  const fetchPaymentMethod = () => {
-    const myInit = {
-      headers: {}, // AWS-IAM authorization if using empty headers
-      body: {
-        id: props.user.id,
-      },
-      response: true,
-    };
-
-    API.post("stripeAPI", "/stripe/api/user/get/payment", myInit)
-      .then((d) => {
-        if (mounted) {
-          setPaymentMethods(d.data.data);
-        }
-      })
-      .catch(console.log);
   };
 
   const signOut = () => {
@@ -199,7 +235,7 @@ export default function Settings(props) {
       .catch(console.log);
   };
 
-  const onboard = async () => {
+  const onboard = () => {
     const myInit = {
       headers: {}, // AWS-IAM authorization if using empty headers
       body: {
@@ -219,7 +255,7 @@ export default function Settings(props) {
       });
   };
 
-  const login = async () => {
+  const login = () => {
     const myInit = {
       headers: {}, // AWS-IAM authorization if using empty headers
       body: {
@@ -231,24 +267,6 @@ export default function Settings(props) {
     API.post("stripeAPI", "/stripe/api/trainer/link/login", myInit)
       .then((res) => {
         window.location.href = res.data.AccountLink;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const getPrices = () => {
-    const myInit = {
-      headers: {}, // AWS-IAM authorization if using empty headers
-      body: {
-        id: props.user.id,
-      },
-      response: true,
-    };
-
-    API.post("stripeAPI", "/stripe/api/trainer/get/price", myInit)
-      .then((res) => {
-        setPrices(res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -295,205 +313,190 @@ export default function Settings(props) {
     setPaymentMethods(sorted);
   }, [defaultPaymentMethod, paymentMethods.length]);
 
-  useEffect(() => {
-    if (props.user.id) {
-      if (userRole === userRoles.TRAINER) {
-        getPrices();
-      }
-      fetchSettings();
-    }
-  }, [props.user.id, setPrices, setTrainers]);
-
-  useEffect(() => {
-    if (props.user.id) {
-      if (props.user.role === userRoles.STUDENT) {
-        fetchDefaultPaymentMethod();
-        fetchPaymentMethod();
-      }
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [props.user.id, setDefaultPaymentMethod, setPaymentMethods]);
-
   return (
     <>
-      <CustomContainer>
-        <Grid direction="column" container>
-          <Grid
-            item
-            container
-            direction="row"
-            alignItems="center"
-            justify="space-between"
-            style={{ padding: "10px" }}
-          >
-            <Grid item xs>
-              <TextStyle variant="h2">Account</TextStyle>
-            </Grid>
-            <Grid
-              item
-              xs
-              container
-              direction="row"
-              alignItems="center"
-              justify="flex-end"
-            >
-              <Grid item>
-                <TextStyle variant="body1">{email}</TextStyle>
-              </Grid>
-              <Grid item>
-                <CustomButton onClick={signOut}>Sign out</CustomButton>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Divider light />
-          <Grid
-            item
-            container
-            direction="row"
-            alignItems="center"
-            justify="space-between"
-            style={{ padding: "10px" }}
-          >
-            <Grid item xs>
-              <TextStyle variant="h3">
-                {userRole === userRoles.STUDENT
-                  ? "Membership and Billing"
-                  : "Account and Billing"}
-              </TextStyle>
-            </Grid>
-            <Grid item container xs direction="column">
+      {loaded ? (
+        <>
+          <CustomContainer>
+            <Grid direction="column" container>
               <Grid
                 item
                 container
-                xs
                 direction="row"
-                justify="space-between"
                 alignItems="center"
+                justify="space-between"
                 style={{ padding: "10px" }}
               >
-                <Grid item>Password: ********</Grid>
-                <Grid item>
-                  <CustomButton onClick={handleOpenPassword}>
-                    Change password
-                  </CustomButton>
+                <Grid item xs>
+                  <TextStyle variant="h2">Account</TextStyle>
+                </Grid>
+                <Grid
+                  item
+                  xs
+                  container
+                  direction="row"
+                  alignItems="center"
+                  justify="flex-end"
+                >
+                  <Grid item>
+                    <TextStyle variant="body1">{email}</TextStyle>
+                  </Grid>
+                  <Grid item>
+                    <CustomButton onClick={signOut}>Sign out</CustomButton>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Divider light />
+              <Grid
+                item
+                container
+                direction="row"
+                alignItems="center"
+                justify="space-between"
+                style={{ padding: "10px" }}
+              >
+                <Grid item xs>
+                  <TextStyle variant="h3">
+                    {userRole === userRoles.STUDENT
+                      ? "Membership and Billing"
+                      : "Account and Billing"}
+                  </TextStyle>
+                </Grid>
+                <Grid item container xs direction="column">
+                  <Grid
+                    item
+                    container
+                    xs
+                    direction="row"
+                    justify="space-between"
+                    alignItems="center"
+                    style={{ padding: "10px" }}
+                  >
+                    <Grid item>Password: ********</Grid>
+                    <Grid item>
+                      <CustomButton onClick={handleOpenPassword}>
+                        Change password
+                      </CustomButton>
+                    </Grid>
+                  </Grid>
+                  <Divider light />
+                  {userRole === userRoles.STUDENT ? (
+                    <Grid
+                      item
+                      container
+                      direction="column"
+                      style={{ padding: "10px" }}
+                    >
+                      {paymentMethods.map((p, idx) => {
+                        let isDefault = p.id === defaultPaymentMethod;
+                        return (
+                          <Grid item key={idx}>
+                            <PaymentMethod
+                              isDefault={isDefault}
+                              PaymentMethod={p}
+                              deleteCallback={deletePaymentMethod}
+                              defaultCallback={makeDefaultPaymentMethod}
+                              key={idx}
+                            />
+                          </Grid>
+                        );
+                      })}
+                      <Grid item>
+                        <IconButton onClick={() => setOpenCheckout(true)}>
+                          <AddIcon />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                  ) : (
+                    <Grid item style={{ padding: "10px" }}>
+                      <CustomButton
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        onClick={() => {
+                          isVerified ? login() : onboard();
+                        }}
+                      >
+                        {isVerified
+                          ? "Manage Billing on Stripe"
+                          : "Verify Account on Stripe"}
+                      </CustomButton>
+                    </Grid>
+                  )}
                 </Grid>
               </Grid>
               <Divider light />
               {userRole === userRoles.STUDENT ? (
-                <Grid
-                  item
-                  container
-                  direction="column"
-                  style={{ padding: "10px" }}
-                >
-                  {paymentMethods.map((p, idx) => {
-                    let isDefault = p.id === defaultPaymentMethod;
-                    return (
-                      <Grid item key={idx}>
-                        <PaymentMethod
-                          isDefault={isDefault}
-                          PaymentMethod={p}
-                          deleteCallback={deletePaymentMethod}
-                          defaultCallback={makeDefaultPaymentMethod}
-                          key={idx}
-                        />
-                      </Grid>
-                    );
-                  })}
-                  <Grid item>
-                    <IconButton onClick={() => setOpenCheckout(true)}>
-                      <AddIcon />
-                    </IconButton>
-                  </Grid>
-                </Grid>
+                <ActiveSubscriptions trainers={trainers} />
               ) : (
-                <Grid item style={{ padding: "10px" }}>
-                  <CustomButton
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    onClick={() => {
-                      isVerified ? login() : onboard();
-                    }}
-                  >
-                    {isVerified
-                      ? "Manage Billing on Stripe"
-                      : "Verify Account on Stripe"}
-                  </CustomButton>
-                </Grid>
+                isVerified && (
+                  <>
+                    <Grid
+                      item
+                      container
+                      direction="row"
+                      alignItems="center"
+                      justify="space-between"
+                      style={{ padding: "10px" }}
+                    >
+                      <EditURL url={url} user={props.user} />
+                    </Grid>
+                    <Divider light />
+                    <Grid
+                      item
+                      container
+                      direction="row"
+                      alignItems="center"
+                      justify="space-between"
+                      style={{ padding: "10px" }}
+                    >
+                      <Grid item xs>
+                        <TextStyle variant="h3">Pricing Tiers</TextStyle>
+                      </Grid>
+                      <Grid item xs container direction="column">
+                        {prices.map((p, idx) => (
+                          <Grid item key={idx}>
+                            <TrainerPrice
+                              key={idx}
+                              price={p.unit_amount}
+                              changePrice={changePrice}
+                            />
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </Grid>
+                    <Divider light />
+                    <CashOut
+                      balance={balance}
+                      changeBalance={setBalance}
+                      user={props.user}
+                    />
+                  </>
+                )
               )}
             </Grid>
-          </Grid>
-          <Divider light />
-          {userRole === userRoles.STUDENT ? (
-            <ActiveSubscriptions trainers={trainers} />
-          ) : (
-            isVerified && (
-              <>
-                <Grid
-                  item
-                  container
-                  direction="row"
-                  alignItems="center"
-                  justify="space-between"
-                  style={{ padding: "10px" }}
-                >
-                  <EditURL url={url} user={props.user} />
-                </Grid>
-                <Divider light />
-                <Grid
-                  item
-                  container
-                  direction="row"
-                  alignItems="center"
-                  justify="space-between"
-                  style={{ padding: "10px" }}
-                >
-                  <Grid item xs>
-                    <TextStyle variant="h3">Pricing Tiers</TextStyle>
-                  </Grid>
-                  <Grid item xs container direction="column">
-                    {prices.map((p, idx) => (
-                      <Grid item key={idx}>
-                        <TrainerPrice
-                          key={idx}
-                          price={p.unit_amount}
-                          changePrice={changePrice}
-                        />
-                      </Grid>
-                    ))}
-                  </Grid>
-                </Grid>
-                <Divider light />
-                <CashOut
-                  balance={balance}
-                  changeBalance={setBalance}
-                  user={props.user}
-                />
-              </>
-            )
-          )}
-        </Grid>
-      </CustomContainer>
-      <Dialog
-        onClose={() => setOpenCheckout(false)}
-        fullWidth
-        aria-labelledby="checkout-dialog"
-        open={openCheckout}
-      >
-        <Checkout
-          paymentMethodCallback={addPaymentMethod}
-          buttonTitle="Add"
-          user={props.user}
-          checkExistingPaymentMethod={false}
-        />
-      </Dialog>
-      <CustomSnackbar
-        setMessage={setSnackbarMessage}
-        message={snackbarMessage}
-      />
+          </CustomContainer>
+          <Dialog
+            onClose={() => setOpenCheckout(false)}
+            fullWidth
+            aria-labelledby="checkout-dialog"
+            open={openCheckout}
+          >
+            <Checkout
+              paymentMethodCallback={addPaymentMethod}
+              buttonTitle="Add"
+              user={props.user}
+              checkExistingPaymentMethod={false}
+            />
+          </Dialog>
+          <CustomSnackbar
+            setMessage={setSnackbarMessage}
+            message={snackbarMessage}
+          />
+        </>
+      ) : (
+        <></>
+      )}
     </>
   );
 }

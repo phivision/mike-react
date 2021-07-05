@@ -8,8 +8,9 @@ import Typography from "@material-ui/core/Typography";
 
 export default function Search({ ...props }) {
   const [trainers, setTrainers] = useState([]);
+  const [loaded, setLoaded] = useState(false);
 
-  async function trainerQuery() {
+  const trainerQuery = async () => {
     const trainerList = await API.graphql({
       query: searchUserProfiles,
       variables: {
@@ -27,27 +28,37 @@ export default function Search({ ...props }) {
     if (trainerList.data.searchUserProfiles.items != null) {
       return trainerList.data.searchUserProfiles.items;
     }
-  }
+    return null;
+  };
 
   useEffect(() => {
-    trainerQuery().then((r) => setTrainers(r));
+    trainerQuery().then((r) => {
+      setTrainers(r);
+      setLoaded(true);
+    });
   }, [props.match.params.query]);
 
   return (
-    <div style={{ padding: "20px" }}>
-      <Grid container direction="row">
-        <Grid item xs={12} sm={3}>
-          <Typography variant="h2">
-            {"Results for: " + props.match.params.query}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={9}>
-          {trainers.map((trainer, idx) => {
-            return <ProfileCard key={idx} profile={trainer} />;
-          })}
-        </Grid>
-      </Grid>
-    </div>
+    <>
+      {loaded ? (
+        <div style={{ padding: "20px" }}>
+          <Grid container direction="row">
+            <Grid item xs={12} sm={3}>
+              <Typography variant="h2">
+                {"Results for: " + props.match.params.query}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={9}>
+              {trainers.map((trainer, idx) => {
+                return <ProfileCard key={idx} profile={trainer} />;
+              })}
+            </Grid>
+          </Grid>
+        </div>
+      ) : (
+        <>Loading...</>
+      )}
+    </>
   );
 }
 
