@@ -85,7 +85,7 @@ const setVerified = async (id) => {
 
   const res = await request(updateUserProfile, variables);
 
-  return res.data.updateUserProfile;
+  return res;
 };
 
 const addTokens = async (id, currentTokenCount, amount) => {
@@ -95,7 +95,7 @@ const addTokens = async (id, currentTokenCount, amount) => {
 
   const res = await request(updateUserProfile, variables);
 
-  return res.data.updateUserProfile;
+  return res;
 };
 
 const createSubscription = async (
@@ -104,12 +104,15 @@ const createSubscription = async (
   subscriptionID,
   expireDate
 ) => {
-  const createUserSubscriptionTrainer = /* GraphQL */ `
-    mutation CreateUserSubscriptionTrainer(
+  const createUserSubscriptionTrainer = gql`
+    mutation createUserSubscriptionTrainer(
       $input: CreateUserSubscriptionTrainerInput!
     ) {
-      createUserSubscriptionTrainer(input: $input, condition: $condition) {
+      createUserSubscriptionTrainer(input: $input) {
         id
+        StripeID
+        ExpireDate
+        CancelAtPeriodEnd
       }
     }
   `;
@@ -129,14 +132,18 @@ const createSubscription = async (
     },
   };
 
+  console.log(variables);
+
   const res = await request(createUserSubscriptionTrainer, variables);
 
-  return res.data.createUserSubscriptionTrainer;
+  console.log(res);
+
+  return res;
 };
 
 const deleteSubscription = async (trainerID, userID) => {
-  const deleteUserSubscriptionTrainer = /* GraphQL */ `
-    mutation DeleteUserSubscriptionTrainer(
+  const deleteUserSubscriptionTrainer = gql`
+    mutation deleteUserSubscriptionTrainer(
       $input: DeleteUserSubscriptionTrainerInput!
     ) {
       deleteUserSubscriptionTrainer(input: $input) {
@@ -155,7 +162,7 @@ const deleteSubscription = async (trainerID, userID) => {
 
   const res = await request(deleteUserSubscriptionTrainer, variables);
 
-  return res.data.deleteUserSubscriptionTrainer;
+  return res;
 };
 
 module.exports = {

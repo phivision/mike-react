@@ -111,6 +111,7 @@ app.post(
     switch (event.type) {
       case "invoice.paid":
         const invoice = event.data.object;
+
         const [customer, trainer, sub] = await Promise.all([
           queryByStripeID(invoice.customer),
           queryByStripeID(invoice.transfer_data.destination),
@@ -147,6 +148,10 @@ app.post(
         const paymentIntent = event.data.object;
         const c = await queryByStripeID(paymentIntent.customer);
 
+        if (paymentIntent.transfer_data) {
+          res.json({ received: true });
+          break;
+        }
         await addTokens(
           c.items[0].id,
           c.items[0].TokenBalance,
