@@ -27,13 +27,13 @@
         }
       }
     },
-    "stripeWebhook": {
+    "marketing": {
       "service": "API Gateway",
       "providerPlugin": "awscloudformation",
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "stripeWebhook",
+          "resourceName": "marketing",
           "attributes": [
             "Name",
             "Arn"
@@ -55,13 +55,13 @@
         }
       ]
     },
-    "marketing": {
+    "stripeWebhook": {
       "service": "API Gateway",
       "providerPlugin": "awscloudformation",
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "marketing",
+          "resourceName": "stripeWebhook",
           "attributes": [
             "Name",
             "Arn"
@@ -79,16 +79,6 @@
     }
   },
   "function": {
-    "stripeAPI": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "stripeWebhook": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
     "cognitoPostConfirm": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -140,6 +130,36 @@
       ]
     },
     "messageTokenTransaction": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "mikeAmplify",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ]
+        }
+      ]
+    },
+    "stripeAPI": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "mikeAmplify",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ]
+        }
+      ]
+    },
+    "stripeWebhook": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",

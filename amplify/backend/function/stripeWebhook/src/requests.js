@@ -1,0 +1,167 @@
+const https = require("https");
+const AWS = require("aws-sdk");
+const urlParse = require("url").URL;
+const appsyncUrl = process.env.API_MIKEAMPLIFY_GRAPHQLAPIENDPOINTOUTPUT;
+const region = process.env.REGION;
+
+const v5 = require("uuid/v5");
+const graphql = require("graphql");
+const gql = require("graphql-tag");
+const { print } = graphql;
+
+let UUID = "d2b157d4-5a66-49ca-b868-c83008f1e126";
+
+const request = (queryDetails, variables) => {
+  const req = new AWS.HttpRequest(appsyncUrl, region);
+  const endpoint = new urlParse(appsyncUrl).hostname.toString();
+
+  req.method = "POST";
+  req.path = "/graphql";
+  req.headers.host = endpoint;
+  req.headers["Content-Type"] = "application/json";
+  req.body = JSON.stringify({
+    query: print(queryDetails),
+    variables: variables,
+  });
+
+  const signer = new AWS.Signers.V4(req, "appsync", true);
+  signer.addAuthorization(AWS.config.credentials, AWS.util.date.getDate());
+
+  return new Promise((resolve, reject) => {
+    const httpRequest = https.request({ ...req, host: endpoint }, (result) => {
+      result.on("data", (data) => {
+        resolve(JSON.parse(data.toString()));
+      });
+    });
+
+    httpRequest.write(req.body);
+    httpRequest.end();
+  });
+};
+
+const queryByStripeID = async (stripeID) => {
+  const profilesByStripeID = gql`
+    query ProfilesByStripeID($StripeID: String) {
+      profilesByStripeID(StripeID: $StripeID) {
+        items {
+          id
+          Email
+          RegDate
+          StripeID
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          LandingURL
+          TokenBalance
+          TokenPrice
+          owner
+        }
+      }
+    }
+  `;
+
+  const variables = { StripeID: stripeID };
+
+  const res = await request(profilesByStripeID, variables);
+
+  return res.data.profilesByStripeID;
+};
+
+const updateUserProfile = gql`
+  mutation updateUserProfile($input: UpdateUserProfileInput!) {
+    updateUserProfile(input: $input) {
+      id
+      IsVerified
+      TokenBalance
+    }
+  }
+`;
+
+const setVerified = async (id) => {
+  const variables = { input: { id: id, IsVerified: true } };
+
+  const res = await request(updateUserProfile, variables);
+
+  return res.data.updateUserProfile;
+};
+
+const addTokens = async (id, currentTokenCount, amount) => {
+  let curr = currentTokenCount ? currentTokenCount : 0;
+
+  const variables = { input: { id: id, TokenBalance: curr + amount } };
+
+  const res = await request(updateUserProfile, variables);
+
+  return res.data.updateUserProfile;
+};
+
+const createSubscription = async (
+  trainerID,
+  userID,
+  subscriptionID,
+  expireDate
+) => {
+  const createUserSubscriptionTrainer = /* GraphQL */ `
+    mutation CreateUserSubscriptionTrainer(
+      $input: CreateUserSubscriptionTrainerInput!
+    ) {
+      createUserSubscriptionTrainer(input: $input, condition: $condition) {
+        id
+      }
+    }
+  `;
+
+  const i = v5(trainerID + userID, UUID);
+  const expire = new Date(expireDate * 1000).toISOString();
+  const exp = expire.slice(0, 10);
+
+  const variables = {
+    input: {
+      id: i,
+      CancelAtPeriodEnd: false,
+      userSubscriptionTrainerTrainerId: trainerID,
+      userSubscriptionTrainerUserId: userID,
+      StripeID: subscriptionID,
+      ExpireDate: exp,
+    },
+  };
+
+  const res = await request(createUserSubscriptionTrainer, variables);
+
+  return res.data.createUserSubscriptionTrainer;
+};
+
+const deleteSubscription = async (trainerID, userID) => {
+  const deleteUserSubscriptionTrainer = /* GraphQL */ `
+    mutation DeleteUserSubscriptionTrainer(
+      $input: DeleteUserSubscriptionTrainerInput!
+    ) {
+      deleteUserSubscriptionTrainer(input: $input) {
+        id
+      }
+    }
+  `;
+
+  const i = v5(trainerID + userID, UUID);
+
+  const variables = {
+    input: {
+      id: i,
+    },
+  };
+
+  const res = await request(deleteUserSubscriptionTrainer, variables);
+
+  return res.data.deleteUserSubscriptionTrainer;
+};
+
+module.exports = {
+  queryByStripeID,
+  setVerified,
+  addTokens,
+  createSubscription,
+  deleteSubscription,
+};

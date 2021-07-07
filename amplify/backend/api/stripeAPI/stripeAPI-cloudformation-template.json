@@ -3,12 +3,6 @@
     "Description": "API Gateway resource stack creation using Amplify CLI",
     
     "Parameters": {
-        "authRoleName": {
-            "Type":  "String"
-        },
-        "unauthRoleName": {
-            "Type":  "String"
-        },
         "env": {
             "Type": "String"
         },
@@ -18,13 +12,13 @@
             "Type": "String",
             "Default": "functionstripeAPIName"
           },
-        
+
           
           "functionstripeAPIArn": {
             "Type": "String",
             "Default": "functionstripeAPIArn"
           }
-        
+
           
           
     
@@ -40,8 +34,6 @@
         }
     },
     "Resources": {
-        
-        
         
         
         
@@ -82,7 +74,7 @@
                           }
                       ]
                   ]
-                } 
+                }
               ]
             },
             "schemes": [
@@ -158,6 +150,12 @@
                     }
                   },
                   
+                    "security": [
+                        {
+                          "sigv4": []
+                        }
+                      ],
+                  
                   "x-amazon-apigateway-integration": {
                     "responses": {
                       "default": {
@@ -175,7 +173,7 @@
                             ":lambda:path/2015-03-31/functions/",
                             
                             {
-                                
+
                                 "Ref": "functionstripeAPIArn"
                             },
                             
@@ -257,6 +255,12 @@
                     }
                   },
                   
+                    "security": [
+                        {
+                          "sigv4": []
+                        }
+                      ],
+                  
                   "x-amazon-apigateway-integration": {
                     "responses": {
                       "default": {
@@ -274,7 +278,7 @@
                           ":lambda:path/2015-03-31/functions/",
                           
                           {
-                            
+
                             "Ref": "functionstripeAPIArn"
                           },
                           
@@ -287,7 +291,7 @@
                     "type": "aws_proxy"
                   }
                 }
-              }   
+              }
               
             },
             "securityDefinitions": {
@@ -329,9 +333,9 @@
         }
       },
 
-                  
+      
         
-        
+
         "functionstripeAPIPermissionstripeAPI": {
             "Type": "AWS::Lambda::Permission",
             "Properties": {
@@ -366,7 +370,7 @@
         },
         
         
-        
+
       "DeploymentAPIGWstripeAPI": {
         "Type": "AWS::ApiGateway::Deployment",
         "Properties": {
@@ -374,10 +378,10 @@
           "StageName": {
             "Fn::If": [
               "ShouldNotCreateEnvResources",
-              "Prod", 
+              "Prod",
               {
                 "Ref": "env"
-              } 
+              }
             ]
           },
           "RestApiId": {

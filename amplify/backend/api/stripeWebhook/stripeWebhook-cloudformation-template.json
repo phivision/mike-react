@@ -3,12 +3,6 @@
     "Description": "API Gateway resource stack creation using Amplify CLI",
     
     "Parameters": {
-        "authRoleName": {
-            "Type":  "String"
-        },
-        "unauthRoleName": {
-            "Type":  "String"
-        },
         "env": {
             "Type": "String"
         },
@@ -18,13 +12,13 @@
             "Type": "String",
             "Default": "functionstripeWebhookName"
           },
-        
+
           
           "functionstripeWebhookArn": {
             "Type": "String",
             "Default": "functionstripeWebhookArn"
           }
-        
+
           
           
     
@@ -40,8 +34,6 @@
         }
     },
     "Resources": {
-        
-        
         
         
         
@@ -82,7 +74,7 @@
                           }
                       ]
                   ]
-                } 
+                }
               ]
             },
             "schemes": [
@@ -175,7 +167,7 @@
                             ":lambda:path/2015-03-31/functions/",
                             
                             {
-                                
+
                                 "Ref": "functionstripeWebhookArn"
                             },
                             
@@ -274,7 +266,7 @@
                           ":lambda:path/2015-03-31/functions/",
                           
                           {
-                            
+
                             "Ref": "functionstripeWebhookArn"
                           },
                           
@@ -287,7 +279,7 @@
                     "type": "aws_proxy"
                   }
                 }
-              }   
+              }
               
             },
             "securityDefinitions": {
@@ -329,9 +321,9 @@
         }
       },
 
-                  
+      
         
-        
+
         "functionstripeWebhookPermissionstripeWebhook": {
             "Type": "AWS::Lambda::Permission",
             "Properties": {
@@ -366,7 +358,7 @@
         },
         
         
-        
+
       "DeploymentAPIGWstripeWebhook": {
         "Type": "AWS::ApiGateway::Deployment",
         "Properties": {
@@ -374,10 +366,10 @@
           "StageName": {
             "Fn::If": [
               "ShouldNotCreateEnvResources",
-              "Prod", 
+              "Prod",
               {
                 "Ref": "env"
-              } 
+              }
             ]
           },
           "RestApiId": {

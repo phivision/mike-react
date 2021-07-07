@@ -1,35 +1,35 @@
 {
-    "paths": [
-        {
-            "name": "/stripe/webhook",
-            "lambdaFunction": "stripeWebhook",
-            "privacy": {
-                "open": true
-            },
-            "policyResourceName": "/stripe/webhook"
-        }
-    ],
-    "resourceName": "stripeWebhook",
-    "apiName": "stripeWebhook",
-    "functionArns": [
-        {
-            "lambdaFunction": "stripeWebhook"
-        }
-    ],
-    "privacy": {
-        "auth": 0,
-        "unauth": 0,
-        "authRoleName": "amplify-mike-react-dev-150010-authRole",
-        "unAuthRoleName": "amplify-mike-react-dev-150010-unauthRole"
-    },
-    "dependsOn": [
-        {
-            "category": "function",
-            "resourceName": "stripeWebhook",
-            "attributes": [
-                "Name",
-                "Arn"
-            ]
-        }
-    ]
+  "paths": [
+    {
+      "name": "/stripe/webhook",
+      "lambdaFunction": "stripeWebhook",
+      "privacy": {
+        "open": true
+      },
+      "policyResourceName": "/stripe/webhook"
+    }
+  ],
+  "resourceName": "stripeWebhook",
+  "apiName": "stripeWebhook",
+  "functionArns": [
+    {
+      "lambdaFunction": "stripeWebhook"
+    }
+  ],
+  "privacy": {
+    "auth": 0,
+    "unauth": 0,
+    "authRoleName": "amplify-mike-react-dev-150010-authRole",
+    "unAuthRoleName": "amplify-mike-react-dev-150010-unauthRole"
+  },
+  "dependsOn": [
+    {
+      "category": "function",
+      "resourceName": "stripeWebhook",
+      "attributes": [
+        "Name",
+        "Arn"
+      ]
+    }
+  ]
 }
