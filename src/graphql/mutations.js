@@ -27,10 +27,10 @@ export const createUserProfile = /* GraphQL */ `
       LandingURL
       TokenBalance
       TokenPrice
+      owner
       DeviceToken
       createdAt
       updatedAt
-      owner
       Subscriptions {
         items {
           id
@@ -114,10 +114,10 @@ export const updateUserProfile = /* GraphQL */ `
       LandingURL
       TokenBalance
       TokenPrice
+      owner
       DeviceToken
       createdAt
       updatedAt
-      owner
       Subscriptions {
         items {
           id
@@ -201,10 +201,10 @@ export const deleteUserProfile = /* GraphQL */ `
       LandingURL
       TokenBalance
       TokenPrice
+      owner
       DeviceToken
       createdAt
       updatedAt
-      owner
       Subscriptions {
         items {
           id
@@ -295,10 +295,10 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        owner
         DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -333,10 +333,10 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        owner
         DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -387,10 +387,10 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        owner
         DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -425,10 +425,10 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        owner
         DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -479,10 +479,10 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        owner
         DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -517,10 +517,10 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        owner
         DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -568,10 +568,10 @@ export const createUserFavoriteContent = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        owner
         DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -623,10 +623,10 @@ export const createUserFavoriteContent = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          owner
           DeviceToken
           createdAt
           updatedAt
-          owner
         }
         FavoriteUser {
           nextToken
@@ -666,10 +666,10 @@ export const updateUserFavoriteContent = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        owner
         DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -721,10 +721,10 @@ export const updateUserFavoriteContent = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          owner
           DeviceToken
           createdAt
           updatedAt
-          owner
         }
         FavoriteUser {
           nextToken
@@ -764,10 +764,10 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        owner
         DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -819,10 +819,10 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          owner
           DeviceToken
           createdAt
           updatedAt
-          owner
         }
         FavoriteUser {
           nextToken
@@ -874,10 +874,10 @@ export const createUserContent = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        owner
         DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -946,10 +946,10 @@ export const updateUserContent = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        owner
         DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -1018,10 +1018,10 @@ export const deleteUserContent = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        owner
         DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -1083,10 +1083,10 @@ export const createMessage = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        owner
         DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -1121,10 +1121,10 @@ export const createMessage = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        owner
         DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -1177,10 +1177,10 @@ export const updateMessage = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        owner
         DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -1215,10 +1215,10 @@ export const updateMessage = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        owner
         DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -1271,10 +1271,10 @@ export const deleteMessage = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        owner
         DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -1309,10 +1309,10 @@ export const deleteMessage = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        owner
         DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }

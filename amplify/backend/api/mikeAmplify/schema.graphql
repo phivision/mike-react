@@ -1,5 +1,5 @@
 ﻿type UserProfile @model(subscriptions: null) @searchable
-@auth(rules: [{ allow: owner, operations: [create, delete, update] },
+@auth(rules: [{ allow: owner, ownerField: "owner", operations: [create, delete, update] },
   { allow: private, operations: [read]},
   { allow: public, provider: iam, operations: [read]}])
 @key(name: "profilesByStripeID", fields: ["StripeID"], queryField: "profilesByStripeID")
@@ -25,6 +25,7 @@
   LandingURL: String
   TokenBalance: Int
   TokenPrice: Int
+  owner: String!
   """
   Apple device token for push notifications
   """
