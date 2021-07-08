@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import Amplify, { API, Auth, graphqlOperation } from "aws-amplify";
 import { Hub } from "aws-amplify";
@@ -23,7 +23,6 @@ const stripePromise = loadStripe(stripePublishableKey);
 
 const initialUser = { id: null, role: "unknown" };
 
-//TODO: Remove excess components
 const App = () => {
   const [user, setUser] = React.useState(initialUser);
   const [verified, setVerified] = React.useState(false);
@@ -80,7 +79,7 @@ const App = () => {
     setOpenContentUpload(false);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     Auth.currentSession().then((res) => {
       if (res.isValid()) {
         setUser({
@@ -94,7 +93,7 @@ const App = () => {
     });
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     Hub.listen("auth", (data) => {
       if (data.payload.event === "signIn") {
         setUser({

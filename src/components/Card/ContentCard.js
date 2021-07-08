@@ -26,9 +26,9 @@ import {
 export default function ContentCard(props) {
   const [img, setImg] = useState(empty);
   const [liked, setLiked] = useState(false);
-  const [openViewer, setOpenViewer] = React.useState(false);
-  const [openContentEdit, setOpenContentEdit] = React.useState(false);
-  const [openDeletionDialog, setDeletionDialog] = React.useState(false);
+  const [openViewer, setOpenViewer] = useState(false);
+  const [openContentEdit, setOpenContentEdit] = useState(false);
+  const [openDeletionDialog, setDeletionDialog] = useState(false);
 
   const handleOpenContentEdit = () => {
     setOpenContentEdit(true);

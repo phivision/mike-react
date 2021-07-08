@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { Icon, Typography } from "@material-ui/core";
 import logo from "../../assets/img/logo.png";
@@ -38,17 +38,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Header(props) {
-  const [userRole, setUserRole] = React.useState(userRoles.UNKNOWN);
+  const [userRole, setUserRole] = useState(userRoles.UNKNOWN);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setUserRole(props.user.role);
   }, [props.user]);
 
   const handleOpenContentUpload = props.onContentUpload;
 
   let history = useHistory();
-  const [query, setQuery] = React.useState("");
-  const [mobileMore, setMobileMore] = React.useState(null);
+  const [query, setQuery] = useState("");
+  const [mobileMore, setMobileMore] = useState(null);
   const isMobileMenuOpen = Boolean(mobileMore);
   const classes = useStyles();
 
@@ -123,7 +123,7 @@ export default function Header(props) {
         <LogoImage src={logo} alt="logo" />
       </LogoLink>
     ) : (
-      <LogoLink to="/user">
+      <LogoLink to="/feed">
         <LogoImage src={logo} alt="logo" />
       </LogoLink>
     );
@@ -131,12 +131,12 @@ export default function Header(props) {
 
   const UserButton = () => {
     const location = useLocation();
-    let color = location.pathname === "/user" ? "primary" : "secondary";
+    let color = location.pathname === "/feed" ? "primary" : "secondary";
     return (
       <>
         {isMobileMenuOpen ? (
           <MenuItem>
-            <Nav to={"/user"} key={"User Profile"}>
+            <Nav to={"/feed"} key={"User Profile"}>
               <CustomIcon color={color}>
                 <UserIcon />
               </CustomIcon>
@@ -146,7 +146,7 @@ export default function Header(props) {
             </Nav>
           </MenuItem>
         ) : (
-          <Nav to={"/user"} key={"User Profile"}>
+          <Nav to={"/feed"} key={"User Profile"}>
             <CustomIcon color={color}>
               {typeof UserIcon === "string" ? (
                 <Icon> {UserIcon} </Icon>

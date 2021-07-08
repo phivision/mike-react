@@ -39,9 +39,11 @@ export const onContentByCreatorID = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        owner
+        DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -106,9 +108,11 @@ export const onUpdateByCreatorID = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        owner
+        DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -173,9 +177,11 @@ export const onDeletionByCreatorID = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        owner
+        DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -233,9 +239,11 @@ export const onMessagesByToUserID = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        owner
+        DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }
@@ -269,9 +277,11 @@ export const onMessagesByToUserID = /* GraphQL */ `
         Biography
         LandingURL
         TokenBalance
+        TokenPrice
+        owner
+        DeviceToken
         createdAt
         updatedAt
-        owner
         Subscriptions {
           nextToken
         }

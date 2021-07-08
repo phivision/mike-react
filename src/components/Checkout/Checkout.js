@@ -9,10 +9,13 @@ import {
   CustomContainer,
   TextStyle,
 } from "../StyledComponents/StyledComponents";
+import CustomSnackbar from "../CustomSnackbar/CustomSnackbar";
 
 export default function Checkout({ ...props }) {
   const [defaultPaymentMethod, setDefaultPaymentMethod] = useState("");
   const [paymentMethods, setPaymentMethods] = useState([]);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
   const stripe = useStripe();
   const elements = useElements();
 
@@ -67,7 +70,7 @@ export default function Checkout({ ...props }) {
       });
       props.paymentMethodCallback(payment.paymentMethod.id);
     } catch (e) {
-      props.errorCallback(e);
+      setSnackbarMessage(e);
     }
   };
 
@@ -94,13 +97,13 @@ export default function Checkout({ ...props }) {
           {paymentMethods.map((p, idx) => {
             let isDefault = p.id === defaultPaymentMethod;
             return isDefault ? (
-              <div style={{ padding: "15px" }}>
+              <div style={{ padding: "15px" }} key={idx}>
                 <PaymentMethod PaymentMethod={p} key={idx} />
               </div>
             ) : null;
           })}
           <CustomButton variant="contained" onClick={onClick}>
-            Subscribe
+            {props.buttonTitle}
           </CustomButton>
         </CustomContainer>
       ) : (
@@ -115,12 +118,15 @@ export default function Checkout({ ...props }) {
           </form>
         </CustomContainer>
       )}
+      <CustomSnackbar
+        message={snackbarMessage}
+        setMessage={setSnackbarMessage}
+      />
     </>
   );
 }
 
 Checkout.propTypes = {
-  errorCallback: PropTypes.func,
   paymentMethodCallback: PropTypes.func,
   buttonTitle: PropTypes.string,
   user: PropTypes.shape({

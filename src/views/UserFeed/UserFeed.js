@@ -43,6 +43,7 @@ export default function UserFeed(props) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
   const limit = 2;
+  const [loaded, setLoaded] = useState(false);
 
   const ContentNextTokenQuery = async (nextToken) => {
     const { data } = await API.graphql({
@@ -215,20 +216,20 @@ export default function UserFeed(props) {
   };
 
   const contentQuery = async () => {
-    API.graphql(
+    const d = await API.graphql(
       graphqlOperation(contentPaginatingQuery, {
         id: props.user.id,
         limit: limit,
       })
-    )
-      .then((d) => {
-        const Contents = d.data.getUserProfile.Contents;
-        setSortedContent(Contents.items);
-        if (!nextTokenRef.current) {
-          nextTokenRef.current = Contents.nextToken;
-        }
-      })
-      .catch(console.log);
+    );
+
+    const Contents = d.data.getUserProfile.Contents;
+    setSortedContent(Contents.items);
+    if (!nextTokenRef.current) {
+      nextTokenRef.current = Contents.nextToken;
+    }
+
+    return Contents;
   };
 
   const trainerSub = () => {
@@ -266,8 +267,12 @@ export default function UserFeed(props) {
       props.user.role === userRoles.STUDENT
         ? subQuery().then((subs) => {
             userSub(subs);
+            setLoaded(true);
           })
-        : contentQuery().then(trainerSub);
+        : contentQuery().then(() => {
+            trainerSub();
+            setLoaded(true);
+          });
       return unsubscribeAll();
     }
   }, [props.user.id]);
@@ -305,78 +310,84 @@ export default function UserFeed(props) {
 
   return (
     <>
-      <UserFeedBanner url={Banner} />
-      <Container maxWidth="xl">
-        <GridContainer
-          direction="row"
-          justify="space-evenly"
-          alignItems="flex-start"
-        >
-          {props.user.role === userRoles.STUDENT ? (
-            <UserProfile user={props.user} trainers={trainers} />
-          ) : (
-            <UserProfile user={props.user} />
-          )}
-          <GridContainer item direction="column" xs={12} sm={4}>
-            <GridTitleFlex>
-              <Typography variant="h2">Feed</Typography>
-              <TextA
-                size="20px"
-                onClick={() => {
-                  handleContentMore();
-                }}
-              >
-                More
-              </TextA>
-            </GridTitleFlex>
-            {contents.map((c, idx) => {
-              let f = favorites.findIndex((e) => e.Content.id === c.id);
-              return (
-                <ContentCard
-                  post={c}
-                  trainer={c.Creator}
-                  user={{ id: props.user.id }}
-                  favorite={favorites[f]}
-                  segments={c.Segments}
-                  favoriteCallback={editFavorite}
-                  key={idx}
-                />
-              );
-            })}
-          </GridContainer>
-          <GridContainer item direction="column" xs={12} sm={4}>
-            <GridItem>
-              <Typography variant="h2">Favorite Workouts</Typography>
-            </GridItem>
-            <GridItem>
-              {(rowsPerPage > 0
-                ? favorites.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                  )
-                : favorites
-              ).map((fav, idx) => {
-                return (
-                  <WorkoutCard
-                    post={fav.Content}
-                    favorite={fav}
-                    segments={fav.Content.Segments}
-                    favoriteCallback={editFavorite}
-                    key={idx}
+      {loaded ? (
+        <>
+          <UserFeedBanner url={Banner} />
+          <Container maxWidth="xl">
+            <GridContainer
+              direction="row"
+              justify="space-evenly"
+              alignItems="flex-start"
+            >
+              {props.user.role === userRoles.STUDENT ? (
+                <UserProfile user={props.user} trainers={trainers} />
+              ) : (
+                <UserProfile user={props.user} />
+              )}
+              <GridContainer item direction="column" xs={12} sm={4}>
+                <GridTitleFlex>
+                  <Typography variant="h2">Feed</Typography>
+                  <TextA
+                    size="20px"
+                    onClick={() => {
+                      handleContentMore();
+                    }}
+                  >
+                    More
+                  </TextA>
+                </GridTitleFlex>
+                {contents.map((c, idx) => {
+                  let f = favorites.findIndex((e) => e.Content.id === c.id);
+                  return (
+                    <ContentCard
+                      post={c}
+                      trainer={c.Creator}
+                      user={{ id: props.user.id }}
+                      favorite={favorites[f]}
+                      segments={c.Segments}
+                      favoriteCallback={editFavorite}
+                      key={idx}
+                    />
+                  );
+                })}
+              </GridContainer>
+              <GridContainer item direction="column" xs={12} sm={4}>
+                <GridItem>
+                  <Typography variant="h2">Favorite Workouts</Typography>
+                </GridItem>
+                <GridItem>
+                  {(rowsPerPage > 0
+                    ? favorites.slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                    : favorites
+                  ).map((fav, idx) => {
+                    return (
+                      <WorkoutCard
+                        post={fav.Content}
+                        favorite={fav}
+                        segments={fav.Content.Segments}
+                        favoriteCallback={editFavorite}
+                        key={idx}
+                      />
+                    );
+                  })}
+                  <DataPagination
+                    length={favorites.length}
+                    page={page}
+                    rowsPerPage={rowsPerPage}
+                    setPage={setPage}
+                    setRowsPerPage={setRowsPerPage}
                   />
-                );
-              })}
-              <DataPagination
-                length={favorites.length}
-                page={page}
-                rowsPerPage={rowsPerPage}
-                setPage={setPage}
-                setRowsPerPage={setRowsPerPage}
-              />
-            </GridItem>
-          </GridContainer>
-        </GridContainer>
-      </Container>
+                </GridItem>
+              </GridContainer>
+            </GridContainer>
+          </Container>
+        </>
+      ) : (
+        <>Loading...</>
+      )}
     </>
   );
 }

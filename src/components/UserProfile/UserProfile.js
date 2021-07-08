@@ -34,6 +34,7 @@ const initialProfileState = {
 export default function UserProfile(props) {
   const [profile, setProfile] = useState(initialProfileState);
   const [edit, setEdit] = useState(false);
+  const [updateStripe, setUpdateStripe] = useState(false);
   const history = useHistory();
 
   const userQuery = async () => {
@@ -47,9 +48,11 @@ export default function UserProfile(props) {
     switch (e.target.id) {
       case "firstName":
         setProfile({ ...profile, FirstName: e.target.value });
+        setUpdateStripe(true);
         break;
       case "lastName":
         setProfile({ ...profile, LastName: e.target.value });
+        setUpdateStripe(true);
         break;
       case "description":
         setProfile({ ...profile, Description: e.target.value });
@@ -60,10 +63,22 @@ export default function UserProfile(props) {
   const onClickEditProfile = async (type) => {
     if (edit) {
       if (type === "submit-changes") {
-        API.graphql({
+        await API.graphql({
           query: updateUserProfile,
           variables: { input: profile },
         });
+        if (updateStripe) {
+          const myInit = {
+            headers: {}, // AWS-IAM authorization if using empty headers
+            body: {
+              id: props.user.id,
+              name: profile.FirstName + " " + profile.LastName,
+            },
+            response: true,
+          };
+
+          await API.post("stripeAPI", "/stripe/api/user/update/name", myInit);
+        }
       } else {
         setProfile(tempProfile);
       }
@@ -192,7 +207,7 @@ export default function UserProfile(props) {
                 <GridItem key={idx}>
                   <UserAvatar
                     UserImage={trainer.UserImage}
-                    onClick={() => history.push(`/landingpage/${trainer.id}`)}
+                    onClick={() => history.push(`/user/${trainer.id}`)}
                   />
                 </GridItem>
               );

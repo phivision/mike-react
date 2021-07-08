@@ -1,15 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { TextField } from "@material-ui/core";
 import { Auth } from "aws-amplify";
 import { TextStyle, CustomButton } from "../StyledComponents/StyledComponents";
 import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom";
+import CustomSnackbar from "../CustomSnackbar/CustomSnackbar";
 
 const ResetPasswordForm = ({ ...props }) => {
-  const [showVerify, setShowVerify] = React.useState(false);
-  const [verifyCode, setVerifyCode] = React.useState("");
+  const [showVerify, setShowVerify] = useState(false);
+  const [verifyCode, setVerifyCode] = useState("");
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const history = useHistory();
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     email: "",
     password: "",
     remember: false,
@@ -37,7 +39,7 @@ const ResetPasswordForm = ({ ...props }) => {
         setShowVerify(true);
       })
       .catch((err) => {
-        props.openError(err.message);
+        setSnackbarMessage(err.message);
       });
   };
 
@@ -54,11 +56,11 @@ const ResetPasswordForm = ({ ...props }) => {
               history.push(props.location.state.next);
             }
           }
-          history.push("/user/");
+          history.push("/feed/");
         });
       })
       .catch((err) => {
-        props.openError(err.message);
+        setSnackbarMessage(err.message);
       });
   };
 
@@ -143,6 +145,10 @@ const ResetPasswordForm = ({ ...props }) => {
           </CustomButton>
         </>
       )}
+      <CustomSnackbar
+        setMessage={setSnackbarMessage}
+        message={snackbarMessage}
+      />
     </>
   );
 };
@@ -153,7 +159,6 @@ ResetPasswordForm.propTypes = {
       next: PropTypes.object,
     }),
   }),
-  openError: PropTypes.func,
 };
 
 export default ResetPasswordForm;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import { Auth } from "aws-amplify";
@@ -6,12 +6,14 @@ import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom";
 import { API } from "aws-amplify";
 import { CustomButton } from "../StyledComponents/StyledComponents";
+import CustomSnackbar from "../CustomSnackbar/CustomSnackbar";
 // import auth styles
 
-export default function VerifyForm({ openError: openError, ...props }) {
+export default function VerifyForm({ ...props }) {
   const history = useHistory();
 
-  const [verify, setVerify] = React.useState("");
+  const [verify, setVerify] = useState("");
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const handleChange = (e) => {
     setVerify(e.target.value);
@@ -57,31 +59,37 @@ export default function VerifyForm({ openError: openError, ...props }) {
                 history.push(props.location.state.next);
               }
             }
-            history.push("/user/");
+            history.push("/feed/");
           });
         });
       });
     } catch (error) {
-      openError(error.message);
+      setSnackbarMessage(error.message);
     }
   }
 
   return (
-    <form onSubmit={(e) => handleSubmit(e)} noValidate>
-      <Grid container spacing={2}>
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          autoFocus
-          onChange={handleChange}
-        />
-      </Grid>
-      <CustomButton type="submit" fullWidth variant="contained">
-        Verify
-      </CustomButton>
-    </form>
+    <>
+      <form onSubmit={(e) => handleSubmit(e)} noValidate>
+        <Grid container spacing={2}>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            autoFocus
+            onChange={handleChange}
+          />
+        </Grid>
+        <CustomButton type="submit" fullWidth variant="contained">
+          Verify
+        </CustomButton>
+      </form>
+      <CustomSnackbar
+        message={snackbarMessage}
+        setMessage={setSnackbarMessage}
+      />
+    </>
   );
 }
 
@@ -94,5 +102,4 @@ VerifyForm.propTypes = {
       next: PropTypes.object,
     }),
   }),
-  openError: PropTypes.func,
 };

@@ -19,8 +19,8 @@ export default function WorkoutCard(props) {
   const [img, setImg] = useState(empty);
   const [liked, setLiked] = useState(true);
   const [segments, setSegments] = useState([]);
-  const [openViewer, setOpenViewer] = React.useState(false);
-  const [openContentEdit, setOpenContentEdit] = React.useState(false);
+  const [openViewer, setOpenViewer] = useState(false);
+  const [openContentEdit, setOpenContentEdit] = useState(false);
   var times = 0;
 
   const handleCloseContentEdit = () => {

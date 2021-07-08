@@ -1,19 +1,28 @@
 /* Amplify Params - DO NOT EDIT
+	API_MIKEAMPLIFY_GRAPHQLAPIENDPOINTOUTPUT
+	API_MIKEAMPLIFY_GRAPHQLAPIIDOUTPUT
 	ENV
 	REGION
-	STORAGE_MIKE_REACT9AA15861_BUCKETNAME
 Amplify Params - DO NOT EDIT */
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
-const AWS = require("aws-sdk");
-const docClient = new AWS.DynamoDB.DocumentClient();
-const v5 = require("uuid/v5");
+const prices = require("./prices").prices;
+const asyncHandler = require("express-async-handler");
+const {
+  queryByStripeID,
+  setVerified,
+  addTokens,
+  createSubscription,
+  deleteSubscription,
+} = require("./requests");
 
 // declare a new express app
 const app = express();
 
 app.use(awsServerlessExpressMiddleware.eventContext());
+app.use(bodyParser.raw({ type: "application/json" }));
 
 // Enable CORS for all methods
 app.use(function (req, res, next) {
@@ -25,7 +34,6 @@ app.use(function (req, res, next) {
 let stripe;
 let ENDPOINT_SECRET;
 let CONNECT_SECRET;
-let UUID = "d2b157d4-5a66-49ca-b868-c83008f1e126";
 
 if (process.env.ENV === "prod") {
   stripe = require("stripe")(
@@ -48,50 +56,18 @@ if (process.env.ENV === "prod") {
 
 app.post(
   "/stripe/webhook/connect",
-  bodyParser.raw({ type: "application/json" }),
-  (request, response) => {
-    const payload = request.body;
-    const sig = request.headers["stripe-signature"];
-
+  asyncHandler(async (req, res, next) => {
     let event;
 
     try {
-      event = stripe.webhooks.constructEvent(payload, sig, CONNECT_SECRET);
+      event = stripe.webhooks.constructEvent(
+        req.body,
+        req.headers["stripe-signature"],
+        CONNECT_SECRET
+      );
     } catch (err) {
-      return response.status(400).send(`Webhook Error: ${err.message}`);
+      return res.status(400).send(`Webhook Error: ${err.message}`);
     }
-
-    const query = async (stripeID) => {
-      const params = {
-        TableName: process.env.TABLE_NAME,
-        IndexName: "profilesByStripeID",
-        KeyConditionExpression: "StripeID = :s",
-        ExpressionAttributeValues: {
-          ":s": stripeID,
-        },
-      };
-
-      return await docClient.query(params).promise();
-    };
-
-    const setVerified = async (id) => {
-      const params = {
-        TableName: process.env.TABLE_NAME,
-        Key: {
-          id: id,
-        },
-        UpdateExpression: "set #s = :d",
-        ExpressionAttributeNames: {
-          "#s": "IsVerified",
-        },
-        ExpressionAttributeValues: {
-          ":d": true,
-        },
-        ReturnValues: "ALL_NEW",
-      };
-
-      return await docClient.update(params).promise();
-    };
 
     // Handle the event
     switch (event.type) {
@@ -101,141 +77,104 @@ app.post(
           account.requirements.currently_due.length === 0 &&
           account.requirements.pending_verification.length === 0
         ) {
-          query(account.id).then((user) => {
-            setVerified(user.Items[0].id)
-              .then(() => response.json({ received: true }))
-              .catch(console.log);
-          });
+          const user = await queryByStripeID(account.id);
+          await setVerified(user.items[0].id);
+          res.json({ received: true });
+        } else {
+          res.json({ received: true });
         }
-        response.json({ received: true });
         break;
 
       default:
         console.log(`Unhandled event type ${event.type}`);
-        response.json({ received: true });
+        res.json({ received: true });
     }
-  }
+  })
 );
 
 app.post(
   "/stripe/webhook",
-  bodyParser.raw({ type: "application/json" }),
-  (request, response) => {
-    const payload = request.body;
-    const sig = request.headers["stripe-signature"];
-
+  asyncHandler(async (req, res, next) => {
     let event;
 
     try {
-      event = stripe.webhooks.constructEvent(payload, sig, ENDPOINT_SECRET);
+      event = stripe.webhooks.constructEvent(
+        req.body,
+        req.headers["stripe-signature"],
+        ENDPOINT_SECRET
+      );
     } catch (err) {
-      return response.status(400).send(`Webhook Error: ${err.message}`);
+      return res.status(400).send(`Webhook Error: ${err.message}`);
     }
-
-    const createSubscription = async (
-      trainerID,
-      userID,
-      subscriptionID,
-      expireDate
-    ) => {
-      const i = v5(trainerID + userID, UUID);
-      const time = new Date();
-      const expire = new Date(expireDate * 1000).toISOString();
-      const exp = expire.slice(0, 10);
-      const params = {
-        TableName: process.env.SUB_TABLE_NAME,
-        Item: {
-          id: i,
-          __typename: "UserSubscriptionTrainer",
-          createdAt: time.toISOString(),
-          CancelAtPeriodEnd: false,
-          userSubscriptionTrainerTrainerId: trainerID,
-          userSubscriptionTrainerUserId: userID,
-          StripeID: subscriptionID,
-          ExpireDate: exp,
-          updatedAt: time.toISOString(),
-        },
-      };
-
-      return await docClient.put(params).promise();
-    };
-
-    const deleteSubscription = async (trainerID, userID) => {
-      const i = v5(trainerID + userID, process.env.UUID);
-      console.log(i);
-      const params = {
-        TableName: process.env.SUB_TABLE_NAME,
-        Key: { id: i },
-      };
-
-      return await docClient.delete(params).promise();
-    };
-
-    const getTrainer = async (priceID) => {
-      return await stripe.prices.retrieve(priceID);
-    };
-
-    const query = async (stripeID) => {
-      const params = {
-        TableName: process.env.TABLE_NAME,
-        IndexName: "profilesByStripeID",
-        KeyConditionExpression: "StripeID = :s",
-        ExpressionAttributeValues: {
-          ":s": stripeID,
-        },
-      };
-
-      return await docClient.query(params).promise();
-    };
 
     // Handle the event
     switch (event.type) {
       case "invoice.paid":
-        const paymentIntent = event.data.object;
-        console.log("Invoice Paid.");
-        console.log(paymentIntent);
-        query(paymentIntent.customer).then((user) => {
-          query(paymentIntent.transfer_data.destination).then((trainer) => {
-            stripe.subscriptions
-              .retrieve(paymentIntent.subscription)
-              .then((subscription) => {
-                createSubscription(
-                  trainer.Items[0].id,
-                  user.Items[0].id,
-                  subscription.id,
-                  subscription.current_period_end
-                )
-                  .then(() => response.json({ received: true }))
-                  .catch(console.log);
-              });
-          });
-        });
+        const invoice = event.data.object;
+
+        const [customer, trainer, sub] = await Promise.all([
+          queryByStripeID(invoice.customer),
+          queryByStripeID(invoice.transfer_data.destination),
+          stripe.subscriptions.retrieve(invoice.subscription),
+        ]);
+
+        await Promise.all([
+          createSubscription(
+            trainer.items[0].id,
+            customer.items[0].id,
+            sub.id,
+            sub.current_period_end
+          ),
+          addTokens(customer.items[0].id, customer.items[0].TokenBalance, 10),
+        ]);
+
+        res.json({ received: true });
         break;
 
       case "customer.subscription.deleted":
         const subscription = event.data.object;
-        console.log("Customer Subscription Delete.");
-        console.log(subscription);
-        query(subscription.customer).then((user) => {
-          getTrainer(subscription.plan.id).then((trainerStripeID) => {
-            query(trainerStripeID.lookup_key).then((trainer) => {
-              deleteSubscription(trainer.Items[0].id, user.Items[0].id)
-                .then(() => response.json({ received: true }))
-                .catch(console.log);
-            });
-          });
-        });
+        const [cus, price] = await Promise.all([
+          queryByStripeID(subscription.customer),
+          stripe.prices.retrieve(subscription.plan.id),
+        ]);
+
+        const train = await queryByStripeID(price.lookup_key);
+        await deleteSubscription(train.items[0].id, cus.items[0].id);
+
+        res.json({ received: true });
+        break;
+
+      case "payment_intent.succeeded":
+        const paymentIntent = event.data.object;
+        const c = await queryByStripeID(paymentIntent.customer);
+
+        if (paymentIntent.transfer_data) {
+          res.json({ received: true });
+          break;
+        }
+        await addTokens(
+          c.items[0].id,
+          c.items[0].TokenBalance,
+          parseInt(
+            Object.keys(prices).find(
+              (key) => prices[key] === paymentIntent.amount
+            )
+          )
+        );
+
+        res.json({ received: true });
         break;
 
       default:
         console.log(`Unhandled event type ${event.type}`);
         // Return a response to acknowledge receipt of the event
-        response.json({ received: true });
+        res.json({ received: true });
     }
-  }
+  })
 );
 
-app.post("/*", function (req, res) {
+app.use(function (req, res, next) {
+  console.log("Route not found.");
   res.status(404).send();
 });
 

@@ -16,21 +16,13 @@
         "mikereact": {}
       },
       "function": {
-        "stripeAPI": {
-          "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/stripeAPI-426e366f4c65786b7337-build.zip"
-        },
-        "stripeWebhook": {
-          "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/stripeWebhook-546c6949424863766172-build.zip"
-        },
         "cognitoPostConfirm": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/cognitoPostConfirm-5a2b77384c45372b7435-build.zip"
+          "s3Key": "amplify-builds/cognitoPostConfirm-4b4c577773387a383242-build.zip"
         },
         "videoConvertComplete": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/videoConvertComplete-39316244773246665439-build.zip"
+          "s3Key": "amplify-builds/videoConvertComplete-3334434b6f7233394158-build.zip"
         },
         "marketing": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
@@ -39,12 +31,31 @@
         "videoFlutterMove": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
           "s3Key": "amplify-builds/videoFlutterMove-3378536f55673042754d-build.zip"
+        },
+        "messageTokenTransaction": {
+          "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
+          "s3Key": "amplify-builds/messageTokenTransaction-4f624938454b59326c37-build.zip"
+        },
+        "stripeAPI": {
+          "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
+          "s3Key": "amplify-builds/stripeAPI-43684f37735a32426b73-build.zip"
+        },
+        "stripeWebhook": {
+          "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
+          "s3Key": "amplify-builds/stripeWebhook-3779463546374f754d59-build.zip"
         }
       },
       "storage": {
         "mikereact48af3338": {
           "bucketName": "mike-vod-dev",
           "region": "us-east-1"
+        }
+      },
+      "notifications": {
+        "Pinpoint": {
+          "Name": "iosMessagePush-dev",
+          "Id": "3f9d3c0805944df4b85ca3ef793bbbbf",
+          "Region": "us-east-1"
         }
       }
     }
@@ -118,19 +129,19 @@
       "function": {
         "stripeAPI": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
-          "s3Key": "amplify-builds/stripeAPI-426e366f4c65786b7337-build.zip"
+          "s3Key": "amplify-builds/stripeAPI-43684f37735a32426b73-build.zip"
         },
         "stripeWebhook": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
-          "s3Key": "amplify-builds/stripeWebhook-546c6949424863766172-build.zip"
+          "s3Key": "amplify-builds/stripeWebhook-4c4d716b334c534a6631-build.zip"
         },
         "cognitoPostConfirm": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
-          "s3Key": "amplify-builds/cognitoPostConfirm-5a2b77384c45372b7435-build.zip"
+          "s3Key": "amplify-builds/cognitoPostConfirm-4b4c577773387a383242-build.zip"
         },
         "videoConvertComplete": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
-          "s3Key": "amplify-builds/videoConvertComplete-39316244773246665439-build.zip"
+          "s3Key": "amplify-builds/videoConvertComplete-3334434b6f7233394158-build.zip"
         },
         "marketing": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
@@ -138,13 +149,24 @@
         },
         "videoFlutterMove": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
-          "s3Key": "amplify-builds/videoFlutterMove-3378536f55673042754d-build.zip"
+          "s3Key": "amplify-builds/videoFlutterMove-4f614f71356730585536-build.zip"
+        },
+        "messageTokenTransaction": {
+          "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
+          "s3Key": "amplify-builds/messageTokenTransaction-4f624938454b59326c37-build.zip"
         }
       },
       "storage": {
         "mikereact48af3338": {
           "bucketName": "mike-vod-feature",
           "region": "us-east-1"
+        }
+      },
+      "notifications": {
+        "Pinpoint": {
+          "Name": "iosMessagePush-feature",
+          "Id": "37d7798ba9c3470ab88013ce41fe5714",
+          "Region": "us-east-1"
         }
       }
     }

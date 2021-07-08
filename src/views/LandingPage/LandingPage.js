@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { API, graphqlOperation } from "aws-amplify";
 import PropTypes from "prop-types";
-import { Dialog, Snackbar, Typography, Container } from "@material-ui/core";
+import { Dialog, Typography, Container } from "@material-ui/core";
 import ContentCard from "../../components/Card/ContentCard";
 import WorkoutCard from "../../components/Card/WorkoutCard";
 import Banner from "assets/img/banner.jpeg";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
 import { useHistory } from "react-router-dom";
 import Checkout from "../../components/Checkout/Checkout";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
 import {
   GridItem,
   GridContainer,
@@ -24,6 +22,7 @@ import {
   profileLimitQuery,
   contentPaginatingQuery,
 } from "../../graphql/UserFeed";
+import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
 
 // import initial profile
 const initialProfileState = {
@@ -44,7 +43,6 @@ export default function LandingPage({ ...props }) {
   const [price, setPrice] = useState("");
   const [favorites, setFavorites] = useState([]);
   const [openCheckout, setOpenCheckout] = useState(false);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const history = useHistory();
   const [page, setPage] = useState(0);
@@ -56,6 +54,7 @@ export default function LandingPage({ ...props }) {
   const limit = 2;
   let nextToken = "";
   const [isVerified, setVerified] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   const ContentNextTokenQuery = async (nextToken) => {
     const { data } = await API.graphql({
@@ -70,24 +69,24 @@ export default function LandingPage({ ...props }) {
   };
 
   const userQuery = async () => {
-    API.graphql(
+    const d = await API.graphql(
       graphqlOperation(profileLimitQuery, {
         id: id,
         limit: limit,
       })
-    )
-      .then((d) => {
-        const { Contents, IsVerified, Favorites, ...p } = d.data.getUserProfile;
-        setProfile(p);
-        setVerified(IsVerified);
-        setFavorites(Favorites.items);
-        setContent(Contents.items);
-        if (!nextToken) {
-          nextToken = Contents.nextToken;
-          ContentNextTokenQuery(nextToken);
-        }
-      })
-      .catch((e) => console.log(e));
+    );
+
+    const { Contents, IsVerified, Favorites, ...p } = d.data.getUserProfile;
+    setProfile(p);
+    setVerified(IsVerified);
+    setFavorites(Favorites.items);
+    setContent(Contents.items);
+    if (!nextToken) {
+      nextToken = Contents.nextToken;
+      ContentNextTokenQuery(nextToken);
+    }
+
+    return d;
   };
 
   const getPrice = async (id) => {
@@ -99,13 +98,42 @@ export default function LandingPage({ ...props }) {
       response: true,
     };
 
-    API.post("stripeAPI", "/stripe/api/trainer/get/price", myInit)
-      .then((res) => {
-        setPrice(res.data.data[0].unit_amount / 100);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const res = await API.post(
+      "stripeAPI",
+      "/stripe/api/trainer/get/price",
+      myInit
+    );
+
+    setPrice(res.data.data[0].unit_amount / 100);
+
+    return res;
+  };
+
+  const checkSubscription = async (userID, trainerID) => {
+    const query = /* GraphQL */ `
+      query GetUserProfile($id: ID!) {
+        getUserProfile(id: $id) {
+          Subscriptions {
+            items {
+              Trainer {
+                id
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const d = await API.graphql(graphqlOperation(query, { id: userID }));
+
+    d.data.getUserProfile.Subscriptions.items.forEach((sub) => {
+      if (sub.Trainer.id === trainerID) {
+        setSubscribed(true);
+        return true;
+      }
+    });
+
+    return false;
   };
 
   const createSubscription = (paymentMethodId) => {
@@ -122,30 +150,14 @@ export default function LandingPage({ ...props }) {
     API.post("stripeAPI", "/stripe/api/user/create/subscription", myInit)
       .then((res) => {
         if (res.error) {
-          checkoutError(res.error);
+          setSnackbarMessage("Subscription unsuccessful");
         } else {
-          checkoutSuccess();
+          setSnackbarMessage("Subscription successful.");
         }
       })
-      .catch((e) => {
-        checkoutError(e);
+      .catch(() => {
+        setSnackbarMessage("Subscription unsuccessful");
       });
-  };
-
-  const handleSnackbarClose = () => {
-    setOpenSnackbar(false);
-  };
-
-  const checkoutSuccess = () => {
-    handleCloseCheckout();
-    setSnackbarMessage("Subscription successful.");
-    setOpenSnackbar(true);
-  };
-
-  const checkoutError = (e) => {
-    console.log(e);
-    setSnackbarMessage("Subscription unsuccessful. Please try again.");
-    setOpenSnackbar(true);
   };
 
   const onClick = () => {
@@ -157,36 +169,6 @@ export default function LandingPage({ ...props }) {
         state: { next: props.location.pathname },
       });
     }
-  };
-
-  const handleCloseCheckout = () => {
-    setOpenCheckout(false);
-  };
-
-  const checkSubscription = (userID, trainerID) => {
-    const query = /* GraphQL */ `
-      query GetUserProfile($id: ID!) {
-        getUserProfile(id: $id) {
-          Subscriptions {
-            items {
-              Trainer {
-                id
-              }
-            }
-          }
-        }
-      }
-    `;
-
-    API.graphql(graphqlOperation(query, { id: userID }))
-      .then((d) => {
-        d.data.getUserProfile.Subscriptions.items.forEach((sub) => {
-          if (sub.Trainer.id === trainerID) {
-            setSubscribed(true);
-          }
-        });
-      })
-      .catch(console.log);
   };
 
   useEffect(() => {
@@ -213,11 +195,6 @@ export default function LandingPage({ ...props }) {
     }
   }, [props.match.params.id]);
 
-  useEffect(() => {
-    getPrice(id);
-    userQuery();
-  }, [id]);
-
   const handleContentMore = () => {
     nextToken = contentAll.nextToken;
     ContentNextTokenQuery(nextToken);
@@ -226,7 +203,7 @@ export default function LandingPage({ ...props }) {
     var temp = contentMore;
     temp.push.apply(temp, contentAll.items);
     for (var item of temp) {
-      if (arrId.indexOf(item["id"]) == -1) {
+      if (arrId.indexOf(item["id"]) === -1) {
         arrId.push(item["id"]);
         newArr.push(item);
       }
@@ -239,138 +216,139 @@ export default function LandingPage({ ...props }) {
   }
 
   useEffect(() => {
-    if (props.user.id && id) {
-      checkSubscription(props.user.id, id);
+    if (id) {
+      if (props.user.id) {
+        Promise.all([
+          getPrice(id),
+          userQuery(),
+          checkSubscription(props.user.id, id),
+        ]).then(() => setLoaded(true));
+      } else {
+        Promise.all([getPrice(id), userQuery()]).then(() => setLoaded(true));
+      }
     }
   }, [props.user.id, id]);
 
   return (
     <>
-      <UserFeedBanner url={Banner} />
-      <Container maxWidth="xl">
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={6000}
-          onClose={handleSnackbarClose}
-          message={snackbarMessage}
-          action={
-            <React.Fragment>
-              <IconButton
-                size="small"
-                aria-label="close"
-                color="inherit"
-                onClick={handleSnackbarClose}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            </React.Fragment>
-          }
-        />
-        <GridContainer
-          direction="row"
-          justify="space-evenly"
-          alignItems="flex-start"
-        >
-          <GridContainer item direction="column" xs={12} sm={4}>
-            <ProfileBox>
-              <GridItem>
-                <UserAvatar UserImage={profile.UserImage} />
-              </GridItem>
-              <GridItem>
-                <Typography variant="h3">
-                  {profile.FirstName + " " + profile.LastName}
-                </Typography>
-              </GridItem>
-              <GridItem variant="body1">{profile.Description}</GridItem>
-              <GridItem>
-                {isVerified && (
-                  <>
-                    {subscribed ? (
-                      <CustomButton variant="outlined" disabled>
-                        Already Subscribed
-                      </CustomButton>
-                    ) : (
-                      <CustomButton variant="contained" onClick={onClick}>
-                        {"Subscribe for $" + price + " per month"}
-                      </CustomButton>
+      {loaded ? (
+        <>
+          <UserFeedBanner url={Banner} />
+          <Container maxWidth="xl">
+            <GridContainer
+              direction="row"
+              justify="space-evenly"
+              alignItems="flex-start"
+            >
+              <GridContainer item direction="column" xs={12} sm={4}>
+                <ProfileBox>
+                  <GridItem>
+                    <UserAvatar UserImage={profile.UserImage} />
+                  </GridItem>
+                  <GridItem>
+                    <Typography variant="h3">
+                      {profile.FirstName + " " + profile.LastName}
+                    </Typography>
+                  </GridItem>
+                  <GridItem variant="body1">{profile.Description}</GridItem>
+                  <GridItem>
+                    {isVerified && (
+                      <>
+                        {subscribed ? (
+                          <CustomButton variant="outlined" disabled>
+                            Already Subscribed
+                          </CustomButton>
+                        ) : (
+                          <CustomButton variant="contained" onClick={onClick}>
+                            {"Subscribe for $" + price + " per month"}
+                          </CustomButton>
+                        )}
+                      </>
                     )}
-                  </>
-                )}
-              </GridItem>
-            </ProfileBox>
-          </GridContainer>
-          <GridContainer item direction="column" xs={12} sm={4}>
-            <GridTitleFlex>
-              <Typography variant="h2">Feed</Typography>
-              <TextA
-                size="20px"
-                onClick={() => {
-                  handleContentMore();
-                }}
-              >
-                More
-              </TextA>
-            </GridTitleFlex>
-            {contentMore.map((c, idx) => {
-              let f = favorites.findIndex((e) => e.Content.id === content.id);
-              return (
-                <ContentCard
-                  post={c}
-                  trainer={profile}
-                  user={props.user}
-                  favorite={favorites[f]}
-                  key={idx}
-                />
-              );
-            })}
-          </GridContainer>
-          <GridContainer item direction="column" xs={12} sm={4}>
-            <GridItem>
-              <Typography variant="h2">Favorite Workouts</Typography>
-            </GridItem>
-            <GridItem>
-              {(rowsPerPage > 0
-                ? favorites.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                  )
-                : favorites
-              ).map((fav, idx) => {
-                return (
-                  <WorkoutCard
-                    post={fav.Content}
-                    trainer={profile}
-                    favorite={fav}
-                    segments={fav.Content.Segments}
-                    key={idx}
+                  </GridItem>
+                </ProfileBox>
+              </GridContainer>
+              <GridContainer item direction="column" xs={12} sm={4}>
+                <GridTitleFlex>
+                  <Typography variant="h2">Feed</Typography>
+                  <TextA
+                    size="20px"
+                    onClick={() => {
+                      handleContentMore();
+                    }}
+                  >
+                    More
+                  </TextA>
+                </GridTitleFlex>
+                {contentMore.map((c, idx) => {
+                  let f = favorites.findIndex(
+                    (e) => e.Content.id === content.id
+                  );
+                  return (
+                    <ContentCard
+                      post={c}
+                      trainer={profile}
+                      user={props.user}
+                      favorite={favorites[f]}
+                      key={idx}
+                    />
+                  );
+                })}
+              </GridContainer>
+              <GridContainer item direction="column" xs={12} sm={4}>
+                <GridItem>
+                  <Typography variant="h2">Favorite Workouts</Typography>
+                </GridItem>
+                <GridItem>
+                  {(rowsPerPage > 0
+                    ? favorites.slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                    : favorites
+                  ).map((fav, idx) => {
+                    return (
+                      <WorkoutCard
+                        post={fav.Content}
+                        trainer={profile}
+                        favorite={fav}
+                        segments={fav.Content.Segments}
+                        key={idx}
+                      />
+                    );
+                  })}
+                  <DataPagination
+                    length={favorites.length}
+                    page={page}
+                    rowsPerPage={rowsPerPage}
+                    setPage={setPage}
+                    setRowsPerPage={setRowsPerPage}
                   />
-                );
-              })}
-              <DataPagination
-                length={favorites.length}
-                page={page}
-                rowsPerPage={rowsPerPage}
-                setPage={setPage}
-                setRowsPerPage={setRowsPerPage}
+                </GridItem>
+              </GridContainer>
+            </GridContainer>
+            <Dialog
+              onClose={() => setOpenCheckout(false)}
+              fullWidth
+              aria-labelledby="checkout-dialog"
+              open={openCheckout}
+            >
+              <Checkout
+                user={props.user}
+                paymentMethodCallback={createSubscription}
+                buttonTitle="Subscribe"
+                checkExistingPaymentMethod={true}
               />
-            </GridItem>
-          </GridContainer>
-        </GridContainer>
-        <Dialog
-          onClose={handleCloseCheckout}
-          fullWidth
-          aria-labelledby="checkout-dialog"
-          open={openCheckout}
-        >
-          <Checkout
-            errorCallback={checkoutError}
-            user={props.user}
-            paymentMethodCallback={createSubscription}
-            buttonTitle="Subscribe"
-            checkExistingPaymentMethod={true}
+            </Dialog>
+          </Container>
+          <CustomSnackbar
+            message={snackbarMessage}
+            setMessage={setSnackbarMessage}
           />
-        </Dialog>
-      </Container>
+        </>
+      ) : (
+        <>Loading...</>
+      )}
     </>
   );
 }

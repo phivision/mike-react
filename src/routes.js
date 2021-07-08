@@ -1,5 +1,3 @@
-// @material-ui/icons
-import { UserIcon } from "./components/StyledComponents/StyledComponents";
 // core components/views for Admin layout
 import Settings from "views/Settings/Settings";
 import UserFeed from "views/UserFeed/UserFeed.js";
@@ -13,10 +11,11 @@ import SignUp from "views/Auth/SignUp.js";
 import Verify from "views/Auth/Verify.js";
 import ResetPassword from "views/Auth/ResetPassword";
 import NotFound from "./views/NotFound/NotFound";
+import TokenPurchase from "./views/TokenPurchase/TokenPurchase";
 
 const routes = [
   {
-    path: "/user",
+    path: "/feed",
     name: "Feed",
     component: UserFeed,
     auth: "both",
@@ -28,15 +27,21 @@ const routes = [
     exact: true,
   },
   {
+    path: "/buycoins",
+    name: "Purchase coins",
+    component: TokenPurchase,
+    exact: true,
+    auth: "both",
+  },
+  {
     path: "/search/:query",
     name: "Search",
     component: Search,
     exact: true,
   },
   {
-    path: "/landingpage/:id",
+    path: "/user/:id",
     name: "Landing Page",
-    icon: UserIcon,
     component: LandingPage,
     exact: true,
   },
