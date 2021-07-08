@@ -34,7 +34,7 @@
         },
         "messageTokenTransaction": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/messageTokenTransaction-4f624938454b59326c37-build.zip"
+          "s3Key": "amplify-builds/messageTokenTransaction-37747951613459475933-build.zip"
         },
         "stripeAPI": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
@@ -42,7 +42,11 @@
         },
         "stripeWebhook": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/stripeWebhook-736452355343616c4b6c-build.zip"
+          "s3Key": "amplify-builds/stripeWebhook-56426a4b6f72517a416a-build.zip"
+        },
+        "messageGroupSend": {
+          "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
+          "s3Key": "amplify-builds/messageGroupSend-41486371624b5033326a-build.zip"
         }
       },
       "storage": {
@@ -157,7 +161,11 @@
         },
         "messageTokenTransaction": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
-          "s3Key": "amplify-builds/messageTokenTransaction-4f624938454b59326c37-build.zip"
+          "s3Key": "amplify-builds/messageTokenTransaction-37747951613459475933-build.zip"
+        },
+        "messageGroupSend": {
+          "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
+          "s3Key": "amplify-builds/messageGroupSend-41486371624b5033326a-build.zip"
         }
       },
       "storage": {
