@@ -1,0 +1,45 @@
+{
+  "paths": [
+    {
+      "name": "/sendUsers",
+      "lambdaFunction": "messageGroupSend",
+      "privacy": {
+        "protected": true,
+        "auth": [
+          "/POST",
+          "/GET",
+          "/PUT",
+          "/PATCH",
+          "/DELETE"
+        ],
+        "unauth": [
+          "/GET"
+        ]
+      },
+      "policyResourceName": "/sendUsers"
+    }
+  ],
+  "resourceName": "messageGroupSend",
+  "apiName": "messageGroupSend",
+  "functionArns": [
+    {
+      "lambdaFunction": "messageGroupSend"
+    }
+  ],
+  "privacy": {
+    "auth": 1,
+    "unauth": 1,
+    "authRoleName": "amplify-mikereact-feature-135143-authRole",
+    "unAuthRoleName": "amplify-mikereact-feature-135143-unauthRole"
+  },
+  "dependsOn": [
+    {
+      "category": "function",
+      "resourceName": "messageGroupSend",
+      "attributes": [
+        "Name",
+        "Arn"
+      ]
+    }
+  ]
+}
