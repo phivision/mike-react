@@ -23,6 +23,14 @@
     "apimikeAmplifyGraphQLAPIEndpointOutput": {
       "Type": "String",
       "Default": "apimikeAmplifyGraphQLAPIEndpointOutput"
+    },
+    "analyticsiosMessagePushId": {
+      "Type": "String",
+      "Default": "analyticsiosMessagePushId"
+    },
+    "analyticsiosMessagePushRegion": {
+      "Type": "String",
+      "Default": "analyticsiosMessagePushRegion"
     }
   },
   "Conditions": {
@@ -87,6 +95,12 @@
             },
             "API_MIKEAMPLIFY_GRAPHQLAPIENDPOINTOUTPUT": {
               "Ref": "apimikeAmplifyGraphQLAPIEndpointOutput"
+            },
+            "ANALYTICS_IOSMESSAGEPUSH_ID": {
+              "Ref": "analyticsiosMessagePushId"
+            },
+            "ANALYTICS_IOSMESSAGEPUSH_REGION": {
+              "Ref": "analyticsiosMessagePushRegion"
             }
           }
         },
@@ -241,6 +255,59 @@
                         "Ref": "apimikeAmplifyGraphQLAPIIdOutput"
                       },
                       "/types/Mutation/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "mobiletargeting:Put*",
+                "mobiletargeting:Create*",
+                "mobiletargeting:Send*",
+                "mobiletargeting:Get*",
+                "mobiletargeting:List*",
+                "mobiletargeting:Update*",
+                "mobiletargeting:Delete*"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:mobiletargeting:",
+                      {
+                        "Ref": "analyticsiosMessagePushRegion"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":apps/",
+                      {
+                        "Ref": "analyticsiosMessagePushId"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:mobiletargeting:",
+                      {
+                        "Ref": "analyticsiosMessagePushRegion"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":apps/",
+                      {
+                        "Ref": "analyticsiosMessagePushId"
+                      },
+                      "/*"
                     ]
                   ]
                 }

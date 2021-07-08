@@ -1,4 +1,11 @@
-const express = require("express");
+/* Amplify Params - DO NOT EDIT
+	ANALYTICS_IOSMESSAGEPUSH_ID
+	ANALYTICS_IOSMESSAGEPUSH_REGION
+	API_MIKEAMPLIFY_GRAPHQLAPIENDPOINTOUTPUT
+	API_MIKEAMPLIFY_GRAPHQLAPIIDOUTPUT
+	ENV
+	REGION
+Amplify Params - DO NOT EDIT */ const express = require("express");
 const bodyParser = require("body-parser");
 const awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
 const AWS = require("aws-sdk");
@@ -22,6 +29,7 @@ app.use(function (req, res, next) {
 
 const url = process.env.API_MIKEAMPLIFY_GRAPHQLAPIENDPOINTOUTPUT;
 const region = process.env.REGION;
+const notification_app_id = process.env.ANALYTICS_IOSMESSAGEPUSH_ID;
 
 AWS.config.update({
   region,
@@ -52,6 +60,16 @@ const appsyncClient = new AWSAppSyncClient(
     },
   }
 );
+
+const queryDeviceTokenById = gql`
+  query MyQuery($id: ID!) {
+    getUserProfile(id: $id) {
+      id
+      DeviceToken
+    }
+  }
+`;
+
 const queryTokenBalanceById = gql`
   query MyQuery($id: ID!) {
     getUserProfile(id: $id) {
@@ -59,6 +77,15 @@ const queryTokenBalanceById = gql`
       TokenBalance
       TokenPrice
       UserRole
+    }
+  }
+`;
+
+const queryNameById = gql`
+  query MyQuery($id: ID!) {
+    getUserProfile(id: $id) {
+      FirstName
+      LastName
     }
   }
 `;
@@ -74,135 +101,129 @@ const updateTokenBalance = gql`
 const updateUserTokenBalance = async (msgModel) => {
   const fromUserId = msgModel.FromUserID.S;
   const toUserId = msgModel.ToUserID.S;
-  return appsyncClient
-    .hydrated()
-    .then((client) => {
-      return client
-        .query({
-          query: queryTokenBalanceById,
-          variables: { id: fromUserId },
-        })
-        .then((d) => {
-          const userRole = d.data.getUserProfile.UserRole;
-          const tokenBalance = d.data.getUserProfile.TokenBalance;
-          if (userRole === "student") {
-            if (tokenBalance > 0) {
-              return queryAndAddTrainerTokenBalance(fromUserId,toUserId,tokenBalance).then((res) => {
-                return res;
-              }); 
-              // return reduceStudentTokenBalance(
-              //   fromUserId,
-              //   toUserId,
-              //   tokenBalance
-              // ).then((res) => {
-              //   return res;
-              // });
-            } else {
-              return "Don't have enough tokenBalance";
-            }
-          } else {
-            return "Don't need to mutate!";
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-          return e.message;
-        });
-    })
-    .catch((e) => {
-      console.log(e);
-      return e.message;
-    });
+  const client = await appsyncClient.hydrated();
+  const d = await client.query({
+    query: queryTokenBalanceById,
+    variables: { id: fromUserId },
+  });
+  const userRole = d.data.getUserProfile.UserRole;
+  const tokenBalance = d.data.getUserProfile.TokenBalance;
+  if (userRole === "student") {
+    if (tokenBalance > 0) {
+      await queryAndAddTrainerTokenBalance(fromUserId, toUserId, tokenBalance);
+    }
+  } else {
+    console.log("Don't need to mutate!");
+  }
 };
-
-const queryAndAddTrainerTokenBalance = async (fromUserId,trainerId,userTokenBalance) => {
-  return appsyncClient
-    .hydrated()
-    .then((client) => {
-      return client
-        .query({
-          query: queryTokenBalanceById,
-          variables: { id: trainerId },
-        })
-        .then((d) => {
-          //fetch tokenBalance and tokenPrice for trainer
-          var tokenPrice = d.data.getUserProfile.TokenPrice;
-          var tokenBalance = d.data.getUserProfile.TokenBalance;
-          if (tokenPrice == null){
-            tokenPrice = 0;
-          }
-          if (tokenBalance == null) {
-            tokenBalance = tokenPrice;
-          } else {
-            tokenBalance = tokenBalance + tokenPrice;
-          }
-          //mutate trainer's tokenBalance add by trainer's tokenPrice
-          return appsyncClient
-            .hydrated()
-            .then((client) => {
-              client
-                .mutate({
-                  mutation: updateTokenBalance,
-                  variables: { id: trainerId, TokenBalance: tokenBalance },
-                })
-                .then(() => {
-                  //mutate student's tokenBalance reduce by trainer's tokenPrice
-                  console.log("add trainer token balance suc!");
-                  return reduceStudentTokenBalance(
-                    fromUserId,
-                    userTokenBalance,
-                    tokenPrice
-                  ).then((res) => {
-                    return res;
-                  }); 
-                })
-                .catch((e) => {
-                  console.log(e);
-                  return e.message;
-                });
-            })
-            .catch((e) => {
-              console.log(e);
-              return e.message;
-            });
-        })
-        .catch((e) => {
-          console.log(e);
-          return e.message;
-        });
-    })
-    .catch((e) => {
-      console.log(e);
-      return e.message;
-    });
-};
-
-const reduceStudentTokenBalance = async (
+const queryAndAddTrainerTokenBalance = async (
   fromUserId,
-  tokenBalance,
-  tokenPrice
+  trainerId,
+  userTokenBalance
 ) => {
-  //reduce student's tokenBalance by trainerToken
-  return appsyncClient
-    .hydrated()
-    .then((client) => {
-      client
-        .mutate({
-          mutation: updateTokenBalance,
-          variables: { id: fromUserId, TokenBalance: tokenBalance - tokenPrice },
-        })
-        .then(() => {
-          return "reduce token balance from student!";
-        })
-        .catch((e) => {
-          console.log(e);
-          return e.message;
-        });
-    })
-    .catch((e) => {
-      console.log(e);
-      return e.message;
+  const client = await appsyncClient.hydrated();
+  const dicForTokenBalance = await client.query({
+    query: queryTokenBalanceById,
+    variables: { id: trainerId },
+  });
+  //fetch tokenBalance and tokenPrice for trainer
+  let tokenPrice = dicForTokenBalance.data.getUserProfile.TokenPrice;
+  if (tokenPrice == null) {
+    tokenPrice = 0;
+  }
+  if (tokenPrice !== 0) {
+    let tokenBalance = dicForTokenBalance.data.getUserProfile.TokenBalance;
+    if (tokenBalance == null) {
+      tokenBalance = tokenPrice;
+    } else {
+      tokenBalance = tokenBalance + tokenPrice;
+    }
+    await client.mutate({
+      mutation: updateTokenBalance,
+      variables: { id: trainerId, TokenBalance: tokenBalance },
     });
+    console.log("add trainer token balance suc!");
+    await client.mutate({
+      mutation: updateTokenBalance,
+      variables: {
+        id: fromUserId,
+        TokenBalance: userTokenBalance - tokenPrice,
+      },
+    });
+    console.log("reduce token balance from student!");
+  }
+};
+
+function CreateMessageRequest(token, msgModel, fromUserName) {
+  console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~", msgModel.PostMessages.S);
+  return {
+    Addresses: {
+      [token]: {
+        ChannelType: "APNS_SANDBOX",
+      },
+    },
+    MessageConfiguration: {
+      APNSMessage: {
+        Action: "OPEN_APP",
+        Body: msgModel.PostMessages.S,
+        SilentPush: false,
+        Title: fromUserName,
+        TimeToLive: 30,
+        Priority: "high",
+      },
+    },
+  };
+}
+//send message to userId
+const sendMessage = async (msgModel) => {
+  const fromUserId = msgModel.FromUserID.S;
+  const toUserId = msgModel.ToUserID.S;
+  const client = await appsyncClient.hydrated();
+  const dicForSendUser = await client.query({
+    query: queryNameById,
+    variables: { id: fromUserId },
+  });
+  const fromUserName =
+    dicForSendUser.data.getUserProfile.FirstName +
+    " " +
+    dicForSendUser.data.getUserProfile.LastName;
+  console.log("from username is :", fromUserName);
+  const dicForDeviceToken = await client.query({
+    query: queryDeviceTokenById,
+    variables: { id: toUserId },
+  });
+  const deviceToken = dicForDeviceToken.data.getUserProfile.DeviceToken;
+  console.log("device token is :", deviceToken);
+  var messageRequest = CreateMessageRequest(
+    deviceToken,
+    msgModel,
+    fromUserName
+  );
+  console.log("pinpoint app id is :", notification_app_id);
+  const sendMessagesParams = {
+    ApplicationId: notification_app_id, // Find it in Pinpoint->All projects
+    MessageRequest: messageRequest,
+  };
+  //Create a new Pinpoint object.
+  var pinpoint = new AWS.Pinpoint();
+  // Try to send the message.
+  pinpoint.sendMessages(sendMessagesParams, function (err, data) {
+    if (err) {
+      console.log(err);
+    } else {
+      let status;
+      if (
+        data["MessageResponse"]["Result"][deviceToken]["DeliveryStatus"] ===
+        "SUCCESSFUL"
+      ) {
+        status = "Message sent! Response information: ";
+      } else {
+        status = "The message wasn't sent. Response information: ";
+      }
+      console.log(status);
+      console.dir(data, { depth: null });
+    }
+  });
 };
 
 exports.handler = (event) => {
@@ -210,13 +231,13 @@ exports.handler = (event) => {
   for (var i = 0; i < event.Records.length; i++) {
     const record = event.Records[i];
     if (record.eventName === "INSERT") {
+      console.log(record);
       message = record.dynamodb.NewImage;
     }
   }
   if (message) {
-    updateUserTokenBalance(message).then(() => {
-      return Promise.resolve("Successfully process token transaction.");
-    });
+    sendMessage(message);
+    updateUserTokenBalance(message);
   } else {
     return Promise.resolve("No token transaction is processed.");
   }

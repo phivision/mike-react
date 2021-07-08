@@ -108,46 +108,6 @@
                 ]
               ]
             },
-            "STRIPE_ENDPOINT_SECRET": {
-              "Fn::Join": [
-                "",
-                [
-                  {
-                    "Fn::Sub": [
-                      "/amplify/${appId}/${env}/AMPLIFY_${functionName}_",
-                      {
-                        "appId": "d2zq2hh7w4s55d",
-                        "env": {
-                          "Ref": "env"
-                        },
-                        "functionName": "stripeWebhook"
-                      }
-                    ]
-                  },
-                  "STRIPE_ENDPOINT_SECRET"
-                ]
-              ]
-            },
-            "STRIPE_CONNECT_ENDPOINT_SECRET": {
-              "Fn::Join": [
-                "",
-                [
-                  {
-                    "Fn::Sub": [
-                      "/amplify/${appId}/${env}/AMPLIFY_${functionName}_",
-                      {
-                        "appId": "d2zq2hh7w4s55d",
-                        "env": {
-                          "Ref": "env"
-                        },
-                        "functionName": "stripeWebhook"
-                      }
-                    ]
-                  },
-                  "STRIPE_CONNECT_ENDPOINT_SECRET"
-                ]
-              ]
-            },
             "SEED_UUID": {
               "Fn::Join": [
                 "",
@@ -329,61 +289,6 @@
           ]
         }
       }
-    },
-    "AmplifyFunctionSecretsPolicy": {
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "amplify-function-secrets-policy",
-        "Roles": [
-          {
-            "Ref": "LambdaExecutionRole"
-          }
-        ],
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "ssm:GetParameter",
-                "ssm:GetParameters"
-              ],
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:aws:ssm:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":parameter",
-                    {
-                      "Fn::Sub": [
-                        "/amplify/${appId}/${env}/AMPLIFY_${functionName}_",
-                        {
-                          "appId": "d2zq2hh7w4s55d",
-                          "env": {
-                            "Ref": "env"
-                          },
-                          "functionName": "stripeWebhook"
-                        }
-                      ]
-                    },
-                    "*"
-                  ]
-                ]
-              }
-            }
-          ]
-        }
-      },
-      "DependsOn": [
-        "LambdaExecutionRole"
-      ]
     }
   },
   "Outputs": {
