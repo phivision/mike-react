@@ -7,5 +7,11 @@
       ]
     }
   },
-  "lambdaLayers": []
+  "lambdaLayers": [],
+  "secretNames": [
+    "STRIPE_SECRET_KEY",
+    "STRIPE_ENDPOINT_SECRET",
+    "STRIPE_CONNECT_ENDPOINT_SECRET",
+    "SEED_UUID"
+  ]
 }
