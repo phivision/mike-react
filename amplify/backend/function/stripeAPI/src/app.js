@@ -8,9 +8,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
 const AWS = require("aws-sdk");
-const docClient = new AWS.DynamoDB.DocumentClient();
 const asyncHandler = require("express-async-handler");
 const { prices, conversionRate } = require("./prices");
+const { getProfileByID, setStripeID } = require("./requests.js");
 
 // declare a new express app
 var app = express();
@@ -38,72 +38,6 @@ if (process.env.ENV === "prod") {
   );
 }
 
-const getProfileByID = async (id) => {
-  const params = {
-    TableName: process.env.TABLE_NAME,
-    Key: { id: id },
-  };
-
-  return await docClient.get(params).promise();
-};
-
-const setStripeID = async (id, stripeID) => {
-  const params = {
-    TableName: process.env.TABLE_NAME,
-    Key: {
-      id: id,
-    },
-    UpdateExpression: "set #s = :d",
-    ExpressionAttributeNames: {
-      "#s": "StripeID",
-    },
-    ExpressionAttributeValues: {
-      ":d": stripeID,
-    },
-    ReturnValues: "UPDATED_NEW",
-  };
-
-  return await docClient.update(params).promise();
-};
-
-const resetTokens = async (userID) => {
-  const params = {
-    TableName: process.env.TABLE_NAME,
-    Key: {
-      id: userID,
-    },
-    UpdateExpression: "set #s = :d",
-    ExpressionAttributeNames: {
-      "#s": "TokenBalance",
-    },
-    ExpressionAttributeValues: {
-      ":d": 0,
-    },
-    ReturnValues: "ALL_NEW",
-  };
-
-  return await docClient.update(params).promise();
-};
-
-const updatePeriodEnd = async (id) => {
-  const params = {
-    TableName: process.env.SUB_TABLE_NAME,
-    Key: {
-      id: id,
-    },
-    UpdateExpression: "set #s = :d",
-    ExpressionAttributeNames: {
-      "#s": "CancelAtPeriodEnd",
-    },
-    ExpressionAttributeValues: {
-      ":d": true,
-    },
-    ReturnValues: "ALL_NEW",
-  };
-
-  return await docClient.update(params).promise();
-};
-
 app.post(
   "/stripe/api/trainer/create",
   asyncHandler(async (req, res, next) => {
@@ -115,7 +49,7 @@ app.post(
         type: "express",
       }),
       stripe.products.create({
-        name: user.Item.FirstName + " " + user.Item.LastName,
+        name: user.FirstName + " " + user.LastName,
       }),
     ]);
 
@@ -141,7 +75,7 @@ app.post(
     const user = await getProfileByID(req.body.id);
 
     const onboardingLink = await stripe.accountLinks.create({
-      account: user.Item.StripeID,
+      account: user.StripeID,
       refresh_url: req.body.refreshUrl,
       return_url: req.body.returnUrl,
       type: "account_onboarding",
@@ -156,7 +90,7 @@ app.post(
   "/stripe/api/trainer/link/login",
   asyncHandler(async (req, res, next) => {
     const user = await getProfileByID(req.body.id);
-    const loginLink = await stripe.accounts.createLoginLink(user.Item.StripeID);
+    const loginLink = await stripe.accounts.createLoginLink(user.StripeID);
 
     res.json({ AccountLink: loginLink.url });
   })
@@ -168,7 +102,7 @@ app.post(
     const user = await getProfileByID(req.body.id);
     const prices = await stripe.prices.list({
       active: true,
-      lookup_keys: [user.Item.StripeID],
+      lookup_keys: [user.StripeID],
     });
 
     res.json(prices);
@@ -181,7 +115,7 @@ app.post(
     const user = await getProfileByID(req.body.id);
     const balance = await stripe.balance.retrieve(
       {},
-      { stripeAccount: user.Item.StripeID }
+      { stripeAccount: user.StripeID }
     );
 
     res.json(balance);
@@ -194,7 +128,7 @@ app.post(
     const user = await getProfileByID(req.body.id);
     const prices = await stripe.prices.list({
       active: true,
-      lookup_keys: [user.Item.StripeID],
+      lookup_keys: [user.StripeID],
     });
 
     await Promise.all([
@@ -207,7 +141,7 @@ app.post(
         currency: "usd",
         recurring: { interval: "month" },
         product: prices.data[0].product,
-        lookup_key: user.Item.StripeID,
+        lookup_key: user.StripeID,
       }),
     ]);
 
@@ -219,7 +153,7 @@ app.post(
   "/stripe/api/trainer/get/account",
   asyncHandler(async (req, res, next) => {
     const user = await getProfileByID(req.body.id);
-    const account = await stripe.accounts.retrieve(user.Item.StripeID);
+    const account = await stripe.accounts.retrieve(user.StripeID);
 
     res.json(account);
   })
@@ -231,9 +165,9 @@ app.post(
     const user = await getProfileByID(req.body.id);
 
     await stripe.transfers.create({
-      amount: user.Item.TokenBalance * conversionRate,
+      amount: user.TokenBalance * conversionRate,
       currency: "usd",
-      destination: user.Item.StripeID,
+      destination: user.StripeID,
     });
 
     await resetTokens(req.body.id);
@@ -263,26 +197,26 @@ app.post(
 
     const prices = await stripe.prices.list({
       active: true,
-      lookup_keys: [trainer.Item.StripeID],
+      lookup_keys: [trainer.StripeID],
     });
 
     await stripe.paymentMethods.attach(req.body.paymentMethodID, {
-      customer: customer.Item.StripeID,
+      customer: customer.StripeID,
     });
 
-    await stripe.customers.update(customer.Item.StripeID, {
+    await stripe.customers.update(customer.StripeID, {
       invoice_settings: {
         default_payment_method: req.body.paymentMethodID,
       },
     });
 
     await stripe.subscriptions.create({
-      customer: customer.Item.StripeID,
+      customer: customer.StripeID,
       items: [{ price: prices.data[0].id }],
       expand: ["latest_invoice.payment_intent"],
       application_fee_percent: 20,
       transfer_data: {
-        destination: trainer.Item.StripeID,
+        destination: trainer.StripeID,
       },
     });
 
@@ -295,7 +229,7 @@ app.post(
   asyncHandler(async (req, res, next) => {
     const user = await getProfileByID(req.body.id);
 
-    const customer = await stripe.customers.update(user.Item.StripeID, {
+    const customer = await stripe.customers.update(user.StripeID, {
       name: req.body.name,
     });
 
@@ -323,7 +257,7 @@ app.post(
     const user = await getProfileByID(req.body.id);
 
     const paymentMethods = await stripe.paymentMethods.list({
-      customer: user.Item.StripeID,
+      customer: user.StripeID,
       type: "card",
     });
 
@@ -336,7 +270,7 @@ app.post(
   asyncHandler(async (req, res, next) => {
     const user = await getProfileByID(req.body.id);
 
-    const customer = await stripe.customers.retrieve(user.Item.StripeID);
+    const customer = await stripe.customers.retrieve(user.StripeID);
 
     res.json(customer);
   })
@@ -366,7 +300,7 @@ app.post(
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: price,
-      customer: user.Item.StripeID,
+      customer: user.StripeID,
       currency: "usd",
     });
 
@@ -380,7 +314,7 @@ app.post(
     const user = await getProfileByID(req.body.id);
 
     const subscriptions = await stripe.subscriptions.list({
-      customer: user.Item.StripeID,
+      customer: user.StripeID,
     });
 
     res.json(subscriptions);
@@ -395,7 +329,7 @@ app.post(
     const paymentMethod = await stripe.paymentMethods.attach(
       req.body.paymentMethodID,
       {
-        customer: user.Item.StripeID,
+        customer: user.StripeID,
       }
     );
 
@@ -419,7 +353,7 @@ app.post(
   asyncHandler(async (req, res, next) => {
     const user = await getProfileByID(req.body.id);
 
-    const invoiceReturn = await stripe.customers.update(user.Item.StripeID, {
+    const invoiceReturn = await stripe.customers.update(user.StripeID, {
       invoice_settings: {
         default_payment_method: req.body.paymentMethodID,
       },

@@ -1,35 +1,49 @@
 {
-    "paths": [
-        {
-            "name": "/stripe/api",
-            "lambdaFunction": "stripeAPI",
-            "privacy": {
-                "open": true
-            },
-            "policyResourceName": "/stripe/api"
-        }
-    ],
-    "resourceName": "stripeAPI",
-    "apiName": "stripeAPI",
-    "functionArns": [
-        {
-            "lambdaFunction": "stripeAPI"
-        }
-    ],
-    "privacy": {
-        "auth": 0,
-        "unauth": 0,
-        "authRoleName": "amplify-mike-react-dev-150010-authRole",
-        "unAuthRoleName": "amplify-mike-react-dev-150010-unauthRole"
-    },
-    "dependsOn": [
-        {
-            "category": "function",
-            "resourceName": "stripeAPI",
-            "attributes": [
-                "Name",
-                "Arn"
-            ]
-        }
-    ]
+  "paths": [
+    {
+      "name": "/stripe/api",
+      "lambdaFunction": "stripeAPI",
+      "privacy": {
+        "protected": true,
+        "auth": [
+          "/POST",
+          "/GET",
+          "/PUT",
+          "/PATCH",
+          "/DELETE"
+        ],
+        "unauth": [
+          "/POST",
+          "/GET",
+          "/PUT",
+          "/PATCH",
+          "/DELETE"
+        ]
+      },
+      "policyResourceName": "/stripe/api"
+    }
+  ],
+  "resourceName": "stripeAPI",
+  "apiName": "stripeAPI",
+  "functionArns": [
+    {
+      "lambdaFunction": "stripeAPI"
+    }
+  ],
+  "privacy": {
+    "auth": 1,
+    "unauth": 1,
+    "authRoleName": "amplify-mike-react-dev-150010-authRole",
+    "unAuthRoleName": "amplify-mike-react-dev-150010-unauthRole"
+  },
+  "dependsOn": [
+    {
+      "category": "function",
+      "resourceName": "stripeAPI",
+      "attributes": [
+        "Name",
+        "Arn"
+      ]
+    }
+  ]
 }

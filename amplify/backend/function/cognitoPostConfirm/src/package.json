@@ -5,7 +5,10 @@
   "main": "index.js",
   "dependencies": {
     "aws-sdk": "^2.873.0",
-    "aws-serverless-express": "^3.3.5"
+    "aws-serverless-express": "^3.3.5",
+    "graphql": "^15.5.1",
+    "graphql-tag": "^2.12.5",
+    "url": "^0.10.3"
   },
   "license": "Apache-2.0"
 }
