@@ -1,0 +1,22 @@
+{
+    "appName": "iosMessagePush",
+    "roleName": "pinpointLambdaRole864c363c",
+    "cloudformationPolicyName": "cloudformationPolicy864c363c",
+    "cloudWatchPolicyName": "cloudWatchPolicy864c363c",
+    "pinpointPolicyName": "pinpointPolicy864c363c",
+    "authPolicyName": "pinpoint_amplify_864c363c",
+    "unauthPolicyName": "pinpoint_amplify_864c363c",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    },
+    "appId": "37d7798ba9c3470ab88013ce41fe5714"
+}

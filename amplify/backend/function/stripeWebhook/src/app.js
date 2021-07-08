@@ -9,6 +9,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
 const prices = require("./prices").prices;
+const AWS = require("aws-sdk");
 const asyncHandler = require("express-async-handler");
 const {
   queryByStripeID,
@@ -31,28 +32,38 @@ app.use(function (req, res, next) {
   next();
 });
 
-let stripe;
-let ENDPOINT_SECRET;
-let CONNECT_SECRET;
+let stripe, ENDPOINT_SECRET, CONNECT_SECRET;
 
-if (process.env.ENV === "prod") {
-  stripe = require("stripe")(
-    "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"
-  );
-  ENDPOINT_SECRET = "whsec_QlApDvB6XPkqQEZv40xzjrLBUMu7mENM";
-  CONNECT_SECRET = "whsec_1UVRXpjEK7waebehSsr0ujUXWDRWNup7";
-} else {
-  if (process.env.ENV === "dev") {
-    ENDPOINT_SECRET = "whsec_DjCSZgxymENwj2yF0iAyIUKsJ1da0kIO";
-    CONNECT_SECRET = "whsec_cmRg2kJ0dxuJZPDfaJgivyf7mf7bZZJl";
-  } else {
-    ENDPOINT_SECRET = "whsec_XMAGthm9Glxu8vSlrdYNDHMZ36LSmOvu";
-    CONNECT_SECRET = "whsec_fRhIhpQ2H22msNN5HXWVwX3jjp5LmBnk";
-  }
-  stripe = require("stripe")(
-    "sk_test_51IWoNlAXegvVyt5s8RgdmlA7kMtgxRkk5ckcNHQYVjgTyMCxKHDlgJm810tTm3KIVXe34FvDSlnsqzigH25AwsLU00nIkry9yo"
-  );
-}
+app.use(
+  asyncHandler(async (req, res, next) => {
+    const { Parameters } = await new AWS.SSM()
+      .getParameters({
+        Names: [
+          "STRIPE_SECRET_KEY",
+          "STRIPE_ENDPOINT_SECRET",
+          "STRIPE_CONNECT_ENDPOINT_SECRET",
+        ].map((secretName) => process.env[secretName]),
+        WithDecryption: true,
+      })
+      .promise();
+
+    const secretKey = Parameters.find(
+      (e) => e.Name === process.env.STRIPE_SECRET_KEY
+    );
+
+    stripe = require("stripe")(secretKey.Value);
+
+    ENDPOINT_SECRET = Parameters.find(
+      (e) => e.Name === process.env.STRIPE_ENDPOINT_SECRET
+    ).Value;
+
+    CONNECT_SECRET = Parameters.find(
+      (e) => e.Name === process.env.STRIPE_CONNECT_ENDPOINT_SECRET
+    ).Value;
+
+    next();
+  })
+);
 
 app.post(
   "/stripe/webhook/connect",

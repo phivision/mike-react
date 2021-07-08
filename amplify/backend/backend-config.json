@@ -68,6 +68,20 @@
           ]
         }
       ]
+    },
+    "messageGroupSend": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "messageGroupSend",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ]
     }
   },
   "storage": {
@@ -141,6 +155,14 @@
             "GraphQLAPIIdOutput",
             "GraphQLAPIEndpointOutput"
           ]
+        },
+        {
+          "category": "analytics",
+          "resourceName": "iosMessagePush",
+          "attributes": [
+            "Id",
+            "Region"
+          ]
         }
       ]
     },
@@ -173,12 +195,35 @@
           ]
         }
       ]
+    },
+    "messageGroupSend": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "mikeAmplify",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ]
+        }
+      ]
     }
   },
   "notifications": {
     "iosMessagePush": {
       "service": "Pinpoint",
-      "channels": []
+      "channels": [
+        "APNS"
+      ]
+    }
+  },
+  "analytics": {
+    "iosMessagePush": {
+      "service": "Pinpoint",
+      "providerPlugin": "awscloudformation"
     }
   }
 }

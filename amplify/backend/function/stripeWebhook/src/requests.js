@@ -9,7 +9,16 @@ const graphql = require("graphql");
 const gql = require("graphql-tag");
 const { print } = graphql;
 
-let UUID = "d2b157d4-5a66-49ca-b868-c83008f1e126";
+const getUUID = async () => {
+  const { Parameters } = await new AWS.SSM()
+    .getParameters({
+      Names: ["SEED_UUID"].map((secretName) => process.env[secretName]),
+      WithDecryption: true,
+    })
+    .promise();
+
+  return Parameters.find((e) => e.Name === process.env.SEED_UUID).Value;
+};
 
 const request = (queryDetails, variables) => {
   const req = new AWS.HttpRequest(appsyncUrl, region);
@@ -117,6 +126,7 @@ const createSubscription = async (
     }
   `;
 
+  const UUID = await getUUID();
   const i = v5(trainerID + userID, UUID);
   const expire = new Date(expireDate * 1000).toISOString();
   const exp = expire.slice(0, 10);

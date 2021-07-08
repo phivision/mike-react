@@ -87,6 +87,46 @@
             },
             "API_MIKEAMPLIFY_GRAPHQLAPIENDPOINTOUTPUT": {
               "Ref": "apimikeAmplifyGraphQLAPIEndpointOutput"
+            },
+            "STRIPE_SECRET_KEY": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Fn::Sub": [
+                      "/amplify/${appId}/${env}/AMPLIFY_${functionName}_",
+                      {
+                        "appId": "d2zq2hh7w4s55d",
+                        "env": {
+                          "Ref": "env"
+                        },
+                        "functionName": "stripeWebhook"
+                      }
+                    ]
+                  },
+                  "STRIPE_SECRET_KEY"
+                ]
+              ]
+            },
+            "SEED_UUID": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Fn::Sub": [
+                      "/amplify/${appId}/${env}/AMPLIFY_${functionName}_",
+                      {
+                        "appId": "d2zq2hh7w4s55d",
+                        "env": {
+                          "Ref": "env"
+                        },
+                        "functionName": "stripeWebhook"
+                      }
+                    ]
+                  },
+                  "SEED_UUID"
+                ]
+              ]
             }
           }
         },

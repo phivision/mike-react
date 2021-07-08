@@ -5,6 +5,14 @@
         "Query",
         "Mutation"
       ]
+    },
+    "analytics": {
+      "iosMessagePush": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
     }
   },
   "lambdaLayers": []
