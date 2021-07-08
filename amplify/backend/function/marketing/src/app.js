@@ -1,19 +1,21 @@
 /*
-Copyright 2017 - 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
-    http://aws.amazon.com/apache2.0/
-or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and limitations under the License.
+Use the following code to retrieve configured secrets from SSM:
+
+const aws = require('aws-sdk');
+
+const { Parameters } = await (new aws.SSM())
+  .getParameters({
+    Names: ["MAILCHIMP_API_KEY"].map(secretName => process.env[secretName]),
+    WithDecryption: true,
+  })
+  .promise();
+
+Parameters will be of the form { Name: 'secretName', Value: 'secretValue', ... }[]
 */
-
+const asyncHandler = require("express-async-handler");
 const mailchimp = require("@mailchimp/mailchimp_marketing");
-mailchimp.setConfig({
-  apiKey: "5497a4533a2814a5eaca674911a805b4-us6",
-  server: "us6",
-});
-
 const trainerCTA = "513c9c2876";
-
+const AWS = require("aws-sdk");
 var express = require("express");
 var bodyParser = require("body-parser");
 var awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
@@ -23,6 +25,30 @@ var app = express();
 app.use(bodyParser.json());
 app.use(awsServerlessExpressMiddleware.eventContext());
 
+app.use(
+  asyncHandler(async (req, res, next) => {
+    const { Parameters } = await new AWS.SSM()
+      .getParameters({
+        Names: ["MAILCHIMP_API_KEY"].map(
+          (secretName) => process.env[secretName]
+        ),
+        WithDecryption: true,
+      })
+      .promise();
+
+    const apiKey = Parameters.find(
+      (e) => e.Name === process.env.MAILCHIMP_API_KEY
+    ).Value;
+
+    mailchimp.setConfig({
+      apiKey: apiKey,
+      server: "us6",
+    });
+
+    next();
+  })
+);
+
 // Enable CORS for all methods
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -30,24 +56,27 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.post("/marketing", function (req, res) {
-  const subscribe = async () => {
-    const query = {
-      email_address: req.body.email,
-      status: "subscribed",
+app.post(
+  "/marketing",
+  asyncHandler(async (req, res, next) => {
+    const subscribe = async () => {
+      const query = {
+        email_address: req.body.email,
+        status: "subscribed",
+      };
+
+      const response = await mailchimp.lists.addListMember(trainerCTA, query);
+
+      console.log(
+        `Successfully added contact as an audience member. The contact's id is ${response.id}.`
+      );
     };
 
-    const response = await mailchimp.lists.addListMember(trainerCTA, query);
-
-    console.log(
-      `Successfully added contact as an audience member. The contact's id is ${response.id}.`
-    );
-  };
-
-  subscribe().then(() => {
-    res.status(200).send();
-  });
-});
+    subscribe().then(() => {
+      res.status(200).send();
+    });
+  })
+);
 
 app.post("/*", function (req, res) {
   console.log("Route not found.");

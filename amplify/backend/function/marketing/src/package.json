@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "aws-sdk": "^2.873.0",
     "@mailchimp/mailchimp_marketing": "^3.0.44",
     "aws-serverless-express": "^3.3.5",
+    "express-async-handler": "^1.1.4",
     "body-parser": "^1.17.1",
     "express": "^4.15.2"
   },

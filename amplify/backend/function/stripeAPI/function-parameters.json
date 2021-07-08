@@ -7,5 +7,8 @@
       ]
     }
   },
-  "lambdaLayers": []
+  "lambdaLayers": [],
+  "secretNames": [
+    "STRIPE_SECRET_KEY"
+  ]
 }

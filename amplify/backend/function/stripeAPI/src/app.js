@@ -1,3 +1,17 @@
+/*
+Use the following code to retrieve configured secrets from SSM:
+
+const aws = require('aws-sdk');
+
+const { Parameters } = await (new aws.SSM())
+  .getParameters({
+    Names: ["STRIPE_SECRET_KEY"].map(secretName => process.env[secretName]),
+    WithDecryption: true,
+  })
+  .promise();
+
+Parameters will be of the form { Name: 'secretName', Value: 'secretValue', ... }[]
+*/
 /* Amplify Params - DO NOT EDIT
 	API_MIKEAMPLIFY_GRAPHQLAPIENDPOINTOUTPUT
 	API_MIKEAMPLIFY_GRAPHQLAPIIDOUTPUT
@@ -28,15 +42,26 @@ app.use(function (req, res, next) {
 
 let stripe;
 
-if (process.env.ENV === "prod") {
-  stripe = require("stripe")(
-    "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"
-  );
-} else {
-  stripe = require("stripe")(
-    "sk_test_51IWoNlAXegvVyt5s8RgdmlA7kMtgxRkk5ckcNHQYVjgTyMCxKHDlgJm810tTm3KIVXe34FvDSlnsqzigH25AwsLU00nIkry9yo"
-  );
-}
+app.use(
+  asyncHandler(async (req, res, next) => {
+    const { Parameters } = await new AWS.SSM()
+      .getParameters({
+        Names: ["STRIPE_SECRET_KEY"].map(
+          (secretName) => process.env[secretName]
+        ),
+        WithDecryption: true,
+      })
+      .promise();
+
+    const secretKey = Parameters.find(
+      (e) => e.Name === process.env.STRIPE_SECRET_KEY
+    );
+
+    stripe = require("stripe")(secretKey.Value);
+
+    next();
+  })
+);
 
 app.post(
   "/stripe/api/trainer/create",
