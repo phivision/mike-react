@@ -1,7 +1,8 @@
 /* Amplify Params - DO NOT EDIT
+	API_MIKEAMPLIFY_GRAPHQLAPIENDPOINTOUTPUT
+	API_MIKEAMPLIFY_GRAPHQLAPIIDOUTPUT
 	ENV
 	REGION
-	STORAGE_MIKE_REACT9AA15861_BUCKETNAME
 Amplify Params - DO NOT EDIT */
 const express = require("express");
 const bodyParser = require("body-parser");
