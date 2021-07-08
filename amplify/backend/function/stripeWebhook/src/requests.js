@@ -132,11 +132,7 @@ const createSubscription = async (
     },
   };
 
-  console.log(variables);
-
   const res = await request(createUserSubscriptionTrainer, variables);
-
-  console.log(res);
 
   return res;
 };
