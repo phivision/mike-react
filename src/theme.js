@@ -1,63 +1,47 @@
 import { createMuiTheme } from "@material-ui/core/styles";
 
-const fonts = [
-  "Nunito",
-  "Roboto",
-  '"Helvetica Neue"',
-  "Arial",
-  "sans-serif",
-].join(",");
+const fonts = ["Avenir", "Arial", "sans-serif"].join(",");
 
 const theme = createMuiTheme({
   palette: {
     primary: {
-      light: "#F4F6FA",
-      main: "#7265E3",
-      dark: "#3632A8",
-      contrastText: "#FFFFFF",
+      light: "#F4F4F4",
+      main: "#848484",
+      dark: "#000000",
     },
     secondary: {
-      main: "#4C5980",
+      main: "#FF4E00",
     },
     background: {
-      default: "#F3F6FB",
+      default: "#FFFFFF",
     },
   },
   typography: {
     fontFamily: fonts,
-    body1: {
-      fontWeight: 500,
-      fontSize: 16,
-      letterSpacing: "0.014 em",
-      color: "#4C5980",
-    },
-    body2: {
-      fontWeight: 500,
-      fontSize: 14,
-      letterSpacing: "0.014 em",
-      color: "#9C9EB9",
-    },
     h1: {
-      fontWeight: 600,
-      fontSize: 60,
-      color: "#F4F6FA",
+      fontWeight: 900,
+      fontSize: 32,
+      color: "#000000",
     },
     h2: {
-      fontWeight: 600,
-      fontSize: 32,
-      color: "#4C5980",
+      fontWeight: 900,
+      fontSize: 18,
+      color: "#000000",
     },
     h3: {
       fontWeight: 600,
-      fontSize: 24,
-      color: "#4C5980",
+      fontSize: 16,
+      color: "#000000",
     },
-    h6: {
-      fontWeight: 700,
-      fontSize: 18,
-      letterSpacing: "0.167 em",
-      textTransform: "uppercase",
-      color: "#7265E3",
+    body1: {
+      fontWeight: 500,
+      fontSize: 16,
+      color: "#000000",
+    },
+    body2: {
+      fontWeight: 300,
+      fontSize: 16,
+      color: "#848484",
     },
   },
   overrides: {

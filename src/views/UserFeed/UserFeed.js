@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Typography, Container } from "@material-ui/core";
 import ContentCard from "../../components/Card/ContentCard";
 import WorkoutCard from "../../components/Card/WorkoutCard";
-import Banner from "assets/img/banner.jpeg";
+import Banner from "assets/banner.jpeg";
 import { userRoles } from "../../variables/userRoles";
 import {
   GridItem,

@@ -22,6 +22,7 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 import { MobileVersion, uptoMobileWidth } from "variables/mediaQueries";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { ExternalLink } from "../Link/ExternalLink";
+import Box from "@material-ui/core/Box";
 // import { useTheme } from "@material-ui/core/styles";
 
 // const theme = useTheme();
@@ -318,6 +319,22 @@ export const TextA = styled.a`
     color: #7265e3;
     font-weight: bold;
   }
+`;
+
+export const BannerText = styled(Box)`
+  max-width: 540px;
+  padding-top: 0;
+  padding-bottom: 60px;
+`;
+
+export const BannerImage = styled.img`
+  max-width: 555px;
+  margin-top: 0;
+  margin-right: 0;
+  margin-left: 10px;
+  padding-right: 0;
+  vertical-align: middle;
+  display: inline-block;
 `;
 
 export const GridTitleFlex = styled(Grid).attrs({

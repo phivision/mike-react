@@ -9,7 +9,7 @@ import {
   CardStyled,
   CardIcon,
 } from "../StyledComponents/StyledComponents";
-import avatar from "assets/img/faces/blank.png";
+import avatar from "assets/faces/blank.png";
 
 const ProfileCard = ({ ...props }) => {
   const [img, setImg] = useState(avatar);
