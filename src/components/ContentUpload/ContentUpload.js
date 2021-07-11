@@ -15,7 +15,7 @@ import { API, Storage, graphqlOperation } from "aws-amplify";
 import { createUserContent, updateUserContent } from "graphql/mutations";
 import { getUserContent } from "graphql/queries";
 // resources
-import empty from "assets/img/empty.jpg";
+import empty from "assets/empty.jpg";
 import ImageInput from "./ImageInput";
 import useInterval from "../../useInterval";
 import SegmentEditor from "./SegmentEditor";

@@ -1,92 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { API } from "aws-amplify";
-import { listUserProfiles } from "graphql/queries";
+import React from "react";
 import {
-  CustomBanner,
   CustomContainer,
-  InputField,
   TextStyle,
 } from "../../components/StyledComponents/StyledComponents";
-import SendIcon from "@material-ui/icons/Send";
-import IconButton from "@material-ui/core/IconButton";
-import Grid from "@material-ui/core/Grid";
-import CustomSnackbar from "../../components/CustomSnackbar/CustomSnackbar";
 
 export default function Home() {
-  const [trainers, setTrainers] = useState([]);
-  const [email, setEmail] = useState("");
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-
-  async function trainerQuery() {
-    const trainerList = await API.graphql({
-      query: listUserProfiles,
-      variables: { filter: { UserRole: { contains: "trainer" } } },
-      authMode: "AWS_IAM",
-    });
-    if (trainerList.data.listUserProfiles.items != null) {
-      return trainerList.data.listUserProfiles.items;
-    }
-  }
-
-  const onChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const onClick = () => {
-    const myInit = {
-      headers: {}, // AWS-IAM authorization if using empty headers
-      body: {
-        email: email,
-      },
-      response: true,
-    };
-    API.post("marketing", "/marketing", myInit)
-      .then(() => {
-        setEmail("");
-        setSnackbarMessage("Successfully signed up. We'll reach out soon!");
-      })
-      .catch(console.log);
-  };
-
-  useEffect(() => {
-    trainerQuery()
-      .then((r) => setTrainers(r))
-      .catch(console.log);
-  }, [trainers.length]);
-
   return (
     <>
-      <CustomBanner>
-        <CustomContainer
-          style={{
-            marginTop: "0px",
-            paddingTop: "144px",
-            paddingBottom: "144px",
-            paddingLeft: "72px",
-          }}
-        >
-          <TextStyle
-            variant="h1"
-            color="primary"
-            style={{ paddingBottom: "64px" }}
-          >
-            Monetize your audience + expertise.
-          </TextStyle>
-          <TextStyle variant="h3">
-            Get in touch to start growing a brand online.
-          </TextStyle>
-          <Grid
-            container
-            alignItems="center"
-            style={{ paddingTop: "10px", paddingBottom: "10px" }}
-          >
-            <InputField label="Your email" value={email} onChange={onChange} />
-            <IconButton onClick={onClick}>
-              <SendIcon color="primary" fontSize="large" />
-            </IconButton>
-          </Grid>
-        </CustomContainer>
-      </CustomBanner>
       <div style={{ padding: "30px" }}>
         <CustomContainer>
           <TextStyle variant="h2" color="primary">
@@ -130,10 +50,6 @@ export default function Home() {
           </TextStyle>
         </CustomContainer>
       </div>
-      <CustomSnackbar
-        message={snackbarMessage}
-        setMessage={setSnackbarMessage}
-      />
     </>
   );
 }

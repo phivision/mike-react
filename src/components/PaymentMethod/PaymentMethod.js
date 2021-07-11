@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import visaIcon from "../../assets/img/card/Visa.png";
-import mastercardIcon from "../../assets/img/card/MasterCard.png";
-import discoverIcon from "../../assets/img/card/Discover.png";
-import amexIcon from "../../assets/img/card/AmericanExpress.png";
+import visaIcon from "../../assets/card/Visa.png";
+import mastercardIcon from "../../assets/card/MasterCard.png";
+import discoverIcon from "../../assets/card/Discover.png";
+import amexIcon from "../../assets/card/AmericanExpress.png";
 import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
