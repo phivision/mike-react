@@ -15,32 +15,35 @@ const theme = createMuiTheme({
     background: {
       default: "#FFFFFF",
     },
+    text: {
+      primary: "#000000",
+    },
   },
   typography: {
     fontFamily: fonts,
     h1: {
       fontWeight: 900,
-      fontSize: 32,
+      fontSize: 52,
       color: "#000000",
     },
     h2: {
       fontWeight: 900,
-      fontSize: 18,
+      fontSize: 32,
       color: "#000000",
     },
     h3: {
       fontWeight: 600,
-      fontSize: 16,
+      fontSize: 24,
       color: "#000000",
     },
     body1: {
       fontWeight: 500,
-      fontSize: 16,
-      color: "#000000",
+      fontSize: 20,
+      color: "#848484",
     },
     body2: {
       fontWeight: 300,
-      fontSize: 16,
+      fontSize: 12,
       color: "#848484",
     },
   },

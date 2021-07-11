@@ -23,9 +23,6 @@ import { MobileVersion, uptoMobileWidth } from "variables/mediaQueries";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { ExternalLink } from "../Link/ExternalLink";
 import Box from "@material-ui/core/Box";
-// import { useTheme } from "@material-ui/core/styles";
-
-// const theme = useTheme();
 
 export const ContainBox = styled(Container).attrs({
   disableGutters: true,
@@ -42,8 +39,7 @@ export const GridContainer = styled(Grid).attrs({
 export const GridItem = styled(Grid).attrs({
   item: true,
 })`
-  padding: 5px;
-  display: block;
+  padding: 20px;
 `;
 
 export const CardStyled = styled(Card)`
@@ -74,6 +70,7 @@ export const BlackTitle = styled(Typography).attrs({
 export const AttriTitle = styled(Typography).attrs({
   variant: "h6",
 })`
+  color: black !important;
   display: inline-block;
   text-decoration: none;
   text-transform: none;
@@ -109,13 +106,14 @@ export const SearchButton = styled(SearchBar)`
 
 //Variant should be noted per instance, NOT in styled components
 export const CustomButton = styled(Button).attrs({
-  color: "primary",
+  color: "secondary",
 })`
   text-transform: none;
   border-radius: 10px;
   font-weight: 600;
   margin: 5px;
   min-width: 120px;
+  font-size: 18px;
   @media only screen and ${uptoMobileWidth} {
     font-size: 11px;
   }
@@ -189,12 +187,6 @@ export const UploadIcon = styled(CloudUploadIcon).attrs({
 })`
   font-size: 30px;
 `;
-
-// export const StyledContent = styled.div`
-//   border-radius: 30px 30px 0 0;
-//   margin-top: -20px;
-//   background-color: ${contentColor};
-// `;
 
 export const ProfileBox = styled.div`
   width: 100%;
@@ -316,19 +308,18 @@ export const TextA = styled.a`
   cursor: pointer;
   font-size: ${(props) => props.size};
   :hover {
-    color: #7265e3;
     font-weight: bold;
   }
 `;
 
 export const BannerText = styled(Box)`
-  max-width: 540px;
+  min-width: 500px;
   padding-top: 0;
   padding-bottom: 60px;
 `;
 
 export const BannerImage = styled.img`
-  max-width: 555px;
+  max-width: 300px;
   margin-top: 0;
   margin-right: 0;
   margin-left: 10px;
