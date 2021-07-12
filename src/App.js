@@ -16,9 +16,6 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import UploadDialog from "./views/ContentUpload/UploadDialog";
 import { FlexContain } from "./components/StyledComponents/StyledComponents";
 import { getStripeKey } from "./utilities/StripeTools";
-import ReactGA from "react-ga";
-
-ReactGA.initialize("G-P5G2678L3L");
 
 const stripePublishableKey = getStripeKey();
 
