@@ -104,10 +104,8 @@ export const SearchButton = styled(SearchBar)`
   }
 `;
 
-//Variant should be noted per instance, NOT in styled components
-export const CustomButton = styled(Button).attrs({
-  color: "secondary",
-})`
+//Variant + color should be noted per instance, NOT in styled components
+export const CustomButton = styled(Button)`
   text-transform: none;
   border-radius: 10px;
   font-weight: 600;
