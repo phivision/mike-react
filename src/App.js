@@ -7,7 +7,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { BrowserRouter, Switch, Redirect } from "react-router-dom";
 import theme from "./theme.js";
 import { MuiThemeProvider } from "@material-ui/core/styles";
-import Header from "./components/Header/Header";
+import Header from "./components/Header/SimpleHeader";
 import { routes } from "./routes";
 import Footer from "./components/Footer/Footer";
 import PrivateRoute from "./components/Routes/PrivateRoute";
@@ -16,6 +16,9 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import UploadDialog from "./views/ContentUpload/UploadDialog";
 import { FlexContain } from "./components/StyledComponents/StyledComponents";
 import { getStripeKey } from "./utilities/StripeTools";
+import ReactGA from "react-ga";
+
+ReactGA.initialize("G-P5G2678L3L");
 
 const stripePublishableKey = getStripeKey();
 

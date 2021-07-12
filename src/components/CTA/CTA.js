@@ -35,7 +35,7 @@ const CTA = (props) => {
         <InputField label="Your email" value={email} onChange={onChange} />
       </Grid>
       <Grid item>
-        <CustomButton variant="contained" onClick={onClick}>
+        <CustomButton variant="contained" color="secondary" onClick={onClick}>
           {props.ButtonText}
         </CustomButton>
       </Grid>
