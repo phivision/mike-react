@@ -127,6 +127,11 @@ type Message @model(subscriptions: null)
   ToUser: UserProfile! @connection(fields: ["ToUserID"])
 }
 
+type TrainerConnection @aws_iam @aws_cognito_user_pools {
+  items: [UserProfile]
+  nextToken: String
+}
+
 enum MessageStatus {
   UNREAD
   UNRESPONDED
@@ -145,4 +150,8 @@ type Subscription {
   onUpdateByCreatorID(CreatorID: ID!): UserContent @aws_subscribe(mutations: ["updateUserContent"])
   onDeletionByCreatorID(CreatorID: ID!): UserContent @aws_subscribe(mutations: ["deleteUserContent"])
   onMessagesByToUserID(ToUserID: ID!): Message @aws_subscribe(mutations: ["createMessage"])
+}
+
+type Query {
+  trainerSearch(keyword: String!): TrainerConnection @aws_iam @aws_cognito_user_pools
 }
