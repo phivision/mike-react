@@ -1,6 +1,51 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const trainerSearch = /* GraphQL */ `
+  query TrainerSearch($keyword: String!) {
+    trainerSearch(keyword: $keyword) {
+      items {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        IsVerified
+        Description
+        Biography
+        LandingURL
+        TokenBalance
+        TokenPrice
+        owner
+        DeviceToken
+        createdAt
+        updatedAt
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
+      }
+      nextToken
+    }
+  }
+`;
 export const getUserProfile = /* GraphQL */ `
   query GetUserProfile($id: ID!) {
     getUserProfile(id: $id) {

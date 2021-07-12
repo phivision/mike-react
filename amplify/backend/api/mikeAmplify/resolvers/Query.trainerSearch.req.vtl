@@ -1,0 +1,30 @@
+## Query.trainerSearch.req.vtl
+## Objects of type UserProfile will be stored in the /userprofile index
+
+#set( $indexPath = "/userprofile/doc/_search" )
+{
+    "version": "2017-02-28",
+    "operation": "GET",
+    "path": "$indexPath.toLowerCase()",
+    "params": {
+        "body": {
+            "query" : {
+                "bool": {
+                    "must" : {
+                        "multi_match" : {
+                            "query" : $util.toJson($ctx.args.keyword),
+                            "fields" : [ "FirstName", "LastName", "Description" ],
+                            "fuzziness" : "AUTO",
+                            "prefix_length" : 2
+                        }
+                    },
+                    "filter": {
+                        "term": {
+                            "UserRole": "trainer"
+                      }
+                    }
+                }
+            }
+        }
+    }
+}
