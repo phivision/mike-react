@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Storage } from "aws-amplify";
 import PropTypes from "prop-types";
-import avatar from "assets/img/faces/blank.png";
+import avatar from "assets/faces/blank.png";
 import { CardIcon } from "../StyledComponents/StyledComponents";
 
 const UserAvatar = ({ UserImage: UserImage, ...p }) => {

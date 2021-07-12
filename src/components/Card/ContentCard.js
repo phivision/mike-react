@@ -10,7 +10,7 @@ import ViewerDialog from "../../views/ContentViewer/ViewerDialog";
 import ImageButton from "../CustomButtons/ImageButton";
 import UploadDialog from "../../views/ContentUpload/UploadDialog";
 import { deleteVideo } from "../../utilities/VideoTools";
-import empty from "assets/img/empty.jpg";
+import empty from "assets/empty.jpg";
 import { deleteUserContent } from "../../graphql/mutations";
 import CustomDialog from "../Dialog/CustomDialog";
 import GridContainer from "../Grid/GridContainer.js";

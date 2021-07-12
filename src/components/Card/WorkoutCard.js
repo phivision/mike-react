@@ -13,7 +13,7 @@ import {
   CardStyled,
 } from "../StyledComponents/StyledComponents";
 
-import empty from "assets/img/empty.jpg";
+import empty from "assets/empty.jpg";
 
 export default function WorkoutCard(props) {
   const [img, setImg] = useState(empty);

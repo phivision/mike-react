@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { Icon, Typography } from "@material-ui/core";
-import logo from "../../assets/img/logo.png";
+import logo from "../../assets/logo.jpg";
 import PropTypes from "prop-types";
 import { userRoles } from "../../variables/userRoles";
 import {
@@ -66,12 +66,12 @@ export default function Header(props) {
         {isMobileMenuOpen ? (
           <MenuItem>
             <Nav to="/signup/trainer">
-              <AttriTitle>Coach on Motion</AttriTitle>
+              <AttriTitle>Create on Motion</AttriTitle>
             </Nav>
           </MenuItem>
         ) : (
           <Nav to="/signup/trainer">
-            <CustomButton variant="contained">Coach on Motion</CustomButton>
+            <CustomButton variant="contained">Create on Motion</CustomButton>
           </Nav>
         )}
       </>
