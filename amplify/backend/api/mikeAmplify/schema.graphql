@@ -127,7 +127,7 @@ type Message @model(subscriptions: null)
   ToUser: UserProfile! @connection(fields: ["ToUserID"])
 }
 
-type TrainerConnection {
+type TrainerConnection @aws_iam @aws_cognito_user_pools {
   items: [UserProfile]
   nextToken: String
 }
@@ -153,5 +153,5 @@ type Subscription {
 }
 
 type Query {
-  trainerSearch(keyword: String!): TrainerConnection
+  trainerSearch(keyword: String!): TrainerConnection @aws_iam @aws_cognito_user_pools
 }
