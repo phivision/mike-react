@@ -111,10 +111,6 @@ export const CustomButton = styled(Button)`
   font-weight: 600;
   margin: 5px;
   min-width: 120px;
-  font-size: 18px;
-  @media only screen and ${uptoMobileWidth} {
-    font-size: 11px;
-  }
 `;
 
 export const AppHeader = styled(AppBar)`
@@ -317,13 +313,7 @@ export const BannerText = styled(Box)`
 `;
 
 export const BannerImage = styled.img`
-  max-width: 300px;
-  margin-top: 0;
-  margin-right: 0;
-  margin-left: 10px;
-  padding-right: 0;
-  vertical-align: middle;
-  display: inline-block;
+  width: 100%;
 `;
 
 export const GridTitleFlex = styled(Grid).attrs({
