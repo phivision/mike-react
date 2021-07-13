@@ -1,8 +1,9 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createTheme } from "@material-ui/core/styles";
+import { responsiveFontSizes } from "@material-ui/core";
 
 const fonts = ["Avenir", "Arial", "sans-serif"].join(",");
 
-const theme = createMuiTheme({
+let theme = createTheme({
   palette: {
     primary: {
       light: "#F4F4F4",
@@ -55,5 +56,7 @@ const theme = createMuiTheme({
     },
   },
 });
+
+theme = responsiveFontSizes(theme);
 
 export default theme;
