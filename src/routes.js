@@ -4,7 +4,7 @@ import UserFeed from "views/UserFeed/UserFeed.js";
 
 //core components/views for Home layout
 import LandingPage from "views/LandingPage/LandingPage.js";
-import Landing from "views/Home/Landing.js";
+import Home from "views/Home/Home.js";
 import Search from "views/Search/Search.js";
 import SignIn from "views/Auth/SignIn.js";
 import SignUp from "views/Auth/SignUp.js";
@@ -23,7 +23,7 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Landing,
+    component: Home,
     exact: true,
   },
   {
