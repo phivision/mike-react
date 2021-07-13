@@ -70,8 +70,8 @@ const Header = () => {
                   </CustomButton>
                 </Grid>
                 <Grid item>
-                  <IconButton>
-                    <CloseIcon color="theme.primary.dark" />
+                  <IconButton onClick={() => setOpenDrawer(false)}>
+                    <CloseIcon />
                   </IconButton>
                 </Grid>
               </Grid>
