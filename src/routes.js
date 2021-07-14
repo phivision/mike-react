@@ -6,12 +6,15 @@ import UserFeed from "views/UserFeed/UserFeed.js";
 import LandingPage from "views/LandingPage/LandingPage.js";
 import Home from "views/Home/Home.js";
 import Search from "views/Search/Search.js";
+import Onboarding from "views/Home/Onboarding";
 import SignIn from "views/Auth/SignIn.js";
 import SignUp from "views/Auth/SignUp.js";
 import Verify from "views/Auth/Verify.js";
 import ResetPassword from "views/Auth/ResetPassword";
 import NotFound from "./views/NotFound/NotFound";
 import TokenPurchase from "./views/TokenPurchase/TokenPurchase";
+import Follower from "./views/Home/Follower";
+import Creator from "./views/Home/Creator";
 
 const routes = [
   {
@@ -26,12 +29,20 @@ const routes = [
     component: Home,
     exact: true,
   },
+  { path: "/follower", name: "Follower", component: Follower, exact: true },
+  { path: "/creator", name: "Creator", component: Creator, exact: true },
   {
     path: "/buycoins",
     name: "Purchase coins",
     component: TokenPurchase,
     exact: true,
     auth: "both",
+  },
+  {
+    path: "/onboarding",
+    name: "Onboarding",
+    component: Onboarding,
+    exact: true,
   },
   {
     path: "/search/:query",

@@ -2,14 +2,11 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Storage } from "aws-amplify";
 import { useHistory } from "react-router-dom";
-import { CardActionArea, Typography } from "@material-ui/core";
-import {
-  GridContainer,
-  GridItem,
-  CardStyled,
-  CardIcon,
-} from "../StyledComponents/StyledComponents";
-import avatar from "assets/faces/blank.png";
+import { Card, CardActionArea, Typography } from "@material-ui/core";
+import { CardIcon } from "../StyledComponents/StyledComponents";
+import avatar from "assets/empty.jpg";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
 
 const ProfileCard = ({ ...props }) => {
   const [img, setImg] = useState(avatar);
@@ -28,29 +25,24 @@ const ProfileCard = ({ ...props }) => {
   };
 
   return (
-    <CardStyled>
+    <Card elevation={0}>
       <CardActionArea onClick={link}>
-        <GridContainer direction="row">
-          <GridItem xs={4} sm={2}>
-            <CardIcon src={img} />
-          </GridItem>
-          <GridContainer item direction="column" xs={8} sm={4}>
-            <GridItem>
-              <Typography variant="h3">
-                {props.profile.FirstName + " " + props.profile.LastName}
-              </Typography>
-            </GridItem>
-          </GridContainer>
-          <GridItem xs={12} sm={6}>
-            <GridItem>
-              <Typography variant="body1">
-                {props.profile.Description}
-              </Typography>
-            </GridItem>
-          </GridItem>
-        </GridContainer>
+        <Box m={1}>
+          <Grid container alignItems="center" direction="row">
+            <Grid item xs={1}>
+              <CardIcon src={img} />
+            </Grid>
+            <Grid item xs>
+              <Box mx={5}>
+                <Typography variant="h3">
+                  {props.profile.FirstName + " " + props.profile.LastName}
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
       </CardActionArea>
-    </CardStyled>
+    </Card>
   );
 };
 

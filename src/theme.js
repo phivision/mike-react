@@ -47,6 +47,9 @@ let theme = createTheme({
       fontSize: 12,
       color: "#848484",
     },
+    button: {
+      fontSize: 18,
+    },
   },
   overrides: {
     MuiAppBar: {
