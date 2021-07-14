@@ -15,6 +15,8 @@ import NotFound from "./views/NotFound/NotFound";
 import TokenPurchase from "./views/TokenPurchase/TokenPurchase";
 import Follower from "./views/Home/Follower";
 import Creator from "./views/Home/Creator";
+import Success from "./views/Home/Success";
+import Join from "./views/Home/Join";
 
 const routes = [
   {
@@ -29,6 +31,8 @@ const routes = [
     component: Home,
     exact: true,
   },
+  { path: "/join", name: "Join", component: Join, exact: true },
+  { path: "/success", name: "Success", component: Success, exact: true },
   { path: "/follower", name: "Follower", component: Follower, exact: true },
   { path: "/creator", name: "Creator", component: Creator, exact: true },
   {

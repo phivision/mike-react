@@ -12,9 +12,11 @@ import { TextField } from "@material-ui/core";
 import Container from "@material-ui/core/Container";
 import revenue from "../../assets/revenue.png";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useHistory } from "react-router-dom";
 
 const Creator = () => {
   const [state, setState] = useState({ price: 8, count: 800 });
+  const history = useHistory();
 
   const prices = [5, 8, 10, 15, 20, 30];
   const counts = [50, 100, 200, 400, 800, 2000, 5000, 10000, 50000];
@@ -49,7 +51,11 @@ const Creator = () => {
                 </TextStyle>
               </Grid>
               <Grid item>
-                <CustomButton color="secondary" variant="contained">
+                <CustomButton
+                  onClick={() => history.push("/onboarding")}
+                  color="secondary"
+                  variant="contained"
+                >
                   Get started
                 </CustomButton>
               </Grid>
@@ -201,7 +207,11 @@ const Creator = () => {
             </TextStyle>
           </Grid>
           <Grid item>
-            <CustomButton color="secondary" variant="contained">
+            <CustomButton
+              onClick={() => history.push("/onboarding")}
+              color="secondary"
+              variant="contained"
+            >
               Get in touch
             </CustomButton>
           </Grid>

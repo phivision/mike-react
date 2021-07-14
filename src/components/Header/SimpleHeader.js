@@ -44,7 +44,7 @@ const Header = () => {
     <Link to="/" className={classes.logoLink}>
       <Grid container alignItems="center" direction="row">
         <Grid item xs={1}>
-          <img src={logo} className={classes.logo} />
+          <img src={logo} alt="logo" className={classes.logo} />
         </Grid>
         <Grid item>
           <TextStyle variant="h2">Motion</TextStyle>

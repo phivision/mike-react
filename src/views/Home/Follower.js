@@ -39,7 +39,13 @@ const Follower = () => {
                 </TextStyle>
               </Grid>
               <Grid item>
-                <CustomButton color="secondary" variant="contained">
+                <CustomButton
+                  onClick={() => {
+                    history.push("/join");
+                  }}
+                  color="secondary"
+                  variant="contained"
+                >
                   Start Learning Today
                 </CustomButton>
               </Grid>
