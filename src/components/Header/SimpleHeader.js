@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  CustomButton,
-  LogoImage,
-  LogoLink,
-} from "../StyledComponents/StyledComponents";
+import { CustomButton, TextStyle } from "../StyledComponents/StyledComponents";
+import { Link } from "react-router-dom";
 import logo from "../../assets/logo.jpg";
 import { AppBar, SwipeableDrawer, Toolbar } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
@@ -14,31 +11,46 @@ import Grid from "@material-ui/core/Grid";
 import CloseIcon from "@material-ui/icons/Close";
 import { useHistory } from "react-router-dom";
 
-const Header = () => {
-  const useStyles = makeStyles((theme) => ({
-    sectionDesktop: {
+const useStyles = makeStyles((theme) => ({
+  sectionDesktop: {
+    display: "none",
+    [theme.breakpoints.up("md")]: {
+      display: "block",
+    },
+  },
+  sectionMobile: {
+    display: "flex",
+    [theme.breakpoints.up("md")]: {
       display: "none",
-      [theme.breakpoints.up("md")]: {
-        display: "block",
-      },
     },
-    sectionMobile: {
-      display: "flex",
-      [theme.breakpoints.up("md")]: {
-        display: "none",
-      },
-    },
-  }));
+  },
+  logo: {
+    width: "100%",
+    height: "auto",
+    maxWidth: "100px",
+  },
+  logoLink: {
+    flex: "1",
+  },
+}));
 
+const Header = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const classes = useStyles();
   let history = useHistory();
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
   const Logo = () => (
-    <LogoLink to="/">
-      <LogoImage src={logo} alt="logo" />
-    </LogoLink>
+    <Link to="/" className={classes.logoLink}>
+      <Grid container alignItems="center" direction="row">
+        <Grid item xs={1}>
+          <img src={logo} alt="logo" className={classes.logo} />
+        </Grid>
+        <Grid item>
+          <TextStyle variant="h2">Motion</TextStyle>
+        </Grid>
+      </Grid>
+    </Link>
   );
 
   const redirect = (route) => {
@@ -50,7 +62,7 @@ const Header = () => {
     <AppBar position="static" elevation={0}>
       <Toolbar>
         <Logo />
-        <React.Fragment key="anchor">
+        <>
           <IconButton
             className={classes.sectionMobile}
             onClick={() => setOpenDrawer(true)}
@@ -95,7 +107,7 @@ const Header = () => {
               </Grid>
             </Box>
           </SwipeableDrawer>
-        </React.Fragment>
+        </>
         <div className={classes.sectionDesktop}>
           <CustomButton onClick={() => history.push("/creator")}>
             I&apos;m a creator

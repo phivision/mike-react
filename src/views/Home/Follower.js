@@ -15,7 +15,6 @@ import { useHistory } from "react-router-dom";
 const Follower = () => {
   let history = useHistory();
   const [query, setQuery] = useState("");
-  console.log(setQuery);
   let isLargeScreen = useMediaQuery((theme) => theme.breakpoints.up("sm"));
 
   return (
@@ -40,7 +39,13 @@ const Follower = () => {
                 </TextStyle>
               </Grid>
               <Grid item>
-                <CustomButton color="secondary" variant="contained">
+                <CustomButton
+                  onClick={() => {
+                    history.push("/join");
+                  }}
+                  color="secondary"
+                  variant="contained"
+                >
                   Start Learning Today
                 </CustomButton>
               </Grid>
