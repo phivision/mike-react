@@ -177,6 +177,10 @@
         "messageGroupSend": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
           "s3Key": "amplify-builds/messageGroupSend-482b4236383131305861-build.zip"
+        },
+        "videoFavoriteCleanup": {
+          "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
+          "s3Key": "amplify-builds/videoFavoriteCleanup-51566f313964554a6964-build.zip"
         }
       },
       "storage": {

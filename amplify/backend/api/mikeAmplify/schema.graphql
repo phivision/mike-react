@@ -46,6 +46,10 @@
   A list of users who is subscripting to one or a few trainers
   """
   Users: [UserSubscriptionTrainer] @connection(name: "bySubscriptedTrainer")
+  """
+  A group of message for all subscripted user chatting
+  """
+  UserMessageGroup: MessageGroup @connection(name: "groupTrainerConnection")
 }
 
 # create a join model and disable query for m2m relationship
@@ -106,14 +110,16 @@ type UserContent @model(subscriptions: null)
 
 type Message @model(subscriptions: null)
 @auth(rules: [{ allow: owner, operations: [create, delete] },
+              { allow: private, operations: [read]},
               { allow: public, provider: iam, operations: [read] }])
 @key(name: "byToUser", fields: ["ToUserID", "createdAt"], queryField: "messageByToUserID")
 @key(name: "byFromUser", fields: ["FromUserID", "createdAt"], queryField: "messageByFromUserID")
+@key(name: "byGroup", fields: ["GroupID", "createdAt"], queryField: "messageByGroupID")
   {
   id: ID!
   PostMessages: String!
   FromUserID: ID!
-  ToUserID: ID!
+  ToUserID: ID
   createdAt: AWSDateTime!
   """
   The message type can be text, voice, image, video, etc
@@ -124,7 +130,24 @@ type Message @model(subscriptions: null)
   """
   Status: MessageStatus
   FromUser: UserProfile! @connection(fields: ["FromUserID"])
-  ToUser: UserProfile! @connection(fields: ["ToUserID"])
+  ToUser: UserProfile @connection(fields: ["ToUserID"])
+  """
+  If message is in a group chat, it will has a message group ID
+  """
+  GroupID: ID
+}
+
+type MessageGroup @model(queries: null, subscriptions: null)
+@auth(rules: [{ allow: owner, operations: [create, delete, update] },
+  { allow: private, operations: [read]},
+  { allow: public, provider: iam, operations: [read]}])
+{
+  id: ID!
+  Messages: [Message] @connection(keyName: "byGroup", fields: ["id"])
+  """
+  The trainer who lead the group chat with students
+  """
+  Trainer: UserProfile! @connection(name: "groupTrainerConnection")
 }
 
 type TrainerConnection @aws_iam @aws_cognito_user_pools {
@@ -150,6 +173,7 @@ type Subscription {
   onUpdateByCreatorID(CreatorID: ID!): UserContent @aws_subscribe(mutations: ["updateUserContent"])
   onDeletionByCreatorID(CreatorID: ID!): UserContent @aws_subscribe(mutations: ["deleteUserContent"])
   onMessagesByToUserID(ToUserID: ID!): Message @aws_subscribe(mutations: ["createMessage"])
+  onMessageByGroupID(GroupID: ID!): Message @aws_subscribe(mutations: ["createMessage"])
 }
 
 type Query {
