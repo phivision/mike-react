@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import "./App.css";
 import Amplify, { API, Auth, graphqlOperation } from "aws-amplify";
 import { Hub } from "aws-amplify";
 import { Elements } from "@stripe/react-stripe-js";
@@ -80,17 +79,19 @@ const App = () => {
   };
 
   useEffect(() => {
-    Auth.currentSession().then((res) => {
-      if (res.isValid()) {
-        setUser({
-          id: res.idToken.payload["cognito:username"],
-          role: res.idToken.payload["custom:role"],
-        });
-        Amplify.configure({
-          aws_appsync_authenticationType: "AMAZON_COGNITO_USER_POOLS",
-        });
-      }
-    });
+    Auth.currentSession()
+      .then((res) => {
+        if (res.isValid()) {
+          setUser({
+            id: res.idToken.payload["cognito:username"],
+            role: res.idToken.payload["custom:role"],
+          });
+          Amplify.configure({
+            aws_appsync_authenticationType: "AMAZON_COGNITO_USER_POOLS",
+          });
+        }
+      })
+      .catch(console.log);
   }, []);
 
   useEffect(() => {

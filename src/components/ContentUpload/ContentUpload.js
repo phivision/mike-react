@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 // @material-ui/core components
-import { Typography } from "@material-ui/core";
+import { Typography, Card } from "@material-ui/core";
 // core components
 import {
   GridContainer,
   GridItem,
   CustomButton,
-  CardStyled,
   InputField,
 } from "components/StyledComponents/StyledComponents";
 // amplify components
@@ -319,7 +318,7 @@ export default function ContentUpload(props) {
           value={videoForm.Description}
           onChange={handleVideoFormChange}
         />
-        <CardStyled>
+        <Card>
           <ImageInput
             title="Thumbnail"
             width="100%"
@@ -329,13 +328,13 @@ export default function ContentUpload(props) {
             inputRef={thumbFileRef}
             onChange={handleThumbnailChange}
           />
-        </CardStyled>
+        </Card>
         <CustomButton variant="contained" onClick={handleVideoUpload}>
           Upload Content
         </CustomButton>
       </GridContainer>
       <GridItem xs={12} sm={6}>
-        <CardStyled>
+        <Card>
           <ImageInput
             title={videoStatus}
             url=""
@@ -344,7 +343,7 @@ export default function ContentUpload(props) {
             inputRef={videoFileRef}
             onChange={handleVideoFileChange}
           />
-        </CardStyled>
+        </Card>
         <CustomDialog
           open={openDuplicationDialog}
           title="Video Duplication Alert"

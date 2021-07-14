@@ -42,18 +42,10 @@ export const GridItem = styled(Grid).attrs({
   padding: 20px;
 `;
 
-export const CardStyled = styled(Card)`
-  border-radius: 20px;
-  margin: 20px;
-  padding: 20px;
-  box-shadow: 0 5px 20px 5px #eff1fa;
-  max-width: 80%;
-`;
-
 export const CardIcon = styled.img`
-  max-height: 100%;
   max-width: 100%;
-  border-radius: 30px;
+  aspectratio: 1;
+  border-radius: 50%;
   display: block;
   margin: auto;
 `;
@@ -284,10 +276,7 @@ export const LogoImage = styled.img`
 
 export const CustomFooter = styled.footer`
   position: absolute;
-  width: 100%;
-  padding-top: 30px;
-  padding-left: 72px;
-  padding-right: 72px;
+  width: 100% !important;
   bottom: 0;
 `;
 

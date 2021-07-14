@@ -12,6 +12,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import CloseIcon from "@material-ui/icons/Close";
+import { useHistory } from "react-router-dom";
 
 const Header = () => {
   const useStyles = makeStyles((theme) => ({
@@ -31,6 +32,7 @@ const Header = () => {
 
   const [openDrawer, setOpenDrawer] = useState(false);
   const classes = useStyles();
+  let history = useHistory();
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
   const Logo = () => (
@@ -38,6 +40,11 @@ const Header = () => {
       <LogoImage src={logo} alt="logo" />
     </LogoLink>
   );
+
+  const redirect = (route) => {
+    setOpenDrawer(false);
+    history.push(route);
+  };
 
   return (
     <AppBar position="static" elevation={0}>
@@ -62,10 +69,21 @@ const Header = () => {
             <Box m={2}>
               <Grid container direction="column" alignItems="center">
                 <Grid item>
-                  <CustomButton>I&apos;m a follower</CustomButton>
+                  <CustomButton onClick={() => redirect("/creator")}>
+                    I&apos;m a creator
+                  </CustomButton>
                 </Grid>
                 <Grid item>
-                  <CustomButton color="secondary" variant="contained">
+                  <CustomButton onClick={() => redirect("/follower")}>
+                    I&apos;m a follower
+                  </CustomButton>
+                </Grid>
+                <Grid item>
+                  <CustomButton
+                    onClick={() => redirect("/onboarding")}
+                    color="secondary"
+                    variant="contained"
+                  >
                     Create on Motion
                   </CustomButton>
                 </Grid>
@@ -79,8 +97,17 @@ const Header = () => {
           </SwipeableDrawer>
         </React.Fragment>
         <div className={classes.sectionDesktop}>
-          <CustomButton>I&apos;m a follower</CustomButton>
-          <CustomButton color="secondary" variant="contained">
+          <CustomButton onClick={() => history.push("/creator")}>
+            I&apos;m a creator
+          </CustomButton>
+          <CustomButton onClick={() => history.push("/follower")}>
+            I&apos;m a follower
+          </CustomButton>
+          <CustomButton
+            onClick={() => history.push("/onboarding")}
+            color="secondary"
+            variant="contained"
+          >
             Create on Motion
           </CustomButton>
         </div>
