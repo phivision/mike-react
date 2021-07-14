@@ -19,7 +19,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import UserAvatar from "../UserAvatar/UserAvatar";
 import Container from "@material-ui/core/Container";
 import MoreIcon from "@material-ui/icons/MoreVert";
-import { MobileVersion, uptoMobileWidth } from "variables/mediaQueries";
+import { MobileVersion } from "variables/mediaQueries";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { ExternalLink } from "../Link/ExternalLink";
 import Box from "@material-ui/core/Box";
@@ -42,18 +42,10 @@ export const GridItem = styled(Grid).attrs({
   padding: 20px;
 `;
 
-export const CardStyled = styled(Card)`
-  border-radius: 20px;
-  margin: 20px;
-  padding: 20px;
-  box-shadow: 0 5px 20px 5px #eff1fa;
-  max-width: 80%;
-`;
-
 export const CardIcon = styled.img`
-  max-height: 100%;
   max-width: 100%;
-  border-radius: 30px;
+  aspectratio: 1;
+  border-radius: 50%;
   display: block;
   margin: auto;
 `;
@@ -122,10 +114,6 @@ export const Bars = styled(Toolbar)`
     padding-left: 8px;
     padding-right: 8px;
   }
-`;
-
-export const LogoLink = styled(Link)`
-  flex: 1;
 `;
 
 export const Nav = styled(Link)`
@@ -274,20 +262,9 @@ export const CustomBanner = styled(Container).attrs({ maxWidth: false })`
   border: none;
 `;
 
-export const LogoImage = styled.img`
-  width: auto;
-  max-width: 200px;
-  @media only screen and ${uptoMobileWidth} {
-    width: 80px;
-  }
-`;
-
 export const CustomFooter = styled.footer`
   position: absolute;
-  width: 100%;
-  padding-top: 30px;
-  padding-left: 72px;
-  padding-right: 72px;
+  width: 100% !important;
   bottom: 0;
 `;
 

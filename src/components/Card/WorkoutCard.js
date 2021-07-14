@@ -8,10 +8,7 @@ import { FavoriteBorder } from "@material-ui/icons";
 import ViewerDialog from "../../views/ContentViewer/ViewerDialog";
 import ImageButton from "../CustomButtons/ImageButton";
 import UploadDialog from "../../views/ContentUpload/UploadDialog";
-import {
-  GridContainer,
-  CardStyled,
-} from "../StyledComponents/StyledComponents";
+import { GridContainer } from "../StyledComponents/StyledComponents";
 
 import empty from "assets/empty.jpg";
 
@@ -54,7 +51,7 @@ export default function WorkoutCard(props) {
   }
 
   return (
-    <CardStyled>
+    <Card>
       <GridContainer direction="row">
         <Grid item container xs={12} sm={4} direction="column">
           <Grid item xs>
@@ -109,7 +106,7 @@ export default function WorkoutCard(props) {
           isVerified={true}
         />
       )}
-    </CardStyled>
+    </Card>
   );
 }
 

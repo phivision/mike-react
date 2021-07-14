@@ -5,7 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import { Typography } from "@material-ui/core";
 import PropTypes from "prop-types";
-import blank from "assets/faces/blank.png";
+import blank from "assets/empty.jpg";
 
 export const TrainerCard = ({ trainer, expire, CancelAtPeriodEnd }) => {
   const [imageURL, setImageURL] = useState();
