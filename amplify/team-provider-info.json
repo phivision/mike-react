@@ -22,7 +22,7 @@
         },
         "videoConvertComplete": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/videoConvertComplete-74633378325a5976694b-build.zip"
+          "s3Key": "amplify-builds/videoConvertComplete-3334434b6f7233394158-build.zip"
         },
         "marketing": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
@@ -34,7 +34,7 @@
         },
         "messageTokenTransaction": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/messageTokenTransaction-46386c576853524c4135-build.zip"
+          "s3Key": "amplify-builds/messageTokenTransaction-37747951613459475933-build.zip"
         },
         "stripeAPI": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
@@ -47,6 +47,10 @@
         "messageGroupSend": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
           "s3Key": "amplify-builds/messageGroupSend-6b323579704f64783836-build.zip"
+        },
+        "videoFavoriteCleanup": {
+          "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
+          "s3Key": "amplify-builds/videoFavoriteCleanup-51566f313964554a6964-build.zip"
         }
       },
       "storage": {

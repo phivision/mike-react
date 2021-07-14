@@ -88,7 +88,7 @@
               "Resource": [
                 {
                   "Fn::Sub": [
-                    "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/${fieldName}",
+                    "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/fields/${fieldName}",
                     {
                       "apiId": {
                         "Ref": "AppSyncApiId"
