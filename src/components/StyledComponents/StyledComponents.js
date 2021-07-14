@@ -19,7 +19,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import UserAvatar from "../UserAvatar/UserAvatar";
 import Container from "@material-ui/core/Container";
 import MoreIcon from "@material-ui/icons/MoreVert";
-import { MobileVersion, uptoMobileWidth } from "variables/mediaQueries";
+import { MobileVersion } from "variables/mediaQueries";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { ExternalLink } from "../Link/ExternalLink";
 import Box from "@material-ui/core/Box";
@@ -114,10 +114,6 @@ export const Bars = styled(Toolbar)`
     padding-left: 8px;
     padding-right: 8px;
   }
-`;
-
-export const LogoLink = styled(Link)`
-  flex: 1;
 `;
 
 export const Nav = styled(Link)`
@@ -264,14 +260,6 @@ export const CustomBanner = styled(Container).attrs({ maxWidth: false })`
   background-color: white;
   margin: 0;
   border: none;
-`;
-
-export const LogoImage = styled.img`
-  width: auto;
-  max-width: 200px;
-  @media only screen and ${uptoMobileWidth} {
-    width: 80px;
-  }
 `;
 
 export const CustomFooter = styled.footer`

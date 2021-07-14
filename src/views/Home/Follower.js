@@ -15,7 +15,6 @@ import { useHistory } from "react-router-dom";
 const Follower = () => {
   let history = useHistory();
   const [query, setQuery] = useState("");
-  console.log(setQuery);
   let isLargeScreen = useMediaQuery((theme) => theme.breakpoints.up("sm"));
 
   return (

@@ -7,10 +7,12 @@ import { CardIcon } from "../StyledComponents/StyledComponents";
 import avatar from "assets/empty.jpg";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const ProfileCard = ({ ...props }) => {
   const [img, setImg] = useState(avatar);
   let history = useHistory();
+  let isLargeScreen = useMediaQuery((theme) => theme.breakpoints.up("sm"));
 
   useEffect(() => {
     if (props.profile.UserImage) {
@@ -29,7 +31,7 @@ const ProfileCard = ({ ...props }) => {
       <CardActionArea onClick={link}>
         <Box m={1}>
           <Grid container alignItems="center" direction="row">
-            <Grid item xs={1}>
+            <Grid item xs={isLargeScreen ? 1 : 2}>
               <CardIcon src={img} />
             </Grid>
             <Grid item xs>

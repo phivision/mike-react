@@ -48,22 +48,24 @@ export default function Search({ ...props }) {
     <>
       {loaded ? (
         <Container maxWidth="md">
-          <Grid container direction="column">
-            <Grid item>
-              <TextStyle variant="h2">
-                {'Results for: "' + props.match.params.query + '"'}
-              </TextStyle>
+          <Box mt={2}>
+            <Grid container direction="column">
+              <Grid item>
+                <TextStyle variant="h1">
+                  {'Results for: "' + props.match.params.query + '"'}
+                </TextStyle>
+              </Grid>
+              <Grid item>
+                {trainers.map((trainer, idx) => {
+                  return (
+                    <Box my={3} key={idx}>
+                      <ProfileCard key={idx} profile={trainer} />
+                    </Box>
+                  );
+                })}
+              </Grid>
             </Grid>
-            <Grid item>
-              {trainers.map((trainer, idx) => {
-                return (
-                  <Box my={3} key={idx}>
-                    <ProfileCard key={idx} profile={trainer} />
-                  </Box>
-                );
-              })}
-            </Grid>
-          </Grid>
+          </Box>
         </Container>
       ) : (
         <>Loading...</>
