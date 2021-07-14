@@ -56,6 +56,12 @@ export const onContentByCreatorID = /* GraphQL */ `
         Contents {
           nextToken
         }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
       }
       FavoriteUser {
         items {
@@ -124,6 +130,12 @@ export const onUpdateByCreatorID = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       FavoriteUser {
@@ -194,6 +206,12 @@ export const onDeletionByCreatorID = /* GraphQL */ `
         Contents {
           nextToken
         }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
       }
       FavoriteUser {
         items {
@@ -218,6 +236,7 @@ export const onMessagesByToUserID = /* GraphQL */ `
       createdAt
       Type
       Status
+      GroupID
       updatedAt
       FromUser {
         id
@@ -256,6 +275,12 @@ export const onMessagesByToUserID = /* GraphQL */ `
         Contents {
           nextToken
         }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
       }
       ToUser {
         id
@@ -293,6 +318,116 @@ export const onMessagesByToUserID = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+      }
+      owner
+    }
+  }
+`;
+export const onMessageByGroupID = /* GraphQL */ `
+  subscription OnMessageByGroupID($GroupID: ID!) {
+    onMessageByGroupID(GroupID: $GroupID) {
+      id
+      PostMessages
+      FromUserID
+      ToUserID
+      createdAt
+      Type
+      Status
+      GroupID
+      updatedAt
+      FromUser {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        IsVerified
+        Description
+        Biography
+        LandingURL
+        TokenBalance
+        TokenPrice
+        owner
+        DeviceToken
+        createdAt
+        updatedAt
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+      }
+      ToUser {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        IsVerified
+        Description
+        Biography
+        LandingURL
+        TokenBalance
+        TokenPrice
+        owner
+        DeviceToken
+        createdAt
+        updatedAt
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       owner

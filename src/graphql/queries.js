@@ -41,6 +41,12 @@ export const trainerSearch = /* GraphQL */ `
         Contents {
           nextToken
         }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
       }
       nextToken
     }
@@ -127,6 +133,41 @@ export const getUserProfile = /* GraphQL */ `
         }
         nextToken
       }
+      UserMessageGroup {
+        id
+        createdAt
+        updatedAt
+        Trainer {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          TokenPrice
+          owner
+          DeviceToken
+          createdAt
+          updatedAt
+        }
+        Messages {
+          nextToken
+        }
+        owner
+      }
     }
   }
 `;
@@ -173,6 +214,12 @@ export const listUserProfiles = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       nextToken
@@ -231,6 +278,12 @@ export const profilesByStripeID = /* GraphQL */ `
         Contents {
           nextToken
         }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
       }
       nextToken
     }
@@ -287,6 +340,12 @@ export const profilesByURL = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       nextToken
@@ -345,6 +404,12 @@ export const searchUserProfiles = /* GraphQL */ `
         Contents {
           nextToken
         }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
       }
       nextToken
       total
@@ -397,6 +462,12 @@ export const getUserSubscriptionTrainer = /* GraphQL */ `
         Contents {
           nextToken
         }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
       }
       User {
         id
@@ -434,6 +505,12 @@ export const getUserSubscriptionTrainer = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       owner
@@ -570,6 +647,12 @@ export const getUserContent = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       FavoriteUser {
@@ -787,6 +870,7 @@ export const getMessage = /* GraphQL */ `
       createdAt
       Type
       Status
+      GroupID
       updatedAt
       FromUser {
         id
@@ -824,6 +908,12 @@ export const getMessage = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       ToUser {
@@ -863,6 +953,12 @@ export const getMessage = /* GraphQL */ `
         Contents {
           nextToken
         }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
       }
       owner
     }
@@ -883,6 +979,7 @@ export const listMessages = /* GraphQL */ `
         createdAt
         Type
         Status
+        GroupID
         updatedAt
         FromUser {
           id
@@ -967,6 +1064,7 @@ export const messageByToUserID = /* GraphQL */ `
         createdAt
         Type
         Status
+        GroupID
         updatedAt
         FromUser {
           id
@@ -1051,6 +1149,92 @@ export const messageByFromUserID = /* GraphQL */ `
         createdAt
         Type
         Status
+        GroupID
+        updatedAt
+        FromUser {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          TokenPrice
+          owner
+          DeviceToken
+          createdAt
+          updatedAt
+        }
+        ToUser {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          TokenPrice
+          owner
+          DeviceToken
+          createdAt
+          updatedAt
+        }
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const messageByGroupID = /* GraphQL */ `
+  query MessageByGroupID(
+    $GroupID: ID
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    messageByGroupID(
+      GroupID: $GroupID
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        PostMessages
+        FromUserID
+        ToUserID
+        createdAt
+        Type
+        Status
+        GroupID
         updatedAt
         FromUser {
           id
