@@ -20,6 +20,8 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
 
+var ses = new AWS.SES({ region: "us-east-1" });
+
 // declare a new express app
 var app = express();
 app.use(bodyParser.json());
@@ -59,22 +61,54 @@ app.use(function (req, res, next) {
 app.post(
   "/marketing",
   asyncHandler(async (req, res, next) => {
-    const subscribe = async () => {
-      const query = {
-        email_address: req.body.email,
-        status: "subscribed",
+    // if (req.body.email) {
+    //   const query = {
+    //     email_address: req.body.email,
+    //     status: "subscribed",
+    //   };
+    //
+    //   const response = await mailchimp.lists.addListMember(trainerCTA, query);
+    //
+    //   console.log(
+    //     `Successfully added contact as an audience member. The contact's id is ${response.id}.`
+    //   );
+    // }
+    const send = () => {
+      var params = {
+        Destination: {
+          ToAddresses: ["growth@joinmotion.app"],
+        },
+        Message: {
+          Body: {
+            Text: {
+              Data:
+                "Phone Number: " +
+                req.body.phoneNumber +
+                "\n" +
+                "Email: " +
+                req.body.email,
+            },
+          },
+
+          Subject: {
+            Data: "Onboarding Lead: ",
+          },
+        },
+        Source: "thomas@joinmotion.app",
       };
 
-      const response = await mailchimp.lists.addListMember(trainerCTA, query);
-
-      console.log(
-        `Successfully added contact as an audience member. The contact's id is ${response.id}.`
-      );
+      return ses.sendEmail(params).promise();
     };
 
-    subscribe().then(() => {
-      res.status(200).send();
-    });
+    send()
+      .then((d) => {
+        console.log(d);
+        res.status(200).send();
+      })
+      .catch((e) => {
+        console.log(e);
+        res.status(500).send();
+      });
   })
 );
 
