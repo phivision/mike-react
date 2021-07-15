@@ -21,7 +21,7 @@ const Onboarding = () => {
       headers: {}, // AWS-IAM authorization if using empty headers
       body: {
         email: state.email,
-        // phoneNumber: state.phoneNumber,
+        phoneNumber: state.phoneNumber,
       },
       response: true,
     };
