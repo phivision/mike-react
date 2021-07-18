@@ -8,8 +8,15 @@ Parameters:
   unauthRoleArn:
     Type: String
 
-  
-  
+
+  emailSendingAccount:
+    Type: String
+  from:
+    Type: String
+  replyToEmailAddress:
+    Type: String
+  sourceArn:
+    Type: String
   
   functionmikereactPostConfirmationArn:
     Type: String
@@ -18,15 +25,11 @@ Parameters:
   functionmikereactPostConfirmationName:
     Type: String
     Default: functionmikereactPostConfirmationName
-  
-  
-  
 
     
   identityPoolName:
     Type: String
-  
-            
+
   
   allowUnauthenticatedIdentities:
     Type: String
@@ -268,11 +271,22 @@ Resources:
           Required: true
           Mutable: true
         
-      
+      AccountRecoverySetting:
+        RecoveryMechanisms:
+          - Name: verified_email
+            Priority: 1
+          - Name: verified_phone_number
+            Priority: 2
+
       
       
       AutoVerifiedAttributes: !Ref autoVerifiedAttributes
-      
+
+      EmailConfiguration:
+        EmailSendingAccount: !Ref emailSendingAccount
+        From: !Ref from
+        ReplyToEmailAddress: !Ref from
+        SourceArn: !Ref sourceArn
       
       EmailVerificationMessage: !Ref emailVerificationMessage
       EmailVerificationSubject: !Ref emailVerificationSubject

@@ -9,16 +9,15 @@ import {
   CustomButton,
   SearchButton,
   Bars,
-  LogoLink,
   Nav,
   AttriTitle,
   CustomIcon,
   SetIcon,
   UserIcon,
   IconMore,
-  LogoImage,
   UploadIcon,
 } from "../StyledComponents/StyledComponents";
+import { Link } from "react-router-dom";
 import { Menu, MenuItem } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -119,13 +118,13 @@ export default function Header(props) {
 
   const Logo = () => {
     return userRole === userRoles.UNKNOWN ? (
-      <LogoLink to="/">
-        <LogoImage src={logo} alt="logo" />
-      </LogoLink>
+      <Link to="/">
+        <img style={{ maxWidth: "100px" }} src={logo} alt="logo" />
+      </Link>
     ) : (
-      <LogoLink to="/feed">
-        <LogoImage src={logo} alt="logo" />
-      </LogoLink>
+      <Link to="/feed">
+        <img style={{ maxWidth: "100px" }} src={logo} alt="logo" />
+      </Link>
     );
   };
 
