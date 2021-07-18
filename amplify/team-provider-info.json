@@ -16,10 +16,6 @@
         "mikereact": {}
       },
       "function": {
-        "cognitoPostConfirm": {
-          "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/cognitoPostConfirm-783573644d52694b5556-build.zip"
-        },
         "videoConvertComplete": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
           "s3Key": "amplify-builds/videoConvertComplete-3334434b6f7233394158-build.zip"
@@ -55,6 +51,10 @@
         "appStore": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
           "s3Key": "amplify-builds/appStore-4134654c795675563943-build.zip"
+        },
+        "mikereactPostConfirmation": {
+          "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
+          "s3Key": "amplify-builds/mikereactPostConfirmation-586130702f37437a5743-build.zip"
         }
       },
       "storage": {
@@ -162,10 +162,6 @@
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
           "s3Key": "amplify-builds/stripeWebhook-50702f56726c506d3832-build.zip"
         },
-        "cognitoPostConfirm": {
-          "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
-          "s3Key": "amplify-builds/cognitoPostConfirm-783573644d52694b5556-build.zip"
-        },
         "videoConvertComplete": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
           "s3Key": "amplify-builds/videoConvertComplete-3334434b6f7233394158-build.zip"
@@ -193,6 +189,10 @@
         "appStore": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
           "s3Key": "amplify-builds/appStore-4134654c795675563943-build.zip"
+        },
+        "mikereactPostConfirmation": {
+          "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
+          "s3Key": "amplify-builds/mikereactPostConfirmation-586130702f37437a5743-build.zip"
         }
       },
       "storage": {

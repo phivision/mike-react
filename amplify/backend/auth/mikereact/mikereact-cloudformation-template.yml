@@ -9,6 +9,18 @@ Parameters:
     Type: String
 
   
+  
+  
+  functionmikereactPostConfirmationArn:
+    Type: String
+    Default: functionmikereactPostConfirmationArn
+  
+  functionmikereactPostConfirmationName:
+    Type: String
+    Default: functionmikereactPostConfirmationName
+  
+  
+  
 
     
   identityPoolName:
@@ -194,6 +206,10 @@ Parameters:
   
             
             
+  authTriggerConnections:
+    Type: String
+  
+            
 Conditions:
   ShouldNotCreateEnvResources: !Equals [ !Ref env, NONE ]
   
@@ -280,18 +296,6 @@ Resources:
     
     DependsOn: SNSRole
     
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  # Updating lambda role with permissions to Cognito
-  
   
   UserPoolClientWeb:
   # Created provide application access to user pool

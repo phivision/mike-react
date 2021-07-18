@@ -13,8 +13,8 @@
     ],
     "smsAuthenticationMessage": "Your MIKE authentication code is {####}",
     "smsVerificationMessage": "Your MIKE verification code is {####}",
-    "emailVerificationSubject": "Your MIKE verification code",
-    "emailVerificationMessage": "Your MIKE verification code is {####}",
+    "emailVerificationSubject": "Your Motion verification code is '{####}'",
+    "emailVerificationMessage": "Your Motion verification code is '{####}'",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
@@ -59,10 +59,20 @@
     "userPoolGroupList": [],
     "adminQueries": false,
     "usernameCaseSensitive": false,
-    "dependsOn": [],
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "mikereactPostConfirmation",
+            "triggerProvider": "Cognito",
+            "attributes": [
+                "Arn",
+                "Name"
+            ]
+        }
+    ],
     "authProviders": [],
     "thirdPartyAuth": false,
-    "triggers": "{}",
+    "triggers": "{\n  \"PostConfirmation\": [\n    \"custom\"\n  ]\n}",
     "hostedUI": true,
     "hostedUIDomainName": "mikereactd9688095-d9688095",
     "authProvidersUserPool": [
@@ -73,9 +83,10 @@
         "Ref": "AWS::StackId"
     },
     "permissions": [],
-    "breakCircularDependency": false,
+    "breakCircularDependency": true,
     "signinwithappleAuthorizeScopes": [
         "email"
     ],
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"mikeios://\",\"mike://\"],\"LogoutURLs\":[\"mike://\"]}"
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"mikeios://\",\"mike://\"],\"LogoutURLs\":[\"mike://\"]}",
+    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostConfirmation\",\n    \"lambdaFunctionName\": \"mikereactPostConfirmation\"\n  }\n]"
 }

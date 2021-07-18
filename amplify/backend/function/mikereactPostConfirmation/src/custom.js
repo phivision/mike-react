@@ -1,10 +1,3 @@
-/* Amplify Params - DO NOT EDIT
-	API_MIKEAMPLIFY_GRAPHQLAPIENDPOINTOUTPUT
-	API_MIKEAMPLIFY_GRAPHQLAPIIDOUTPUT
-	ENV
-	REGION
-Amplify Params - DO NOT EDIT */
-
 const https = require("https");
 const AWS = require("aws-sdk");
 const urlParse = require("url").URL;
@@ -80,13 +73,10 @@ const addUser = async (userAttributes) => {
 
   const res = await request(createUserProfile, variables);
 
-  console.log(res);
-
   return res;
 };
 
 exports.handler = (event, context, callback) => {
-  console.log(event);
   if (event.request.userAttributes.sub) {
     addUser(event.request.userAttributes).then(() => callback(null, event));
   }
