@@ -25,6 +25,7 @@
   LandingURL: String
   TokenBalance: Int
   TokenPrice: Int
+  SubscriptionPrice: Int
   owner: String!
   """
   Apple device token for push notifications

@@ -136,7 +136,7 @@ app.post(
             sub.id,
             sub.current_period_end
           ),
-          addTokens(customer.items[0].id, customer.items[0].TokenBalance, 10),
+          // addTokens(customer.items[0].id, customer.items[0].TokenBalance, 10),
         ]);
 
         res.json({ received: true });

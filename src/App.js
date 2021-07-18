@@ -6,7 +6,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { BrowserRouter, Switch, Redirect } from "react-router-dom";
 import theme from "./theme.js";
 import { MuiThemeProvider } from "@material-ui/core/styles";
-import Header from "./components/Header/SimpleHeader";
+import Header from "./components/Header/Header";
 import { routes } from "./routes";
 import Footer from "./components/Footer/Footer";
 import PrivateRoute from "./components/Routes/PrivateRoute";

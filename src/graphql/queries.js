@@ -25,6 +25,7 @@ export const trainerSearch = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -75,6 +76,7 @@ export const getUserProfile = /* GraphQL */ `
       LandingURL
       TokenBalance
       TokenPrice
+      SubscriptionPrice
       owner
       DeviceToken
       createdAt
@@ -158,6 +160,7 @@ export const getUserProfile = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -199,6 +202,7 @@ export const listUserProfiles = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -262,6 +266,7 @@ export const profilesByStripeID = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -325,6 +330,7 @@ export const profilesByURL = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -388,6 +394,7 @@ export const searchUserProfiles = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -446,6 +453,7 @@ export const getUserSubscriptionTrainer = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -490,6 +498,7 @@ export const getUserSubscriptionTrainer = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -556,6 +565,7 @@ export const listUserSubscriptionTrainers = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -582,6 +592,7 @@ export const listUserSubscriptionTrainers = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -632,6 +643,7 @@ export const getUserContent = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -712,6 +724,7 @@ export const listUserContents = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -780,6 +793,7 @@ export const byContentCreatedAt = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -846,6 +860,7 @@ export const contentByName = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -893,6 +908,7 @@ export const getMessage = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -937,6 +953,7 @@ export const getMessage = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -1002,6 +1019,7 @@ export const listMessages = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -1028,6 +1046,7 @@ export const listMessages = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -1087,6 +1106,7 @@ export const messageByToUserID = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -1113,6 +1133,7 @@ export const messageByToUserID = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -1172,6 +1193,7 @@ export const messageByFromUserID = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -1198,6 +1220,7 @@ export const messageByFromUserID = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -1257,6 +1280,7 @@ export const messageByGroupID = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -1283,6 +1307,7 @@ export const messageByGroupID = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt

@@ -11,10 +11,14 @@
         "SMS Text Message",
         "TOTP"
     ],
-    "smsAuthenticationMessage": "Your MIKE authentication code is {####}",
-    "smsVerificationMessage": "Your MIKE verification code is {####}",
-    "emailVerificationSubject": "Your MIKE verification code",
-    "emailVerificationMessage": "Your MIKE verification code is {####}",
+    "emailSendingAccount": "DEVELOPER",
+    "from": "thomas@joinmotion.app",
+    "replyToEmailAddress": "thomas@joinmotion.app",
+    "sourceArn": "arn:aws:ses:us-east-1:301286101195:identity/thomas@joinmotion.app",
+    "smsAuthenticationMessage": "Your Motion authentication code is {####}",
+    "smsVerificationMessage": "Your Motion verification code is {####}",
+    "emailVerificationSubject": "Your Motion verification code is '{####}'",
+    "emailVerificationMessage": "Your Motion verification code is '{####}'",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
@@ -59,17 +63,34 @@
     "userPoolGroupList": [],
     "adminQueries": false,
     "usernameCaseSensitive": false,
-    "dependsOn": [],
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "mikereactPostConfirmation",
+            "triggerProvider": "Cognito",
+            "attributes": [
+                "Arn",
+                "Name"
+            ]
+        }
+    ],
     "authProviders": [],
     "thirdPartyAuth": false,
-    "triggers": "{}",
+    "triggers": "{\n  \"PostConfirmation\": [\n    \"custom\"\n  ]\n}",
     "hostedUI": true,
     "hostedUIDomainName": "mikereactd9688095-d9688095",
-    "authProvidersUserPool": [],
-    "hostedUIProviderMeta": "[]",
+    "authProvidersUserPool": [
+        "SignInWithApple"
+    ],
+    "hostedUIProviderMeta": "[{\"ProviderName\":\"SignInWithApple\",\"authorize_scopes\":\"email\",\"AttributeMapping\":{\"email\":\"email\"}}]",
     "parentStack": {
         "Ref": "AWS::StackId"
     },
     "permissions": [],
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"mikeios://\",\"mike://\"],\"LogoutURLs\":[\"mike://\"]}"
+    "breakCircularDependency": true,
+    "signinwithappleAuthorizeScopes": [
+        "email"
+    ],
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"mikeios://\",\"mike://\"],\"LogoutURLs\":[\"mike://\"]}",
+    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostConfirmation\",\n    \"lambdaFunctionName\": \"mikereactPostConfirmation\"\n  }\n]"
 }

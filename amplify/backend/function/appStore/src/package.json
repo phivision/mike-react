@@ -1,22 +1,17 @@
 {
-  "name": "stripeAPI",
+  "name": "appStore",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "aws-sdk": "^2.873.0",
+    "aws-sdk": "^2.948.0",
     "aws-serverless-express": "^3.3.5",
-    "axios": "^0.21.1",
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
     "express-async-handler": "^1.1.4",
-    "graphql": "^15.5.1",
-    "graphql-tag": "^2.12.5",
-    "i": "^0.3.6",
-    "npm": "^7.19.1",
-    "stripe": "^8.140.0",
-    "url": "^0.10.3"
+    "node-apple-receipt-verify": "^1.10.0"
   },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
