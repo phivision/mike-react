@@ -1,0 +1,36 @@
+{
+    "paths": [
+        {
+            "name": "/appstore",
+            "lambdaFunction": "appStore",
+            "privacy": {
+                "open": true
+            },
+            "policyResourceName": "/appstore"
+        }
+    ],
+    "resourceName": "appStore",
+    "apiName": "appStore",
+    "functionArns": [
+        {
+            "lambdaFunction": "appStore"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "amplify-mikereact-feature-135143-authRole",
+        "unAuthRoleName": "amplify-mikereact-feature-135143-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "appStore",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ],
+    "uuid": "14bfcbc5"
+}

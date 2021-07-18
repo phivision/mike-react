@@ -65,11 +65,17 @@
     "triggers": "{}",
     "hostedUI": true,
     "hostedUIDomainName": "mikereactd9688095-d9688095",
-    "authProvidersUserPool": [],
-    "hostedUIProviderMeta": "[]",
+    "authProvidersUserPool": [
+        "SignInWithApple"
+    ],
+    "hostedUIProviderMeta": "[{\"ProviderName\":\"SignInWithApple\",\"authorize_scopes\":\"email\",\"AttributeMapping\":{\"email\":\"email\"}}]",
     "parentStack": {
         "Ref": "AWS::StackId"
     },
     "permissions": [],
+    "breakCircularDependency": false,
+    "signinwithappleAuthorizeScopes": [
+        "email"
+    ],
     "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"mikeios://\",\"mike://\"],\"LogoutURLs\":[\"mike://\"]}"
 }

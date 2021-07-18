@@ -4,9 +4,21 @@ const urlParse = require("url").URL;
 const appsyncUrl = process.env.API_MIKEAMPLIFY_GRAPHQLAPIENDPOINTOUTPUT;
 const region = process.env.REGION;
 
+const v5 = require("uuid/v5");
 const graphql = require("graphql");
 const gql = require("graphql-tag");
 const { print } = graphql;
+
+const getUUID = async () => {
+  const { Parameters } = await new AWS.SSM()
+    .getParameters({
+      Names: ["SEED_UUID"].map((secretName) => process.env[secretName]),
+      WithDecryption: true,
+    })
+    .promise();
+
+  return Parameters.find((e) => e.Name === process.env.SEED_UUID).Value;
+};
 
 const request = (queryDetails, variables) => {
   const req = new AWS.HttpRequest(appsyncUrl, region);
@@ -40,15 +52,7 @@ const getProfileByID = async (id) => {
   const getUserProfile = gql`
     query getUserProfile($id: ID!) {
       getUserProfile(id: $id) {
-        Email
-        FirstName
-        IsVerified
-        LandingURL
-        LastName
-        StripeID
-        TokenBalance
         TokenPrice
-        UserRole
       }
     }
   `;
@@ -62,59 +66,57 @@ const updateUserProfile = gql`
   mutation updateUserProfile($input: UpdateUserProfileInput!) {
     updateUserProfile(input: $input) {
       id
-      StripeID
+      IsVerified
       TokenBalance
     }
   }
 `;
 
-const setStripeID = async (id, stripeID) => {
-  const variables = { input: { id: id, StripeID: stripeID } };
+const addTokens = async (id, currentTokenCount, amount) => {
+  let curr = currentTokenCount ? currentTokenCount : 0;
+
+  const variables = { input: { id: id, TokenBalance: curr + amount } };
 
   const res = await request(updateUserProfile, variables);
 
-  return res.data.updateUserProfile;
+  return res;
 };
 
-const resetTokens = async (id) => {
-  const variables = { input: { id: id, TokenBalance: 0 } };
-
-  const res = await request(updateUserProfile, variables);
-
-  return res.data.updateUserProfile;
-};
-
-const updatePrice = async (id, price) => {
-  const variables = { input: { id: id, SubscriptionPrice: price } };
-
-  const res = await request(updateUserProfile, variables);
-
-  return res.data.updateUserProfile;
-};
-
-const updateUserSubscriptionTrainer = gql`
-  mutation UpdateUserSubscriptionTrainer(
-    $input: UpdateUserSubscriptionTrainerInput!
-  ) {
-    UpdateUserSubscriptionTrainer(input: $input) {
-      id
-      CancelAtPeriodEnd
+const createSubscription = async (trainerID, userID, expireDate) => {
+  const createUserSubscriptionTrainer = gql`
+    mutation createUserSubscriptionTrainer(
+      $input: CreateUserSubscriptionTrainerInput!
+    ) {
+      createUserSubscriptionTrainer(input: $input) {
+        id
+        ExpireDate
+        CancelAtPeriodEnd
+      }
     }
-  }
-`;
+  `;
 
-const updatePeriodEnd = async (id) => {
-  const variables = { input: { id: id, CancelAtPeriodEnd: true } };
+  const UUID = await getUUID();
+  const i = v5(trainerID + userID, UUID);
+  const expire = new Date(expireDate * 1000).toISOString();
+  const exp = expire.slice(0, 10);
 
-  const res = await request(updateUserSubscriptionTrainer, variables);
+  const variables = {
+    input: {
+      id: i,
+      CancelAtPeriodEnd: false,
+      userSubscriptionTrainerTrainerId: trainerID,
+      userSubscriptionTrainerUserId: userID,
+      ExpireDate: exp,
+    },
+  };
 
-  return res.data.UpdateUserSubscriptionTrainer;
+  const res = await request(createUserSubscriptionTrainer, variables);
+
+  return res;
 };
 
 module.exports = {
   getProfileByID,
-  updatePrice,
-  setStripeID,
-  resetTokens,
-  updatePeriodEnd,
+  addTokens,
+  createSubscription,
 };
