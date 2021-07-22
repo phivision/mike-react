@@ -60,11 +60,11 @@ app.use(
     const secretKey = Parameters.find(
       (e) => e.Name === process.env.APPLE_SHARED_SECRET
     );
-
     appleReceiptVerify.config({
-      secret: secretKey,
+      secret: secretKey.Value,
       extended: true,
       excludeOldTransactions: true,
+      environment:['sandbox']
     });
 
     next();
@@ -76,36 +76,33 @@ app.post(
   asyncHandler(async (req, res, next) => {
     const { body } = req;
     const { trainerID, userID, receipt } = body;
-
     const products = await appleReceiptVerify.validate({
       receipt: receipt,
     });
-
     if (Array.isArray(products)) {
-      const { productID } = products[0];
-      if (productID.slice(5) === "Coins") {
+      const { productId } = products[0];
+      if (productId.slice(0,5) === "Coins") {
         const user = await getProfileByID(userID);
 
-        await addTokens(userID, user.TokenBalance, productID.slice(-4));
+        await addTokens(userID, user.TokenBalance, productId.slice(-4)*1);
         res.status(200).send();
-      }
-      if (productID.slice(3) === "Sub") {
+      }else if (productId.slice(0,3) === "Sub") {
         const trainer = await getProfileByID(trainerID);
 
-        if (trainer.SubscriptionPrice === productID.slice(-4)) {
+        if (trainer.SubscriptionPrice === productId.slice(-4)) {
           const { originalPurchaseDate } = products[0];
-          const purchase = new Date(Math.round(originalPurchaseDate / 1000));
+          const purchase = new Date(Math.round(originalPurchaseDate));
           const expire = new Date(purchase.setMonth(purchase.getMonth() + 1));
-          const expireDate = expire.slice(0, 10);
+          const expireDate = expire.getFullYear() + "-" + (expire.getMonth()<10 ? "0" : "") + expire.getMonth() + "-" + (expire.getDay()<10 ? "0" : "") + expire.getDay(); //expire.toLocaleString().slice(0, 9);
 
-          await createSubscription(trainerID, userID, expireDate);
-
+          const result = await createSubscription(trainerID, userID, expireDate);
           res.status(200).send();
         } else {
           res.status(500).send();
         }
+      }else{
+        res.status(500).send();
       }
-      res.status(500).send();
     } else {
       res.status(500).send();
     }

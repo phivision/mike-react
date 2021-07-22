@@ -53,6 +53,7 @@ const getProfileByID = async (id) => {
     query getUserProfile($id: ID!) {
       getUserProfile(id: $id) {
         TokenPrice
+        TokenBalance
       }
     }
   `;
@@ -95,21 +96,21 @@ const createSubscription = async (trainerID, userID, expireDate) => {
     }
   `;
 
-  const UUID = await getUUID();
-  const i = v5(trainerID + userID, UUID);
-  const expire = new Date(expireDate * 1000).toISOString();
-  const exp = expire.slice(0, 10);
+  // const UUID = await getUUID();
+  // const i = v5(trainerID + userID, UUID);
+  // const expire = new Date(expireDate * 1000).toISOString();
+  // const exp = expire.toLocaleString().slice(0, 10);
 
   const variables = {
     input: {
-      id: i,
       CancelAtPeriodEnd: false,
       userSubscriptionTrainerTrainerId: trainerID,
       userSubscriptionTrainerUserId: userID,
-      ExpireDate: exp,
+      ExpireDate: expireDate,
+      StripeID:""
     },
   };
-
+  console.log("variables",variables);
   const res = await request(createUserSubscriptionTrainer, variables);
 
   return res;
