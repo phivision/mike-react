@@ -55,12 +55,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "videoFavoriteCleanup",
+            "videoCleanUpFavorite",
             {
               "Fn::Join": [
                 "",
                 [
-                  "videoFavoriteCleanup",
+                  "videoCleanUpFavorite",
                   "-",
                   {
                     "Ref": "env"
@@ -103,12 +103,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "mikereactLambdaRole88af5566",
+            "mikereactLambdaRole5ed7e475",
             {
               "Fn::Join": [
                 "",
                 [
-                  "mikereactLambdaRole88af5566",
+                  "mikereactLambdaRole5ed7e475",
                   "-",
                   {
                     "Ref": "env"
@@ -244,62 +244,6 @@
             }
           ]
         }
-      }
-    },
-    "LambdaTriggerPolicyUserContent": {
-      "DependsOn": [
-        "LambdaExecutionRole"
-      ],
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "amplify-lambda-execution-policy-UserContent",
-        "Roles": [
-          {
-            "Ref": "LambdaExecutionRole"
-          }
-        ],
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "dynamodb:DescribeStream",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
-                "dynamodb:ListStreams"
-              ],
-              "Resource": {
-                "Fn::ImportValue": {
-                  "Fn::Sub": "${apimikeAmplifyGraphQLAPIIdOutput}:GetAtt:UserContentTable:StreamArn"
-                }
-              }
-            }
-          ]
-        }
-      }
-    },
-    "LambdaEventSourceMappingUserContent": {
-      "Type": "AWS::Lambda::EventSourceMapping",
-      "DependsOn": [
-        "LambdaTriggerPolicyUserContent",
-        "LambdaExecutionRole"
-      ],
-      "Properties": {
-        "BatchSize": 100,
-        "Enabled": true,
-        "EventSourceArn": {
-          "Fn::ImportValue": {
-            "Fn::Sub": "${apimikeAmplifyGraphQLAPIIdOutput}:GetAtt:UserContentTable:StreamArn"
-          }
-        },
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "LambdaFunction",
-            "Arn"
-          ]
-        },
-        "StartingPosition": "LATEST"
       }
     }
   },

@@ -1,0 +1,45 @@
+{
+  "paths": [
+    {
+      "name": "/videoCleanUpFavorite/delContentAndRelFav",
+      "lambdaFunction": "videoCleanUpFavorite",
+      "privacy": {
+        "protected": true,
+        "auth": [
+          "/POST",
+          "/GET",
+          "/PUT",
+          "/PATCH",
+          "/DELETE"
+        ],
+        "unauth": [
+          "/GET"
+        ]
+      },
+      "policyResourceName": "/videoCleanUpFavorite/delContentAndRelFav"
+    }
+  ],
+  "resourceName": "videoCleanUpFavorite",
+  "apiName": "videoCleanUpFavorite",
+  "functionArns": [
+    {
+      "lambdaFunction": "videoCleanUpFavorite"
+    }
+  ],
+  "privacy": {
+    "auth": 1,
+    "unauth": 1,
+    "authRoleName": "amplify-mikereact-feature-135143-authRole",
+    "unAuthRoleName": "amplify-mikereact-feature-135143-unauthRole"
+  },
+  "dependsOn": [
+    {
+      "category": "function",
+      "resourceName": "videoCleanUpFavorite",
+      "attributes": [
+        "Name",
+        "Arn"
+      ]
+    }
+  ]
+}

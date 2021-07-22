@@ -1,4 +1,5 @@
 {
+  "lambdaLayers": [],
   "permissions": {
     "api": {
       "mikeAmplify": [
@@ -6,6 +7,5 @@
         "Mutation"
       ]
     }
-  },
-  "lambdaLayers": []
+  }
 }

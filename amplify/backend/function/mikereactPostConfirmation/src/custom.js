@@ -22,6 +22,14 @@ const createUserProfile = gql`
   }
 `;
 
+const createMessageGroup = gql`
+    mutation MyMutation2($messageGroupTrainerId: ID!) {
+      createMessageGroup(input: {messageGroupTrainerId: $messageGroupTrainerId}) {
+        id
+      }
+    }
+`
+
 const request = (queryDetails, variables) => {
   const req = new AWS.HttpRequest(appsyncUrl, region);
   const endpoint = new urlParse(appsyncUrl).hostname.toString();
@@ -59,21 +67,44 @@ const addUser = async (userAttributes) => {
   const dateTime = new Date().toISOString();
   const today = dateTime.slice(0, 10);
 
-  const variables = {
-    input: {
-      id: cognitoID,
-      Email: email,
-      UserRole: role,
-      FirstName: first,
-      LastName: last,
-      RegDate: today,
-      owner: cognitoID,
-    },
-  };
+  if(role == "trainer"){
 
-  const res = await request(createUserProfile, variables);
+      const messageGroupRes = await request(createMessageGroup,{messageGroupTrainerId:cognitoID});
+      console.log(messageGroupRes.data);
+      const variables = {
+        input: {
+          id: cognitoID,
+          Email: email,
+          UserRole: role,
+          FirstName: first,
+          LastName: last,
+          RegDate: today,
+          owner: cognitoID,
+          userProfileUserMessageGroupId:messageGroupRes.data.createMessageGroup.id
+        },
+      };
 
-  return res;
+      const res = await request(createUserProfile, variables);
+
+      return res;
+  }else{
+        const variables = {
+          input: {
+            id: cognitoID,
+            Email: email,
+            UserRole: role,
+            FirstName: first,
+            LastName: last,
+            RegDate: today,
+            owner: cognitoID,
+          },
+        };
+        const res = await request(createUserProfile, variables);
+
+        return res;
+  }
+
+
 };
 
 exports.handler = (event, context, callback) => {

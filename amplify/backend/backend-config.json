@@ -106,6 +106,20 @@
           ]
         }
       ]
+    },
+    "videoCleanUpFavorite": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "videoCleanUpFavorite",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ]
     }
   },
   "storage": {
@@ -220,21 +234,6 @@
         }
       ]
     },
-    "videoFavoriteCleanup": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "mikeAmplify",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
-          ]
-        }
-      ]
-    },
     "appStore": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -251,6 +250,21 @@
       ]
     },
     "mikereactPostConfirmation": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "mikeAmplify",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ]
+        }
+      ]
+    },
+    "videoCleanUpFavorite": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",
