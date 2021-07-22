@@ -12,7 +12,6 @@ const awsServerlessExpressMiddleware = require("aws-serverless-express/middlewar
 const AWS = require("aws-sdk");
 const gql = require("graphql-tag");
 const AWSAppSyncClient = require("aws-appsync").default;
-const { from } = require("apollo-link");
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
 
@@ -101,8 +100,8 @@ const updateTokenBalance = gql`
 `;
 const updateUserTokenBalance = async (msgModel) => {
   if (
-    is_empty(msgModel.ToUserID) == false &&
-    msgModel.FromUserID.S != msgModel.ToUserID.S
+    is_empty(msgModel.ToUserID) === false &&
+    msgModel.FromUserID.S !== msgModel.ToUserID.S
   ) {
     const fromUserId = msgModel.FromUserID.S;
     const toUserId = msgModel.ToUserID.S;
@@ -139,7 +138,7 @@ const queryAndAddTrainerTokenBalance = async (
   if (tokenPrice == null) {
     tokenPrice = 0;
   }
-  if (tokenPrice != 0) {
+  if (tokenPrice !== 0) {
     var tokenBalance = dicForTokenBalance.data.getUserProfile.TokenBalance;
     if (tokenBalance == null) {
       tokenBalance = tokenPrice;
@@ -164,7 +163,7 @@ const queryAndAddTrainerTokenBalance = async (
 
 function CreateMessageRequest(token, msgModel, fromUserName) {
   console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~", msgModel.PostMessages.S);
-  var messageRequest = {
+  return {
     Addresses: {
       [token]: {
         ChannelType: "APNS_SANDBOX",
@@ -181,14 +180,12 @@ function CreateMessageRequest(token, msgModel, fromUserName) {
       },
     },
   };
-
-  return messageRequest;
 }
 //send message to userId
 const sendMessage = async (msgModel) => {
   if (
-    is_empty(msgModel.ToUserID) == false &&
-    msgModel.FromUserID.S != msgModel.ToUserID.S
+    is_empty(msgModel.ToUserID) === false &&
+    msgModel.FromUserID.S !== msgModel.ToUserID.S
   ) {
     const fromUserId = msgModel.FromUserID.S;
     const toUserId = msgModel.ToUserID.S;
@@ -225,13 +222,14 @@ const sendMessage = async (msgModel) => {
       if (err) {
         console.log(err);
       } else {
+        let status;
         if (
-          data["MessageResponse"]["Result"][deviceToken]["DeliveryStatus"] ==
+          data["MessageResponse"]["Result"][deviceToken]["DeliveryStatus"] ===
           "SUCCESSFUL"
         ) {
-          var status = "Message sent! Response information: ";
+          status = "Message sent! Response information: ";
         } else {
-          var status = "The message wasn't sent. Response information: ";
+          status = "The message wasn't sent. Response information: ";
         }
         console.log(status);
         console.dir(data, { depth: null });
@@ -260,7 +258,5 @@ exports.handler = (event) => {
 };
 
 const is_empty = (str) => {
-  if (typeof str === "undefined" || str === null || str.length === 0)
-    return true;
-  return false;
+  return typeof str === "undefined" || str === null || str.length === 0;
 };
