@@ -23,12 +23,14 @@ const createUserProfile = gql`
 `;
 
 const createMessageGroup = gql`
-    mutation MyMutation2($messageGroupTrainerId: ID!) {
-      createMessageGroup(input: {messageGroupTrainerId: $messageGroupTrainerId}) {
-        id
-      }
+  mutation MyMutation2($messageGroupTrainerId: ID!) {
+    createMessageGroup(
+      input: { messageGroupTrainerId: $messageGroupTrainerId }
+    ) {
+      id
     }
-`
+  }
+`;
 
 const request = (queryDetails, variables) => {
   const req = new AWS.HttpRequest(appsyncUrl, region);
@@ -67,44 +69,40 @@ const addUser = async (userAttributes) => {
   const dateTime = new Date().toISOString();
   const today = dateTime.slice(0, 10);
 
-  if(role == "trainer"){
+  if (role === "trainer") {
+    const messageGroupRes = await request(createMessageGroup, {
+      messageGroupTrainerId: cognitoID,
+    });
+    console.log(messageGroupRes.data);
+    const variables = {
+      input: {
+        id: cognitoID,
+        Email: email,
+        UserRole: role,
+        FirstName: first,
+        LastName: last,
+        RegDate: today,
+        owner: cognitoID,
+        userProfileUserMessageGroupId:
+          messageGroupRes.data.createMessageGroup.id,
+      },
+    };
 
-      const messageGroupRes = await request(createMessageGroup,{messageGroupTrainerId:cognitoID});
-      console.log(messageGroupRes.data);
-      const variables = {
-        input: {
-          id: cognitoID,
-          Email: email,
-          UserRole: role,
-          FirstName: first,
-          LastName: last,
-          RegDate: today,
-          owner: cognitoID,
-          userProfileUserMessageGroupId:messageGroupRes.data.createMessageGroup.id
-        },
-      };
-
-      const res = await request(createUserProfile, variables);
-
-      return res;
-  }else{
-        const variables = {
-          input: {
-            id: cognitoID,
-            Email: email,
-            UserRole: role,
-            FirstName: first,
-            LastName: last,
-            RegDate: today,
-            owner: cognitoID,
-          },
-        };
-        const res = await request(createUserProfile, variables);
-
-        return res;
+    return await request(createUserProfile, variables);
+  } else {
+    const variables = {
+      input: {
+        id: cognitoID,
+        Email: email,
+        UserRole: role,
+        FirstName: first,
+        LastName: last,
+        RegDate: today,
+        owner: cognitoID,
+      },
+    };
+    return await request(createUserProfile, variables);
   }
-
-
 };
 
 exports.handler = (event, context, callback) => {
