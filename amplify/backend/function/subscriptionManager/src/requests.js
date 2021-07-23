@@ -59,48 +59,35 @@ const getProfileByID = async (id) => {
   return res.data.getUserProfile;
 };
 
-const getUUID = async () => {
-  const { Parameters } = await new AWS.SSM()
-    .getParameters({
-      Names: ["SEED_UUID"].map((secretName) => process.env[secretName]),
-      WithDecryption: true,
-    })
-    .promise();
+const updateSubscription = async (id, expireDate) => {};
 
-  return Parameters.find((e) => e.Name === process.env.SEED_UUID).Value;
-};
-
-const createSubscription = async (trainerID, userID, expireDate) => {
-  const createUserSubscriptionTrainer = gql`
-    mutation createUserSubscriptionTrainer(
-      $input: CreateUserSubscriptionTrainerInput!
-    ) {
-      createUserSubscriptionTrainer(input: $input) {
-        id
-        ExpireDate
-        CancelAtPeriodEnd
+const getSubscriptionsByExpireDate = async (date) => {
+  const subscriptionsByExpireDate = gql`
+    query SubscriptionsByExpireDate($ExpireDate: AWSDate) {
+      subscriptionsByExpireDate(ExpireDate: $ExpireDate) {
+        items {
+          id
+          ExpireDate
+          CancelAtPeriodEnd
+          createdAt
+          updatedAt
+          Trainer {
+            SubscriptionPrice
+          }
+          User {
+            id
+            TokenBalance
+          }
+        }
       }
     }
   `;
 
-  const UUID = await getUUID();
-  const i = v5(trainerID + userID, UUID);
-  const expire = new Date(expireDate * 1000).toISOString();
-  const exp = expire.slice(0, 10);
+  const variables = { ExpireDate: date };
 
-  const variables = {
-    input: {
-      id: i,
-      CancelAtPeriodEnd: false,
-      userSubscriptionTrainerTrainerId: trainerID,
-      userSubscriptionTrainerUserId: userID,
-      ExpireDate: exp,
-    },
-  };
+  const res = await request(subscriptionsByExpireDate, variables);
 
-  const res = await request(createUserSubscriptionTrainer, variables);
-
-  return res;
+  return res.data.subscriptionsByExpireDate.items;
 };
 
 const deductTokens = async (id, currentTokenCount, amount) => {
@@ -113,6 +100,7 @@ const deductTokens = async (id, currentTokenCount, amount) => {
       }
     }
   `;
+
   let curr = currentTokenCount ? currentTokenCount : 0;
 
   const variables = { input: { id: id, TokenBalance: curr - amount } };
@@ -148,7 +136,8 @@ const deleteSubscription = async (trainerID, userID) => {
 
 module.exports = {
   deleteSubscription,
-  createSubscription,
+  updateSubscription,
+  getSubscriptionsByExpireDate,
   getProfileByID,
   deductTokens,
 };
