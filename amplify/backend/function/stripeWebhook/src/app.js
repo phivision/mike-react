@@ -11,13 +11,7 @@ const awsServerlessExpressMiddleware = require("aws-serverless-express/middlewar
 const prices = require("./prices").prices;
 const AWS = require("aws-sdk");
 const asyncHandler = require("express-async-handler");
-const {
-  queryByStripeID,
-  setVerified,
-  addTokens,
-  createSubscription,
-  deleteSubscription,
-} = require("./requests");
+const { queryByStripeID, setVerified, addTokens } = require("./requests");
 
 // declare a new express app
 const app = express();
@@ -120,41 +114,6 @@ app.post(
 
     // Handle the event
     switch (event.type) {
-      case "invoice.paid":
-        const invoice = event.data.object;
-
-        const [customer, trainer, sub] = await Promise.all([
-          queryByStripeID(invoice.customer),
-          queryByStripeID(invoice.transfer_data.destination),
-          stripe.subscriptions.retrieve(invoice.subscription),
-        ]);
-
-        await Promise.all([
-          createSubscription(
-            trainer.items[0].id,
-            customer.items[0].id,
-            sub.id,
-            sub.current_period_end
-          ),
-          // addTokens(customer.items[0].id, customer.items[0].TokenBalance, 10),
-        ]);
-
-        res.json({ received: true });
-        break;
-
-      case "customer.subscription.deleted":
-        const subscription = event.data.object;
-        const [cus, price] = await Promise.all([
-          queryByStripeID(subscription.customer),
-          stripe.prices.retrieve(subscription.plan.id),
-        ]);
-
-        const train = await queryByStripeID(price.lookup_key);
-        await deleteSubscription(train.items[0].id, cus.items[0].id);
-
-        res.json({ received: true });
-        break;
-
       case "payment_intent.succeeded":
         const paymentIntent = event.data.object;
         const c = await queryByStripeID(paymentIntent.customer);
