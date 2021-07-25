@@ -4,21 +4,9 @@ const urlParse = require("url").URL;
 const appsyncUrl = process.env.API_MIKEAMPLIFY_GRAPHQLAPIENDPOINTOUTPUT;
 const region = process.env.REGION;
 
-const v5 = require("uuid/v5");
 const graphql = require("graphql");
 const gql = require("graphql-tag");
 const { print } = graphql;
-
-const getUUID = async () => {
-  const { Parameters } = await new AWS.SSM()
-    .getParameters({
-      Names: ["SEED_UUID"].map((secretName) => process.env[secretName]),
-      WithDecryption: true,
-    })
-    .promise();
-
-  return Parameters.find((e) => e.Name === process.env.SEED_UUID).Value;
-};
 
 const request = (queryDetails, variables) => {
   const req = new AWS.HttpRequest(appsyncUrl, region);
@@ -107,74 +95,8 @@ const addTokens = async (id, currentTokenCount, amount) => {
   return res;
 };
 
-const createSubscription = async (
-  trainerID,
-  userID,
-  subscriptionID,
-  expireDate
-) => {
-  const createUserSubscriptionTrainer = gql`
-    mutation createUserSubscriptionTrainer(
-      $input: CreateUserSubscriptionTrainerInput!
-    ) {
-      createUserSubscriptionTrainer(input: $input) {
-        id
-        StripeID
-        ExpireDate
-        CancelAtPeriodEnd
-      }
-    }
-  `;
-
-  const UUID = await getUUID();
-  const i = v5(trainerID + userID, UUID);
-  const expire = new Date(expireDate * 1000).toISOString();
-  const exp = expire.slice(0, 10);
-
-  const variables = {
-    input: {
-      id: i,
-      CancelAtPeriodEnd: false,
-      userSubscriptionTrainerTrainerId: trainerID,
-      userSubscriptionTrainerUserId: userID,
-      StripeID: subscriptionID,
-      ExpireDate: exp,
-    },
-  };
-
-  const res = await request(createUserSubscriptionTrainer, variables);
-
-  return res;
-};
-
-const deleteSubscription = async (trainerID, userID) => {
-  const deleteUserSubscriptionTrainer = gql`
-    mutation deleteUserSubscriptionTrainer(
-      $input: DeleteUserSubscriptionTrainerInput!
-    ) {
-      deleteUserSubscriptionTrainer(input: $input) {
-        id
-      }
-    }
-  `;
-
-  const i = v5(trainerID + userID, UUID);
-
-  const variables = {
-    input: {
-      id: i,
-    },
-  };
-
-  const res = await request(deleteUserSubscriptionTrainer, variables);
-
-  return res;
-};
-
 module.exports = {
   queryByStripeID,
   setVerified,
   addTokens,
-  createSubscription,
-  deleteSubscription,
 };

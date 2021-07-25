@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "api": {
+      "mikeAmplify": [
+        "Query",
+        "Mutation"
+      ]
+    }
+  },
+  "lambdaLayers": [],
+  "secretNames": [
+    "SEED_UUID"
+  ]
+}

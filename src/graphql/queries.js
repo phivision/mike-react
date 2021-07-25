@@ -604,6 +604,88 @@ export const listUserSubscriptionTrainers = /* GraphQL */ `
     }
   }
 `;
+export const subscriptionsByExpireDate = /* GraphQL */ `
+  query SubscriptionsByExpireDate(
+    $ExpireDate: AWSDate
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserSubscriptionTrainerFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    subscriptionsByExpireDate(
+      ExpireDate: $ExpireDate
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        StripeID
+        ExpireDate
+        CancelAtPeriodEnd
+        createdAt
+        updatedAt
+        Trainer {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          TokenPrice
+          SubscriptionPrice
+          owner
+          DeviceToken
+          createdAt
+          updatedAt
+        }
+        User {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          TokenPrice
+          SubscriptionPrice
+          owner
+          DeviceToken
+          createdAt
+          updatedAt
+        }
+        owner
+      }
+      nextToken
+    }
+  }
+`;
 export const getUserContent = /* GraphQL */ `
   query GetUserContent($id: ID!) {
     getUserContent(id: $id) {

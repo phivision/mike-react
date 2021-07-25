@@ -57,9 +57,11 @@
 type UserSubscriptionTrainer @model(subscriptions: null)
 @auth(rules: [{ allow: owner, operations: [create, delete, update] },
   { allow: private, operations: [read]},
-  { allow: public, provider: iam, operations: [read]}]){
+  { allow: public, provider: iam, operations: [read]}])
+@key(name: "subscriptionsByExpire", fields: ["ExpireDate"], queryField: "subscriptionsByExpireDate")
+{
   id: ID!
-  StripeID: String!
+  StripeID: String
   ExpireDate: AWSDate!
   CancelAtPeriodEnd: Boolean!
   Trainer: UserProfile! @connection(name: "bySubscriptedTrainer")
