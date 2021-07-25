@@ -59,7 +59,24 @@ const getProfileByID = async (id) => {
   return res.data.getUserProfile;
 };
 
-const updateSubscription = async (id, expireDate) => {};
+const updateSubscription = async (id, expireDate) => {
+  const updateUserSubscriptionTrainer = gql`
+    mutation UpdateUserSubscriptionTrainer(
+      $input: UpdateUserSubscriptionTrainerInput!
+      $condition: ModelUserSubscriptionTrainerConditionInput
+    ) {
+      updateUserSubscriptionTrainer(input: $input, condition: $condition) {
+        id
+      }
+    }
+  `;
+
+  const variables = { input: { id: id, ExpireDate: expireDate } };
+
+  const res = await request(updateUserSubscriptionTrainer, variables);
+
+  return res;
+};
 
 const getSubscriptionsByExpireDate = async (date) => {
   const subscriptionsByExpireDate = gql`

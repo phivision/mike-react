@@ -51,6 +51,10 @@
             "Ref": "s3Key"
           }
         },
+        "MemorySize": 1024,
+        "TracingConfig": {
+          "Mode": "Active"
+        },
         "Handler": "index.handler",
         "FunctionName": {
           "Fn::If": [
