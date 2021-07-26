@@ -91,6 +91,6 @@
     "signinwithappleAuthorizeScopes": [
         "email"
     ],
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"mikeios://\",\"mike://\"],\"LogoutURLs\":[\"mike://\"]}",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\"],\"CallbackURLs\":[\"mike://\"],\"LogoutURLs\":[\"mike://\"]}",
     "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostConfirmation\",\n    \"lambdaFunctionName\": \"mikereactPostConfirmation\"\n  }\n]"
 }
