@@ -49,6 +49,7 @@ const getProfileByID = async (id) => {
         StripeID
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         UserRole
       }
     }
