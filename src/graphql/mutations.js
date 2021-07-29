@@ -73,6 +73,7 @@ export const createUserProfile = /* GraphQL */ `
           ContentName
           Description
           Title
+          Orientation
           Level
           Length
           IsDemo
@@ -197,6 +198,7 @@ export const updateUserProfile = /* GraphQL */ `
           ContentName
           Description
           Title
+          Orientation
           Level
           Length
           IsDemo
@@ -321,6 +323,7 @@ export const deleteUserProfile = /* GraphQL */ `
           ContentName
           Description
           Title
+          Orientation
           Level
           Length
           IsDemo
@@ -753,6 +756,7 @@ export const createUserFavoriteContent = /* GraphQL */ `
         ContentName
         Description
         Title
+        Orientation
         Level
         Length
         IsDemo
@@ -859,6 +863,7 @@ export const updateUserFavoriteContent = /* GraphQL */ `
         ContentName
         Description
         Title
+        Orientation
         Level
         Length
         IsDemo
@@ -965,6 +970,7 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
         ContentName
         Description
         Title
+        Orientation
         Level
         Length
         IsDemo
@@ -1021,6 +1027,7 @@ export const createUserContent = /* GraphQL */ `
       ContentName
       Description
       Title
+      Orientation
       Level
       Length
       IsDemo
@@ -1100,6 +1107,7 @@ export const updateUserContent = /* GraphQL */ `
       ContentName
       Description
       Title
+      Orientation
       Level
       Length
       IsDemo
@@ -1179,6 +1187,7 @@ export const deleteUserContent = /* GraphQL */ `
       ContentName
       Description
       Title
+      Orientation
       Level
       Length
       IsDemo

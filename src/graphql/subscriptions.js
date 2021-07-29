@@ -10,6 +10,7 @@ export const onContentByCreatorID = /* GraphQL */ `
       ContentName
       Description
       Title
+      Orientation
       Level
       Length
       IsDemo
@@ -86,6 +87,7 @@ export const onUpdateByCreatorID = /* GraphQL */ `
       ContentName
       Description
       Title
+      Orientation
       Level
       Length
       IsDemo
@@ -162,6 +164,7 @@ export const onDeletionByCreatorID = /* GraphQL */ `
       ContentName
       Description
       Title
+      Orientation
       Level
       Length
       IsDemo

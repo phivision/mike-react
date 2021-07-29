@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 // @material-ui/core components
-import { Typography, Card } from "@material-ui/core";
+import { Typography, Card, Button, Menu, MenuItem } from "@material-ui/core";
 // core components
 import {
   GridContainer,
@@ -42,6 +42,12 @@ const initialVideoForm = {
 let videoFile;
 let thumbFile;
 let newImage;
+const videoOrientations = ["Choose Orientation", "Landscape", "Portrait"];
+const orientationTypeMap = { Portrait: "PORTRAIT", Landscape: "LANDSCAPE" };
+
+function capFirst(s) {
+  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+}
 
 export default function ContentUpload(props) {
   const [videoForm, setVideoForm] = useState(initialVideoForm);
@@ -49,6 +55,8 @@ export default function ContentUpload(props) {
   const [videoReady, setVideoReady] = useState(false);
   const [videoStatus, setVideoStatus] = useState("New Video");
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [orientationIndex, setOrientationIndex] = React.useState(0);
   // uploading count down internal
   const [count, setCount] = useState(0);
   const [openDuplicationDialog, setOpenDuplicationDialog] = useState(false);
@@ -79,7 +87,12 @@ export default function ContentUpload(props) {
             ? d.data.getUserContent.Segments
             : JSON.stringify([]),
         };
-
+        if (d.data.getUserContent.Orientation) {
+          const currentOrient = capFirst(d.data.getUserContent.Orientation);
+          setOrientationIndex(
+            videoOrientations.findIndex((orient) => orient === currentOrient)
+          );
+        }
         setVideoForm(userData);
         // video exists
         setVideoReady(true);
@@ -136,19 +149,25 @@ export default function ContentUpload(props) {
   }
   const handleVideoFileChange = (event) => {
     if (!event.target.files[0]) return;
-    videoFile = event.target.files[0];
-    // combine filename with owner id and remove non alphanumeric value from the string
-    const fileName = videoFile.name.split(".");
-    const newContentName =
-      (fileName[0] + props.user + Date.now()).replace(/[^0-9a-z]/gi, "") +
-      "." +
-      fileName[1];
-    const prevContentName = videoForm.ContentName;
-    setVideoForm({
-      ...videoForm,
-      PrevContentName: prevContentName,
-      ContentName: newContentName,
-    });
+    if (orientationIndex !== 0) {
+      videoFile = event.target.files[0];
+      // combine filename with owner id and remove non alphanumeric value from the string
+      const fileName = videoFile.name.split(".");
+      const newContentName =
+        videoOrientations[orientationIndex] +
+        "_" +
+        (fileName[0] + props.user + Date.now()).replace(/[^0-9a-z]/gi, "") +
+        "." +
+        fileName[1];
+      const prevContentName = videoForm.ContentName;
+      setVideoForm({
+        ...videoForm,
+        PrevContentName: prevContentName,
+        ContentName: newContentName,
+      });
+    } else {
+      missingFileMessage();
+    }
   };
   const handleSegmentJSONChange = (s) => {
     setVideoForm({ ...videoForm, Segments: JSON.stringify(s) });
@@ -169,6 +188,8 @@ export default function ContentUpload(props) {
                 ContentName: videoForm.ContentName,
                 Description: videoForm.Description,
                 Title: videoForm.Title,
+                Orientation:
+                  orientationTypeMap[videoOrientations[orientationIndex]],
                 IsDemo: videoForm.IsDemo,
                 Thumbnail: videoForm.Thumbnail,
                 Segments: videoForm.Segments,
@@ -192,7 +213,7 @@ export default function ContentUpload(props) {
     setOpenDuplicationDialog(false);
     // remove existing video, then re-create the video
     if (props.video) {
-      if (videoFile && thumbFile) {
+      if (videoFile && thumbFile && orientationIndex !== 0) {
         // if new video ready, delete existing video
         deleteVideo(videoForm.PrevContentName, videoForm.Thumbnail).then(
           uploadVideo
@@ -208,6 +229,8 @@ export default function ContentUpload(props) {
             id: props.video,
             Description: videoForm.Description,
             Title: videoForm.Title,
+            Orientation:
+              orientationTypeMap[videoOrientations[orientationIndex]],
             IsDemo: videoForm.IsDemo,
             Segments: videoForm.Segments,
             ContentName: videoForm.ContentName,
@@ -218,6 +241,19 @@ export default function ContentUpload(props) {
     }
   };
 
+  const handleClickOrientation = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseOrientation = () => {
+    setAnchorEl(null);
+  };
+
+  const handleOrientationMenuClick = (event, index) => {
+    setOrientationIndex(index);
+    setAnchorEl(null);
+  };
+
   const missingFileMessage = () => {
     let msg = "";
     if (videoFile === undefined) {
@@ -225,6 +261,9 @@ export default function ContentUpload(props) {
     }
     if (thumbFile === undefined) {
       msg += "The thumbnail is not selected! ";
+    }
+    if (orientationIndex === 0) {
+      msg += "The video orientation is not selected! ";
     }
     setVideoStatus(msg);
   };
@@ -238,7 +277,11 @@ export default function ContentUpload(props) {
     } else {
       newImage = thumbFile;
     }
-    if (videoFile !== undefined && newImage !== undefined) {
+    if (
+      videoFile !== undefined &&
+      newImage !== undefined &&
+      orientationIndex !== 0
+    ) {
       // prepare progress bar
       setUploadProgress(1);
       // notify uploader
@@ -318,7 +361,33 @@ export default function ContentUpload(props) {
           value={videoForm.Description}
           onChange={handleVideoFormChange}
         />
+        <Button
+          aria-controls="simple-menu"
+          aria-haspopup="true"
+          onClick={handleClickOrientation}
+        >
+          {videoOrientations[orientationIndex]}
+        </Button>
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleCloseOrientation}
+        >
+          {videoOrientations.map((option, index) => (
+            <MenuItem
+              key={option}
+              disabled={index === 0}
+              selected={index === orientationIndex}
+              onClick={(event) => handleOrientationMenuClick(event, index)}
+            >
+              {option}
+            </MenuItem>
+          ))}
+        </Menu>
         <Card>
+          <Typography> Select Thumbnail</Typography>
           <ImageInput
             title="Thumbnail"
             width="100%"
@@ -335,6 +404,7 @@ export default function ContentUpload(props) {
       </GridContainer>
       <GridItem xs={12} sm={6}>
         <Card>
+          <Typography> Select Video</Typography>
           <ImageInput
             title={videoStatus}
             url=""

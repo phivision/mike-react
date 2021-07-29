@@ -11,6 +11,7 @@ import { Card } from "@material-ui/core";
 
 export default function ContentViewer({ post }) {
   const segments = post.Segments ? post.Segments : JSON.stringify([]);
+  const m3u8Key = post.ContentName.replace(/_/g, "");
   return (
     <GridContainer>
       <GridItem xs={12} sm={5}>
@@ -22,7 +23,7 @@ export default function ContentViewer({ post }) {
       </GridItem>
       <GridItem xs={12} sm={7}>
         <Card>
-          <MemoVideoPlayer video={post.ContentName} />
+          <MemoVideoPlayer video={m3u8Key} />
         </Card>
       </GridItem>
     </GridContainer>
