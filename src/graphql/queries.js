@@ -122,6 +122,7 @@ export const getUserProfile = /* GraphQL */ `
           ContentName
           Description
           Title
+          Orientation
           Level
           Length
           IsDemo
@@ -695,6 +696,7 @@ export const getUserContent = /* GraphQL */ `
       ContentName
       Description
       Title
+      Orientation
       Level
       Length
       IsDemo
@@ -776,6 +778,7 @@ export const listUserContents = /* GraphQL */ `
         ContentName
         Description
         Title
+        Orientation
         Level
         Length
         IsDemo
@@ -845,6 +848,7 @@ export const byContentCreatedAt = /* GraphQL */ `
         ContentName
         Description
         Title
+        Orientation
         Level
         Length
         IsDemo
@@ -912,6 +916,7 @@ export const contentByName = /* GraphQL */ `
         ContentName
         Description
         Title
+        Orientation
         Level
         Length
         IsDemo

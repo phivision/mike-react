@@ -8,15 +8,8 @@ Parameters:
   unauthRoleArn:
     Type: String
 
-
-  emailSendingAccount:
-    Type: String
-  from:
-    Type: String
-  replyToEmailAddress:
-    Type: String
-  sourceArn:
-    Type: String
+  
+  
   
   functionmikereactPostConfirmationArn:
     Type: String
@@ -25,11 +18,15 @@ Parameters:
   functionmikereactPostConfirmationName:
     Type: String
     Default: functionmikereactPostConfirmationName
+  
+  
+  
 
     
   identityPoolName:
     Type: String
-
+  
+            
   
   allowUnauthenticatedIdentities:
     Type: String
@@ -109,6 +106,22 @@ Parameters:
   
   userpoolClientSetAttributes:
     Type: String
+            
+  emailSendingAccount:
+    Type: String
+  
+            
+  from:
+    Type: String
+  
+            
+  replyToEmailAddress:
+    Type: String
+  
+            
+  sourceArn:
+    Type: String
+  
             
   sharedId:
     Type: String
@@ -200,6 +213,10 @@ Parameters:
   signinwithappleAuthorizeScopes:
     Type: CommaDelimitedList
       
+  authTriggerConnections:
+    Type: String
+  
+            
   hostedUIProviderCreds:
     Type: String
   
@@ -208,10 +225,6 @@ Parameters:
     Type: String
   
             
-            
-  authTriggerConnections:
-    Type: String
-  
             
 Conditions:
   ShouldNotCreateEnvResources: !Equals [ !Ref env, NONE ]
@@ -271,22 +284,11 @@ Resources:
           Required: true
           Mutable: true
         
-      AccountRecoverySetting:
-        RecoveryMechanisms:
-          - Name: verified_email
-            Priority: 1
-          - Name: verified_phone_number
-            Priority: 2
-
+      
       
       
       AutoVerifiedAttributes: !Ref autoVerifiedAttributes
-
-      EmailConfiguration:
-        EmailSendingAccount: !Ref emailSendingAccount
-        From: !Ref from
-        ReplyToEmailAddress: !Ref from
-        SourceArn: !Ref sourceArn
+      
       
       EmailVerificationMessage: !Ref emailVerificationMessage
       EmailVerificationSubject: !Ref emailVerificationSubject
@@ -840,6 +842,15 @@ Resources:
               Action:
                 - 'iam:PassRole'
               Resource: !If [ShouldNotCreateEnvResources, 'arn:aws:iam:::role/mikere862a812d_totp_lambda_role', !Join ['',['arn:aws:iam:::role/mikere862a812d_totp_lambda_role', '-', !Ref env]]]
+      - PolicyName: mikere862a812d_sns_pass_role_policy
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement: 
+            - Effect: Allow
+              Action:
+                - 'iam:PassRole'
+              Resource: !GetAtt SNSRole.Arn
+    DependsOn: SNSRole
   MFALambda:
   # Lambda which sets MFA config values
   # Depends on MFALambdaRole for role ARN

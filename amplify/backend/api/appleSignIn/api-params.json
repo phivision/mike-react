@@ -1,0 +1,45 @@
+{
+  "paths": [
+    {
+      "name": "/appleSignIn/configureProfile",
+      "lambdaFunction": "appleSignIn",
+      "privacy": {
+        "protected": true,
+        "auth": [
+          "/POST",
+          "/GET",
+          "/PUT",
+          "/PATCH",
+          "/DELETE"
+        ],
+        "unauth": [
+          "/GET"
+        ]
+      },
+      "policyResourceName": "/appleSignIn/configureProfile"
+    }
+  ],
+  "resourceName": "appleSignIn",
+  "apiName": "appleSignIn",
+  "functionArns": [
+    {
+      "lambdaFunction": "appleSignIn"
+    }
+  ],
+  "privacy": {
+    "auth": 1,
+    "unauth": 1,
+    "authRoleName": "amplify-mikereact-feature-135143-authRole",
+    "unAuthRoleName": "amplify-mikereact-feature-135143-unauthRole"
+  },
+  "dependsOn": [
+    {
+      "category": "function",
+      "resourceName": "appleSignIn",
+      "attributes": [
+        "Name",
+        "Arn"
+      ]
+    }
+  ]
+}

@@ -182,7 +182,7 @@
     }
   }
 },
-"hls_presets": [
+"hls_landscape_presets": [
   {
     "width": 480,
     "height": 270,
@@ -246,6 +246,80 @@
   {
     "width": 1920,
     "height": 1080,
+    "videoBitrate": 8500000,
+    "framerateNumerator": 30000,
+    "gopSize": 90,
+    "adaptiveQuantization": "HIGH",
+    "codecLevel": "LEVEL_4",
+    "videoCodecProfile": "HIGH",
+    "audioBitrate": 128000,
+    "audioProfile": "LC"
+  }
+],
+"hls_portrait_presets": [
+  {
+    "width": 270,
+    "height": 480,
+    "videoBitrate": 400000,
+    "framerateNumerator": 15000,
+    "gopSize": 45,
+    "adaptiveQuantization": "MEDIUM",
+    "codecLevel": "LEVEL_3_1",
+    "videoCodecProfile": "MAIN",
+    "audioBitrate": 64000,
+    "audioProfile": "HEV1"
+  },
+  {
+    "width": 360,
+    "height": 640,
+    "videoBitrate": 600000,
+    "framerateNumerator": 30000,
+    "gopSize": 90,
+    "adaptiveQuantization": "MEDIUM",
+    "codecLevel": "LEVEL_3_1",
+    "videoCodecProfile": "MAIN",
+    "audioBitrate": 64000,
+    "audioProfile": "HEV1"
+  },
+  {
+    "width": 360,
+    "height": 640,
+    "videoBitrate": 1200000,
+    "framerateNumerator": 30000,
+    "gopSize": 90,
+    "adaptiveQuantization": "MEDIUM",
+    "codecLevel": "LEVEL_3_1",
+    "videoCodecProfile": "MAIN",
+    "audioBitrate": 96000,
+    "audioProfile": "HEV1"
+  },
+  {
+    "width": 540,
+    "height": 960,
+    "videoBitrate": 3500000,
+    "framerateNumerator": 30000,
+    "gopSize": 90,
+    "adaptiveQuantization": "HIGH",
+    "codecLevel": "LEVEL_4",
+    "videoCodecProfile": "HIGH",
+    "audioBitrate": 96000,
+    "audioProfile": "HEV1"
+  },
+  {
+    "width": 720,
+    "height": 1280,
+    "videoBitrate": 5000000,
+    "framerateNumerator": 30000,
+    "gopSize": 90,
+    "adaptiveQuantization": "HIGH",
+    "codecLevel": "LEVEL_4",
+    "videoCodecProfile": "HIGH",
+    "audioBitrate": 128000,
+    "audioProfile": "HEV1"
+  },
+  {
+    "width": 1080,
+    "height": 1920,
     "videoBitrate": 8500000,
     "framerateNumerator": 30000,
     "gopSize": 90,

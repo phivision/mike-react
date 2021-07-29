@@ -134,6 +134,20 @@
           ]
         }
       ]
+    },
+    "appleSignIn": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "appleSignIn",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ]
     }
   },
   "storage": {
@@ -309,6 +323,21 @@
       ]
     },
     "subscriptionManager": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "mikeAmplify",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ]
+        }
+      ]
+    },
+    "appleSignIn": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",

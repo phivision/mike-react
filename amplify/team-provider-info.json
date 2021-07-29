@@ -58,7 +58,7 @@
         },
         "subscriptions": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/subscriptions-7959624e323331303278-build.zip"
+          "s3Key": "amplify-builds/subscriptions-4a3133387061346a7631-build.zip"
         },
         "subscriptionManager": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
@@ -212,11 +212,15 @@
         },
         "subscriptions": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
-          "s3Key": "amplify-builds/subscriptions-7959624e323331303278-build.zip"
+          "s3Key": "amplify-builds/subscriptions-39514432554634757a70-build.zip"
         },
         "subscriptionManager": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
-          "s3Key": "amplify-builds/subscriptionManager-50526e65475462487a57-build.zip"
+          "s3Key": "amplify-builds/subscriptionManager-4d78334b674359713448-build.zip"
+        },
+        "appleSignIn": {
+          "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
+          "s3Key": "amplify-builds/appleSignIn-63462b4c516c59413956-build.zip"
         }
       },
       "storage": {

@@ -7,7 +7,6 @@ const region = process.env.REGION;
 const graphql = require("graphql");
 const gql = require("graphql-tag");
 const { print } = graphql;
-const v5 = require("uuid/v5");
 
 const request = (queryDetails, variables) => {
   const req = new AWS.HttpRequest(appsyncUrl, region);
@@ -35,28 +34,6 @@ const request = (queryDetails, variables) => {
     httpRequest.write(req.body);
     httpRequest.end();
   });
-};
-
-const getProfileByID = async (id) => {
-  const getUserProfile = gql`
-    query getUserProfile($id: ID!) {
-      getUserProfile(id: $id) {
-        Email
-        FirstName
-        IsVerified
-        LandingURL
-        LastName
-        StripeID
-        TokenBalance
-        TokenPrice
-        UserRole
-      }
-    }
-  `;
-  const variables = { id: id };
-  const res = await request(getUserProfile, variables);
-
-  return res.data.getUserProfile;
 };
 
 const updateSubscription = async (id, expireDate) => {
@@ -127,34 +104,8 @@ const deductTokens = async (id, currentTokenCount, amount) => {
   return res;
 };
 
-const deleteSubscription = async (trainerID, userID) => {
-  const deleteUserSubscriptionTrainer = gql`
-    mutation deleteUserSubscriptionTrainer(
-      $input: DeleteUserSubscriptionTrainerInput!
-    ) {
-      deleteUserSubscriptionTrainer(input: $input) {
-        id
-      }
-    }
-  `;
-
-  const i = v5(trainerID + userID, UUID);
-
-  const variables = {
-    input: {
-      id: i,
-    },
-  };
-
-  const res = await request(deleteUserSubscriptionTrainer, variables);
-
-  return res;
-};
-
 module.exports = {
-  deleteSubscription,
   updateSubscription,
   getSubscriptionsByExpireDate,
-  getProfileByID,
   deductTokens,
 };
