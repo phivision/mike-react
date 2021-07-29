@@ -71,7 +71,7 @@ const getUUID = async () => {
   return Parameters.find((e) => e.Name === process.env.SEED_UUID).Value;
 };
 
-const createSubscription = async (trainerID, userID, expireDate) => {
+const createSubscription = async (trainerID, userID, dateString) => {
   const createUserSubscriptionTrainer = gql`
     mutation createUserSubscriptionTrainer(
       $input: CreateUserSubscriptionTrainerInput!
@@ -86,8 +86,6 @@ const createSubscription = async (trainerID, userID, expireDate) => {
 
   const UUID = await getUUID();
   const i = v5(trainerID + userID, UUID);
-  const expire = new Date(expireDate * 1000).toISOString();
-  const exp = expire.slice(0, 10);
 
   const variables = {
     input: {
@@ -95,7 +93,7 @@ const createSubscription = async (trainerID, userID, expireDate) => {
       CancelAtPeriodEnd: false,
       userSubscriptionTrainerTrainerId: trainerID,
       userSubscriptionTrainerUserId: userID,
-      ExpireDate: exp,
+      ExpireDate: dateString,
     },
   };
 
@@ -123,32 +121,27 @@ const deductTokens = async (id, currentTokenCount, amount) => {
   return res;
 };
 
-const deleteSubscription = async (trainerID, userID) => {
-  const deleteUserSubscriptionTrainer = gql`
-    mutation deleteUserSubscriptionTrainer(
-      $input: DeleteUserSubscriptionTrainerInput!
+const expireSubscription = async (id) => {
+  const updateUserSubscriptionTrainer = gql`
+    mutation UpdateUserSubscriptionTrainer(
+      $input: UpdateUserSubscriptionTrainerInput!
+      $condition: ModelUserSubscriptionTrainerConditionInput
     ) {
-      deleteUserSubscriptionTrainer(input: $input) {
+      updateUserSubscriptionTrainer(input: $input, condition: $condition) {
         id
       }
     }
   `;
 
-  const i = v5(trainerID + userID, UUID);
+  const variables = { input: { id: id, CancelAtPeriodEnd: true } };
 
-  const variables = {
-    input: {
-      id: i,
-    },
-  };
-
-  const res = await request(deleteUserSubscriptionTrainer, variables);
+  const res = await request(updateUserSubscriptionTrainer, variables);
 
   return res;
 };
 
 module.exports = {
-  deleteSubscription,
+  expireSubscription,
   createSubscription,
   getProfileByID,
   deductTokens,

@@ -3,16 +3,16 @@ var mediaconvert = new AWS.MediaConvert({ apiVersion: "2017-08-29" });
 
 const MEDIACONVERT_ROLE = process.env.JOB_ROLE;
 const PACKAGE_TYPE = process.env.PACKAGE_TYPE;
-let INPUT_PREFIX = fixForPrefix(process.env.INPUT_PREFIX);
-let OUTPUT_PREFIX = fixForPrefix(process.env.OUTPUT_PREFIX);
+const INPUT_PREFIX = fixForPrefix(process.env.INPUT_PREFIX);
+const OUTPUT_PREFIX = fixForPrefix(process.env.OUTPUT_PREFIX);
 
 //helper function to address scenarios where user does not enter the
 //trailing '/' in 'input' and 'output' prefix
-function fixForPrefix(foldername) {
-  if (!foldername.endsWith("/")) {
-    foldername = foldername + "/";
+function fixForPrefix(folderName) {
+  if (!folderName.endsWith("/")) {
+    folderName = folderName + "/";
   }
-  return foldername;
+  return folderName;
 }
 
 let INITIALISED = false;
@@ -21,8 +21,8 @@ exports.handler = async (event, context, callback) => {
   console.log("Event Object :%j", event);
 
   //create the transcoding job
-  let job = await createJob(event);
-  //initiatize the MediaConvert Endpoint with account specific endpoint only if not done already.
+  const job = await createJob(event);
+  //initialize the MediaConvert Endpoint with account specific endpoint only if not done already.
   if (!INITIALISED) {
     await setMediaConvertEndpoint(mediaconvert);
     await setMediaConvertQueue(job);
@@ -36,35 +36,36 @@ exports.handler = async (event, context, callback) => {
 
 //set the Default Queue Arn
 async function setMediaConvertQueue(job) {
-  var params = {
+  const params = {
     Name: "Default" /* required */,
   };
 
-  let queue = await mediaconvert.getQueue(params).promise();
+  const queue = await mediaconvert.getQueue(params).promise();
   job.Queue = queue.Queue.Arn;
 }
 
 //set the AWS Account specific mediaconvert endpoint
 async function setMediaConvertEndpoint(mediaconvert) {
   // Create empty request parameters
-  var params = {
+  const params = {
     MaxResults: 0,
   };
 
-  let endpoint = await mediaconvert.describeEndpoints(params).promise();
+  const endpoint = await mediaconvert.describeEndpoints(params).promise();
   mediaconvert.endpoint = endpoint.Endpoints[0].Url;
 }
 
 //create the job with input and output configurations for HLS and DASH
 function createJob(event) {
-  let packageTypes = PACKAGE_TYPE.split("|");
-  let bucket = event.Records[0].s3.bucket.name;
-  let key = event.Records[0].s3.object.key;
-
+  const packageTypes = PACKAGE_TYPE.split("|");
+  const bucket = event.Records[0].s3.bucket.name;
+  const key = event.Records[0].s3.object.key;
+  const orientation = key.split("_")[0].split("/")[1];
+  console.log("Input file orientation: ", orientation);
   console.log("Package types :%j", packageTypes);
   // console.log("Package type 1:%s", packageTypes[1]);
 
-  var params = {
+  let params = {
     Queue: "",
     Role: MEDIACONVERT_ROLE,
     UserMetadata: { S3Bucket: bucket, S3Key: key },
@@ -84,6 +85,7 @@ function createJob(event) {
           },
           VideoSelector: {
             ColorSpace: "FOLLOW",
+            Rotate: "AUTO",
           },
           FilterEnable: "AUTO",
           PsiControl: "USE_PSI",
@@ -102,23 +104,29 @@ function createJob(event) {
 
   packageTypes.forEach(function (packageType, index, array) {
     console.log("Type,index :", packageType, index, array);
-    let type = packageType.split(":");
-    if (type[0] == "hls") {
-      var output = {};
+    const type = packageType.split(":");
+    let output = {};
+    let outputGroupSettings = {};
+    if (type[0] === "hls") {
       output.Name = "HLS";
       output.Outputs = [];
-      let profiles = type[1].split(",");
+      const profiles = type[1].split(",");
 
-      profiles.forEach(function (profile, ind) {
-        let preset = {};
-        preset.Preset = profile;
-        preset.NameModifier = "/" + profile; //"/preset-" + ind;
-        output.Outputs.push(preset);
+      profiles.forEach(function (profile) {
+        const profileOrient = profile.split("_")[0];
+        // use matched profile for media convert
+        if (
+          orientation === profileOrient ||
+          (orientation !== "Portrait" && profileOrient !== "Portrait")
+        ) {
+          let preset = {};
+          preset.Preset = profile;
+          preset.NameModifier = "/" + profile; //"/preset-" + ind;
+          output.Outputs.push(preset);
+        }
       });
-
-      var outputGroupSettings = {};
       outputGroupSettings.Type = "HLS_GROUP_SETTINGS";
-      var hlsSettings = {};
+      let hlsSettings = {};
       hlsSettings.ManifestDurationFormat = "INTEGER";
       hlsSettings.Destination =
         "s3://" +
@@ -145,8 +153,7 @@ function createJob(event) {
       outputGroupSettings.HlsGroupSettings = hlsSettings;
       output.OutputGroupSettings = outputGroupSettings;
       params.Settings.OutputGroups.push(output);
-    } else if ((type[0] = "dash")) {
-      var output = {};
+    } else if (type[0] === "dash") {
       output.Name = "DASH ISO";
       output.Outputs = [];
       let profiles = type[1].split(",");
@@ -161,10 +168,8 @@ function createJob(event) {
         Preset: "System-Ott_Dash_Mp4_Aac_He_96Kbps",
         NameModifier: "/preset-0_Ott_Dash_Mp4_Aac_He_96Kbps",
       });
-
-      var outputGroupSettings = {};
       outputGroupSettings.Type = "DASH_ISO_GROUP_SETTINGS";
-      var dashSettings = {};
+      let dashSettings = {};
       dashSettings.SegmentLength = 4;
       dashSettings.Destination =
         "s3://" +

@@ -11,10 +11,6 @@
         "SMS Text Message",
         "TOTP"
     ],
-    "emailSendingAccount": "DEVELOPER",
-    "from": "thomas@joinmotion.app",
-    "replyToEmailAddress": "thomas@joinmotion.app",
-    "sourceArn": "arn:aws:ses:us-east-1:301286101195:identity/thomas@joinmotion.app",
     "smsAuthenticationMessage": "Your Motion authentication code is {####}",
     "smsVerificationMessage": "Your Motion verification code is {####}",
     "emailVerificationSubject": "Your Motion verification code",
@@ -39,6 +35,10 @@
     ],
     "userpoolClientLambdaRole": "mikere862a812d_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": true,
+    "emailSendingAccount": "DEVELOPER",
+    "from": "thomas@joinmotion.app",
+    "replyToEmailAddress": "thomas@joinmotion.app",
+    "sourceArn": "arn:aws:ses:us-east-1:301286101195:identity/thomas@joinmotion.app",
     "sharedId": "862a812d",
     "resourceName": "mikereact",
     "authSelections": "identityPoolAndUserPool",
@@ -62,6 +62,7 @@
     "userPoolGroups": false,
     "userPoolGroupList": [],
     "adminQueries": false,
+    "userpoolClientGenerateSecret": true,
     "usernameCaseSensitive": false,
     "dependsOn": [
         {
@@ -91,6 +92,6 @@
     "signinwithappleAuthorizeScopes": [
         "email"
     ],
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\"],\"CallbackURLs\":[\"mike://\"],\"LogoutURLs\":[\"mike://\"]}",
-    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostConfirmation\",\n    \"lambdaFunctionName\": \"mikereactPostConfirmation\"\n  }\n]"
+    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostConfirmation\",\n    \"lambdaFunctionName\": \"mikereactPostConfirmation\"\n  }\n]",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\"],\"CallbackURLs\":[\"mike://\"],\"LogoutURLs\":[\"mike://\"]}"
 }

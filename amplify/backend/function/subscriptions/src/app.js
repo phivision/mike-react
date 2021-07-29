@@ -33,6 +33,7 @@ var awsServerlessExpressMiddleware = require("aws-serverless-express/middleware"
 const asyncHandler = require("express-async-handler");
 
 const {
+  expireSubscription,
   createSubscription,
   deductTokens,
   getProfileByID,
@@ -83,7 +84,12 @@ app.post(
   })
 );
 
-// app.delete("/sub"), asyncHandler(async (req, res, next) => {});
+app.delete("/sub"),
+  asyncHandler(async (req, res, next) => {
+    await expireSubscription(req.body.id);
+
+    res.status(200).send();
+  });
 
 app.use((req, res, next) => {
   console.log("Route not found.");
