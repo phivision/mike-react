@@ -58,15 +58,19 @@
         },
         "subscriptions": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/subscriptions-4a3133387061346a7631-build.zip"
+          "s3Key": "amplify-builds/subscriptions-39514432554634757a70-build.zip"
         },
         "subscriptionManager": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/subscriptionManager-50526e65475462487a57-build.zip"
+          "s3Key": "amplify-builds/subscriptionManager-4d78334b674359713448-build.zip"
         },
         "videoCleanUpFavorite": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
           "s3Key": "amplify-builds/videoCleanUpFavorite-4b676b68675a58324c33-build.zip"
+        },
+        "appleSignIn": {
+          "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
+          "s3Key": "amplify-builds/appleSignIn-394f4e4e4e4669444353-build.zip"
         }
       },
       "storage": {
