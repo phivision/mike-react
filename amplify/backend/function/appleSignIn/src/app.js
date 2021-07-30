@@ -6,70 +6,72 @@ or in the "license" file accompanying this file. This file is distributed on an 
 See the License for the specific language governing permissions and limitations under the License.
 */
 
-
 /* Amplify Params - DO NOT EDIT
 	API_MIKEAMPLIFY_GRAPHQLAPIENDPOINTOUTPUT
 	API_MIKEAMPLIFY_GRAPHQLAPIIDOUTPUT
+	AUTH_MIKEREACT_USERPOOLID
 	ENV
 	REGION
 Amplify Params - DO NOT EDIT */
 
-var express = require('express')
-var bodyParser = require('body-parser')
-var awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
+var express = require("express");
+var bodyParser = require("body-parser");
+var awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
 const asyncHandler = require("express-async-handler");
 
 // declare a new express app
-var app = express()
-app.use(bodyParser.json())
-app.use(awsServerlessExpressMiddleware.eventContext())
+var app = express();
+app.use(bodyParser.json());
+app.use(awsServerlessExpressMiddleware.eventContext());
 
 // Enable CORS for all methods
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Headers", "*")
-  next()
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "*");
+  next();
 });
-const {fetchUsers, createProfile} = require("./requests");
+const { fetchUsers, createProfile } = require("./requests");
 
 /****************************
-* Example post method *
-****************************/
+ * Example post method *
+ ****************************/
 
-app.post('/appleSignIn/configureProfile',asyncHandler(async (req, res, next) => {
+app.post(
+  "/appleSignIn/configureProfile",
+  asyncHandler(async (req, res, next) => {
     const { body } = req;
-    const { email,firstName,lastName } = body;
+    const { email, firstName, lastName } = body;
 
-    const { apiGateway } = req;
-    const { event } = apiGateway;
-    const { requestContext } = event;
-    const { identity } = requestContext;
-    const { cognitoAuthenticationProvider } = identity;
+    const userPoolID = process.env.AUTH_MIKEREACT_USERPOOLID;
 
-    const parts = cognitoAuthenticationProvider.split(':');
-    const userPoolIdParts = parts[parts.length - 3].split('/');
-    const userPoolId = userPoolIdParts[userPoolIdParts.length - 1];
+    const [subValue, username] = await fetchUsers(email, userPoolID);
 
-    const subValue = await fetchUsers(email,userPoolId);
-    console.log("subValue",subValue);
-    if(subValue == ""){
+    console.log("subValue", subValue);
+    console.log("username", username);
+    if (subValue === "") {
       res.status(500).send();
-    }else{
-      const createResult = await createProfile(firstName,lastName,email,subValue)
-      if(createResult.data.createUserProfile == null){
+    } else {
+      const createResult = await createProfile(
+        firstName,
+        lastName,
+        email,
+        subValue,
+        username
+      );
+      if (createResult.data.createUserProfile === null) {
         res.status(500).send();
-      }else{
+      } else {
         res.status(200).send();
       }
     }
   })
 );
 
-app.listen(3000, function() {
-    console.log("App started")
+app.listen(3000, function () {
+  console.log("App started");
 });
 
 // Export the app object. When executing the application local this does nothing. However,
 // to port it to AWS Lambda we will create a wrapper around that will load the app from
 // this file
-module.exports = app
+module.exports = app;
