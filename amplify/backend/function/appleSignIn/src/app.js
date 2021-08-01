@@ -44,6 +44,8 @@ app.post(
 
     const userPoolID = process.env.AUTH_MIKEREACT_USERPOOLID;
 
+    console.log(userPoolID);
+
     const [subValue, username] = await fetchUsers(email, userPoolID);
 
     console.log("subValue", subValue);
