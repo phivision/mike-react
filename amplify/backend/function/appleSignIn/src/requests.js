@@ -85,11 +85,8 @@ const request = (queryDetails, variables) => {
 const fetchUsers = async (emailValue, userPoolId) => {
   console.log('email = "' + emailValue + '"');
   var params = {
-    UserPoolId: userPoolId /* required */,
-    AttributesToGet: [
-      "sub",
-      /* more items */
-    ],
+    UserPoolId: userPoolId,
+    AttributesToGet: ["sub"],
     Filter: 'email = "' + emailValue + '"',
   };
   return new Promise((resolve, reject) => {
