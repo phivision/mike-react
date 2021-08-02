@@ -9,7 +9,7 @@ const getUserByEmail = async (userPoolId, email) => {
   return cognitoIdp.listUsers(params).promise();
 };
 
-const linkProviderToUser = async (
+const linkProviderToUser = (
   username,
   userPoolId,
   providerName,
@@ -28,16 +28,11 @@ const linkProviderToUser = async (
     UserPoolId: userPoolId,
   };
 
-  console.log(params);
-
-  const result = await cognitoIdp.adminLinkProviderForUser(params).promise();
-
-  return result;
+  return cognitoIdp.adminLinkProviderForUser(params).promise();
 };
 
 exports.handler = async (event, context, callback) => {
   if (event.triggerSource === "PreSignUp_ExternalProvider") {
-    console.log(process.env);
     const userRs = await getUserByEmail(
       event.userPoolId,
       event.request.userAttributes.email
@@ -45,7 +40,7 @@ exports.handler = async (event, context, callback) => {
     console.log(event);
     if (userRs && userRs.Users.length > 0) {
       const [providerName, providerUserId] = event.userName.split("_");
-      await linkProviderToUser(
+      return linkProviderToUser(
         userRs.Users[0].Username,
         event.userPoolId,
         providerName,
@@ -53,7 +48,7 @@ exports.handler = async (event, context, callback) => {
       );
     } else {
       console.log("user not found, skip.");
+      callback(null, event);
     }
   }
-  callback(null, event);
 };
