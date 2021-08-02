@@ -84,12 +84,14 @@ app.post(
   })
 );
 
-app.delete("/sub"),
+app.delete(
+  "/sub",
   asyncHandler(async (req, res, next) => {
     await expireSubscription(req.body.id);
 
     res.status(200).send();
-  });
+  })
+);
 
 app.use((req, res, next) => {
   console.log("Route not found.");
