@@ -1,0 +1,11 @@
+{
+  "lambdaLayers": [],
+  "permissions": {
+    "api": {
+      "mikeAmplify": [
+        "Query",
+        "Mutation"
+      ]
+    }
+  }
+}

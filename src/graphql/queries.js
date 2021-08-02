@@ -25,6 +25,7 @@ export const trainerSearch = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -40,6 +41,12 @@ export const trainerSearch = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       nextToken
@@ -69,6 +76,7 @@ export const getUserProfile = /* GraphQL */ `
       LandingURL
       TokenBalance
       TokenPrice
+      SubscriptionPrice
       owner
       DeviceToken
       createdAt
@@ -114,6 +122,7 @@ export const getUserProfile = /* GraphQL */ `
           ContentName
           Description
           Title
+          Orientation
           Level
           Length
           IsDemo
@@ -126,6 +135,42 @@ export const getUserProfile = /* GraphQL */ `
           owner
         }
         nextToken
+      }
+      UserMessageGroup {
+        id
+        createdAt
+        updatedAt
+        Trainer {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          TokenPrice
+          SubscriptionPrice
+          owner
+          DeviceToken
+          createdAt
+          updatedAt
+        }
+        Messages {
+          nextToken
+        }
+        owner
       }
     }
   }
@@ -158,6 +203,7 @@ export const listUserProfiles = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -173,6 +219,12 @@ export const listUserProfiles = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       nextToken
@@ -215,6 +267,7 @@ export const profilesByStripeID = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -230,6 +283,12 @@ export const profilesByStripeID = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       nextToken
@@ -272,6 +331,7 @@ export const profilesByURL = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -287,6 +347,12 @@ export const profilesByURL = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       nextToken
@@ -329,6 +395,7 @@ export const searchUserProfiles = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -344,6 +411,12 @@ export const searchUserProfiles = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       nextToken
@@ -381,6 +454,7 @@ export const getUserSubscriptionTrainer = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -396,6 +470,12 @@ export const getUserSubscriptionTrainer = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       User {
@@ -419,6 +499,7 @@ export const getUserSubscriptionTrainer = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -434,6 +515,12 @@ export const getUserSubscriptionTrainer = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       owner
@@ -479,6 +566,7 @@ export const listUserSubscriptionTrainers = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -505,6 +593,89 @@ export const listUserSubscriptionTrainers = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
+          owner
+          DeviceToken
+          createdAt
+          updatedAt
+        }
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const subscriptionsByExpireDate = /* GraphQL */ `
+  query SubscriptionsByExpireDate(
+    $ExpireDate: AWSDate
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserSubscriptionTrainerFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    subscriptionsByExpireDate(
+      ExpireDate: $ExpireDate
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        StripeID
+        ExpireDate
+        CancelAtPeriodEnd
+        createdAt
+        updatedAt
+        Trainer {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          TokenPrice
+          SubscriptionPrice
+          owner
+          DeviceToken
+          createdAt
+          updatedAt
+        }
+        User {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -525,6 +696,7 @@ export const getUserContent = /* GraphQL */ `
       ContentName
       Description
       Title
+      Orientation
       Level
       Length
       IsDemo
@@ -555,6 +727,7 @@ export const getUserContent = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -570,6 +743,12 @@ export const getUserContent = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       FavoriteUser {
@@ -599,6 +778,7 @@ export const listUserContents = /* GraphQL */ `
         ContentName
         Description
         Title
+        Orientation
         Level
         Length
         IsDemo
@@ -629,6 +809,7 @@ export const listUserContents = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -667,6 +848,7 @@ export const byContentCreatedAt = /* GraphQL */ `
         ContentName
         Description
         Title
+        Orientation
         Level
         Length
         IsDemo
@@ -697,6 +879,7 @@ export const byContentCreatedAt = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -733,6 +916,7 @@ export const contentByName = /* GraphQL */ `
         ContentName
         Description
         Title
+        Orientation
         Level
         Length
         IsDemo
@@ -763,6 +947,7 @@ export const contentByName = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -787,6 +972,7 @@ export const getMessage = /* GraphQL */ `
       createdAt
       Type
       Status
+      GroupID
       updatedAt
       FromUser {
         id
@@ -809,6 +995,7 @@ export const getMessage = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -824,6 +1011,12 @@ export const getMessage = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       ToUser {
@@ -847,6 +1040,7 @@ export const getMessage = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -862,6 +1056,12 @@ export const getMessage = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       owner
@@ -883,6 +1083,7 @@ export const listMessages = /* GraphQL */ `
         createdAt
         Type
         Status
+        GroupID
         updatedAt
         FromUser {
           id
@@ -905,6 +1106,7 @@ export const listMessages = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -931,6 +1133,7 @@ export const listMessages = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -967,6 +1170,7 @@ export const messageByToUserID = /* GraphQL */ `
         createdAt
         Type
         Status
+        GroupID
         updatedAt
         FromUser {
           id
@@ -989,6 +1193,7 @@ export const messageByToUserID = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -1015,6 +1220,7 @@ export const messageByToUserID = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -1051,6 +1257,7 @@ export const messageByFromUserID = /* GraphQL */ `
         createdAt
         Type
         Status
+        GroupID
         updatedAt
         FromUser {
           id
@@ -1073,6 +1280,7 @@ export const messageByFromUserID = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -1099,6 +1307,94 @@ export const messageByFromUserID = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
+          owner
+          DeviceToken
+          createdAt
+          updatedAt
+        }
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const messageByGroupID = /* GraphQL */ `
+  query MessageByGroupID(
+    $GroupID: ID
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    messageByGroupID(
+      GroupID: $GroupID
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        PostMessages
+        FromUserID
+        ToUserID
+        createdAt
+        Type
+        Status
+        GroupID
+        updatedAt
+        FromUser {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          TokenPrice
+          SubscriptionPrice
+          owner
+          DeviceToken
+          createdAt
+          updatedAt
+        }
+        ToUser {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt

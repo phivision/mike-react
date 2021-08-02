@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "api": {
+      "mikeAmplify": [
+        "Query",
+        "Mutation"
+      ]
+    }
+  },
+  "lambdaLayers": [],
+  "secretNames": [
+    "APPLE_SHARED_SECRET"
+  ]
+}

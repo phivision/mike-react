@@ -48,21 +48,19 @@ export default function VerifyForm({ ...props }) {
     e.preventDefault();
 
     try {
-      Auth.confirmSignUp(props.location.state.username, verify).then(() => {
-        Auth.signIn(
-          props.location.state.username,
-          props.location.state.password
-        ).then((user) => {
-          stripeOnboarding(user.username).then(() => {
-            if (props.location.state !== undefined) {
-              if (props.location.state.next !== undefined) {
-                history.push(props.location.state.next);
-              }
-            }
-            history.push("/feed/");
-          });
-        });
-      });
+      await Auth.confirmSignUp(props.location.state.username, verify);
+
+      const user = await Auth.signIn(
+        props.location.state.username,
+        props.location.state.password
+      );
+      await stripeOnboarding(user.username);
+      if (props.location.state !== undefined) {
+        if (props.location.state.next !== undefined) {
+          history.push(props.location.state.next);
+        }
+      }
+      history.push("/feed/");
     } catch (error) {
       setSnackbarMessage(error.message);
     }

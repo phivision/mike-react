@@ -84,6 +84,14 @@ const resetTokens = async (id) => {
   return res.data.updateUserProfile;
 };
 
+const updatePrice = async (id, price) => {
+  const variables = { input: { id: id, SubscriptionPrice: price } };
+
+  const res = await request(updateUserProfile, variables);
+
+  return res.data.updateUserProfile;
+};
+
 const updateUserSubscriptionTrainer = gql`
   mutation UpdateUserSubscriptionTrainer(
     $input: UpdateUserSubscriptionTrainerInput!
@@ -103,4 +111,10 @@ const updatePeriodEnd = async (id) => {
   return res.data.UpdateUserSubscriptionTrainer;
 };
 
-module.exports = { getProfileByID, setStripeID, resetTokens, updatePeriodEnd };
+module.exports = {
+  getProfileByID,
+  updatePrice,
+  setStripeID,
+  resetTokens,
+  updatePeriodEnd,
+};

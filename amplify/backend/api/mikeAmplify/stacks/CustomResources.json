@@ -17,6 +17,10 @@
       "Description": "The environment name. e.g. Dev, Test, or Production",
       "Default": "NONE"
     },
+    "unauthRoleName": {
+      "Type": "String",
+      "Description": "Reference to the name of the Unauth Role created for the project."
+    },
     "S3DeploymentBucket": {
       "Type": "String",
       "Description": "The S3 bucket containing all deployment assets for the project."
@@ -59,6 +63,42 @@
               "S3DeploymentRootKey": {
                 "Ref": "S3DeploymentRootKey"
               }
+            }
+          ]
+        }
+      }
+    },
+    "UnauthRolePolicyCustom": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "appsync-unauthrole-policy-custom",
+        "Roles": [
+          {
+            "Ref": "unauthRoleName"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "appsync:GraphQL"
+              ],
+              "Resource": [
+                {
+                  "Fn::Sub": [
+                    "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/fields/${fieldName}",
+                    {
+                      "apiId": {
+                        "Ref": "AppSyncApiId"
+                      },
+                      "typeName": "Query",
+                      "fieldName": "trainerSearch"
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }

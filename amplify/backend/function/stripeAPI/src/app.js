@@ -24,10 +24,16 @@ const awsServerlessExpressMiddleware = require("aws-serverless-express/middlewar
 const AWS = require("aws-sdk");
 const asyncHandler = require("express-async-handler");
 const { prices, conversionRate } = require("./prices");
-const { getProfileByID, setStripeID } = require("./requests.js");
+const {
+  getProfileByID,
+  setStripeID,
+  resetTokens,
+  updatePeriodEnd,
+  updatePrice,
+} = require("./requests.js");
 
 // declare a new express app
-var app = express();
+const app = express();
 
 // Use JSON parser for all non-webhook routes
 app.use(bodyParser.json());
@@ -168,6 +174,7 @@ app.post(
         product: prices.data[0].product,
         lookup_key: user.StripeID,
       }),
+      updatePrice(req.body.id, req.body.newPrice),
     ]);
 
     res.status(200).send();

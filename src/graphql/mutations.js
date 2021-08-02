@@ -27,6 +27,7 @@ export const createUserProfile = /* GraphQL */ `
       LandingURL
       TokenBalance
       TokenPrice
+      SubscriptionPrice
       owner
       DeviceToken
       createdAt
@@ -72,6 +73,7 @@ export const createUserProfile = /* GraphQL */ `
           ContentName
           Description
           Title
+          Orientation
           Level
           Length
           IsDemo
@@ -84,6 +86,42 @@ export const createUserProfile = /* GraphQL */ `
           owner
         }
         nextToken
+      }
+      UserMessageGroup {
+        id
+        createdAt
+        updatedAt
+        Trainer {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          TokenPrice
+          SubscriptionPrice
+          owner
+          DeviceToken
+          createdAt
+          updatedAt
+        }
+        Messages {
+          nextToken
+        }
+        owner
       }
     }
   }
@@ -114,6 +152,7 @@ export const updateUserProfile = /* GraphQL */ `
       LandingURL
       TokenBalance
       TokenPrice
+      SubscriptionPrice
       owner
       DeviceToken
       createdAt
@@ -159,6 +198,7 @@ export const updateUserProfile = /* GraphQL */ `
           ContentName
           Description
           Title
+          Orientation
           Level
           Length
           IsDemo
@@ -171,6 +211,42 @@ export const updateUserProfile = /* GraphQL */ `
           owner
         }
         nextToken
+      }
+      UserMessageGroup {
+        id
+        createdAt
+        updatedAt
+        Trainer {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          TokenPrice
+          SubscriptionPrice
+          owner
+          DeviceToken
+          createdAt
+          updatedAt
+        }
+        Messages {
+          nextToken
+        }
+        owner
       }
     }
   }
@@ -201,6 +277,7 @@ export const deleteUserProfile = /* GraphQL */ `
       LandingURL
       TokenBalance
       TokenPrice
+      SubscriptionPrice
       owner
       DeviceToken
       createdAt
@@ -246,6 +323,7 @@ export const deleteUserProfile = /* GraphQL */ `
           ContentName
           Description
           Title
+          Orientation
           Level
           Length
           IsDemo
@@ -258,6 +336,42 @@ export const deleteUserProfile = /* GraphQL */ `
           owner
         }
         nextToken
+      }
+      UserMessageGroup {
+        id
+        createdAt
+        updatedAt
+        Trainer {
+          id
+          Birthday
+          Email
+          Gender
+          Height
+          RegDate
+          StripeID
+          UserImage
+          BgImage
+          BgTitle
+          LastName
+          FirstName
+          UserRole
+          Weight
+          IsVerified
+          Description
+          Biography
+          LandingURL
+          TokenBalance
+          TokenPrice
+          SubscriptionPrice
+          owner
+          DeviceToken
+          createdAt
+          updatedAt
+        }
+        Messages {
+          nextToken
+        }
+        owner
       }
     }
   }
@@ -295,6 +409,7 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -310,6 +425,12 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       User {
@@ -333,6 +454,7 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -348,6 +470,12 @@ export const createUserSubscriptionTrainer = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       owner
@@ -387,6 +515,7 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -402,6 +531,12 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       User {
@@ -425,6 +560,7 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -440,6 +576,12 @@ export const updateUserSubscriptionTrainer = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       owner
@@ -479,6 +621,7 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -494,6 +637,12 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       User {
@@ -517,6 +666,7 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -532,6 +682,12 @@ export const deleteUserSubscriptionTrainer = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       owner
@@ -568,6 +724,7 @@ export const createUserFavoriteContent = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -584,6 +741,12 @@ export const createUserFavoriteContent = /* GraphQL */ `
         Contents {
           nextToken
         }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
       }
       owner
       Content {
@@ -593,6 +756,7 @@ export const createUserFavoriteContent = /* GraphQL */ `
         ContentName
         Description
         Title
+        Orientation
         Level
         Length
         IsDemo
@@ -623,6 +787,7 @@ export const createUserFavoriteContent = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -666,6 +831,7 @@ export const updateUserFavoriteContent = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -682,6 +848,12 @@ export const updateUserFavoriteContent = /* GraphQL */ `
         Contents {
           nextToken
         }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
       }
       owner
       Content {
@@ -691,6 +863,7 @@ export const updateUserFavoriteContent = /* GraphQL */ `
         ContentName
         Description
         Title
+        Orientation
         Level
         Length
         IsDemo
@@ -721,6 +894,7 @@ export const updateUserFavoriteContent = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -764,6 +938,7 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -780,6 +955,12 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
         Contents {
           nextToken
         }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
       }
       owner
       Content {
@@ -789,6 +970,7 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
         ContentName
         Description
         Title
+        Orientation
         Level
         Length
         IsDemo
@@ -819,6 +1001,7 @@ export const deleteUserFavoriteContent = /* GraphQL */ `
           LandingURL
           TokenBalance
           TokenPrice
+          SubscriptionPrice
           owner
           DeviceToken
           createdAt
@@ -844,6 +1027,7 @@ export const createUserContent = /* GraphQL */ `
       ContentName
       Description
       Title
+      Orientation
       Level
       Length
       IsDemo
@@ -874,6 +1058,7 @@ export const createUserContent = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -889,6 +1074,12 @@ export const createUserContent = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       FavoriteUser {
@@ -916,6 +1107,7 @@ export const updateUserContent = /* GraphQL */ `
       ContentName
       Description
       Title
+      Orientation
       Level
       Length
       IsDemo
@@ -946,6 +1138,7 @@ export const updateUserContent = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -961,6 +1154,12 @@ export const updateUserContent = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       FavoriteUser {
@@ -988,6 +1187,7 @@ export const deleteUserContent = /* GraphQL */ `
       ContentName
       Description
       Title
+      Orientation
       Level
       Length
       IsDemo
@@ -1018,6 +1218,7 @@ export const deleteUserContent = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -1033,6 +1234,12 @@ export const deleteUserContent = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       FavoriteUser {
@@ -1061,6 +1268,7 @@ export const createMessage = /* GraphQL */ `
       createdAt
       Type
       Status
+      GroupID
       updatedAt
       FromUser {
         id
@@ -1083,6 +1291,7 @@ export const createMessage = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -1098,6 +1307,12 @@ export const createMessage = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       ToUser {
@@ -1121,6 +1336,7 @@ export const createMessage = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -1136,6 +1352,12 @@ export const createMessage = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       owner
@@ -1155,6 +1377,7 @@ export const updateMessage = /* GraphQL */ `
       createdAt
       Type
       Status
+      GroupID
       updatedAt
       FromUser {
         id
@@ -1177,6 +1400,7 @@ export const updateMessage = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -1192,6 +1416,12 @@ export const updateMessage = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       ToUser {
@@ -1215,6 +1445,7 @@ export const updateMessage = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -1230,6 +1461,12 @@ export const updateMessage = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       owner
@@ -1249,6 +1486,7 @@ export const deleteMessage = /* GraphQL */ `
       createdAt
       Type
       Status
+      GroupID
       updatedAt
       FromUser {
         id
@@ -1271,6 +1509,7 @@ export const deleteMessage = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -1286,6 +1525,12 @@ export const deleteMessage = /* GraphQL */ `
         }
         Contents {
           nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
         }
       }
       ToUser {
@@ -1309,6 +1554,7 @@ export const deleteMessage = /* GraphQL */ `
         LandingURL
         TokenBalance
         TokenPrice
+        SubscriptionPrice
         owner
         DeviceToken
         createdAt
@@ -1325,6 +1571,231 @@ export const deleteMessage = /* GraphQL */ `
         Contents {
           nextToken
         }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+      }
+      owner
+    }
+  }
+`;
+export const createMessageGroup = /* GraphQL */ `
+  mutation CreateMessageGroup(
+    $input: CreateMessageGroupInput!
+    $condition: ModelMessageGroupConditionInput
+  ) {
+    createMessageGroup(input: $input, condition: $condition) {
+      id
+      createdAt
+      updatedAt
+      Trainer {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        IsVerified
+        Description
+        Biography
+        LandingURL
+        TokenBalance
+        TokenPrice
+        SubscriptionPrice
+        owner
+        DeviceToken
+        createdAt
+        updatedAt
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+      }
+      Messages {
+        items {
+          id
+          PostMessages
+          FromUserID
+          ToUserID
+          createdAt
+          Type
+          Status
+          GroupID
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      owner
+    }
+  }
+`;
+export const updateMessageGroup = /* GraphQL */ `
+  mutation UpdateMessageGroup(
+    $input: UpdateMessageGroupInput!
+    $condition: ModelMessageGroupConditionInput
+  ) {
+    updateMessageGroup(input: $input, condition: $condition) {
+      id
+      createdAt
+      updatedAt
+      Trainer {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        IsVerified
+        Description
+        Biography
+        LandingURL
+        TokenBalance
+        TokenPrice
+        SubscriptionPrice
+        owner
+        DeviceToken
+        createdAt
+        updatedAt
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+      }
+      Messages {
+        items {
+          id
+          PostMessages
+          FromUserID
+          ToUserID
+          createdAt
+          Type
+          Status
+          GroupID
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      owner
+    }
+  }
+`;
+export const deleteMessageGroup = /* GraphQL */ `
+  mutation DeleteMessageGroup(
+    $input: DeleteMessageGroupInput!
+    $condition: ModelMessageGroupConditionInput
+  ) {
+    deleteMessageGroup(input: $input, condition: $condition) {
+      id
+      createdAt
+      updatedAt
+      Trainer {
+        id
+        Birthday
+        Email
+        Gender
+        Height
+        RegDate
+        StripeID
+        UserImage
+        BgImage
+        BgTitle
+        LastName
+        FirstName
+        UserRole
+        Weight
+        IsVerified
+        Description
+        Biography
+        LandingURL
+        TokenBalance
+        TokenPrice
+        SubscriptionPrice
+        owner
+        DeviceToken
+        createdAt
+        updatedAt
+        Subscriptions {
+          nextToken
+        }
+        Users {
+          nextToken
+        }
+        Favorites {
+          nextToken
+        }
+        Contents {
+          nextToken
+        }
+        UserMessageGroup {
+          id
+          createdAt
+          updatedAt
+          owner
+        }
+      }
+      Messages {
+        items {
+          id
+          PostMessages
+          FromUserID
+          ToUserID
+          createdAt
+          Type
+          Status
+          GroupID
+          updatedAt
+          owner
+        }
+        nextToken
       }
       owner
     }

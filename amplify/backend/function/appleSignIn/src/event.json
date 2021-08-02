@@ -1,0 +1,125 @@
+{
+  "resource": "/appleSignIn/configureProfile",
+  "path": "/appleSignIn/configureProfile",
+  "httpMethod": "POST",
+  "headers": {
+    "Accept": "*/*",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "zh-cn",
+    "CloudFront-Forwarded-Proto": "https",
+    "CloudFront-Is-Desktop-Viewer": "true",
+    "CloudFront-Is-Mobile-Viewer": "false",
+    "CloudFront-Is-SmartTV-Viewer": "false",
+    "CloudFront-Is-Tablet-Viewer": "false",
+    "CloudFront-Viewer-Country": "CN",
+    "content-type": "application/json",
+    "Host": "99nexp3cca.execute-api.us-east-1.amazonaws.com",
+    "User-Agent": "amplify-iOS/1.12.0 iOS/14.6 en_CN",
+    "Via": "2.0 7b0279ed15f18c36e1a8b2a83f1f63bf.cloudfront.net (CloudFront)",
+    "X-Amz-Cf-Id": "lTOHyLnHZXaVkPfpchQiYLMvUyjgCt-oyyssuprWSIfyZSBGMurYpg==",
+    "x-amz-date": "20210729T133936Z",
+    "x-amz-security-token": "IQoJb3JpZ2luX2VjEIX//////////wEaCXVzLWVhc3QtMSJHMEUCIGkscmlAhkaw12Vu9IFDOoCsDqTjkVwcvw/5TuwjsIydAiEA+U5kvJstVvh4E4Oq9rdvlcx5jD9ZWyWTTzWc8yVm+1cqzQQIjv//////////ARAAGgwzMDEyODYxMDExOTUiDNMO69yhQEGeFbfdrCqhBDnkW93foHYKzfH9o8WXK8DU07K+tURPfJclZb3RcV0iDJC2SA62tTC5s8W3Y4lyOCijIgsrWc+sLMliuHunwBERqPm+ridqdX+CZpUbwOej/z4MmBFkN+qWyPxUqAHDr3kyU4HdIZwbyd6rzsl207FB9P6pE28+uv91QlpbuJOqI6lixyRnKR+iBocR0TaFcPdxKzwwWYELkeWBZLswFpPyeqCwFqLFPMWnD+FI3ggmy/Wl9V7egLHKo9OhasxV3fspaGWgypok+gKBN9w21LYcBNakEKsDEM/+BdkY8a/huZeHu8u//it/H8HfyIFopJfGddIr+HXzqskvlp/k7fvDPnvZzVAbHXfZFdZwuNNGJnECd/YLhrfM99UWAm848lF2YakNNybjvJJZlgnK1K3BQh+2rX/pjXdut/1Mb6afu4+WlTQtJzfmmLNWuqPeqoEbzXpolkxVr3O7ZHVxkQmDPqF9YQIR+B0jcXF4BdflINAxnNCagPCd5XNS8SXn+9Typ2lT1wR16ELtCJ06OTA3i5wgoSvJkGoGq81n8K5ZmIUbp6O2MMgAqhFCPRZHW3yiRS2TZm4FB2jLLC3xxExwaRayXxrV0D1Z9yVoSY2xYXjEj1BXUowKG+qyewa7b8rWCD48o/j9FqqOE8WtEj49AZAaeP/HA6V3iv75YXdyecIa0kTlYLnicx4y8BrJdF84TC3NMNyrGD7skz+fLgYgMIvOiogGOoUCvbBms0xVdoxVQOecOgrBC4nNAeHudJ7yChS0Tpk4sMZTQVU//iGLy1IAH7/5q0XTA5LTtp65h2rj6Mm0lfxu+FJJCiwVvRa+H6yOJoFHL5x+Tjx4DOETJYeLsRrUFCyPV0C1p4tzf1Y2Fy9jXpI9HAY2BGOgpqzdPjCrpWMqsw2aoA3hJeUKxLxTJThtbWQN12/QQD92CVGXt2jh+y8LKbneykApUMq4frfgkiwXINfDBlHnjfHVVnck4mMJfXLBtykHwp/PKquVImgJkPeJK9+/vhdcC2ru56JhJxDKH/2D/vlIIIVIE9cbUGEEcVxGWsmSKSLVUajL1UjAYMXQgVfX7bP5",
+    "X-Amzn-Trace-Id": "Root=1-6102af9a-34a2892d31ea68630698e330",
+    "X-Forwarded-For": "120.208.162.0, 130.176.25.149",
+    "X-Forwarded-Port": "443",
+    "X-Forwarded-Proto": "https"
+  },
+  "multiValueHeaders": {
+    "Accept": [
+      "*/*"
+    ],
+    "Accept-Encoding": [
+      "gzip, deflate, br"
+    ],
+    "Accept-Language": [
+      "zh-cn"
+    ],
+    "CloudFront-Forwarded-Proto": [
+      "https"
+    ],
+    "CloudFront-Is-Desktop-Viewer": [
+      "true"
+    ],
+    "CloudFront-Is-Mobile-Viewer": [
+      "false"
+    ],
+    "CloudFront-Is-SmartTV-Viewer": [
+      "false"
+    ],
+    "CloudFront-Is-Tablet-Viewer": [
+      "false"
+    ],
+    "CloudFront-Viewer-Country": [
+      "CN"
+    ],
+    "content-type": [
+      "application/json"
+    ],
+    "Host": [
+      "99nexp3cca.execute-api.us-east-1.amazonaws.com"
+    ],
+    "User-Agent": [
+      "amplify-iOS/1.12.0 iOS/14.6 en_CN"
+    ],
+    "Via": [
+      "2.0 7b0279ed15f18c36e1a8b2a83f1f63bf.cloudfront.net (CloudFront)"
+    ],
+    "X-Amz-Cf-Id": [
+      "lTOHyLnHZXaVkPfpchQiYLMvUyjgCt-oyyssuprWSIfyZSBGMurYpg=="
+    ],
+    "x-amz-date": [
+      "20210729T133936Z"
+    ],
+    "x-amz-security-token": [
+      "IQoJb3JpZ2luX2VjEIX//////////wEaCXVzLWVhc3QtMSJHMEUCIGkscmlAhkaw12Vu9IFDOoCsDqTjkVwcvw/5TuwjsIydAiEA+U5kvJstVvh4E4Oq9rdvlcx5jD9ZWyWTTzWc8yVm+1cqzQQIjv//////////ARAAGgwzMDEyODYxMDExOTUiDNMO69yhQEGeFbfdrCqhBDnkW93foHYKzfH9o8WXK8DU07K+tURPfJclZb3RcV0iDJC2SA62tTC5s8W3Y4lyOCijIgsrWc+sLMliuHunwBERqPm+ridqdX+CZpUbwOej/z4MmBFkN+qWyPxUqAHDr3kyU4HdIZwbyd6rzsl207FB9P6pE28+uv91QlpbuJOqI6lixyRnKR+iBocR0TaFcPdxKzwwWYELkeWBZLswFpPyeqCwFqLFPMWnD+FI3ggmy/Wl9V7egLHKo9OhasxV3fspaGWgypok+gKBN9w21LYcBNakEKsDEM/+BdkY8a/huZeHu8u//it/H8HfyIFopJfGddIr+HXzqskvlp/k7fvDPnvZzVAbHXfZFdZwuNNGJnECd/YLhrfM99UWAm848lF2YakNNybjvJJZlgnK1K3BQh+2rX/pjXdut/1Mb6afu4+WlTQtJzfmmLNWuqPeqoEbzXpolkxVr3O7ZHVxkQmDPqF9YQIR+B0jcXF4BdflINAxnNCagPCd5XNS8SXn+9Typ2lT1wR16ELtCJ06OTA3i5wgoSvJkGoGq81n8K5ZmIUbp6O2MMgAqhFCPRZHW3yiRS2TZm4FB2jLLC3xxExwaRayXxrV0D1Z9yVoSY2xYXjEj1BXUowKG+qyewa7b8rWCD48o/j9FqqOE8WtEj49AZAaeP/HA6V3iv75YXdyecIa0kTlYLnicx4y8BrJdF84TC3NMNyrGD7skz+fLgYgMIvOiogGOoUCvbBms0xVdoxVQOecOgrBC4nNAeHudJ7yChS0Tpk4sMZTQVU//iGLy1IAH7/5q0XTA5LTtp65h2rj6Mm0lfxu+FJJCiwVvRa+H6yOJoFHL5x+Tjx4DOETJYeLsRrUFCyPV0C1p4tzf1Y2Fy9jXpI9HAY2BGOgpqzdPjCrpWMqsw2aoA3hJeUKxLxTJThtbWQN12/QQD92CVGXt2jh+y8LKbneykApUMq4frfgkiwXINfDBlHnjfHVVnck4mMJfXLBtykHwp/PKquVImgJkPeJK9+/vhdcC2ru56JhJxDKH/2D/vlIIIVIE9cbUGEEcVxGWsmSKSLVUajL1UjAYMXQgVfX7bP5"
+    ],
+    "X-Amzn-Trace-Id": [
+      "Root=1-6102af9a-34a2892d31ea68630698e330"
+    ],
+    "X-Forwarded-For": [
+      "120.208.162.0, 130.176.25.149"
+    ],
+    "X-Forwarded-Port": [
+      "443"
+    ],
+    "X-Forwarded-Proto": [
+      "https"
+    ]
+  },
+  "queryStringParameters": null,
+  "multiValueQueryStringParameters": null,
+  "pathParameters": null,
+  "stageVariables": null,
+  "requestContext": {
+    "resourceId": "0niobh",
+    "resourcePath": "/appleSignIn/configureProfile",
+    "httpMethod": "POST",
+    "extendedRequestId": "DPBgPFUFIAMFR3w=",
+    "requestTime": "29/Jul/2021:13:39:38 +0000",
+    "path": "/feature/appleSignIn/configureProfile",
+    "accountId": "301286101195",
+    "protocol": "HTTP/1.1",
+    "stage": "feature",
+    "domainPrefix": "99nexp3cca",
+    "requestTimeEpoch": 1627565978923,
+    "requestId": "f69541a1-c658-4c74-8698-268d50b0ffef",
+    "identity": {
+      "cognitoIdentityPoolId": "us-east-1:3bd91f8a-679f-47d9-9f2a-073599941fd3",
+      "accountId": "301286101195",
+      "cognitoIdentityId": "us-east-1:3f6c04b9-f96c-4703-8f7b-82882e25aabd",
+      "caller": "AROAUMJQNCDFQBVZHIYXT:CognitoIdentityCredentials",
+      "sourceIp": "120.208.162.0",
+      "principalOrgId": null,
+      "accessKey": "ASIAUMJQNCDFVCPNKJX4",
+      "cognitoAuthenticationType": "authenticated",
+      "cognitoAuthenticationProvider": "cognito-idp.us-east-1.amazonaws.com/us-east-1_BRTCbXlGu,cognito-idp.us-east-1.amazonaws.com/us-east-1_BRTCbXlGu:CognitoSignIn:0f6fefe1-7393-40ab-9e93-43bb5a0aff30",
+      "userArn": "arn:aws:sts::301286101195:assumed-role/amplify-mikereact-feature-135143-authRole/CognitoIdentityCredentials",
+      "userAgent": "amplify-iOS/1.12.0 iOS/14.6 en_CN",
+      "user": "AROAUMJQNCDFQBVZHIYXT:CognitoIdentityCredentials"
+    },
+    "domainName": "99nexp3cca.execute-api.us-east-1.amazonaws.com",
+    "apiId": "99nexp3cca"
+  },
+  "body": "{\n  \"email\" : \"729554966@qq.com\",\n  \"firstName\" : \"Test\",\n  \"lastName\" : \"TestLastName\"\n}",
+  "isBase64Encoded": false
+}

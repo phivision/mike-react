@@ -211,7 +211,7 @@ Resources:
       ServiceToken: !GetAtt
         - CustomPresetsFunction
         - Arn
-      PresetsPrefix: Custom-
+      PresetsPrefix: Mike-
   SourceBucket:
     Type: 'AWS::S3::Bucket'
     Properties:
@@ -358,4 +358,4 @@ Mappings:
   Lambda:
     code:
       custompresets: mike-vod-dev-presets.zip
-      transcoding: mike-vod-transcoding.zip
+      transcoding: mike-vod-feature-transcoding.zip

@@ -1,10 +1,3 @@
-/* Amplify Params - DO NOT EDIT
-	API_MIKEAMPLIFY_GRAPHQLAPIENDPOINTOUTPUT
-	API_MIKEAMPLIFY_GRAPHQLAPIIDOUTPUT
-	ENV
-	REGION
-Amplify Params - DO NOT EDIT */
-
 const https = require("https");
 const AWS = require("aws-sdk");
 const urlParse = require("url").URL;
@@ -25,6 +18,16 @@ const createUserProfile = gql`
       FirstName
       UserRole
       owner
+    }
+  }
+`;
+
+const createMessageGroup = gql`
+  mutation MyMutation2($messageGroupTrainerId: ID!) {
+    createMessageGroup(
+      input: { messageGroupTrainerId: $messageGroupTrainerId }
+    ) {
+      id
     }
   }
 `;
@@ -66,27 +69,43 @@ const addUser = async (userAttributes) => {
   const dateTime = new Date().toISOString();
   const today = dateTime.slice(0, 10);
 
-  const variables = {
-    input: {
-      id: cognitoID,
-      Email: email,
-      UserRole: role,
-      FirstName: first,
-      LastName: last,
-      RegDate: today,
-      owner: cognitoID,
-    },
-  };
+  if (role === "trainer") {
+    const messageGroupRes = await request(createMessageGroup, {
+      messageGroupTrainerId: cognitoID,
+    });
+    console.log(messageGroupRes.data);
+    const variables = {
+      input: {
+        id: cognitoID,
+        Email: email,
+        UserRole: role,
+        FirstName: first,
+        LastName: last,
+        RegDate: today,
+        owner: cognitoID,
+        userProfileUserMessageGroupId:
+          messageGroupRes.data.createMessageGroup.id,
+      },
+    };
 
-  const res = await request(createUserProfile, variables);
-
-  console.log(res);
-
-  return res;
+    return await request(createUserProfile, variables);
+  } else {
+    const variables = {
+      input: {
+        id: cognitoID,
+        Email: email,
+        UserRole: role,
+        FirstName: first,
+        LastName: last,
+        RegDate: today,
+        owner: cognitoID,
+      },
+    };
+    return await request(createUserProfile, variables);
+  }
 };
 
 exports.handler = (event, context, callback) => {
-  console.log(event);
   if (event.request.userAttributes.sub) {
     addUser(event.request.userAttributes).then(() => callback(null, event));
   }

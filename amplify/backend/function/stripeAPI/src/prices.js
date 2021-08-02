@@ -4,6 +4,7 @@ const prices = {
   "10": 140,
   "50": 700,
   "150": 2000,
+  "500": 6500,
 };
 
 const conversionRate = 10;

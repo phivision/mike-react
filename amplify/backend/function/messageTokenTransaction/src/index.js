@@ -1,11 +1,12 @@
 /* Amplify Params - DO NOT EDIT
-	ANALYTICS_IOSMESSAGEPUSH_ID
-	ANALYTICS_IOSMESSAGEPUSH_REGION
-	API_MIKEAMPLIFY_GRAPHQLAPIENDPOINTOUTPUT
-	API_MIKEAMPLIFY_GRAPHQLAPIIDOUTPUT
-	ENV
-	REGION
-Amplify Params - DO NOT EDIT */ const express = require("express");
+ 	ANALYTICS_IOSMESSAGEPUSH_ID
+ 	ANALYTICS_IOSMESSAGEPUSH_REGION
+ 	API_MIKEAMPLIFY_GRAPHQLAPIENDPOINTOUTPUT
+ 	API_MIKEAMPLIFY_GRAPHQLAPIIDOUTPUT
+ 	ENV
+ 	REGION
+ Amplify Params - DO NOT EDIT */
+const express = require("express");
 const bodyParser = require("body-parser");
 const awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
 const AWS = require("aws-sdk");
@@ -29,7 +30,6 @@ app.use(function (req, res, next) {
 
 const url = process.env.API_MIKEAMPLIFY_GRAPHQLAPIENDPOINTOUTPUT;
 const region = process.env.REGION;
-const notification_app_id = process.env.ANALYTICS_IOSMESSAGEPUSH_ID;
 
 AWS.config.update({
   region,
@@ -99,21 +99,28 @@ const updateTokenBalance = gql`
   }
 `;
 const updateUserTokenBalance = async (msgModel) => {
-  const fromUserId = msgModel.FromUserID.S;
-  const toUserId = msgModel.ToUserID.S;
-  const client = await appsyncClient.hydrated();
-  const d = await client.query({
-    query: queryTokenBalanceById,
-    variables: { id: fromUserId },
-  });
-  const userRole = d.data.getUserProfile.UserRole;
-  const tokenBalance = d.data.getUserProfile.TokenBalance;
-  if (userRole === "student") {
-    if (tokenBalance > 0) {
-      await queryAndAddTrainerTokenBalance(fromUserId, toUserId, tokenBalance);
+  if (
+    is_empty(msgModel.ToUserID) === false &&
+    msgModel.FromUserID.S !== msgModel.ToUserID.S
+  ) {
+    const fromUserId = msgModel.FromUserID.S;
+    const toUserId = msgModel.ToUserID.S;
+    const client = await appsyncClient.hydrated();
+    const d = await client.query({
+      query: queryTokenBalanceById,
+      variables: { id: fromUserId },
+    });
+    const userRole = d.data.getUserProfile.UserRole;
+    const tokenBalance = d.data.getUserProfile.TokenBalance;
+    if (userRole === "student") {
+      if (tokenBalance > 0) {
+        queryAndAddTrainerTokenBalance(fromUserId, toUserId, tokenBalance);
+      }
+    } else {
+      console.log("Don't need to mutate!");
     }
   } else {
-    console.log("Don't need to mutate!");
+    console.log("This is a group message");
   }
 };
 const queryAndAddTrainerTokenBalance = async (
@@ -127,12 +134,12 @@ const queryAndAddTrainerTokenBalance = async (
     variables: { id: trainerId },
   });
   //fetch tokenBalance and tokenPrice for trainer
-  let tokenPrice = dicForTokenBalance.data.getUserProfile.TokenPrice;
+  var tokenPrice = dicForTokenBalance.data.getUserProfile.TokenPrice;
   if (tokenPrice == null) {
     tokenPrice = 0;
   }
   if (tokenPrice !== 0) {
-    let tokenBalance = dicForTokenBalance.data.getUserProfile.TokenBalance;
+    var tokenBalance = dicForTokenBalance.data.getUserProfile.TokenBalance;
     if (tokenBalance == null) {
       tokenBalance = tokenPrice;
     } else {
@@ -176,54 +183,61 @@ function CreateMessageRequest(token, msgModel, fromUserName) {
 }
 //send message to userId
 const sendMessage = async (msgModel) => {
-  const fromUserId = msgModel.FromUserID.S;
-  const toUserId = msgModel.ToUserID.S;
-  const client = await appsyncClient.hydrated();
-  const dicForSendUser = await client.query({
-    query: queryNameById,
-    variables: { id: fromUserId },
-  });
-  const fromUserName =
-    dicForSendUser.data.getUserProfile.FirstName +
-    " " +
-    dicForSendUser.data.getUserProfile.LastName;
-  console.log("from username is :", fromUserName);
-  const dicForDeviceToken = await client.query({
-    query: queryDeviceTokenById,
-    variables: { id: toUserId },
-  });
-  const deviceToken = dicForDeviceToken.data.getUserProfile.DeviceToken;
-  console.log("device token is :", deviceToken);
-  var messageRequest = CreateMessageRequest(
-    deviceToken,
-    msgModel,
-    fromUserName
-  );
-  console.log("pinpoint app id is :", notification_app_id);
-  const sendMessagesParams = {
-    ApplicationId: notification_app_id, // Find it in Pinpoint->All projects
-    MessageRequest: messageRequest,
-  };
-  //Create a new Pinpoint object.
-  var pinpoint = new AWS.Pinpoint();
-  // Try to send the message.
-  pinpoint.sendMessages(sendMessagesParams, function (err, data) {
-    if (err) {
-      console.log(err);
-    } else {
-      let status;
-      if (
-        data["MessageResponse"]["Result"][deviceToken]["DeliveryStatus"] ===
-        "SUCCESSFUL"
-      ) {
-        status = "Message sent! Response information: ";
+  if (
+    is_empty(msgModel.ToUserID) === false &&
+    msgModel.FromUserID.S !== msgModel.ToUserID.S
+  ) {
+    const fromUserId = msgModel.FromUserID.S;
+    const toUserId = msgModel.ToUserID.S;
+    const client = await appsyncClient.hydrated();
+    const dicForSendUser = await client.query({
+      query: queryNameById,
+      variables: { id: fromUserId },
+    });
+    const fromUserName =
+      dicForSendUser.data.getUserProfile.FirstName +
+      " " +
+      dicForSendUser.data.getUserProfile.LastName;
+    console.log("from username is :", fromUserName);
+    const dicForDeviceToken = await client.query({
+      query: queryDeviceTokenById,
+      variables: { id: toUserId },
+    });
+    const deviceToken = dicForDeviceToken.data.getUserProfile.DeviceToken;
+    console.log("device token is :", deviceToken);
+    var messageRequest = CreateMessageRequest(
+      deviceToken,
+      msgModel,
+      fromUserName
+    );
+    console.log("pinpoint app id is :", process.env.projectId);
+    const sendMessagesParams = {
+      ApplicationId: "37d7798ba9c3470ab88013ce41fe5714", // Find it in Pinpoint->All projects
+      MessageRequest: messageRequest,
+    };
+    //Create a new Pinpoint object.
+    var pinpoint = new AWS.Pinpoint();
+    // Try to send the message.
+    pinpoint.sendMessages(sendMessagesParams, function (err, data) {
+      if (err) {
+        console.log(err);
       } else {
-        status = "The message wasn't sent. Response information: ";
+        let status;
+        if (
+          data["MessageResponse"]["Result"][deviceToken]["DeliveryStatus"] ===
+          "SUCCESSFUL"
+        ) {
+          status = "Message sent! Response information: ";
+        } else {
+          status = "The message wasn't sent. Response information: ";
+        }
+        console.log(status);
+        console.dir(data, { depth: null });
       }
-      console.log(status);
-      console.dir(data, { depth: null });
-    }
-  });
+    });
+  } else {
+    console.log("This is a group message");
+  }
 };
 
 exports.handler = (event) => {
@@ -231,7 +245,7 @@ exports.handler = (event) => {
   for (var i = 0; i < event.Records.length; i++) {
     const record = event.Records[i];
     if (record.eventName === "INSERT") {
-      console.log(record);
+      console.log(JSON.stringify(record));
       message = record.dynamodb.NewImage;
     }
   }
@@ -241,4 +255,8 @@ exports.handler = (event) => {
   } else {
     return Promise.resolve("No token transaction is processed.");
   }
+};
+
+const is_empty = (str) => {
+  return typeof str === "undefined" || str === null || str.length === 0;
 };

@@ -87,7 +87,7 @@ const Follower = () => {
           </Grid>
           <Grid item xs>
             <Box m={1}>
-              <TextStyle variant="h2">No ads or bulls%@t, ever.</TextStyle>
+              <TextStyle variant="h2">No ads or bullshit, ever.</TextStyle>
               <TextStyle variant="body1">
                 Support the creators you love without having to deal with
                 unskippable ads or two minutes of sponsored content. Get

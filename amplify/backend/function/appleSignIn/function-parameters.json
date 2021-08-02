@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "auth": {
+      "mikereact": [
+        "read"
+      ]
+    },
+    "api": {
+      "mikeAmplify": [
+        "Query",
+        "Mutation"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

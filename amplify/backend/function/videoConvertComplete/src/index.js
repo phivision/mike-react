@@ -74,6 +74,8 @@ const updateContentTranscodeStatus = gql`
   mutation UpdateUserContent($input: UpdateUserContentInput!) {
     updateUserContent(input: $input) {
       TranscodeReady
+      CreatorID
+      id
     }
   }
 `;
