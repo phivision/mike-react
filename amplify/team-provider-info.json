@@ -50,7 +50,7 @@
         },
         "appStore": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/appStore-707a594c5743705a702f-build.zip"
+          "s3Key": "amplify-builds/appStore-7152752b79346c635a45-build.zip"
         },
         "mikereactPostConfirmation": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
