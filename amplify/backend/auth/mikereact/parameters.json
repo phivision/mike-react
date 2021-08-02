@@ -21,7 +21,8 @@
     "requiredAttributes": [
         "email"
     ],
-    "userpoolClientGenerateSecret": false,
+    "aliasAttributes": [],
+    "userpoolClientGenerateSecret": true,
     "userpoolClientRefreshTokenValidity": 30,
     "userpoolClientWriteAttributes": [
         "family_name",
@@ -62,7 +63,6 @@
     "userPoolGroups": false,
     "userPoolGroupList": [],
     "adminQueries": false,
-    "userpoolClientGenerateSecret": true,
     "usernameCaseSensitive": false,
     "dependsOn": [
         {
@@ -73,11 +73,20 @@
                 "Arn",
                 "Name"
             ]
+        },
+        {
+            "category": "function",
+            "resourceName": "mikereactPreSignup",
+            "triggerProvider": "Cognito",
+            "attributes": [
+                "Arn",
+                "Name"
+            ]
         }
     ],
     "authProviders": [],
     "thirdPartyAuth": false,
-    "triggers": "{\n  \"PostConfirmation\": [\n    \"custom\"\n  ]\n}",
+    "triggers": "{\n  \"PostConfirmation\": [\n    \"custom\"\n  ],\n  \"PreSignup\": [\n    \"custom\"\n  ]\n}",
     "hostedUI": true,
     "hostedUIDomainName": "mikereactd9688095-d9688095",
     "authProvidersUserPool": [
@@ -92,6 +101,6 @@
     "signinwithappleAuthorizeScopes": [
         "email"
     ],
-    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostConfirmation\",\n    \"lambdaFunctionName\": \"mikereactPostConfirmation\"\n  }\n]",
+    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostConfirmation\",\n    \"lambdaFunctionName\": \"mikereactPostConfirmation\"\n  },\n  {\n    \"triggerType\": \"PreSignUp\",\n    \"lambdaFunctionName\": \"mikereactPreSignup\"\n  }\n]",
     "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\"],\"CallbackURLs\":[\"mike://\"],\"LogoutURLs\":[\"mike://\"]}"
 }

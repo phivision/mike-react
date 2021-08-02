@@ -16,6 +16,12 @@
     },
     "functionmikereactPostConfirmationArn": {
       "Type": "String"
+    },
+    "functionmikereactPreSignupName": {
+      "Type": "String"
+    },
+    "functionmikereactPreSignupArn": {
+      "Type": "String"
     }
   },
   "Conditions": {
@@ -35,6 +41,19 @@
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
           "Ref": "functionmikereactPostConfirmationName"
+        },
+        "Principal": "cognito-idp.amazonaws.com",
+        "SourceArn": {
+          "Ref": "userpoolArn"
+        }
+      }
+    },
+    "UserPoolPreSignUpLambdaInvokePermission": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Ref": "functionmikereactPreSignupName"
         },
         "Principal": "cognito-idp.amazonaws.com",
         "SourceArn": {
@@ -135,6 +154,13 @@
             "lambdaFunctionName": "mikereactPostConfirmation",
             "lambdaFunctionArn": {
               "Ref": "functionmikereactPostConfirmationArn"
+            }
+          },
+          {
+            "triggerType": "PreSignUp",
+            "lambdaFunctionName": "mikereactPreSignup",
+            "lambdaFunctionArn": {
+              "Ref": "functionmikereactPreSignupArn"
             }
           }
         ]
