@@ -74,7 +74,7 @@
         },
         "mikereactPreSignup": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/mikereactPreSignup-68756a324843785a4a79-build.zip"
+          "s3Key": "amplify-builds/mikereactPreSignup-2f78784e493568775062-build.zip"
         }
       },
       "storage": {
