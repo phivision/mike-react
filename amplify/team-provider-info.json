@@ -232,7 +232,7 @@
         },
         "mikereactPreSignup": {
           "deploymentBucketName": "amplify-mikereact-feature-135143-deployment",
-          "s3Key": "amplify-builds/mikereactPreSignup-2f78784e493568775062-build.zip"
+          "s3Key": "amplify-builds/mikereactPreSignup-305a64743151486a4270-build.zip"
         }
       },
       "storage": {
