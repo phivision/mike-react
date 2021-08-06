@@ -1,6 +1,7 @@
 const CognitoIdentityServiceProvider = require("aws-sdk/clients/cognitoidentityserviceprovider");
 
 const cognitoIdp = new CognitoIdentityServiceProvider();
+const userPoolID = process.env.AUTH_MIKEREACT_USERPOOLID;
 const getUserByEmail = async (userPoolId, email) => {
   const params = {
     UserPoolId: userPoolId,
@@ -28,13 +29,15 @@ const linkProviderToUser = (
     UserPoolId: userPoolId,
   };
 
+  console.log(params);
+
   return cognitoIdp.adminLinkProviderForUser(params).promise();
 };
 
 exports.handler = async (event, context, callback) => {
   if (event.triggerSource === "PreSignUp_ExternalProvider") {
     const userRs = await getUserByEmail(
-      event.userPoolId,
+      userPoolID,
       event.request.userAttributes.email
     );
     console.log(event);

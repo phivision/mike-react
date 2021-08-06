@@ -371,7 +371,16 @@
     "mikereactPreSignup": {
       "build": true,
       "providerPlugin": "awscloudformation",
-      "service": "Lambda"
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "mikereact",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ]
     }
   },
   "notifications": {

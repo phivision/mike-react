@@ -50,7 +50,7 @@
     },
     "authmikereactUserPoolId": {
       "Type": "String",
-      "Default": "us-east-1_JhZsnk4mX"
+      "Default": "authmikereactUserPoolId"
     }
   },
   "Conditions": {
