@@ -29,6 +29,8 @@ const linkProviderToUser = (
     UserPoolId: userPoolId,
   };
 
+  console.log(params);
+
   return cognitoIdp.adminLinkProviderForUser(params).promise();
 };
 

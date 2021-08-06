@@ -50,7 +50,7 @@
         },
         "appStore": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/appStore-7152752b79346c635a45-build.zip"
+          "s3Key": "amplify-builds/appStore-707a594c5743705a702f-build.zip"
         },
         "mikereactPostConfirmation": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
@@ -74,7 +74,7 @@
         },
         "mikereactPreSignup": {
           "deploymentBucketName": "amplify-mike-react-dev-150010-deployment",
-          "s3Key": "amplify-builds/mikereactPreSignup-2f78784e493568775062-build.zip"
+          "s3Key": "amplify-builds/mikereactPreSignup-4e5a752f4f2f36724835-build.zip"
         }
       },
       "storage": {
@@ -140,7 +140,14 @@
         "messageGroupSend": {
           "deploymentBucketName": "amplify-mikereact-prod-93157-deployment",
           "s3Key": "amplify-builds/messageGroupSend-482b4236383131305861-build.zip"
-        }
+        },
+        "appStore": {},
+        "mikereactPostConfirmation": {},
+        "videoCleanUpFavorite": {},
+        "subscriptions": {},
+        "subscriptionManager": {},
+        "appleSignIn": {},
+        "mikereactPreSignup": {}
       },
       "storage": {
         "mikereact48af3338": {
