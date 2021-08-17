@@ -29,29 +29,26 @@ const linkProviderToUser = (
     UserPoolId: userPoolId,
   };
 
-  console.log(params);
-
   return cognitoIdp.adminLinkProviderForUser(params).promise();
 };
 
-exports.handler = async (event, context, callback) => {
+exports.handler = async (event) => {
   if (event.triggerSource === "PreSignUp_ExternalProvider") {
     const userRs = await getUserByEmail(
       userPoolID,
       event.request.userAttributes.email
     );
-    console.log(event);
     if (userRs && userRs.Users.length > 0) {
       const [providerName, providerUserId] = event.userName.split("_");
-      return linkProviderToUser(
+      console.log("User found.");
+      return await linkProviderToUser(
         userRs.Users[0].Username,
         event.userPoolId,
         providerName,
         providerUserId
       );
     } else {
-      console.log("user not found, skip.");
-      callback(null, event);
+      console.log("User not found.");
     }
   }
 };
