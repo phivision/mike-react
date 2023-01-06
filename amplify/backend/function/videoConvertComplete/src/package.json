@@ -17,6 +17,6 @@
     "express": "^4.17.3",
     "graphql": "^0.13.0",
     "graphql-tag": "^2.10.1",
-    "isomorphic-fetch": "^2.2.1"
+    "isomorphic-fetch": "^3.0.0"
   }
 }
